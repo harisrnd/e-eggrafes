@@ -1,0 +1,98 @@
+
+# Gel classes menu items definition
+entity.gel_classes.collection:
+  title: 'Gel classes list'
+  route_name: entity.gel_classes.collection
+  description: 'List Gel classes entities'
+  parent: system.admin_structure
+  weight: 100
+
+gel_classes.admin.structure.settings:
+  title: Gel classes settings
+  description: 'Configure Gel classes entities'
+  route_name: gel_classes.settings
+  parent: system.admin_structure
+
+# Gel choices menu items definition
+entity.gel_choices.collection:
+  title: 'Gel choices list'
+  route_name: entity.gel_choices.collection
+  description: 'List Gel choices entities'
+  parent: system.admin_structure
+  weight: 100
+
+gel_choices.admin.structure.settings:
+  title: Gel choices settings
+  description: 'Configure Gel choices entities'
+  route_name: gel_choices.settings
+  parent: system.admin_structure
+
+# Gel class choices menu items definition
+entity.gel_class_choices.collection:
+  title: 'Gel class choices list'
+  route_name: entity.gel_class_choices.collection
+  description: 'List Gel class choices entities'
+  parent: system.admin_structure
+  weight: 100
+
+gel_class_choices.admin.structure.settings:
+  title: Gel class choices settings
+  description: 'Configure Gel class choices entities'
+  route_name: gel_class_choices.settings
+  parent: system.admin_structure
+
+# Gel student menu items definition
+entity.gel_student.collection:
+  title: 'Gel student list'
+  route_name: entity.gel_student.collection
+  description: 'List Gel student entities'
+  parent: system.admin_structure
+  weight: 100
+
+gel_student.admin.structure.settings:
+  title: Gel student settings
+  description: 'Configure Gel student entities'
+  route_name: gel_student.settings
+  parent: system.admin_structure
+
+# Gel student choices menu items definition
+entity.gel_student_choices.collection:
+  title: 'Gel student choices list'
+  route_name: entity.gel_student_choices.collection
+  description: 'List Gel student choices entities'
+  parent: system.admin_structure
+  weight: 100
+
+gel_student_choices.admin.structure.settings:
+  title: Gel student choices settings
+  description: 'Configure Gel student choices entities'
+  route_name: gel_student_choices.settings
+  parent: system.admin_structure
+
+# Gel region menu items definition
+entity.gel_region.collection:
+  title: 'Gel region list'
+  route_name: entity.gel_region.collection
+  description: 'List Gel region entities'
+  parent: system.admin_structure
+  weight: 100
+
+gel_region.admin.structure.settings:
+  title: Gel region settings
+  description: 'Configure Gel region entities'
+  route_name: gel_region.settings
+  parent: system.admin_structure
+
+# Gel admin area menu items definition
+entity.gel_admin_area.collection:
+  title: 'Gel admin area list'
+  route_name: entity.gel_admin_area.collection
+  description: 'List Gel admin area entities'
+  parent: system.admin_structure
+  weight: 100
+
+gel_admin_area.admin.structure.settings:
+  title: Gel admin area settings
+  description: 'Configure Gel admin area entities'
+  route_name: gel_admin_area.settings
+  parent: system.admin_structure

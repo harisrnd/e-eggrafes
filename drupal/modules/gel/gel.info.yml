@@ -1,0 +1,5 @@
+name: gel
+type: module
+description: My Gel Module
+core: 8.x
+package: GEL

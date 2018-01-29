@@ -1,0 +1,24 @@
+gel.user.get_data:
+  path: '/gel/userdata'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\CurrentUser::getGelUserData'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.current_user:
+  path: '/gel/curuser'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\CurrentUser::getLoginInfo'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.user.save_profile:
+  path: '/gel/user/save'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\CurrentUser::saveUserProfile'
+  requirements:
+    _user_is_logged_in: 'TRUE'

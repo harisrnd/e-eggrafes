@@ -1,0 +1,35 @@
+entity.gel_classes.add_form:
+  route_name: entity.gel_classes.add_form
+  title: 'Add Gel classes'
+  appears_on:
+    - entity.gel_classes.collection
+entity.gel_choices.add_form:
+  route_name: entity.gel_choices.add_form
+  title: 'Add Gel choices'
+  appears_on:
+    - entity.gel_choices.collection
+entity.gel_class_choices.add_form:
+  route_name: entity.gel_class_choices.add_form
+  title: 'Add Gel class choices'
+  appears_on:
+    - entity.gel_class_choices.collection
+entity.gel_student.add_form:
+  route_name: entity.gel_student.add_form
+  title: 'Add Gel student'
+  appears_on:
+    - entity.gel_student.collection
+entity.gel_student_choices.add_form:
+  route_name: entity.gel_student_choices.add_form
+  title: 'Add Gel student choices'
+  appears_on:
+    - entity.gel_student_choices.collection
+entity.gel_region.add_form:
+  route_name: entity.gel_region.add_form
+  title: 'Add Gel region'
+  appears_on:
+    - entity.gel_region.collection
+entity.gel_admin_area.add_form:
+  route_name: entity.gel_admin_area.add_form
+  title: 'Add Gel admin area'
+  appears_on:
+    - entity.gel_admin_area.collection
