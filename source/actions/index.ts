@@ -11,6 +11,8 @@ import { ElectiveCourseFieldsActions } from "./electivecoursesfields.actions";
 import { LangCourseFieldsActions } from "./langcoursesfields.actions";
 import { GelClassesActions } from "./gelclasses.actions";
 import { GelStudentDataFieldsActions } from "./gelstudentdatafields.actions";
+import { SchoolTypeActions } from "./schooltype.actions";
+
 
 const ACTION_PROVIDERS = [
     SectorFieldsActions,
@@ -26,6 +28,7 @@ const ACTION_PROVIDERS = [
     LangCourseFieldsActions,
     GelClassesActions,
     GelStudentDataFieldsActions,
+    SchoolTypeActions,
 ];
 
 export {
@@ -42,6 +45,7 @@ export {
     LangCourseFieldsActions,
     GelClassesActions,
     GelStudentDataFieldsActions,
+    SchoolTypeActions,
 
     ACTION_PROVIDERS,
 };

@@ -39,8 +39,8 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
     <form [formGroup]="formGroup">
     <div class = "loading" *ngIf="(gelclasses$ | async).size === 0">
     </div>
-    <p style="margin-top: 5px; line-height: 2em;"> Παρακαλώ επιλέξτε τον τύπο ΓΕΛ (ημερήσιο, εσπερινό) φοίτησης του μαθητή
-        κατά το σχολικό έτος 2018-2019.</p>
+    <p style="margin-top: 5px; line-height: 2em;"> Παρακαλώ καθορίστε την κατηγορία ΓΕΛ που θα φοιτήσει ο μαθητής
+            κατά το σχολικό έτος 2018-19, επιλέγοντας ΗΜΕΡΗΣΙΟ ή ΕΣΠΕΡΙΝΟ.</p>
         <div style= "margin-top: 50px; margin-bottom: 100px;">
             <label for="category">Τύπος ΓΕ.Λ.:</label><br/>
             <select class="form-group" #type_sel class="form-control" formControlName="category" (change)="categoryselected(type_sel)">
@@ -77,12 +77,12 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
 })
 
 @Injectable() export default class ClassSelection implements OnInit, OnDestroy {
+
     private gelclasses$: BehaviorSubject<IGelClassRecords>;
     private gelclassesSub: Subscription;
     private categoryChosen: String;
     private enableclassfilter: boolean;
-    private classActive=0;
-
+    private classActive;
     private formGroup: FormGroup;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
@@ -94,6 +94,8 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
         private _cfa: GelClassesActions,
         private _ogs: OrientationGroupActions,
         private _cfe: ElectiveCourseFieldsActions,
+
+
         private router: Router) {
         this.formGroup = this.fb.group({
             classId: [],
@@ -105,6 +107,7 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
         this.isModalShown = new BehaviorSubject(false);
         this.gelclasses$ = new BehaviorSubject(GELCLASSES_INITIAL_STATE);
         this.enableclassfilter = false;
+        this.classActive=0;
     };
 
     ngOnInit() {
@@ -121,11 +124,15 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
                             this.formGroup.controls["category"].setValue(gelclass.get("category"));
                             this.enableclassfilter = true;
                             this.classActive=gelclass.get("id");
+                            this.categoryChosen=gelclass.get("category");
                         }
                         return gelclass;
                     }, {});
                 } else {
-                    //this.formGroup.controls["name"].setValue("...");
+                    //this.formGroup.controls["classId"].setValue("...");
+                }
+                if (this.enableclassfilter === false){
+                    this.formGroup.controls["category"].setValue("0");
                 }
                 this.gelclasses$.next(ecs);
             }, error => { console.log("error selecting gelclasses"); });
@@ -152,7 +159,7 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
     }
 
     navigateBack() {
-        this.router.navigate(["/parent-form"]);
+        this.router.navigate(["/school-type-select"]);
     }
 
     public categoryselected(typeId) {
@@ -187,12 +194,12 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
               this.router.navigate(["/electivecourse-fields-select"]);
             else if (this.formGroup.value.classId === "5")
               this.router.navigate(["/gelstudent-application-form-main"]);
-
         }
 
     }
 
     initializestore() {
+
         this._cfa.saveGelClassesSelected(this.classActive-1, this.formGroup.value.classId-1);
 
         this.classActive=this.formGroup.value.classId;
@@ -201,6 +208,7 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
           this._ogs.initOrientationGroup();
         if (this.classActive == 1 || this.classActive == 3 || this.classActive == 4 )
           this._cfe.initElectiveCourseFields();
+
     }
 
 }

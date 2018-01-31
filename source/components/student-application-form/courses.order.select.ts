@@ -229,7 +229,6 @@ import { IAppState } from "../../store/store";
 
     navigateBack() {
         this.updateStore();
-
         if (this.activeClassId == 3)
           this.router.navigate(["/orientation-group-select"]);
         else
