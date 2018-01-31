@@ -139,7 +139,7 @@ import {
 
         //new
         //this.showLoader.next(true);
-        this.epalUserDataSub = this.hds.getEpalUserData().subscribe(x => {
+        this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             this.epalUserData$.next(x);
             this.numAppSelf.next(Number(x.numAppSelf));
             this.numAppChildren.next(Number(x.numAppChildren));

@@ -6,6 +6,8 @@ import { Router } from "@angular/router";
 import { BehaviorSubject, Subscription } from "rxjs/Rx";
 
 import { GelClassesActions } from "../../actions/gelclasses.actions";
+import { OrientationGroupActions } from "../../actions/orientationgroup.action";
+import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
 import { GELCLASSES_INITIAL_STATE } from "../../store/gelclasses/gelclasses.initial-state";
 import { IGelClass, IGelClassRecord, IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 import { IAppState } from "../../store/store";
@@ -81,18 +83,17 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
     private enableclassfilter: boolean;
     private classActive=0;
 
-
     private formGroup: FormGroup;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
 
-
-
     constructor(private fb: FormBuilder,
         private _ngRedux: NgRedux<IAppState>,
         private _cfa: GelClassesActions,
+        private _ogs: OrientationGroupActions,
+        private _cfe: ElectiveCourseFieldsActions,
         private router: Router) {
         this.formGroup = this.fb.group({
             classId: [],
@@ -178,16 +179,28 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
         }
         else {
             this._cfa.saveGelClassesSelected(this.classActive-1, this.formGroup.value.classId-1);
-            if (this.formGroup.value.classId != "0")
-                //this.router.navigate(["/orientation-group-select"]);
-                this.router.navigate(["/electivecourse-fields-select"]);
+            //Όταν class_id = 3 (Γ' Λυκείου - Ημερήσιο), τότε πήγαινε πρώτα στη σελίδα επιλογής για επιλογή προσανατολισμού
+            //και μετά στην επιλογή για μάθημα επιλογής
+            if (this.formGroup.value.classId === "2" || this.formGroup.value.classId === "3" || this.formGroup.value.classId === "6" || this.formGroup.value.classId === "7")
+              this.router.navigate(["/orientation-group-select"]);
+            else if (this.formGroup.value.classId === "1" || this.formGroup.value.classId === "4")
+              this.router.navigate(["/electivecourse-fields-select"]);
+            else if (this.formGroup.value.classId === "5")
+              this.router.navigate(["/gelstudent-application-form-main"]);
+
         }
 
     }
 
     initializestore() {
         this._cfa.saveGelClassesSelected(this.classActive-1, this.formGroup.value.classId-1);
+
         this.classActive=this.formGroup.value.classId;
+
+        if (this.classActive == 2 || this.classActive == 3 || this.classActive == 6 || this.classActive == 7 )
+          this._ogs.initOrientationGroup();
+        if (this.classActive == 1 || this.classActive == 3 || this.classActive == 4 )
+          this._cfe.initElectiveCourseFields();
     }
 
 }

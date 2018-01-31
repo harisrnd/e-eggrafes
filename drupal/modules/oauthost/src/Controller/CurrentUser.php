@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\epal\Controller;
+namespace Drupal\oauthost\Controller;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\epal\Crypt;
+use Drupal\oauthost\Crypt;
 
 class CurrentUser extends ControllerBase
 {
@@ -28,7 +28,7 @@ class CurrentUser extends ControllerBase
     {
         $this->entityTypeManager = $entityTypeManager;
         $this->connection = $connection;
-        $this->logger = $loggerChannel->get('epal');
+        $this->logger = $loggerChannel->get('oauthost');
     }
 
     public static function create(ContainerInterface $container)
@@ -84,16 +84,16 @@ class CurrentUser extends ControllerBase
 
         }
 
-        $epalUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
-        $epalUser = reset($epalUsers);
-        if ($epalUser) {
+        $applicantUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
+        $applicantUser = reset($applicantUsers);
+        if ($applicantUser) {
 
             $crypt = new Crypt();
             try  {
-              $name_decoded = $crypt->decrypt($epalUser->name->value);
-              $surname_decoded = $crypt->decrypt($epalUser->surname->value);
-              $fathername_decoded = $crypt->decrypt($epalUser->fathername->value);
-              $mothername_decoded = $crypt->decrypt($epalUser->mothername->value);
+              $name_decoded = $crypt->decrypt($applicantUser->name->value);
+              $surname_decoded = $crypt->decrypt($applicantUser->surname->value);
+              $fathername_decoded = $crypt->decrypt($applicantUser->fathername->value);
+              $mothername_decoded = $crypt->decrypt($applicantUser->mothername->value);
             }
             catch (\Exception $e) {
                 unset($crypt);
@@ -110,8 +110,8 @@ class CurrentUser extends ControllerBase
             $userMothername =$mothername_decoded;
             $userEmail = $user->mail->value;
 
-            $numAppSelf = $this->getNumApps($epalUser->user_id->target_id, "Μαθητής");
-            $numAppChildren = $this->getNumApps($epalUser->user_id->target_id, "Γονέας/Κηδεμόνας");
+            $numAppSelf = $this->getNumApps($applicantUser->user_id->target_id, "Μαθητής");
+            $numAppChildren = $this->getNumApps($applicantUser->user_id->target_id, "Γονέας/Κηδεμόνας");
             if ($numAppSelf === -1 || $numAppChildren === -1)
               return $this->respondWithStatus([
                   'message' => t("num of children not found"),
@@ -129,34 +129,34 @@ class CurrentUser extends ControllerBase
                     'lock_students' => $epalConfig->lock_school_students_view->value,
                     'lock_application' => $epalConfig->lock_application->value,
                     'disclaimer_checked' => "0",
-                    'verificationCodeVerified' => $epalUser->verificationcodeverified->value,
+                    'verificationCodeVerified' => $applicantUser->verificationcodeverified->value,
                     'numapp_self' => $numAppSelf,
                     'numapp_children' => $numAppChildren,
-                    'numchildren'=> $epalUser->numchildren->value
+                    'numchildren'=> $applicantUser->numchildren->value
                 ], Response::HTTP_OK);
         } else {
             return $this->respondWithStatus([
-                    'message' => t("EPAL user not found"),
+                    'message' => t("applicant user not found"),
                 ], Response::HTTP_FORBIDDEN);
         }
     }
 
-    public function getEpalUserData(Request $request)
+    public function getApplicantUserData(Request $request)
     {
         $authToken = $request->headers->get('PHP_AUTH_USER');
 
-        $epalUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
-        $epalUser = reset($epalUsers);
-        if ($epalUser) {
-            $user = $this->entityTypeManager->getStorage('user')->load($epalUser->user_id->target_id);
+        $applicantUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
+        $applicantUser = reset($applicantUsers);
+        if ($applicantUser) {
+            $user = $this->entityTypeManager->getStorage('user')->load($applicantUser->user_id->target_id);
             if ($user) {
-                $representRole = $epalUser->representative->value;
+                $representRole = $applicantUser->representative->value;
                 $crypt = new Crypt();
                 try  {
-                  $userName = $crypt->decrypt($epalUser->name->value);
-                  $userSurname = $crypt->decrypt($epalUser->surname->value);
-                  $userFathername = $crypt->decrypt($epalUser->fathername->value);
-                  $userMothername = $crypt->decrypt($epalUser->mothername->value);
+                  $userName = $crypt->decrypt($applicantUser->name->value);
+                  $userSurname = $crypt->decrypt($applicantUser->surname->value);
+                  $userFathername = $crypt->decrypt($applicantUser->fathername->value);
+                  $userMothername = $crypt->decrypt($applicantUser->mothername->value);
                 }
                 catch (\Exception $e) {
                     unset($crypt);
@@ -167,8 +167,8 @@ class CurrentUser extends ControllerBase
                 }
                 unset($crypt);
 
-                $numAppSelf = $this->getNumApps($epalUser->user_id->target_id, "Μαθητής");
-                $numAppChildren = $this->getNumApps($epalUser->user_id->target_id, "Γονέας/Κηδεμόνας");
+                $numAppSelf = $this->getNumApps($applicantUser->user_id->target_id, "Μαθητής");
+                $numAppChildren = $this->getNumApps($applicantUser->user_id->target_id, "Γονέας/Κηδεμόνας");
                 if ($numAppSelf === -1 || $numAppChildren === -1)
                   return $this->respondWithStatus([
                       'message' => t("num of children not found"),
@@ -181,12 +181,11 @@ class CurrentUser extends ControllerBase
                     'userFathername' => mb_substr($userFathername,0,4,'UTF-8') !== "####" ? $userFathername : '',
                     'userMothername' => mb_substr($userMothername,0,4,'UTF-8') !== "####" ? $userMothername : '',
                     'userEmail' => mb_substr($user->mail->value,0,4,'UTF-8') !== "####" ? $user->mail->value : '',
-                    'verificationCodeVerified' => $epalUser->verificationcodeverified->value,
-                    //'test' => $epalUser->user_id->target_id,
+                    'verificationCodeVerified' => $applicantUser->verificationcodeverified->value,
                     'representRole' => $representRole,
                     'numAppSelf' => $numAppSelf,
                     'numAppChildren' => $numAppChildren,
-                    'numChildren'=> $epalUser->numchildren->value
+                    'numChildren'=> $applicantUser->numchildren->value
                 ], Response::HTTP_OK);
             } else {
                 return $this->respondWithStatus([
@@ -196,7 +195,7 @@ class CurrentUser extends ControllerBase
 
         } else {
             return $this->respondWithStatus([
-                    'message' => t("EPAL user not found"),
+                    'message' => t("applicant user not found"),
                 ], Response::HTTP_FORBIDDEN);
         }
     }
@@ -204,7 +203,7 @@ class CurrentUser extends ControllerBase
 
     public function getNumApps($userId, $applicantType)  {
       try {
-          $sCon = $this->connection->select('epal_student', 'eStudent')
+          $sCon_epal = $this->connection->select('epal_student', 'eStudent')
               ->fields('eStudent', array('relationtostudent'))
               ->condition('eStudent.user_id', $userId, '=')
               ->condition('eStudent.delapp', 0, '=')
@@ -212,7 +211,14 @@ class CurrentUser extends ControllerBase
           //$results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
           //$row = reset($results);
 
-          return $sCon->countQuery()->execute()->fetchField();
+          $sCon_gel = $this->connection->select('gel_student', 'eStudent')
+              ->fields('eStudent', array('relationtostudent'))
+              ->condition('eStudent.user_id', $userId, '=')
+              ->condition('eStudent.delapp', 0, '=')
+              ->condition('eStudent.relationtostudent', $applicantType , '=');
+
+          return ($sCon_epal->countQuery()->execute()->fetchField() + $sCon_gel->countQuery()->execute()->fetchField() );
+
       } catch (\Exception $e) {
           $this->logger->error($e->getMessage());
           return -1;
@@ -232,18 +238,18 @@ class CurrentUser extends ControllerBase
 
         $trx = $this->connection->startTransaction();
         try {
-        $epalUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
-        $epalUser = reset($epalUsers);
-        if ($epalUser) {
-            $user = $this->entityTypeManager->getStorage('user')->load($epalUser->user_id->target_id);
+        $applicantUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
+        $applicantUser = reset($applicantUsers);
+        if ($applicantUser) {
+            $user = $this->entityTypeManager->getStorage('user')->load($applicantUser->user_id->target_id);
             if ($user) {
                 $postData = null;
                 if ($content = $request->getContent()) {
                     $postData = json_decode($content);
                     $verificationCode = uniqid();
-                    $epalUser->set('verificationcode', $verificationCode);
-                    $epalUser->set('verificationcodeverified', FALSE);
-                    $epalUser->save();
+                    $applicantUser->set('verificationcode', $verificationCode);
+                    $applicantUser->set('verificationcodeverified', FALSE);
+                    $applicantUser->save();
                     $user->set('mail', $postData->userEmail);
                     $user->save();
                     $this->sendEmailWithVerificationCode($postData->userEmail, $verificationCode, $user);
@@ -266,7 +272,7 @@ class CurrentUser extends ControllerBase
 
         } else {
             return $this->respondWithStatus([
-                    'message' => t("EPAL user not found"),
+                    'message' => t("applicant user not found"),
                 ], Response::HTTP_FORBIDDEN);
         }
         } catch (\Exception $ee) {
@@ -309,23 +315,23 @@ class CurrentUser extends ControllerBase
     	}
         $authToken = $request->headers->get('PHP_AUTH_USER');
 
-        $epalUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
-        $epalUser = reset($epalUsers);
-        if ($epalUser) {
+        $applicantUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
+        $applicantUser = reset($applicantUsers);
+        if ($applicantUser) {
 
-            $user = $this->entityTypeManager->getStorage('user')->load($epalUser->user_id->target_id);
+            $user = $this->entityTypeManager->getStorage('user')->load($applicantUser->user_id->target_id);
             if ($user) {
                 $postData = null;
                 if ($content = $request->getContent()) {
                     $postData = json_decode($content);
-                    if ($epalUser->verificationcode->value !== $postData->verificationCode) {
+                    if ($applicantUser->verificationcode->value !== $postData->verificationCode) {
                         return $this->respondWithStatus([
                             'userEmail' => $user->mail->value,
                             'verificationCodeVerified' => false
                         ], Response::HTTP_OK);
                     } else {
-                        $epalUser->set('verificationcodeverified', true);
-                        $epalUser->save();
+                        $applicantUser->set('verificationcodeverified', true);
+                        $applicantUser->save();
                         return $this->respondWithStatus([
                             'userEmail' => $user->mail->value,
                             'verificationCodeVerified' => true
@@ -340,7 +346,7 @@ class CurrentUser extends ControllerBase
 
         } else {
             return $this->respondWithStatus([
-                    'message' => t("EPAL user not found"),
+                    'message' => t("applicant user not found"),
                 ], Response::HTTP_FORBIDDEN);
         }
     }
@@ -355,26 +361,12 @@ class CurrentUser extends ControllerBase
     	}
         $authToken = $request->headers->get('PHP_AUTH_USER');
 
-        $epalUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
-        $epalUser = reset($epalUsers);
-        if ($epalUser) {
+        $applicantUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
+        $applicantUser = reset($applicantUsers);
+        if ($applicantUser) {
             $postData = null;
             if ($content = $request->getContent()) {
                 $postData = json_decode($content);
-                /*
-                if (isset($postData->userProfile->representRole))
-                  $representRole = $postData->userProfile->representRole;
-                if (isset($postData->userProfile->userChildren))
-                  $userChildren = $postData->userProfile->userChildren;
-               */
-
-                //validate representRole
-                /*
-                if ( $epalUser->name->value !== "" &&  intval($epalUser->representative->value) !== $representRole )
-                      return $this->respondWithStatus([
-                          "error_code" => 5001
-                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
-                */
                 $crypt = new Crypt();
                 try  {
                   $name_encoded = $crypt->encrypt($postData->userProfile->userName);
@@ -391,29 +383,23 @@ class CurrentUser extends ControllerBase
                 }
                 unset($crypt);
 
-                /*
-                $epalUser->set('name', $postData->userProfile->userName);
-                $epalUser->set('surname', $postData->userProfile->userSurname);
-                $epalUser->set('mothername', $postData->userProfile->userMothername);
-                $epalUser->set('fathername', $postData->userProfile->userFathername);
-                */
-                $epalUser->set('name', $name_encoded);
-                $epalUser->set('surname', $surname_encoded);
-                $epalUser->set('mothername', $fathername_encoded);
-                $epalUser->set('fathername', $mothername_encoded);
+                $applicantUser->set('name', $name_encoded);
+                $applicantUser->set('surname', $surname_encoded);
+                $applicantUser->set('mothername', $fathername_encoded);
+                $applicantUser->set('fathername', $mothername_encoded);
 
                 $representRole = "0";
                 if (isset($postData->userProfile->representRole)) {
                   $representRole = $postData->userProfile->representRole;
-                  $epalUser->set('representative', $representRole);
+                  $applicantUser->set('representative', $representRole);
                 }
                 if ($representRole === "1")
-                  $epalUser->set('numchildren', self::CHILDREN_LIMIT);
+                  $applicantUser->set('numchildren', self::CHILDREN_LIMIT);
                 else if (isset($postData->userProfile->userChildren))
-                  $epalUser->set('numchildren', $postData->userProfile->userChildren);
+                  $applicantUser->set('numchildren', $postData->userProfile->userChildren);
 
-                $epalUser->save();
-                $user = $this->entityTypeManager->getStorage('user')->load($epalUser->user_id->target_id);
+                $applicantUser->save();
+                $user = $this->entityTypeManager->getStorage('user')->load($applicantUser->user_id->target_id);
                 if ($user) {
                     $user->set('mail', $postData->userProfile->userEmail);
                     $user->save();

@@ -26,7 +26,7 @@ export class OrientationGroupActions {
         }
     };
 
-
+    /*
     saveOrientationGroupSelected = (prevChoice: number, newChoice: number) => {
         return this._ngRedux.dispatch({
             type: ORIENTATIONGROUP_SAVE,
@@ -36,9 +36,23 @@ export class OrientationGroupActions {
             }
         });
     };
+    */
 
 
-   
+    saveOrientationGroupSelected = (newChoice: number, isSelected: number) => {
+        return this._ngRedux.dispatch({
+            type: ORIENTATIONGROUP_SAVE,
+            payload: {
+                newChoice: newChoice,
+                isSelected: isSelected,
+            }
+        });
+    };
+    
+
+
+
+
     initOrientationGroup = () => {
         return this._ngRedux.dispatch({
             type: ORIENTATIONGROUP_INIT,

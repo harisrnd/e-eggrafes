@@ -10,10 +10,8 @@ export function OrientationGroupReducer(state: IOrientationGroupRecords = ORIENT
         case ORIENTATIONGROUP_RECEIVED:
            let orientalGroupFieldss = Array<IOrientationGroupRecord>();
             let i = 0;
-            console.log("eisai edw");
-            action.payload.orientat.forEach(orientalGroupField => 
+            action.payload.orientat.forEach(orientalGroupField =>
             {
-                console.log("eisai edw1111");
                 orientalGroupFieldss.push(recordify<IOrientationGroupObj, IOrientationGroupRecord>(
                     { id: orientalGroupField.id, name: orientalGroupField.name, selected: false }
                     ));
@@ -21,17 +19,28 @@ export function OrientationGroupReducer(state: IOrientationGroupRecords = ORIENT
             });
             return List(orientalGroupFieldss);
 
-
+        /*
         case ORIENTATIONGROUP_SAVE:
-
                 return state.withMutations(function(list) {
                 if (action.payload.prevChoice >= 0)
                     list.setIn([action.payload.prevChoice, "selected"], false);
                 if (action.payload.newChoice >= 0)
                     list.setIn([action.payload.newChoice, "selected"], true);
             });
+        */
+
+
+
+        case ORIENTATIONGROUP_SAVE:
+                return state.withMutations(function(list) {
+                      if (action.payload.isSelected === 1)
+                          list.setIn([action.payload.newChoice, "selected"], false);
+                      else
+                          list.setIn([action.payload.newChoice, "selected"], true);
+                  });
+
+
         case ORIENTATIONGROUP_INIT:
-            console.log("new edw");
             return ORIENTATIONGROUP_INITIAL_STATE;
         default:return state;
     }

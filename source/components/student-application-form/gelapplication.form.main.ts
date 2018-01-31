@@ -14,6 +14,8 @@ import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { IAppState } from "../../store/store";
 import { GELSTUDENT_DATA_FIELDS_INITIAL_STATE } from "../../store/gelstudentdatafields/gelstudentdatafields.initial-state";
 import { IGelStudentDataFieldRecords } from "../../store/gelstudentdatafields/gelstudentdatafields.types";
+import { GelClassesActions } from "../../actions/gelclasses.actions";
+import { IGelClass, IGelClassRecord, IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 import { HelperDataService } from "../../services/helper-data-service";
 import {
     FIRST_SCHOOL_YEAR,
@@ -40,6 +42,7 @@ import {
     private criteriaSub: Subscription;
     //private datamodeSub: Subscription;
     private epalUserDataSub: Subscription;
+    private gelclassesSub: Subscription;
 
     private studentDataGroup: FormGroup;
     private studentCriteriaGroup: FormGroup;
@@ -61,6 +64,7 @@ import {
     private numAppChildren: BehaviorSubject<number>;
     private numChildren: BehaviorSubject<number>;
     private epalUserData$: BehaviorSubject<any>;
+    private activeClassId = -1;
 
     private myDatePickerOptions: IMyDpOptions = {
         // other options...
@@ -91,6 +95,7 @@ import {
 
     constructor(private fb: FormBuilder,
         private _sdfa: GelStudentDataFieldsActions,
+        private _cfb: GelClassesActions,
         private hds: HelperDataService,
         //private _cfa: DataModeActions,
         private _ngRedux: NgRedux<IAppState>,
@@ -137,33 +142,26 @@ import {
     ngOnInit() {
         (<any>$("#applicationFormNotice")).appendTo("body");
 
-        //new
-        //this.showLoader.next(true);
-        this.epalUserDataSub = this.hds.getEpalUserData().subscribe(x => {
+        this._cfb.getClassesList(false);
+        this.gelclassesSub = this._ngRedux.select("gelclasses")
+            .map(gelclasses => <IGelClassRecords>gelclasses)
+            .subscribe(ecs => {
+                if (ecs.size > 0) {
+                     ecs.reduce(({}, gelclass) => {
+                        if (gelclass.get("selected")===true ){
+                            this.activeClassId = gelclass.get("id");
+                        }
+                        return gelclass;
+                    }, {});
+                }
+            }, error => { console.log("error selecting gelclasses"); });
+
+        this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             this.epalUserData$.next(x);
             this.numAppSelf.next(Number(x.numAppSelf));
             this.numAppChildren.next(Number(x.numAppChildren));
             this.numChildren.next(Number(x.numChildren));
         });
-        //end new
-
-        //obsolete
-        /*
-        this.loginInfoSub = this._ngRedux.select("loginInfo")
-            .map(loginInfo => <ILoginInfoRecords>loginInfo)
-            .subscribe(linfo => {
-                if (linfo.size > 0) {
-                    linfo.reduce(({}, loginInfoObj) => {
-                        //obsolete
-                        //this.numAppSelf.next(Number(loginInfoObj.numapp_self));
-                        //this.numAppChildren.next(Number(loginInfoObj.numapp_children));
-                        //this.numChildren.next(Number(loginInfoObj.numchildren));
-                        return loginInfoObj;
-                    }, {});
-                }
-                this.loginInfo$.next(linfo);
-            }, error => { console.log("error selecting loginInfo"); });
-         */
 
          this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
@@ -252,8 +250,15 @@ import {
 
     navigateBack() {
         this._sdfa.saveGelStudentDataFields([this.studentDataGroup.value]);
-        //this.router.navigate(["/schools-order-select"]);
-        this.router.navigate(["/electivecourse-fields-select"]);
+
+        if (this.activeClassId == 1 || this.activeClassId == 3 || this.activeClassId == 4)
+          this.router.navigate(["/electivecourse-fields-select"]);
+        else if (this.activeClassId == 2 || this.activeClassId == 6 || this.activeClassId == 7)
+          this.router.navigate(["/orientation-group-select"]);
+        else if (this.activeClassId == 5) {
+          //this._cfb.resetGelClassesSelected();
+          this.router.navigate(["/gel-class-select"]);
+        }
     }
 
     submitSelected() {
