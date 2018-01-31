@@ -9,6 +9,13 @@ import { RegionSchoolsActions } from "../../actions/regionschools.actions";
 import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
 import { SectorFieldsActions } from "../../actions/sectorfields.actions";
 import { StudentDataFieldsActions } from "../../actions/studentdatafields.actions";
+import { SchoolTypeActions } from "../../actions/schooltype.actions";
+import { GelClassesActions } from "../../actions/gelclasses.actions";
+import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
+import { OrientationGroupActions } from "../../actions/orientationgroup.action";
+import { LangCourseFieldsActions } from "../../actions/langcoursesfields.actions";
+import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
+
 import { DIDE_ROLE, MINISTRY_ROLE, PDE_ROLE, SCHOOL_ROLE, STUDENT_ROLE } from "../../constants";
 import { HelperDataService } from "../../services/helper-data-service";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
@@ -44,6 +51,12 @@ export default class HeaderComponent implements OnInit, OnDestroy {
         private _rsa: RegionSchoolsActions,
         private _eca: EpalClassesActions,
         private _sdfa: StudentDataFieldsActions,
+        private _sta: SchoolTypeActions,
+        private _gca: GelClassesActions,
+        private _ecfa: ElectiveCourseFieldsActions,
+        private _oga: OrientationGroupActions,
+        private _lcfa: LangCourseFieldsActions,
+        private _gsdfa: GelStudentDataFieldsActions,
         private _ngRedux: NgRedux<IAppState>,
         private router: Router
     ) {
@@ -126,6 +139,12 @@ export default class HeaderComponent implements OnInit, OnDestroy {
                 this._rsa.initRegionSchools();
                 this._csa.initSectorCourses();
                 this._sdfa.initStudentDataFields();
+                this._sta.initSchoolType();
+                this._gca.initGelClasses();
+                this._ecfa.initElectiveCourseFields();
+                this._oga.initOrientationGroup();
+                this._lcfa.initLangCourseFields();
+                this._gsdfa.initGelStudentDataFields();
                 this.router.navigate([""]);
             }
             else if (this.authRole === MINISTRY_ROLE) {

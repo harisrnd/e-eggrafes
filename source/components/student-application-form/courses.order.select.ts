@@ -211,7 +211,7 @@ import { IAppState } from "../../store/store";
 
     navigateBack() {
         this.updateStore();
-        this.router.navigate(["/intro-statement"]);
+        this.router.navigate(["/gel-class-select"]);
     }
 
 }

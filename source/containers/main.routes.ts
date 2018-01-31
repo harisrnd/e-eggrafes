@@ -57,6 +57,8 @@ import LangCourseFieldsSelect from "../components/student-application-form/langc
 import CoursesOrderSelect from "../components/student-application-form/courses.order.select";
 import ClassSelection from "../components/student-application-form/class.selection";
 import GelStudentApplicationMain from "../components/student-application-form/gelapplication.form.main";
+import SchoolTypeSelection from "../components/student-application-form/schooltype.selection";
+
 
 
 export const MainRoutes: Routes = [
@@ -107,6 +109,8 @@ export const MainRoutes: Routes = [
     { path: "course-order-select", component: CoursesOrderSelect, canActivate: [StudentAuthGuard, StudentLockGuard]},
     { path: "gel-class-select", component: ClassSelection, canActivate: [StudentAuthGuard, StudentLockGuard]},
     { path: "gelstudent-application-form-main", component: GelStudentApplicationMain, canActivate: [StudentAuthGuard, StudentLockGuard] },
+    { path: "school-type-select", component: SchoolTypeSelection, canActivate: [StudentAuthGuard, StudentLockGuard]},
+
 
 ];
 
@@ -157,5 +161,6 @@ export const MainDeclarations = [
     LangCourseFieldsSelect,
     CoursesOrderSelect,
     ClassSelection,
-    GelStudentApplicationMain
+    GelStudentApplicationMain,
+    SchoolTypeSelection
 ];
