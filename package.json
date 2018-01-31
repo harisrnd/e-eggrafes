@@ -1,10 +1,10 @@
 {
-  "name": "e-gel",
-  "description": "e-GEL student registration system for Greek Ministry of Education",
+  "name": "e-eggrafes",
+  "description": "e-eggrafes student registration system for Greek Ministry of Education",
   "license": "EUPL-1.1",
   "repository": {
     "type": "git",
-    "url": "https://git.minedu.gov.gr/itminedu/e-gel.git"
+    "url": "https://git.minedu.gov.gr/itminedu/e-eggrafes.git"
   },
   "scripts": {
     "start": "webpack-dashboard -- webpack --progress --colors --watch --display-error-details --display-cached",

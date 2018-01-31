@@ -69,7 +69,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     ngOnInit() {
         (<any>$("#emailSentNotice")).appendTo("body");
         this.showLoader.next(true);
-        this.epalUserDataSub = this.hds.getEpalUserData().subscribe(x => {
+        this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             this.showLoader.next(false);
             this.epalUserData$.next(x);
             this.formGroup.get("userEmail").setValue(x.userEmail);

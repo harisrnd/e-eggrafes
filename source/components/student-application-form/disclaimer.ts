@@ -196,7 +196,6 @@ import { IAppState } from "../../store/store";
         } else {
             this._lia.saveStatementAgree(this.formGroup.controls["disclaimerChecked"].value);
 
-            //this.router.navigate(["epal-class-select"]);
             this.router.navigate(["school-type-select"]);
         }
     }

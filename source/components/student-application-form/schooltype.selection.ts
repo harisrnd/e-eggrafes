@@ -14,7 +14,7 @@ import { IAppState } from "../../store/store";
 import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
 
 @Component({
-    selector: "school-type-select",
+    selector: "school-type-select", 
     template: `
     <div id="SchoolTypeNotice" (onHidden)="onHidden()" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog modal-lg">
@@ -37,8 +37,8 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
 
     <h4> Επιλογή Τύπου Σχολείου </h4>
     <form [formGroup]="formGroup">
-    <p style="margin-top: 5px; line-height: 2em;"> Παρακαλώ επιλέξτε τον τυπο σχολείου που θα φοιτήσει ο μαθητής
-            κατά το σχολικό έτος 2018-19 και έπειτα επιλέξτε <i>Συνέχεια</i>.</p>
+    <p style="margin-top: 5px; line-height: 2em;"> Παρακαλώ καθορίστε τον τύπο σχολείου που θα φοιτήσει ο μαθητής
+            κατά το σχολικό έτος 2018-19,  επιλέγοντας Γενικό Λύκειο (ΓΕΛ) ή Επαγγελματικό Λύκειο (ΕΠΑΛ), και έπειτα πατήστε <i>Συνέχεια</i>.</p>
         <div class="form-group" style= "margin-top: 50px; margin-bottom: 100px;">
             <label for="typeId">Τύπος Σχολείου:</label><br/>
             <select class="form-control" formControlName="typeId" (change)="initializestore()">
@@ -47,7 +47,7 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
             <option value="2">ΕΠΑΛ - Επαγγελματικό Λύκειο</option>
             </select>
         </div>
-        
+
         <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
             <div class="col-md-6">
                 <button type="button" class="btn-primary btn-lg pull-left" (click)="navigateBack()">
@@ -74,7 +74,7 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
-    
+
 
 
     constructor(private fb: FormBuilder,
@@ -100,10 +100,10 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
             .subscribe(ecs => {
                 if (ecs.size > 0) {
                       ecs.reduce(({}, type) => {
-                            
+
                         this.formGroup.controls["typeId"].setValue(type.get("id"));
                         return type;
-                    }, {}); 
+                    }, {});
                 } else {
                     this.formGroup.controls["typeId"].setValue("0");
                 }
@@ -156,7 +156,7 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
 
     }
 
-    initializestore() {      
+    initializestore() {
         this._gca.initGelClasses();
     }
 
