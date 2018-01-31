@@ -14,6 +14,7 @@ import { IElectiveCourseFieldRecord, IElectiveCourseFieldRecords } from "./elect
 import { ILangCourseFieldRecord, ILangCourseFieldRecords } from "./langcoursesfields/langcoursesfields.types";
 import { IGelClass, IGelClassRecord, IGelClassRecords } from "./gelclasses/gelclasses.types";
 import { IGelStudentDataFieldRecord, IGelStudentDataFieldRecords } from "./gelstudentdatafields/gelstudentdatafields.types";
+import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "./schooltype/schooltype.types";
 
 export {
     IAppState,
@@ -55,7 +56,10 @@ export {
     IGelClassRecord,
     IGelClassRecords,
     IGelStudentDataFieldRecord,
-    IGelStudentDataFieldRecords
+    IGelStudentDataFieldRecords,
+    ISchoolType,
+    ISchoolTypeRecord,
+    ISchoolTypeRecords
 };
 
 const myLogger = createLogger({

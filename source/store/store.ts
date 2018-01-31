@@ -13,6 +13,8 @@ import * as electivecourseFields from "./electivecoursesfields";
 import * as langcourseFields from "./langcoursesfields";
 import * as gelclasses from "./gelclasses";
 import * as gelstudentDataFields from "./gelstudentdatafields";
+import * as schooltype from "./schooltype";
+
 
 export interface IAppState {
     sectorFields?: sectorFields.ISectorFieldRecords;
@@ -28,6 +30,7 @@ export interface IAppState {
     langcourseFields?: langcourseFields.ILangCourseFieldRecords;
     gelclasses?: gelclasses.IGelClassRecords;
     gelstudentDataFields?: gelstudentDataFields.IGelStudentDataFieldRecords;
+    schooltype?: schooltype.ISchoolTypeRecords
 };
 
 export const rootReducer = combineReducers<IAppState>({
@@ -44,6 +47,7 @@ export const rootReducer = combineReducers<IAppState>({
     langcourseFields: langcourseFields.langcourseFieldsReducer,
     gelclasses: gelclasses.gelclassesReducer,
     gelstudentDataFields: gelstudentDataFields.gelstudentDataFieldsReducer,
+    schooltype: schooltype.schooltypeReducer,
 });
 
 export function deimmutify(state: IAppState): Object {
@@ -61,5 +65,7 @@ export function deimmutify(state: IAppState): Object {
         langcourseFields: langcourseFields.deimmutifyLangCourseFields(state.langcourseFields),
         gelclasses: gelclasses.deimmutifyGelClasses(state.gelclasses),
         gelstudentdataFields: gelstudentDataFields.deimmutifyGelStudentDataFields(state.gelstudentDataFields),
+        schooltype: schooltype.deimmutifySchoolType(state.schooltype),
+
     };
 }
