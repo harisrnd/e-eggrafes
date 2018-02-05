@@ -60,11 +60,12 @@ import { IAppState } from "../../store/store";
 
     ngOnDestroy() {
         if (this.electivecourseFieldsSub) this.electivecourseFieldsSub.unsubscribe();
+        if (this.gelclassesSub) this.gelclassesSub.unsubscribe();
     }
 
     selectClass() {
 
-      this._cfb.getClassesList(false);
+      //this._cfb.getClassesList(false);
       this.gelclassesSub = this._ngRedux.select("gelclasses")
           .map(gelclasses => <IGelClassRecords>gelclasses)
           .subscribe(ecs => {
