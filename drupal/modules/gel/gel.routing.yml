@@ -1,0 +1,8 @@
+gel.application_submit:
+  path: '/gel/appsubmit'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelApplicationSubmit::appSubmit'
+  requirements:
+    _user_is_logged_in: 'TRUE'

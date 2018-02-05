@@ -1,0 +1,133 @@
+add gel classes entities:
+  title: 'Create new Gel classes entities'
+
+administer gel classes entities:
+  title: 'Administer Gel classes entities'
+  description: 'Allow to access the administration form to configure Gel classes entities.'
+  restrict access: true
+
+delete gel classes entities:
+  title: 'Delete Gel classes entities'
+
+edit gel classes entities:
+  title: 'Edit Gel classes entities'
+
+view published gel classes entities:
+  title: 'View published Gel classes entities'
+
+view unpublished gel classes entities:
+  title: 'View unpublished Gel classes entities'
+add gel choices entities:
+  title: 'Create new Gel choices entities'
+
+administer gel choices entities:
+  title: 'Administer Gel choices entities'
+  description: 'Allow to access the administration form to configure Gel choices entities.'
+  restrict access: true
+
+delete gel choices entities:
+  title: 'Delete Gel choices entities'
+
+edit gel choices entities:
+  title: 'Edit Gel choices entities'
+
+view published gel choices entities:
+  title: 'View published Gel choices entities'
+
+view unpublished gel choices entities:
+  title: 'View unpublished Gel choices entities'
+add gel class choices entities:
+  title: 'Create new Gel class choices entities'
+
+administer gel class choices entities:
+  title: 'Administer Gel class choices entities'
+  description: 'Allow to access the administration form to configure Gel class choices entities.'
+  restrict access: true
+
+delete gel class choices entities:
+  title: 'Delete Gel class choices entities'
+
+edit gel class choices entities:
+  title: 'Edit Gel class choices entities'
+
+view published gel class choices entities:
+  title: 'View published Gel class choices entities'
+
+view unpublished gel class choices entities:
+  title: 'View unpublished Gel class choices entities'
+add gel student entities:
+  title: 'Create new Gel student entities'
+
+administer gel student entities:
+  title: 'Administer Gel student entities'
+  description: 'Allow to access the administration form to configure Gel student entities.'
+  restrict access: true
+
+delete gel student entities:
+  title: 'Delete Gel student entities'
+
+edit gel student entities:
+  title: 'Edit Gel student entities'
+
+view published gel student entities:
+  title: 'View published Gel student entities'
+
+view unpublished gel student entities:
+  title: 'View unpublished Gel student entities'
+add gel student choices entities:
+  title: 'Create new Gel student choices entities'
+
+administer gel student choices entities:
+  title: 'Administer Gel student choices entities'
+  description: 'Allow to access the administration form to configure Gel student choices entities.'
+  restrict access: true
+
+delete gel student choices entities:
+  title: 'Delete Gel student choices entities'
+
+edit gel student choices entities:
+  title: 'Edit Gel student choices entities'
+
+view published gel student choices entities:
+  title: 'View published Gel student choices entities'
+
+view unpublished gel student choices entities:
+  title: 'View unpublished Gel student choices entities'
+add gel region entities:
+  title: 'Create new Gel region entities'
+
+administer gel region entities:
+  title: 'Administer Gel region entities'
+  description: 'Allow to access the administration form to configure Gel region entities.'
+  restrict access: true
+
+delete gel region entities:
+  title: 'Delete Gel region entities'
+
+edit gel region entities:
+  title: 'Edit Gel region entities'
+
+view published gel region entities:
+  title: 'View published Gel region entities'
+
+view unpublished gel region entities:
+  title: 'View unpublished Gel region entities'
+add gel admin area entities:
+  title: 'Create new Gel admin area entities'
+
+administer gel admin area entities:
+  title: 'Administer Gel admin area entities'
+  description: 'Allow to access the administration form to configure Gel admin area entities.'
+  restrict access: true
+
+delete gel admin area entities:
+  title: 'Delete Gel admin area entities'
+
+edit gel admin area entities:
+  title: 'Edit Gel admin area entities'
+
+view published gel admin area entities:
+  title: 'View published Gel admin area entities'
+
+view unpublished gel admin area entities:
+  title: 'View unpublished Gel admin area entities'

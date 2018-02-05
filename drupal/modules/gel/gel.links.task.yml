@@ -1,0 +1,154 @@
+# Gel classes routing definition
+gel_classes.settings_tab:
+  route_name: gel_classes.settings
+  title: 'Settings'
+  base_route: gel_classes.settings
+
+entity.gel_classes.canonical:
+  route_name: entity.gel_classes.canonical
+  base_route: entity.gel_classes.canonical
+  title: 'View'
+
+entity.gel_classes.edit_form:
+  route_name: entity.gel_classes.edit_form
+  base_route: entity.gel_classes.canonical
+  title: 'Edit'
+
+entity.gel_classes.delete_form:
+  route_name:  entity.gel_classes.delete_form
+  base_route:  entity.gel_classes.canonical
+  title: Delete
+  weight: 10
+
+# Gel choices routing definition
+gel_choices.settings_tab:
+  route_name: gel_choices.settings
+  title: 'Settings'
+  base_route: gel_choices.settings
+
+entity.gel_choices.canonical:
+  route_name: entity.gel_choices.canonical
+  base_route: entity.gel_choices.canonical
+  title: 'View'
+
+entity.gel_choices.edit_form:
+  route_name: entity.gel_choices.edit_form
+  base_route: entity.gel_choices.canonical
+  title: 'Edit'
+
+entity.gel_choices.delete_form:
+  route_name:  entity.gel_choices.delete_form
+  base_route:  entity.gel_choices.canonical
+  title: Delete
+  weight: 10
+
+# Gel class choices routing definition
+gel_class_choices.settings_tab:
+  route_name: gel_class_choices.settings
+  title: 'Settings'
+  base_route: gel_class_choices.settings
+
+entity.gel_class_choices.canonical:
+  route_name: entity.gel_class_choices.canonical
+  base_route: entity.gel_class_choices.canonical
+  title: 'View'
+
+entity.gel_class_choices.edit_form:
+  route_name: entity.gel_class_choices.edit_form
+  base_route: entity.gel_class_choices.canonical
+  title: 'Edit'
+
+entity.gel_class_choices.delete_form:
+  route_name:  entity.gel_class_choices.delete_form
+  base_route:  entity.gel_class_choices.canonical
+  title: Delete
+  weight: 10
+
+# Gel student routing definition
+gel_student.settings_tab:
+  route_name: gel_student.settings
+  title: 'Settings'
+  base_route: gel_student.settings
+
+entity.gel_student.canonical:
+  route_name: entity.gel_student.canonical
+  base_route: entity.gel_student.canonical
+  title: 'View'
+
+entity.gel_student.edit_form:
+  route_name: entity.gel_student.edit_form
+  base_route: entity.gel_student.canonical
+  title: 'Edit'
+
+entity.gel_student.delete_form:
+  route_name:  entity.gel_student.delete_form
+  base_route:  entity.gel_student.canonical
+  title: Delete
+  weight: 10
+
+# Gel student choices routing definition
+gel_student_choices.settings_tab:
+  route_name: gel_student_choices.settings
+  title: 'Settings'
+  base_route: gel_student_choices.settings
+
+entity.gel_student_choices.canonical:
+  route_name: entity.gel_student_choices.canonical
+  base_route: entity.gel_student_choices.canonical
+  title: 'View'
+
+entity.gel_student_choices.edit_form:
+  route_name: entity.gel_student_choices.edit_form
+  base_route: entity.gel_student_choices.canonical
+  title: 'Edit'
+
+entity.gel_student_choices.delete_form:
+  route_name:  entity.gel_student_choices.delete_form
+  base_route:  entity.gel_student_choices.canonical
+  title: Delete
+  weight: 10
+
+# Gel region routing definition
+gel_region.settings_tab:
+  route_name: gel_region.settings
+  title: 'Settings'
+  base_route: gel_region.settings
+
+entity.gel_region.canonical:
+  route_name: entity.gel_region.canonical
+  base_route: entity.gel_region.canonical
+  title: 'View'
+
+entity.gel_region.edit_form:
+  route_name: entity.gel_region.edit_form
+  base_route: entity.gel_region.canonical
+  title: 'Edit'
+
+entity.gel_region.delete_form:
+  route_name:  entity.gel_region.delete_form
+  base_route:  entity.gel_region.canonical
+  title: Delete
+  weight: 10
+
+# Gel admin area routing definition
+gel_admin_area.settings_tab:
+  route_name: gel_admin_area.settings
+  title: 'Settings'
+  base_route: gel_admin_area.settings
+
+entity.gel_admin_area.canonical:
+  route_name: entity.gel_admin_area.canonical
+  base_route: entity.gel_admin_area.canonical
+  title: 'View'
+
+entity.gel_admin_area.edit_form:
+  route_name: entity.gel_admin_area.edit_form
+  base_route: entity.gel_admin_area.canonical
+  title: 'Edit'
+
+entity.gel_admin_area.delete_form:
+  route_name:  entity.gel_admin_area.delete_form
+  base_route:  entity.gel_admin_area.canonical
+  title: Delete
+  weight: 10
+

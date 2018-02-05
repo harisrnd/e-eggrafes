@@ -1,0 +1,22 @@
+{#
+/**
+ * @file gel_student_choices.html.twig
+ * Default theme implementation to present Gel student choices data.
+ *
+ * This template is used when viewing Gel student choices pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_gel_student_choices()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('gel_student_choices') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</div>

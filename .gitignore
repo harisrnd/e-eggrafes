@@ -1,0 +1,27 @@
+dist/*
+source/app.settings.ts
+node_modules/*
+drupal/*
+!drupal/modules/
+
+
+# Logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Sass cache folder
+.sass-cache
+
+# Users Environment Variables
+npm-debug*
+# bower_components
+
+# Project reference
+# typings
