@@ -801,11 +801,11 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                             if ($taxi === 1)
                                $classConfirm->set('approved_a', 0);
                             if ($taxi === 2)
-                               $classConfirm->set('approved_sector', 1);
+                               $classConfirm->set('approved_sector', 0);
                             if ($taxi === 3)
-                               $classConfirm->set('approved_speciality', 1);
+                               $classConfirm->set('approved_speciality', 0);
                             if ($taxi === 4)
-                               $classConfirm->set('approved_speciality_d', 1);
+                               $classConfirm->set('approved_speciality_d', 0);
                             $classConfirm->save();
                             return $this->respondWithStatus(['message' => t('saved')], Response::HTTP_OK);
                         } else {
