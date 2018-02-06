@@ -101,6 +101,7 @@ import {
         private _ngRedux: NgRedux<IAppState>,
         private router: Router,
         private http: Http) {
+
         this.populateSchoolyears();
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
@@ -137,12 +138,13 @@ import {
             lastschool_schoolyear: ["", this.checkChoice],
             lastschool_class: ["", this.checkChoice],
         });
+
     };
 
     ngOnInit() {
         (<any>$("#applicationFormNotice")).appendTo("body");
 
-        this._cfb.getClassesList(false);
+        //this._cfb.getClassesList(false);
         this.gelclassesSub = this._ngRedux.select("gelclasses")
             .map(gelclasses => <IGelClassRecords>gelclasses)
             .subscribe(ecs => {
@@ -211,13 +213,15 @@ import {
               }, error => { console.log("error selecting datamode"); });
         */
 
-        this.studentDataFieldsSub = this._ngRedux.select("studentDataFields")
+        this.studentDataFieldsSub = this._ngRedux.select("gelstudentDataFields")
             .subscribe(studentDataFields => {
                 let sdfds = <IGelStudentDataFieldRecords>studentDataFields;
                 if (sdfds.size > 0) {
                     sdfds.reduce(({}, studentDataField) => {
-                        if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
-                          this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                        //if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
+                        this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                        if (typeof this.lastSchName.getValue() === "undefined" )
+                          this.lastSchName.next("");
 
                         this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
                         this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
@@ -291,7 +295,8 @@ import {
           }
           */
 
-            this.router.navigate(["/application-submit"]);
+          this.router.navigate(["/gel-application-submit"]);
+
         }
     }
 

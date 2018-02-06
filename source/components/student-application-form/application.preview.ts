@@ -24,6 +24,7 @@ import { ORIENTATIONGROUP_INITIAL_STATE } from "../../store/orientationgroup/ori
 import { IAppState } from "../../store/store";
 import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecoursesfields/electivecoursesfields.initial-state";
 
+
 @Component({
     selector: "application-preview-select",
     template: `
@@ -47,7 +48,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
             </li>
             <li class="list-group-item">
                 {{gelclass$.name}} - {{gelclass$.category}}
-            </li> 
+            </li>
         </ul>
         </div>
 
@@ -58,7 +59,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
             </li>
             <li class="list-group-item">
                 {{or_group$.name}}
-            </li> 
+            </li>
         </ul>
         </div>
 
@@ -142,7 +143,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
     private schooltype$: BehaviorSubject<ISchoolTypeRecords>;
     private gelclasses$: BehaviorSubject<IGelClassRecords>;
     private electivecourses$: BehaviorSubject<IElectiveCourseFieldRecords>;
-    private OrientationGroup$: BehaviorSubject<IOrientationGroupRecords>; 
+    private OrientationGroup$: BehaviorSubject<IOrientationGroupRecords>;
     private OrientationGroupSub: Subscription;
     private electivecoursesSub: Subscription;
     private schooltypeSub: Subscription;
@@ -156,6 +157,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
 
     private electivecourseSelected = <number>0;
     private selectedCourses$: BehaviorSubject<Array<IElectiveCourseFieldRecord>> = new BehaviorSubject(Array());
+
 
     constructor(private _ngRedux: NgRedux<IAppState>,
         private router: Router
@@ -171,6 +173,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
         this.gelclasses$ = new BehaviorSubject(GELCLASSES_INITIAL_STATE);
         this.OrientationGroup$ = new BehaviorSubject(ORIENTATIONGROUP_INITIAL_STATE);
         this.electivecourses$= new BehaviorSubject(ELECTIVECOURSE_FIELDS_INITIAL_STATE);
+
     };
 
     ngOnInit() {
@@ -236,20 +239,18 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
                 this.epalclasses$.next(ecs);
             }, error => { console.log("error selecting epalclasses"); });
 
-
-
             this.schooltypeSub = this._ngRedux.select("schooltype")
             .map(schooltype => <ISchoolTypeRecords>schooltype)
             .subscribe(ecs => {
                 if (ecs.size > 0) {
-                      ecs.reduce(({}, type) => {                            
+                      ecs.reduce(({}, type) => {
                         return type;
-                    }, {}); 
+                    }, {});
                 } else {
                     //this.formGroup.controls["typeId"].setValue("0");
                 }
                 this.schooltype$.next(ecs);
-            }, error => { console.log("error selecting schooltype"); });             
+            }, error => { console.log("error selecting schooltype"); });
 
          this.gelclassesSub = this._ngRedux.select("gelclasses")
             .subscribe(gelclasses => {
@@ -285,14 +286,14 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
                         ++this.electivecourseSelected;
                         selectedCourses.push(electivecourseField.toJS());
                     }
-  
+
                     return electivecourseField;
                 }, {});
                 this.electivecourses$.next(sfds);
                 selectedCourses.sort(this.compareCourses);
                 for (let i = 0; i < selectedCourses.length; i++)
                     selectedCourses[i].order_id = i + 1;
-  
+
                 this.selectedCourses$.next(selectedCourses);
             }, error => { console.log("error selecting electivecourseFields"); });
 
@@ -301,7 +302,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
             .map(orientationGroup => <IOrientationGroupRecords>orientationGroup)
             .subscribe(ogs => {
                   this.OrientationGroup$.next(ogs);
-            }, error => { console.log("error selecting orientation"); }); 
+            }, error => { console.log("error selecting orientation"); });
 
     }
 
@@ -334,6 +335,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
         if (this.epalclassesSub) {
             this.epalclassesSub.unsubscribe();
         }
+
         if (this.electivecoursesSub){
             this.electivecoursesSub.unsubscribe();
         }

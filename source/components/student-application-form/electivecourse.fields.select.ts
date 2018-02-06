@@ -66,6 +66,7 @@ import { IAppState } from "../../store/store";
     selectClass() {
 
       //this._cfb.getClassesList(false);
+
       this.gelclassesSub = this._ngRedux.select("gelclasses")
           .map(gelclasses => <IGelClassRecords>gelclasses)
           .subscribe(ecs => {

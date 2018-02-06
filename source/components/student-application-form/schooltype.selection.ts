@@ -9,6 +9,7 @@ import { SchoolTypeActions } from "../../actions/schooltype.actions";
 import { GelClassesActions } from "../../actions/gelclasses.actions";
 import { OrientationGroupActions } from "../../actions/orientationgroup.action";
 import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
+
 import { EpalClassesActions } from "../../actions/epalclass.actions";
 import { RegionSchoolsActions } from "../../actions/regionschools.actions";
 import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
@@ -20,7 +21,7 @@ import { IAppState } from "../../store/store";
 import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
 
 @Component({
-    selector: "school-type-select", 
+    selector: "school-type-select",
     template: `
     <div id="SchoolTypeNotice" (onHidden)="onHidden()" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog modal-lg">
@@ -48,9 +49,9 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         <div class="form-group" style= "margin-top: 50px; margin-bottom: 100px;">
             <label for="typeId">Τύπος Σχολείου:</label><br/>
             <select class="form-control" formControlName="typeId" (change)="initializestore()">
-            <option value="0">Επιλέξτε Τύπο Σχολείου:</option>
-            <option value="1">Γενικό Λύκειο (ΓΕΛ)</option>
-            <option value="2">Επαγγελματικό Λύκειο (ΕΠΑΛ)</option>
+              <option value="0">Επιλέξτε Τύπο Σχολείου</option>
+              <option value="1">ΓΕΛ - Γενικό Λύκειο</option>
+              <option value="2">ΕΠΑΛ - Επαγγελματικό Λύκειο</option>
             </select>
         </div>
 
@@ -119,21 +120,27 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
             }, error => { console.log("error selecting schooltype"); });
 
     }
+
     ngOnDestroy() {
         if (this.schooltypeSub)
             this.schooltypeSub.unsubscribe();
         (<any>$("#SchoolTypeNotice")).remove();
     }
+
     public showModal(): void {
         (<any>$("#SchoolTypeNotice")).modal("show");
     }
+
+
     public hideModal(): void {
         (<any>$("#SchoolTypeNotice")).modal("hide");
 
     }
+
     public onHidden(): void {
         this.isModalShown.next(false);
     }
+
     navigateBack() {
         this.router.navigate(["/school-type-select"]);
     }
@@ -148,12 +155,15 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         }
         else {
             if (this.formGroup.value.typeId === "1"){
+                this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"ΓΕΛ");
                 this.router.navigate(["/gel-class-select"]);
             }
             else if (this.formGroup.value.typeId === "2"){
+                this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"ΕΠΑΛ");
                 this.router.navigate(["/epal-class-select"]);
             }
         }
+
     }
 
     initializestore() {

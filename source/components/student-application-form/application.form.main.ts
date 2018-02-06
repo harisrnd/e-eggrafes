@@ -217,8 +217,10 @@ import {
                 let sdfds = <IStudentDataFieldRecords>studentDataFields;
                 if (sdfds.size > 0) {
                     sdfds.reduce(({}, studentDataField) => {
-                        if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
-                          this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                        //if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
+                        this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                        if (typeof this.lastSchName.getValue() === "undefined" )
+                          this.lastSchName.next("");
 
                         this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
                         this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
