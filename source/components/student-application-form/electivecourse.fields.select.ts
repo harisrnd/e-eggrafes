@@ -21,17 +21,16 @@ import { IAppState } from "../../store/store";
              <breadcrumbs></breadcrumbs>
     </div>
     <h4> Επιλογή Μαθήματος Επιλογής </h4>
-     <div class = "loading" *ngIf="(electivecourseFields$ | async).size === 0">
-    </div>
-       <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε το μάθημα επιλογής το οποίο θα παρακολουθήσει ο μαθητής το νέο σχολικό έτος.
+    <div class = "loading" *ngIf=" !(electivecourseFields$ | async) || (electivecourseFields$ | async).size === 0"></div>
+
+    <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε το μάθημα επιλογής το οποίο θα παρακολουθήσει ο μαθητής το νέο σχολικό έτος.
        Μπορείτε να επιλέξετε / απο-επιλέξετε περισσότερες προτιμήσεις, κάνοντας κλικ πάνω στην αντίστοιχη επιλογή.
        Σε περίπτωση περισσοτέρων της μίας επιλογής, βάλτε τις επιλογές σας σε επιθυμητή σειρά προτίμησης στην εμφανιζόμενη λίστα στο κάτω μέρος της οθόνης.
        Έπειτα επιλέξτε <i>Συνέχεια</i>.</p>
         <div class="list-group" *ngFor="let electivecourseField$ of electivecourseFields$ | async; let i=index;">
             <button *ngIf = "electivecourseField$.selected === true" type="button" class="list-group-item list-group-item-action active" (click)="saveSelected(i, 1)" >{{electivecourseField$.name}}</button>
             <button *ngIf = "electivecourseField$.selected === false" type="button" class="list-group-item list-group-item-action" (click)="saveSelected(i, 0)" >{{electivecourseField$.name}}</button>
-    </div>
-
+        </div>
     <div>
       <course-order-select></course-order-select>
     </div>
@@ -43,7 +42,7 @@ import { IAppState } from "../../store/store";
     private electivecourseFields$: BehaviorSubject<IElectiveCourseFieldRecords>;
     private electivecourseFieldsSub: Subscription;
     private gelclassesSub: Subscription;
-    private activeClassId: number;
+    //private activeClassId: number;
 
     constructor(private _cfa: ElectiveCourseFieldsActions,
         private _cfb: GelClassesActions,
@@ -54,40 +53,48 @@ import { IAppState } from "../../store/store";
 
     ngOnInit() {
 
-      this.activeClassId = -1;
+      //this.activeClassId = -1;
+      this.selectClass();
 
-      this._cfb.getClassesList(false);
+    }
+
+    ngOnDestroy() {
+        if (this.electivecourseFieldsSub) this.electivecourseFieldsSub.unsubscribe();
+        if (this.gelclassesSub) this.gelclassesSub.unsubscribe();
+    }
+
+    selectClass() {
+
+      //this._cfb.getClassesList(false);
+
       this.gelclassesSub = this._ngRedux.select("gelclasses")
           .map(gelclasses => <IGelClassRecords>gelclasses)
           .subscribe(ecs => {
               if (ecs.size > 0) {
                    ecs.reduce(({}, gelclass) => {
                       if (gelclass.get("selected")===true ){
-                          this.activeClassId = gelclass.get("id");
+                          //this.activeClassId = gelclass.get("id");
+                          this.getAppropriateCourses(gelclass.get("id"));
                       }
                       return gelclass;
                   }, {});
               }
           }, error => { console.log("error selecting gelclasses"); });
 
-        this._cfa.getElectiveCourseFields(false, this.activeClassId);
-        this.electivecourseFieldsSub = this._ngRedux.select("electivecourseFields")
-            .map(electivecourseFields => <IElectiveCourseFieldRecords>electivecourseFields)
-            .subscribe(sfds => {
-                //sfds.reduce(({}, electivecourseField) => {
-                    //if (electivecourseField.get("selected") === true) {
-                    //    ;
-                    //}
-
-                    //return electivecourseField;
-                //}, {});
-                this.electivecourseFields$.next(sfds);
-            }, error => { console.log("error selecting electivecourseFields"); });
-
     }
 
-    ngOnDestroy() {
-        if (this.electivecourseFieldsSub) this.electivecourseFieldsSub.unsubscribe();
+    getAppropriateCourses(classId) {
+
+      this._cfa.getElectiveCourseFields(false, /*this.activeClassId*/ classId);
+      this.electivecourseFieldsSub = this._ngRedux.select("electivecourseFields")
+          .map(electivecourseFields => <IElectiveCourseFieldRecords>electivecourseFields)
+          .subscribe(sfds => {
+              //sfds.reduce(({}, electivecourseField) => {
+                  //return electivecourseField;
+              //}, {});
+              this.electivecourseFields$.next(sfds);
+          }, error => { console.log("error selecting electivecourseFields"); });
+
     }
 
     private saveSelected(ind: number, sel: number): void {

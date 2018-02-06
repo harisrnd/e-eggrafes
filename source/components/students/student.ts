@@ -20,3 +20,11 @@ export class StudentSectorChosen {
         public sectorfield_id: number,
     ) { }
 }
+
+export class StudentGelCourseChosen {
+    constructor(
+        public student_id: number,
+        public choice_id: number,
+        public order_id: number,
+    ) { }
+}

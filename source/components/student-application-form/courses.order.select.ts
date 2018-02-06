@@ -7,6 +7,8 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
 import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
 import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecoursesfields/electivecoursesfields.initial-state";
 import { IElectiveCourseFieldRecords, IElectiveCourseFieldRecord } from "../../store/electivecoursesfields/electivecoursesfields.types";
+import { GelClassesActions } from "../../actions/gelclasses.actions";
+import { IGelClass, IGelClassRecord, IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 
 import { IAppState } from "../../store/store";
 
@@ -78,6 +80,7 @@ import { IAppState } from "../../store/store";
 
     private electivecourseFields$: BehaviorSubject<IElectiveCourseFieldRecords>;
     private electivecourseFieldsSub: Subscription;
+    private gelclassesSub: Subscription;
     private selectedCourses$: BehaviorSubject<Array<IElectiveCourseFieldRecord>> = new BehaviorSubject(Array());
     private nonselectedCourses$: BehaviorSubject<Array<IElectiveCourseFieldRecord>> = new BehaviorSubject(Array());
     private modalTitle: BehaviorSubject<string>;
@@ -85,8 +88,10 @@ import { IAppState } from "../../store/store";
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
     private electivecourseSelected = <number>0;
+    private activeClassId = -1;
 
     constructor(private _cfa: ElectiveCourseFieldsActions,
+        private _cfb: GelClassesActions,
         private _ngRedux: NgRedux<IAppState>,
         private router: Router) {
           this.electivecourseFields$ = new BehaviorSubject(ELECTIVECOURSE_FIELDS_INITIAL_STATE);
@@ -101,6 +106,20 @@ import { IAppState } from "../../store/store";
     ngOnInit() {
 
       (<any>$("#electivecourseNotice")).appendTo("body");
+
+      this._cfb.getClassesList(false);
+      this.gelclassesSub = this._ngRedux.select("gelclasses")
+          .map(gelclasses => <IGelClassRecords>gelclasses)
+          .subscribe(ecs => {
+              if (ecs.size > 0) {
+                   ecs.reduce(({}, gelclass) => {
+                      if (gelclass.get("selected")===true ){
+                          this.activeClassId = gelclass.get("id");
+                      }
+                      return gelclass;
+                  }, {});
+              }
+          }, error => { console.log("error selecting gelclasses"); });
 
       this.electivecourseFieldsSub = this._ngRedux.select("electivecourseFields")
           .map(electivecourseFields => <IElectiveCourseFieldRecords>electivecourseFields)
@@ -204,14 +223,16 @@ import { IAppState } from "../../store/store";
         else {
             this.updateStore();
             this.router.navigate(["/gelstudent-application-form-main"]);
-            //this.router.navigate(["/langcourse-fields-select"]);
         }
 
     }
 
     navigateBack() {
         this.updateStore();
-        this.router.navigate(["/intro-statement"]);
+        if (this.activeClassId == 3)
+          this.router.navigate(["/orientation-group-select"]);
+        else
+          this.router.navigate(["/gel-class-select"]);
     }
 
 }

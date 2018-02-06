@@ -7,6 +7,8 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { OrientationGroupActions } from "../../actions/orientationgroup.action";
 import { ORIENTATIONGROUP_INITIAL_STATE } from "../../store/orientationgroup/orientationgroup.initial-state";
 import { IOrientationGroupRecords } from "../../store/orientationgroup/orientationgroup.types";
+import { GelClassesActions } from "../../actions/gelclasses.actions";
+import { IGelClass, IGelClassRecord, IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 import { IAppState } from "../../store/store";
 
 @Component({
@@ -30,10 +32,12 @@ import { IAppState } from "../../store/store";
         </div>
       </div>
     </div>
-    
+
     <h4>  Επιλογή Ομάδας Προσανατολισμού  </h4>
-    
-     <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε την ομάδα προσανατολισμού στην οποία θα φοιτήσει ο μαθητής το νέο σχολικό έτος. Έπειτα επιλέξτε <i>Συνέχεια</i>.</p>           
+    <div class = "loading" *ngIf=" !(OrientationGroup$ | async) || (OrientationGroup$ | async).size === 0"></div>
+
+     <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε την ομάδα προσανατολισμού στην οποία θα φοιτήσει ο μαθητής το νέο σχολικό έτος. Έπειτα επιλέξτε <i>Συνέχεια</i>.</p>
+     <!--
          <ul class="list-group main-view">
             <div *ngFor="let orientgroup$ of OrientationGroup$| async; let i=index; let isOdd=odd; let isEven=even">
                 <li class="list-group-item  isclickable" (click)="saveSelected(i)" [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedout]="activechoice === i">
@@ -41,11 +45,18 @@ import { IAppState } from "../../store/store";
                 </li>
             </div>
             </ul>
+      -->
+
+
+      <div class="list-group" *ngFor="let orientgroup$ of OrientationGroup$ | async; let i=index;">
+          <button *ngIf = "orientgroup$.selected === true" type="button" class="list-group-item list-group-item-action active" (click)="saveSelected(i,1)" >{{orientgroup$.name}}</button>
+          <button *ngIf = "orientgroup$.selected === false" type="button" class="list-group-item list-group-item-action" (click)="saveSelected(i,0)" >{{orientgroup$.name}}</button>
+      </div>
 
 
 
         <div class="col-md-6">
-            <button type="button" class="btn-primary btn-lg pull-left" (click)="router.navigate(['/epal-class-select']);" >
+            <button type="button" class="btn-primary btn-lg pull-left" (click)="router.navigate(['/gel-class-select']);" >
           <i class="fa fa-backward"></i>
             </button>
         </div>
@@ -54,23 +65,27 @@ import { IAppState } from "../../store/store";
                 <span style="font-size: 0.9em; font-weight: bold;">Συνέχεια&nbsp;&nbsp;&nbsp;</span><i class="fa fa-forward"></i>
             </button>
         </div>
-        
+
 `
 
 })
 @Injectable() export default class OrientationGroup implements OnInit, OnDestroy {
     private OrientationGroup$: BehaviorSubject<IOrientationGroupRecords>;
     private OrientationGroupSub: Subscription;
+    private gelclassesSub: Subscription;
     private formGroup: FormGroup;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
-    private activechoice = <number>-1;
+    private activeChoice = <number>-1;
+    private activeClassId = <number>-1;
+    private listsize = <number>0;
 
-    
+
 
     constructor(private fb: FormBuilder,
+                private _cfb: GelClassesActions,
                 private _ogs: OrientationGroupActions,
                 private _ngRedux: NgRedux<IAppState>,
                 private router: Router) {
@@ -86,34 +101,19 @@ import { IAppState } from "../../store/store";
     };
 
     ngOnInit() {
-     
-        let classid = 2;
-        let typeid = "ΟΠ";
+
         (<any>$("#OrientationGroupNotice")).appendTo("body");
-        this._ogs.getOrientationGroups(false,classid,typeid);
-        
-        this.OrientationGroupSub = this._ngRedux.select("orientationGroup")
-            .map(orientationGroup => <IOrientationGroupRecords>orientationGroup)
-            .subscribe(ogs => {
-                   
-                        ogs.reduce(({}, orientationgroup) => {
-                          if (orientationgroup.get("selected") === true)
-                          {
-                              this.activechoice = orientationgroup.get("id") -1;
-                          }
-                              return orientationgroup;
+
+        this.selectClass();
 
 
-                        }, {});
-                                   this.OrientationGroup$.next(ogs);
-                console.log("7");
-            }, error => { console.log("error selecting orientation"); });
 
     }
 
     ngOnDestroy() {
         (<any>$("#OrientationGroupNotice")).remove();
         if (this.OrientationGroupSub) this.OrientationGroupSub.unsubscribe();
+        if (this.gelclassesSub) this.gelclassesSub.unsubscribe();
     }
 
     public showModal(): void {
@@ -128,23 +128,82 @@ import { IAppState } from "../../store/store";
         this.isModalShown.next(false);
     }
 
-    navigateNext() {
-        
-        this.router.navigate(["/electivecourse-fields-select"]);
+
+    selectClass() {
+
+      //this._cfb.getClassesList(false);
+
+      this.gelclassesSub = this._ngRedux.select("gelclasses")
+          .map(gelclasses => <IGelClassRecords>gelclasses)
+          .subscribe(ecs => {
+              this.activeClassId = -1;
+              if (ecs.size > 0) {
+                   ecs.reduce(({}, gelclass) => {
+                      if (gelclass.get("selected")===true ){
+                          this.activeClassId = gelclass.get("id");
+                          this.getAppropriateOrientations();
+                      }
+                      return gelclass;
+                  }, {});
+              }
+          }, error => { console.log("error selecting gelclasses"); });
     }
 
+    getAppropriateOrientations()  {
+      this._ogs.getOrientationGroups(false, this.activeClassId, 'ΟΠ');
+      this.OrientationGroupSub = this._ngRedux.select("orientationGroup")
+          .map(orientationGroup => <IOrientationGroupRecords>orientationGroup)
+          .subscribe(ogs => {
+                this.listsize = 0;
+                this.activeChoice = -1;
+                ogs.reduce(({}, orientationgroup) => {
+                  ++this.listsize;
+                  if (orientationgroup.get("selected") === true) {
+                      this.activeChoice = orientationgroup.get("id") -1;
+                  }
+                  return orientationgroup;
+                }, {});
+                this.OrientationGroup$.next(ogs);
+          }, error => { console.log("error selecting orientation"); });
+    }
+
+
+    navigateNext() {
+        if (this.activeChoice == -1) {
+          this.modalTitle.next("Δεν επιλέχθηκε Ομάδα Προσανατολισμού");
+          this.modalText.next("Παρακαλούμε να επιλέξετε πρώτα μία Ομάδα Προσανατολισμού");
+          this.modalHeader.next("modal-header-danger");
+          this.showModal();
+        }
+        else  {
+          if (this.activeClassId == 3)
+            this.router.navigate(["/electivecourse-fields-select"]);
+          else
+            this.router.navigate(["/gelstudent-application-form-main"]);
+        }
+    }
+
+    /*
     private saveSelected(ind: number): void {
-    
-        if (this.activechoice == ind)
+      console.log("Test value:");
+      console.log(this.activechoice);
+      console.log(ind);
+      if (this.activechoice == ind)
             return;
 
-        this._ogs.saveOrientationGroupSelected(this.activechoice, ind);
-        this.activechoice = ind;
-       
+      this._ogs.saveOrientationGroupSelected(this.activechoice, ind);
+      this.activechoice = ind;
 
-        
     }
+    */
 
+
+    private saveSelected(ind: number , sel: number): void {
+        for (let i=0; i<this.listsize; i++)
+            this._ogs.saveOrientationGroupSelected(i,1);
+
+        this._ogs.saveOrientationGroupSelected(ind,sel);
+    }
 
 
 

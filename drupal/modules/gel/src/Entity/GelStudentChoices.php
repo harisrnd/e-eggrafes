@@ -82,6 +82,15 @@ class GelStudentChoices extends ContentEntityBase implements GelStudentChoicesIn
     return $this;
   }
 
+  public function getOrder_no() {
+    return $this->get('order_id')->value;
+  }
+
+  public function setOrder_no($name) {
+    $this->set('order_id', $name);
+    return $this;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -193,7 +202,7 @@ class GelStudentChoices extends ContentEntityBase implements GelStudentChoicesIn
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-       $fields['student_id'] = BaseFieldDefinition::create('entity_reference')
+    $fields['student_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Id μαθητη '))
       ->setDescription(t('Δώσε το id του μαθητη.'))
       ->setSetting('target_type', 'gel_student')
@@ -218,13 +227,13 @@ class GelStudentChoices extends ContentEntityBase implements GelStudentChoicesIn
       ->setDisplayConfigurable('view', true);
 
 
-       $fields['choice_id'] = BaseFieldDefinition::create('entity_reference')
+    $fields['choice_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Id επιλογής '))
       ->setDescription(t('Δώσε το id της επιλογής.'))
       ->setSetting('target_type', 'gel_choices')
       ->setSetting('handler', 'default')
-        ->setRequired(true)
-       ->setDisplayOptions('view', array(
+      ->setRequired(true)
+      ->setDisplayOptions('view', array(
               'label' => 'above',
               'type' => 'author',
               'weight' => 0,
@@ -242,6 +251,25 @@ class GelStudentChoices extends ContentEntityBase implements GelStudentChoicesIn
       ->setDisplayConfigurable('form', true)
       ->setDisplayConfigurable('view', true);
 
+    $fields['order_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Σειρά προτίμησης'))
+      ->setDescription(t('Δώσε τη σειρά προτίμησης.'))
+      ->setSettings(array(
+          'max_length' => 2,
+          'text_processing' => 0,
+      ))
+      ->setRequired(true)
+      ->setDisplayOptions('view', array(
+          'label' => 'above',
+          'type' => 'integer',
+          'weight' => -4,
+      ))
+      ->setDisplayOptions('form', array(
+          'type' => 'integer',
+          'weight' => -4,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))

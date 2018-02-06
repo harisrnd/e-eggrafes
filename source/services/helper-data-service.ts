@@ -72,7 +72,7 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     }
 
-    getEpalUserData() {
+    getApplicantUserData() {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -82,7 +82,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/userdata`, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/oauth/userdata`, options)
             .map(response => response.json());
     };
 
@@ -100,7 +100,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         //        let options = new RequestOptions({ headers: headers, withCredentials: true });
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.post(`${AppSettings.API_ENDPOINT}/epal/user/sendvercode`, { userEmail: email }, options)
+            this.http.post(`${AppSettings.API_ENDPOINT}/oauth/user/sendvercode`, { userEmail: email }, options)
                 .map(response => response.json())
                 .subscribe(data => {
                     resolve(data);
@@ -124,7 +124,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         //        let options = new RequestOptions({ headers: headers, withCredentials: true });
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.post(`${AppSettings.API_ENDPOINT}/epal/user/verifyvercode`, { verificationCode: verificationCode }, options)
+            this.http.post(`${AppSettings.API_ENDPOINT}/oauth/user/verifyvercode`, { verificationCode: verificationCode }, options)
                 .map(response => response.json())
                 .subscribe(data => {
                     resolve(<any>data);
@@ -147,10 +147,8 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
 
-        console.log("Test");
-        console.log(userProfile);
         return new Promise((resolve, reject) => {
-            this.http.post(`${AppSettings.API_ENDPOINT}/epal/user/save`, { userProfile: userProfile }, options)
+            this.http.post(`${AppSettings.API_ENDPOINT}/oauth/user/save`, { userProfile: userProfile }, options)
                 .map(response => response.json())
                 .subscribe(data => {
                     resolve(data);
@@ -320,7 +318,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.get(`${AppSettings.API_ENDPOINT}/epal/curuser`, options)
+            this.http.get(`${AppSettings.API_ENDPOINT}/oauth/curuser`, options)
                 .map(response => response.json())
                 .subscribe(data => {
                     window.onbeforeunload = function(e) {
@@ -1185,9 +1183,6 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     getOrientationGroup(classid, typeid)
     {
-
-        console.log(classid, typeid, "aaaaaaaa");
-
         this.loginInfo$.getValue().forEach(loginInfoToken => {
           this.authToken = loginInfoToken.auth_token;
           this.authRole = loginInfoToken.auth_role;
@@ -1198,7 +1193,6 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            console.log("sto hds");
             this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list/?type_id=`+ typeid + `&class_id=` +classid, options)
                 .map(response => <IOrientationGroupObj[]>response.json())
 
@@ -1223,8 +1217,6 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        console.log("this is the path:");
-        console.log(`${AppSettings.API_ENDPOINT}/choicesperclass/list?type_id=ΕΠΙΛΟΓΗ&class_id=` + activeClassId);
         return new Promise((resolve, reject) => {
             this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list?type_id=ΕΠΙΛΟΓΗ&class_id=` + activeClassId, options)
                 .map(response => <IElectiveCourseField[]>response.json())

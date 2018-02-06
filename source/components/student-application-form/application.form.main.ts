@@ -139,7 +139,7 @@ import {
 
         //new
         //this.showLoader.next(true);
-        this.epalUserDataSub = this.hds.getEpalUserData().subscribe(x => {
+        this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             this.epalUserData$.next(x);
             this.numAppSelf.next(Number(x.numAppSelf));
             this.numAppChildren.next(Number(x.numAppChildren));
@@ -217,8 +217,10 @@ import {
                 let sdfds = <IStudentDataFieldRecords>studentDataFields;
                 if (sdfds.size > 0) {
                     sdfds.reduce(({}, studentDataField) => {
-                        if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
-                          this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                        //if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
+                        this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                        if (typeof this.lastSchName.getValue() === "undefined" )
+                          this.lastSchName.next("");
 
                         this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
                         this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));

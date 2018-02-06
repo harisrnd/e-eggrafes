@@ -18,3 +18,44 @@ oauthost.log_out_go:
     _controller: '\Drupal\oauthost\Controller\OAuthLogout::logoutGo'
   requirements:
     _user_is_logged_in: 'TRUE'
+
+oauthost.user.send_verification_code:
+  path: '/oauth/user/sendvercode'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\oauthost\Controller\CurrentUser::sendVerificationCode'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+oauthost.user.verify_verification_code:
+  path: '/oauth/user/verifyvercode'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\oauthost\Controller\CurrentUser::verifyVerificationCode'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+oauthost.user.save_profile:
+  path: '/oauth/user/save'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\oauthost\Controller\CurrentUser::saveUserProfile'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+oauthost.user.get_data:
+  path: '/oauth/userdata'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\oauthost\Controller\CurrentUser::getApplicantUserData'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+oauthost.current_user:
+  path: '/oauth/curuser'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\oauthost\Controller\CurrentUser::getLoginInfo'
+  requirements:
+    _user_is_logged_in: 'TRUE'
