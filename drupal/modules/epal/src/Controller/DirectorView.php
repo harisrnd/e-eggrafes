@@ -489,6 +489,8 @@ class DirectorView extends ControllerBase
                         'classes' => 1,
                         'limitdown' => $limit,
                          'capc' => $capacity_class_a,
+                         'approved' => $object-> approved_a-> value,
+                         'approved_id' => $object -> id()
 
                     );
                 }
@@ -519,6 +521,8 @@ class DirectorView extends ControllerBase
                         'classes' => 2,
                         'limitdown' => $limit,
                         'capc' => $capacity_class_b,
+                        'approved' => $object-> approved_sector -> value,
+                        'approved_id' => $object -> id()
 
                     );
                 }
@@ -548,6 +552,8 @@ class DirectorView extends ControllerBase
                         'classes' => 3,
                         'limitdown' => $limit,
                         'capc' => $capacity_class_c,
+                        'approved' => $object-> approved_speciality -> value,
+                        'approved_id' => $object -> id()
 
                     );
                 }
@@ -575,6 +581,8 @@ class DirectorView extends ControllerBase
                         'classes' => 4,
                         'limitdown' => $limit,
                         'capc' => $capacity_class_d,
+                        'approved' => $object-> approved_speciality_d -> value,
+                        'approved_id' => $object -> id()
                     );
                 }
             }

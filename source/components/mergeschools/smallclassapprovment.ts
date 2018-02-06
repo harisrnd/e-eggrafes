@@ -1,13 +1,14 @@
-import { Component, Injectable, OnDestroy, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Injectable } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, Subscription } from "rxjs/Rx";
 
 import { HelperDataService } from "../../services/helper-data-service";
 
 @Component({
-    selector: "perfecture-view",
+    selector: "smallclassapprovement",
     template: `
-      <div class="loading" *ngIf="(showLoader | async) === true"></div>
+    <div class="loading" *ngIf="(showLoader | async) === true"></div>
       <div id="informationfeedback" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -35,18 +36,26 @@ import { HelperDataService } from "../../services/helper-data-service";
                     [class.evenout]="isEven" [class.selectedout]="regionActive === SchoolNames$.id" >
                     <div [class.changelistcolor]= "SchoolNames$.status === false" class="col-md-12">{{SchoolNames$.name}}</div>
                     <div class = "row" [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
-                        <div class="col-md-8">Τμήματα</div>
-                        <div class="col-md-2">Επιλεχθέντες</div>
-                        <div class="col-md-2">Χωρητικότητα</div>
+                        <div class="col-md-10">Τμήματα</div>
+                        <div class="col-md-2">Εγγεκριμένο</div>
                     </div>
                     <div class = "row" *ngFor="let CoursesNames$  of CoursesPerPerf$  | async; let j=index; let isOdd2=odd; let isEven2=even"
-                        [class.oddin]="isOdd2" [class.evenin]="isEven2" [class.changecolor]="calccolor(CoursesNames$.size,CoursesNames$.limitdown)"
+                        [class.oddin]="isOdd2" [class.evenin]="isEven2" 
                         [class.selectedappout]="regionActive === j"
                         [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
-                       <div class="col-md-8">{{CoursesNames$.name}}</div>
-                        <div class="col-md-2">{{CoursesNames$.size}}</div>
-                        <div class="col-md-2">{{CoursesNames$.capc}}</div>
-                    </div>
+                        <li  class="list-group-item isclickable" class="col-md-12" *ngIf ="calccolor(CoursesNames$.size,CoursesNames$.limitdown) === true">
+                            <div class="col-md-6">{{CoursesNames$.name}}</div>
+
+                            <div class="col-md-4">
+                              <strong><label>Έγκριση Ολιγομελούς:</label> </strong>
+                              <select class="form-control pull-right" #cb name="{{CoursesNames$.id}}" (change)="confirmApproved(CoursesNames$.classes,CoursesNames$.approved_id, cb, j)" >
+                                  <option value="1" [selected]="CoursesNames$.approved === '1' ">Ναι</option>
+                                  <option value="2" [selected]="CoursesNames$.approved === '0' ">Όχι</option>
+                              </select>
+                            </div>
+                                               
+                        </li>
+                        </div>
                 </li>
             </div>
         </form>
@@ -55,20 +64,17 @@ import { HelperDataService } from "../../services/helper-data-service";
    `
 })
 
-@Injectable() export default class EduadminView implements OnInit, OnDestroy {
+@Injectable() export default class SmallClassApprovement implements OnInit, OnDestroy {
 
     private SchoolsPerPerf$: BehaviorSubject<any>;
     private SchoolPerPerfSub: Subscription;
-    private LimitPerCateg$: BehaviorSubject<any>;
-    private LimitPerCategSub: Subscription;
     private CoursesPerPerf$: BehaviorSubject<any>;
     private CoursesPerPerfSub: Subscription;
-    private StudentsSize$: BehaviorSubject<any>;
-    private StudentsSizeSub: Subscription;
     private showLoader: BehaviorSubject<boolean>;
+    private SavedSApproved$: BehaviorSubject<any>;
+    private SavedSApprovedSub: Subscription;
+
     private regionActive = <number>-1;
-    private School$: BehaviorSubject<any>;
-    private SchoolSub: Subscription;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
@@ -78,10 +84,8 @@ import { HelperDataService } from "../../services/helper-data-service";
         private _hds: HelperDataService,
     ) {
         this.SchoolsPerPerf$ = new BehaviorSubject([{}]);
-        this.LimitPerCateg$ = new BehaviorSubject([{}]);
         this.CoursesPerPerf$ = new BehaviorSubject([{}]);
-        this.StudentsSize$ = new BehaviorSubject({});
-        this.School$ = new BehaviorSubject([{}]);
+        this.SavedSApproved$ = new BehaviorSubject([{}]);
         this.showLoader = new BehaviorSubject(false);
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
@@ -142,6 +146,31 @@ import { HelperDataService } from "../../services/helper-data-service";
                 });
         }
     }
+
+
+
+    confirmApproved(taxi, classid, cb, ind) {
+        let rtype;
+        if (cb.value === 1)
+            rtype = "1";
+        if (cb.value === 2)
+            rtype = "0";
+        let type = cb.value;
+        console.log(type,"type");
+
+        let std = this.CoursesPerPerf$.getValue();
+        std[ind].approved = rtype;
+        this.SavedSApprovedSub = this._hds.saveApprovedClasses(taxi, classid, type).subscribe(data => {
+            this.SavedSApproved$.next(data);
+            this.showLoader.next(false);
+          },
+            error => {
+                this.SavedSApproved$.next([{}]);
+                console.log("Error saving Approved");
+                this.showLoader.next(false);
+               }); 
+    }
+
 
     public showModal(): void {
         (<any>$("#informationfeedback")).modal("show");

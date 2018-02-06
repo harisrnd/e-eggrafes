@@ -37,20 +37,7 @@ import { EpalClassesActions } from "../actions/epalclass.actions";
                 </ul>
             </div>
             <div> <p></p><p></p></div>
-            <div class="bg-warning" style="padding: 2em;">
-            <p>
-            <strong>Ανακοίνωση:</strong> Παρακαλείσθε να μην καταχωρείτε δήλωση προτίμησης επιλέγοντας τα παρακάτω:</p>
-            <ul>
-                <li> 9ο ΕΠΑ.Λ. Πειραιά, Β τάξη, Τομέας Ναυτιλιακών Επαγγελμάτων, Γ τάξη-Ειδικότητες Πλοίαρχος Εμπορικού Ναυτικού, Μηχανικός Εμπορικού Ναυτικού
-                </li>
-                <li> 1ο ΕΠΑ.Λ. Δάφνης, Γ τάξη, Ειδικότητα Βοηθός Νοσηλευτή
-                </li>
-                <li> 1ο Ημερήσιο ΕΠΑ.Λ. Σιβιτανιδείου, Γ τάξη, Ειδικότητα Βοηθός Νοσηλευτή
-                </li>
-             </ul>
-             <p>Τα τμήματα έχουν πληρότητα από την 1η περίοδο κατανομής.
-            </p>
-            </div>
+            
 
             <div *ngFor="let loginInfoToken$ of loginInfo$ | async; let i=index"></div>
             <div class="row" style="min-height: 300px; margin-top: 100px;">
