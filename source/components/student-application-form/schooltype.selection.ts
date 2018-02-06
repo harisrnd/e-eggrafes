@@ -7,6 +7,13 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
 
 import { SchoolTypeActions } from "../../actions/schooltype.actions";
 import { GelClassesActions } from "../../actions/gelclasses.actions";
+import { OrientationGroupActions } from "../../actions/orientationgroup.action";
+import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
+
+import { EpalClassesActions } from "../../actions/epalclass.actions";
+import { RegionSchoolsActions } from "../../actions/regionschools.actions";
+import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
+import { SectorFieldsActions } from "../../actions/sectorfields.actions";
 
 import { SCHOOLTYPE_INITIAL_STATE } from "../../store/schooltype/schooltype.initial-state";
 import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/schooltype/schooltype.types";
@@ -42,9 +49,9 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         <div class="form-group" style= "margin-top: 50px; margin-bottom: 100px;">
             <label for="typeId">Τύπος Σχολείου:</label><br/>
             <select class="form-control" formControlName="typeId" (change)="initializestore()">
-            <option value="0">Επιλέξτε Τύπο Σχολείου</option>
-            <option value="1">ΓΕΛ - Γενικό Λύκειο</option>
-            <option value="2">ΕΠΑΛ - Επαγγελματικό Λύκειο</option>
+              <option value="0">Επιλέξτε Τύπο Σχολείου</option>
+              <option value="1">ΓΕΛ - Γενικό Λύκειο</option>
+              <option value="2">ΕΠΑΛ - Επαγγελματικό Λύκειο</option>
             </select>
         </div>
 
@@ -68,19 +75,22 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
 @Injectable() export default class SchoolTypeSelection implements OnInit, OnDestroy {
     private schooltype$: BehaviorSubject<ISchoolTypeRecords>;
     private schooltypeSub: Subscription;
-
     private formGroup: FormGroup;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
 
-
-
     constructor(private fb: FormBuilder,
         private _ngRedux: NgRedux<IAppState>,
-        private _cfa: SchoolTypeActions,
+        private _sta: SchoolTypeActions,
         private _gca: GelClassesActions,
+        private _ogs: OrientationGroupActions,
+        private _cfe: ElectiveCourseFieldsActions,
+        private _eca: EpalClassesActions,
+        private _sca: SectorCoursesActions,
+        private _sfa: SectorFieldsActions,
+        private _rsa: RegionSchoolsActions,
         private router: Router) {
         this.formGroup = this.fb.group({
             typeId: []
@@ -100,7 +110,6 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
             .subscribe(ecs => {
                 if (ecs.size > 0) {
                       ecs.reduce(({}, type) => {
-
                         this.formGroup.controls["typeId"].setValue(type.get("id"));
                         return type;
                     }, {});
@@ -121,6 +130,7 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
     public showModal(): void {
         (<any>$("#SchoolTypeNotice")).modal("show");
     }
+
 
     public hideModal(): void {
         (<any>$("#SchoolTypeNotice")).modal("hide");
@@ -145,11 +155,11 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         }
         else {
             if (this.formGroup.value.typeId === "1"){
-                this._cfa.saveSchoolTypeSelected(this.formGroup.value.typeId,"ΓΕΛ");
+                this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"ΓΕΛ");
                 this.router.navigate(["/gel-class-select"]);
             }
             else if (this.formGroup.value.typeId === "2"){
-                this._cfa.saveSchoolTypeSelected(this.formGroup.value.typeId,"ΕΠΑΛ");
+                this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"ΕΠΑΛ");
                 this.router.navigate(["/epal-class-select"]);
             }
         }
@@ -157,7 +167,20 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
     }
 
     initializestore() {
+        this._eca.initEpalClasses();
+        this._sfa.initSectorFields();
+        this._rsa.initRegionSchools();
+        this._sca.initSectorCourses();
         this._gca.initGelClasses();
+        this._ogs.initOrientationGroup();
+        this._cfe.initElectiveCourseFields();
+        if (this.formGroup.value.typeId === "1"){
+            this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"Γενικό Λύκειο (ΓΕΛ)");
+        }
+        else if (this.formGroup.value.typeId === "2"){
+            this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"Επαγγελματικό Λύκειο (ΕΠΑΛ)");
+        }
+
     }
 
 }

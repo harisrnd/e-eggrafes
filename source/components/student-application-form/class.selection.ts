@@ -42,9 +42,9 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
     <p style="margin-top: 5px; line-height: 2em;"> Παρακαλώ καθορίστε την κατηγορία ΓΕΛ που θα φοιτήσει ο μαθητής
             κατά το σχολικό έτος 2018-19, επιλέγοντας ΗΜΕΡΗΣΙΟ ή ΕΣΠΕΡΙΝΟ.</p>
         <div style= "margin-top: 50px; margin-bottom: 100px;">
-            <label for="category">Κατηγορία ΓΕ.Λ.</label><br/>
+            <label for="category">Τύπος ΓΕ.Λ.:</label><br/>
             <select class="form-group" #type_sel class="form-control" formControlName="category" (change)="categoryselected(type_sel)">
-                <option value="0">Επιλέξτε Τύπο ΓΕΛ</option>
+                <option value="0">Επιλέξτε Τύπο ΓΕ.Λ.</option>
                 <option value="ΗΜΕΡΗΣΙΟ">ΗΜΕΡΗΣΙΟ</option>
                 <option value="ΕΣΠΕΡΙΝΟ">ΕΣΠΕΡΙΝΟ</option>
             </select>
@@ -91,7 +91,7 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
 
     constructor(private fb: FormBuilder,
         private _ngRedux: NgRedux<IAppState>,
-        private _cfa: GelClassesActions,
+        private _gca: GelClassesActions,
         private _ogs: OrientationGroupActions,
         private _cfe: ElectiveCourseFieldsActions,
 
@@ -113,7 +113,7 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
     ngOnInit() {
         (<any>$("#gelClassNotice")).appendTo("body");
 
-        this._cfa.getClassesList(false);
+        this._gca.getClassesList(false);
         this.gelclassesSub = this._ngRedux.select("gelclasses")
             .map(gelclasses => <IGelClassRecords>gelclasses)
             .subscribe(ecs => {
@@ -165,7 +165,9 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
     public categoryselected(typeId) {
 
         this.categoryChosen = typeId.value;
-        this._cfa.resetGelClassesSelected();
+        this._gca.resetGelClassesSelected();
+        this._ogs.initOrientationGroup();
+        this._cfe.initElectiveCourseFields();
 
         if (this.categoryChosen == "ΗΜΕΡΗΣΙΟ" || this.categoryChosen == "ΕΣΠΕΡΙΝΟ") {
             this.enableclassfilter=true;
@@ -185,7 +187,7 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
             this.showModal();
         }
         else {
-            this._cfa.saveGelClassesSelected(this.classActive-1, this.formGroup.value.classId-1);
+            this._gca.saveGelClassesSelected(this.classActive-1, this.formGroup.value.classId-1);
             //Όταν class_id = 3 (Γ' Λυκείου - Ημερήσιο), τότε πήγαινε πρώτα στη σελίδα επιλογής για επιλογή προσανατολισμού
             //και μετά στην επιλογή για μάθημα επιλογής
             if (this.formGroup.value.classId === "2" || this.formGroup.value.classId === "3" || this.formGroup.value.classId === "6" || this.formGroup.value.classId === "7")
@@ -200,15 +202,19 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
 
     initializestore() {
 
-        this._cfa.saveGelClassesSelected(this.classActive-1, this.formGroup.value.classId-1);
+        this._gca.saveGelClassesSelected(this.classActive-1, this.formGroup.value.classId-1);
 
         this.classActive=this.formGroup.value.classId;
+        this._cfe.initElectiveCourseFields();
+        this._ogs.initOrientationGroup();
 
-        if (this.classActive == 2 || this.classActive == 3 || this.classActive == 6 || this.classActive == 7 )
+        //Πρεπει να γινουν init και τα 2 καθε φορα
+        //π.χ. επιλεγει αρχικα Γ - Εσπερινο και διαλεγεις ΟΠ
+        //επιστρεφεις και αλλαζεις Β - Εσπερινο. Θα πρεπει να κανεις Init το ΟΠ (δεν γινεται πιο κατω)
+/*         if (this.classActive == 2 || this.classActive == 3 || this.classActive == 6 || this.classActive == 7 )
           this._ogs.initOrientationGroup();
         if (this.classActive == 1 || this.classActive == 3 || this.classActive == 4 )
-          this._cfe.initElectiveCourseFields();
-
+          this._cfe.initElectiveCourseFields(); */
     }
 
 }

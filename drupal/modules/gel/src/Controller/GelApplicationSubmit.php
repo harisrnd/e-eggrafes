@@ -189,15 +189,19 @@ class GelApplicationSubmit extends ControllerBase
                         'guardian_mothername' => $applicationForm[0]['cu_mothername']
                     ]),
                     //sizeof($applicationForm[1]),
-                    $applicationForm[0]['currentclass'],
-                    //$applicationForm[3]['sectorfield_id'],
-                    //$applicationForm[3]['coursefield_id'],
+                    //0,
+                    //$applicationForm[0]['nextclass'],
+                    //null,
+                    //null,
+                    //$applicationForm[1]['choice_id'],
+                    //$applicationForm[2][0]['choice_id'],
                     $applicantUser, false)) > 0) {
                 return $this->respondWithStatus([
+                    "msg" => "here I am",
                     "error_code" => $errorCode
                 ], Response::HTTP_OK);
             }
-            */
+          */
 
             /*
             $lastSchoolRegistryNumber = $student['lastschool_registrynumber'];
@@ -249,39 +253,6 @@ class GelApplicationSubmit extends ControllerBase
                   $entity_storage_coursechosen->save($entity_object);
               }
             }
-
-            /*
-            $created_student_id = $entity_object->id();
-
-            for ($i = 0; $i < sizeof($applicationForm[1]); $i++) {
-                $epalchosen = array(
-                    'student_id' => $created_student_id,
-                    'epal_id' => $applicationForm[1][$i]['epal_id'],
-                    'choice_no' => $applicationForm[1][$i]['choice_no']
-                );
-                $entity_storage_epalchosen = $this->entityTypeManager->getStorage('epal_student_epal_chosen');
-                $entity_object = $entity_storage_epalchosen->create($epalchosen);
-                $entity_storage_epalchosen->save($entity_object);
-            }
-
-            if ($applicationForm[0]['currentclass'] === "3" || $applicationForm[0]['currentclass'] === "4") {
-                $course = array(
-                    'student_id' => $created_student_id,
-                    'coursefield_id' => $applicationForm[3]['coursefield_id']
-                );
-                $entity_storage_course = $this->entityTypeManager->getStorage('epal_student_course_field');
-                $entity_object = $entity_storage_course->create($course);
-                $entity_storage_course->save($entity_object);
-            } elseif ($applicationForm[0]['currentclass'] === "2") {
-                $sector = array(
-                    'student_id' => $created_student_id,
-                    'sectorfield_id' => $applicationForm[3]['sectorfield_id']
-                );
-                $entity_storage_sector = $this->entityTypeManager->getStorage('epal_student_sector_field');
-                $entity_object = $entity_storage_sector->create($sector);
-                $entity_storage_sector->save($entity_object);
-            }
-          */
             return $this->respondWithStatus([
                 "error_code" => 0
             ], Response::HTTP_OK);
@@ -290,6 +261,7 @@ class GelApplicationSubmit extends ControllerBase
             $transaction->rollback();
 
             return $this->respondWithStatus([
+                "msg2" => "here I am",
                 "error_code" => 5001
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -623,22 +595,19 @@ class GelApplicationSubmit extends ControllerBase
      */
 
 
-     /*
-    private function validateStudent($student, $numberOfSchools, $chosenClass, $chosenSector, $chosenCourse, $epalUser = null, $appUpdate)
+
+    private function validateStudent($student/*, $numberOfSchools, $chosenClass, $chosenOrientation, $chosenElectiveCourse*/, $applicantUser = null, $appUpdate)
     {
         $error_code = 0;
         if (!$student["hasright"] && $appUpdate == false) {
             return 997;
         }
-        if (($chosenClass === "3" || $chosenClass === "4") && !isset($chosenCourse)) {
-            return 998;
-        }
-        if ($chosenClass === "2" && !isset($chosenSector)) {
-            return 999;
-        }
-        if ($numberOfSchools < 1) {
-            return 1000;
-        }
+        //if (($chosenClass === "2" || $chosenClass === "3" || $chosenClass === "6" || $chosenClass === "7") && !isset($chosenOrientation)) {
+        //    return 998;
+        //}
+        //if ( ($chosenClass === "1" || $chosenClass === "3" || $chosenClass === "4") && !isset($chosenElectiveCourse)) {
+        //    return 999;
+        //}
         if (!$student["agreement"] && $appUpdate == false) {
             return 1001;
         }
@@ -677,12 +646,17 @@ class GelApplicationSubmit extends ControllerBase
         if (preg_match(self::VALID_NAMES_PATTERN, $student["regionarea"]) !== 1) {
             return 1010;
         }
-        if (!$student["currentclass"] || ($student["currentclass"] !== "1" && $student["currentclass"] !== "2" && $student["currentclass"] !== "3" && $student["currentclass"] !== "4")) {
+
+
+        $classIds = array("1", "2", "3", "4", "5", "6", "7");
+        if (!in_array($student["nextclass"], $classIds))  {
+        //if (!$student["nextclass"] || ($student["nextclass"] !== "1" && $student["nextclass"] !== "2" && $student["nextclass"] !== "3" && $student["nextclass"] !== "4")) {
             return 1013;
         }
         if (!$student["relationtostudent"]) {
             return 1014;
         }
+
         if (preg_match(self::VALID_TELEPHONE_PATTERN, $student["telnum"]) !== 1) {
             return 1015;
         }
@@ -711,16 +685,36 @@ class GelApplicationSubmit extends ControllerBase
             return 1023;
         }
 
-        // second period: check if application exists
-        if ($student['second_period'] == 1 && $epalUser !== null && $appUpdate == false) {
+        // check if application exists in gel_student entity
+        if (/*$student['second_period'] == 1 &&*/ $applicantUser !== null && $appUpdate == false) {
 
-            $esQuery = $this->connection->select('epal_student', 'es')
+
+            $retCode = $this->existApp("gel_student", "es.gel_userid", $applicantUser, $student);
+            //if ($retCode === -1)
+            //  return 8004;
+            //else
+            //  return 8005;
+
+            //return $retCode;
+
+            if ($retCode === -1) {
+              $retCode = $this->existApp("epal_student", "es.epaluser_id", $applicantUser);
+            }
+            if ($retCode !== -1)
+              return $retCode;
+
+
+
+
+
+            /*
+            $esQuery = $this->connection->select('gel_student', 'es')
                                     ->fields('es',
                                     array('name',
                                             'studentsurname',
                                             'birthdate',
                                         ));
-            $esQuery->condition('es.epaluser_id', $epalUser->id(), '=');
+            $esQuery->condition('es.gel_userid', $applicantUser->id(), '=');
 
             $existing = $esQuery->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -735,14 +729,44 @@ class GelApplicationSubmit extends ControllerBase
                     }
                 }
             }
+            */
+
         }
+
 
         return $error_code;
     }
-    */
 
 
+    private function existApp($entityName, $userIdField, $applicantUser, $student) {
 
+
+      $esQuery = $this->connection->select($entityName, 'es')
+                              ->fields('es',
+                              array('name',
+                                      'studentsurname',
+                                      'birthdate',
+                                  ));
+      //$esQuery->condition('es.gel_userid', $applicantUser->id(), '=');
+      $esQuery->condition($userIdField, $applicantUser->id(), '=');
+
+      $existing = $esQuery->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+      if ($existing && sizeof($existing) > 0) {
+          $crypt = new Crypt();
+          foreach ($existing as $candidate) {
+              if (($crypt->decrypt($candidate->name) == $student['name'])
+                  && ($crypt->decrypt($candidate->studentsurname) == $student['studentsurname'])
+                  && ($candidate->birthdate == $student['birthdate'])
+                  ) {
+                  return 8004;
+              }
+          }
+      }
+
+      return -1;
+
+    }
 
 
 

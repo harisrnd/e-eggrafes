@@ -113,6 +113,7 @@ import { IAppState } from "../../store/store";
     ngOnDestroy() {
         (<any>$("#OrientationGroupNotice")).remove();
         if (this.OrientationGroupSub) this.OrientationGroupSub.unsubscribe();
+        if (this.gelclassesSub) this.gelclassesSub.unsubscribe();
     }
 
     public showModal(): void {
@@ -127,8 +128,11 @@ import { IAppState } from "../../store/store";
         this.isModalShown.next(false);
     }
 
+
     selectClass() {
-      this._cfb.getClassesList(false);
+
+      //this._cfb.getClassesList(false);
+
       this.gelclassesSub = this._ngRedux.select("gelclasses")
           .map(gelclasses => <IGelClassRecords>gelclasses)
           .subscribe(ecs => {

@@ -113,7 +113,6 @@ export const MainRoutes: Routes = [
     { path: "school-type-select", component: SchoolTypeSelection, canActivate: [StudentAuthGuard, StudentLockGuard]},
     { path: "gel-application-submit", component: GelApplicationSubmit, canActivate: [StudentAuthGuard, StudentLockGuard] },
 
-
 ];
 
 export const MainDeclarations = [

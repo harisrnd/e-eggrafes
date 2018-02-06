@@ -101,48 +101,50 @@ import {
         private _ngRedux: NgRedux<IAppState>,
         private router: Router,
         private http: Http) {
-          this.populateSchoolyears();
-          this.modalTitle = new BehaviorSubject("");
-          this.modalText = new BehaviorSubject("");
-          this.modalHeader = new BehaviorSubject("");
-          this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
-          this.appId = new BehaviorSubject("");
-          this.appUpdate = new BehaviorSubject(false);
-          this.dataEdit = new BehaviorSubject(false);
-          this.lastSchName = new BehaviorSubject("");
-          this.previousClass = new BehaviorSubject("");
-          this.previousSector = new BehaviorSubject("");
-          this.previousCourse = new BehaviorSubject("");
-          this.previousSchools = new BehaviorSubject("");
-          this.reltostud = new BehaviorSubject("");
-          this.numAppSelf = new BehaviorSubject(0);
-          this.numAppChildren = new BehaviorSubject(0);
-          this.numChildren = new BehaviorSubject(0);
-          this.epalUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
-                                                          representRole: "", numAppSelf: 0, numAppChildren: 0, numChildren: 0 });
 
-          this.studentDataFields$ = new BehaviorSubject(GELSTUDENT_DATA_FIELDS_INITIAL_STATE);
-          this.studentDataGroup = this.fb.group({
-              name: ["ΑΛΙΚΗ", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
-              studentsurname: ["ΚΑΤΣΑΟΥΝΟΥ", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
-              studentbirthdate: ["2009-07-29", [Validators.required]],
-              fatherfirstname: ["ΝΙΚΟΣ", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
-              motherfirstname: ["ΚΑΤΕΡΙΝΑ", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
-              regionaddress: ["ΧΑΤΖΗ", [Validators.pattern(VALID_ADDRESS_PATTERN), Validators.required]],
-              regiontk: ["26334", [Validators.pattern(VALID_ADDRESSTK_PATTERN), Validators.required]],
-              regionarea: ["ΠΑΤΡA", [Validators.pattern(VALID_NAMES_PATTERN), Validators.required]],
-              relationtostudent: ["Γονέας/Κηδεμόνας", this.checkChoice],
-              telnum: ["2610331498", [Validators.pattern(VALID_TELEPHONE_PATTERN), Validators.required]],
-              lastschool_schoolname: ["ΛΑΠΠΑ", [Validators.required]],
-              lastschool_schoolyear: ["1997-1998", this.checkChoice],
-              lastschool_class: ["Β’", this.checkChoice],
-          });
+        this.populateSchoolyears();
+        this.modalTitle = new BehaviorSubject("");
+        this.modalText = new BehaviorSubject("");
+        this.modalHeader = new BehaviorSubject("");
+        this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
+        this.appId = new BehaviorSubject("");
+        this.appUpdate = new BehaviorSubject(false);
+        this.dataEdit = new BehaviorSubject(false);
+        this.lastSchName = new BehaviorSubject("");
+        this.previousClass = new BehaviorSubject("");
+        this.previousSector = new BehaviorSubject("");
+        this.previousCourse = new BehaviorSubject("");
+        this.previousSchools = new BehaviorSubject("");
+        this.reltostud = new BehaviorSubject("");
+        this.numAppSelf = new BehaviorSubject(0);
+        this.numAppChildren = new BehaviorSubject(0);
+        this.numChildren = new BehaviorSubject(0);
+        this.epalUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
+                                                        representRole: "", numAppSelf: 0, numAppChildren: 0, numChildren: 0 });
+
+        this.studentDataFields$ = new BehaviorSubject(GELSTUDENT_DATA_FIELDS_INITIAL_STATE);
+        this.studentDataGroup = this.fb.group({
+            name: ["", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
+            studentsurname: ["", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
+            studentbirthdate: ["", [Validators.required]],
+            fatherfirstname: ["", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
+            motherfirstname: ["", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
+            regionaddress: ["", [Validators.pattern(VALID_ADDRESS_PATTERN), Validators.required]],
+            regiontk: ["", [Validators.pattern(VALID_ADDRESSTK_PATTERN), Validators.required]],
+            regionarea: ["", [Validators.pattern(VALID_NAMES_PATTERN), Validators.required]],
+            relationtostudent: ["", this.checkChoice],
+            telnum: ["", [Validators.pattern(VALID_TELEPHONE_PATTERN), Validators.required]],
+            lastschool_schoolname: ["", [Validators.required]],
+            lastschool_schoolyear: ["", this.checkChoice],
+            lastschool_class: ["", this.checkChoice],
+        });
+
     };
 
     ngOnInit() {
         (<any>$("#applicationFormNotice")).appendTo("body");
 
-        this._cfb.getClassesList(false);
+        //this._cfb.getClassesList(false);
         this.gelclassesSub = this._ngRedux.select("gelclasses")
             .map(gelclasses => <IGelClassRecords>gelclasses)
             .subscribe(ecs => {
@@ -211,13 +213,15 @@ import {
               }, error => { console.log("error selecting datamode"); });
         */
 
-        this.studentDataFieldsSub = this._ngRedux.select("studentDataFields")
+        this.studentDataFieldsSub = this._ngRedux.select("gelstudentDataFields")
             .subscribe(studentDataFields => {
                 let sdfds = <IGelStudentDataFieldRecords>studentDataFields;
                 if (sdfds.size > 0) {
                     sdfds.reduce(({}, studentDataField) => {
-                        if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
-                          this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                        //if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
+                        this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                        if (typeof this.lastSchName.getValue() === "undefined" )
+                          this.lastSchName.next("");
 
                         this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
                         this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
@@ -291,7 +295,8 @@ import {
           }
           */
 
-            this.router.navigate(["/gel-application-submit"]);
+          this.router.navigate(["/gel-application-submit"]);
+
         }
     }
 
