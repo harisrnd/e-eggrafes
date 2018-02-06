@@ -568,6 +568,27 @@ class EepalSchool extends ContentEntityBase implements EepalSchoolInterface {
        ->setDisplayConfigurable('form', TRUE)
        ->setDisplayConfigurable('view', TRUE);
 
+
+  $fields['approved_a'] = BaseFieldDefinition::create('boolean')
+          ->setLabel(t('Εγκεκριμένο'))
+          ->setDescription(t('Εγκρίνεται σε περίπτωση ολογοελούς.'))
+          ->setDefaultValue(FALSE)
+          ->setSettings(array(
+            'text_processing' => 0,
+          ))
+      ->setRequired(false)
+          ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'boolean',
+            'weight' => -4,
+          ))
+          ->setDisplayOptions('form', array(
+            'type' => 'boolean',
+            'weight' => -4,
+          ))
+          ->setDisplayConfigurable('form', TRUE)
+          ->setDisplayConfigurable('view', TRUE);
+
   $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the Eepal school is published.'))

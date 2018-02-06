@@ -7,6 +7,7 @@ import Home from "../components/home";
 import EduadminView from "../components/infoviews/eduadmin-view";
 import MergeSchools from "../components/mergeschools/mergeschools";
 import UndoMergeSchools from "../components/mergeschools/undomerge";
+import SmallClassApprovement from "../components/mergeschools/smallclassapprovment";
 import PerfectureView from "../components/infoviews/perfecture-view";
 import Breadcrumbs from "../components/main/breadcrumbs";
 import InformStudents from "../components/minister/minister-informstudents";
@@ -50,7 +51,6 @@ import ReportMergedClasses from "../components/minister/report-merged-classes";
 import ReportApplications from "../components/minister/report-applications";
 import ReportUserApplications from "../components/minister/report-user-applications";
 import ReportGelStudents from "../components/minister/report-gel-students";
-
 import ElectiveCourseFieldsSelect from "../components/student-application-form/electivecourse.fields.select";
 import OrientationGroup from "../components/student-application-form/orientation.group";
 import LangCourseFieldsSelect from "../components/student-application-form/langcourse.fields.select";
@@ -95,12 +95,12 @@ export const MainRoutes: Routes = [
     { path: "school/eduadmin-view", component: EduadminView, canActivate: [EduAdminAuthGuard] },
     { path: "school/mergeschools", component: MergeSchools, canActivate: [DidepdeAuthGuard] },
     { path: "school/undomerge", component: UndoMergeSchools, canActivate: [DidepdeAuthGuard] },
+    { path: "school/smallclassapprovement", component: SmallClassApprovement, canActivate: [RegionEduAuthGuard] },
     { path: "help-desk", component: HelpDesk, canActivate: [StudentAuthGuard] },
     { path: "ministry/report-merged-classes", component: ReportMergedClasses, canActivate: [ReportsAuthGuard] },
     { path: "ministry/report-applications", component: ReportApplications, canActivate: [ReportsAuthGuard] },
     { path: "ministry/report-user-applications", component: ReportUserApplications, canActivate: [ReportsAuthGuard] },
     { path: "ministry/report-gel-students", component: ReportGelStudents, canActivate: [ReportsAuthGuard] },
-
     { path: "orientation-group-select", component: OrientationGroup, canActivate: [StudentAuthGuard, StudentLockGuard]},
     { path: "electivecourse-fields-select", component: ElectiveCourseFieldsSelect, canActivate: [StudentAuthGuard, StudentLockGuard]},
     { path: "langcourse-fields-select", component: LangCourseFieldsSelect, canActivate: [StudentAuthGuard, StudentLockGuard]},
@@ -147,11 +147,11 @@ export const MainDeclarations = [
     LegalInfo,
     MergeSchools,
     UndoMergeSchools,
+    SmallClassApprovement,
     ReportMergedClasses,
     ReportApplications,
     ReportUserApplications,
     ReportGelStudents,
-
     OrientationGroup,
     ElectiveCourseFieldsSelect,
     LangCourseFieldsSelect,

@@ -436,3 +436,11 @@ epal.undomergeall:
     _controller: '\Drupal\epal\Controller\SmallClassDistribution::UndoMergeAll'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.approveclasses:
+  path: '/epal/approveclasses'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\SmallClassDistribution::ApproveClasses'
+  requirements:
+    _user_is_logged_in: 'TRUE'
