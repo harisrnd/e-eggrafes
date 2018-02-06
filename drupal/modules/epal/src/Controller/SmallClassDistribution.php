@@ -1,7 +1,7 @@
 <?php
 
-namespace Drupal\epal\Controller;  
- 
+namespace Drupal\epal\Controller;
+
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,8 +38,8 @@ class SmallClassDistribution extends ControllerBase
         );
     }
 
-    
- 
+
+
 
     public function findStatus($id, $classId, $sector, $specialit)
     {
@@ -55,12 +55,12 @@ class SmallClassDistribution extends ControllerBase
         }
 
         if ($classId == 1){
-        
+
             $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1));
 
             $size = sizeof($studentPerSchool);
                         return $size;
-        
+
         }
         elseif ($classId == 2)
         {
@@ -81,10 +81,10 @@ class SmallClassDistribution extends ControllerBase
                 $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $specialit, 'currentclass' => 4));
                     $size = sizeof($studentPerSchool);
                         return $size;
-                
+
             }
         }
-        
+
     }
 
 
@@ -155,7 +155,7 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
 
             if ($schools) {
                 $list = array();
-                foreach ($schools as $object) 
+                foreach ($schools as $object)
                 {
                       $categ = $object->metathesis_region->value;
                       if ($classId == 1)
@@ -183,7 +183,7 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
                       $courses =  $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(array('epal_id' => $object->id(), 'sector_id' => $sector));
                       if ($courses){
                       foreach ($courses as $key)
-                        {   
+                        {
                             if ($firstid != $object->id())
                             {
                             $status = $this-> findStatus($object->id(),$classId, $sector, $specialit);
@@ -195,9 +195,9 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
                                 'studentcount' => $stat,
                                     );
                             }
-                            
+
                         }
- 
+
                     }
 
 
@@ -207,7 +207,7 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
                       $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $object->id(), 'specialty_id' => $specialit));
                       if ($courses){
                       foreach ($courses as $key)
-                        {   
+                        {
                             if ($firstid != $object->id())
                             {
                             $status = $this-> findStatus($object->id(),$classId, $sector, $specialit);
@@ -219,9 +219,9 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
                                 'studentcount' => $stat,
                                     );
                             }
-                            
+
                         }
- 
+
                     }
                     }
                 }
@@ -261,7 +261,7 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
                 }
             }
             $postData = null;
-            if ($content = $request->getContent()) 
+            if ($content = $request->getContent())
             {
                 $postData = json_decode($content);
 
@@ -279,15 +279,15 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
                 {
                     $recordsformerge = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $secondid, 'specialization_id' => $speciality, 'currentclass' => $classId));
 
-                }    
+                }
 
-               
-                if ($recordsformerge) 
+
+                if ($recordsformerge)
                 {
                     foreach ($recordsformerge as $recordsformerges)
-                    {   
+                    {
                         $secondmerge = $recordsformerges -> getepalid() ;
-                     
+
                         if (($secondmerge == '0') || ($secondmerge == null))
                         {
                             $recordsformerges->set('initial_epal_id', $secondid);
@@ -298,8 +298,8 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
                         $recordsformerges->save();
                     }
 
-              
-                               
+
+
                 } else {
                     return $this->respondWithStatus([
                         'error_code' => '1001',
@@ -357,17 +357,17 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
 
             if ($schools) {
                 $list = array();
-                foreach ($schools as $object) 
+                foreach ($schools as $object)
                 {
                     $schoolid = $object -> id();
                     if ($classId == 1)
                     {
-                        
+
                         $mergedSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('initial_epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1));
 
                              $mergedSchools = reset($mergedSchool);
                                 if ($mergedSchools)
-                                {   
+                                {
                                     $indnew = $mergedSchools -> epal_id -> entity ->id();
                                     if ($schoolid != $indnew )
                                     {
@@ -375,15 +375,15 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                                         'id' => $schoolid,
                                         'idnew' => $indnew,
                                         'name' => $object->name->value,
-                                        'namenew' => $mergedSchools -> epal_id ->entity->get('name')->value,                                   
+                                        'namenew' => $mergedSchools -> epal_id ->entity->get('name')->value,
                                             );
                                     }
                                 }
-                        
+
                     }
                     elseif ($classId == 2)
                     {
-                        
+
                         $mergedSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('initial_epal_id' => $schoolid, 'specialization_id' => $sector, 'currentclass' => 2));
 
                              $mergedSchools = reset($mergedSchool);
@@ -397,16 +397,16 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                                     'idnew' => $idnew,
                                     'name' => $object->name->value,
                                     'namenew' => $mergedSchools -> epal_id ->entity->get('name')->value,
-                                   
+
                                 );
-                                }  
+                                }
 
                                 }
-                        
+
                     }
                     elseif ($classId == 3)
                     {
-                        
+
                         $mergedSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('initial_epal_id' => $schoolid, 'specialization_id' => $specialit, 'currentclass' => 3));
 
                              $mergedSchools = reset($mergedSchool);
@@ -420,15 +420,15 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                                     'idnew' => $idnew,
                                     'name' => $object->name->value,
                                     'namenew' => $mergedSchools -> epal_id ->entity->get('name')->value,
-                                   
+
                                         );
-                                }    
                                 }
-                        
+                                }
+
                     }
                     else
                     {
-                        
+
                         $mergedSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('initial_epal_id' => $schoolid, 'specialization_id' => $specialit, 'currentclass' => 4));
 
                              $mergedSchools = reset($mergedSchool);
@@ -442,17 +442,17 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                                     'idnew' => $indnew,
                                     'name' => $object->name->value,
                                     'namenew' => $mergedSchools -> epal_id ->entity->get('name')->value,
-                                   
+
                                 );
                              }
                                 }
-                        
+
                     }
 
-                
 
-                    
-                }   
+
+
+                }
 
                 return $this->respondWithStatus($list, Response::HTTP_OK);
             } else {
@@ -504,16 +504,16 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
 
             if ($schools) {
                 $list = array();
-                foreach ($schools as $object) 
+                foreach ($schools as $object)
                 {
                       $categ = $object->metathesis_region->value;
                       if ($classId == 1)
                       {
-                            $limit = $this->getLimit(1, $categ);  
+                            $limit = $this->getLimit(1, $categ);
                             $status = $this-> findStatus($object->id(),$classId, $sector, $specialit);
                             $stat = intval($status);
                             $lim = intval($limit);
-                            if ($stat <= $limit && $stat !=0) 
+                            if ($stat <= $limit && $stat !=0)
                             {
                                 $list[] = array(
                                 'id' => $object->id(),
@@ -521,7 +521,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                                 'tmhma' => 'Ά Λυκείου',
                                 'studentcount' => $stat,
                                     );
-                            }                                                  
+                            }
                       }
                       elseif ($classId ==2)
                       {
@@ -533,7 +533,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                                 $status = $this-> findStatus($object->id(),$classId, $sector, $specialit);
                                 $stat = intval($status);
                                 $lim = intval($limit);
-                                if ($stat < $limit && $stat !=0 ) 
+                                if ($stat < $limit && $stat !=0 )
                                 {
                                     $list[] = array(
                                     'id' => $object->id(),
@@ -547,7 +547,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                       }
                      }
                       elseif ($classId == 3 || $classId == 4)
-                       { 
+                       {
                       $limit = $this->getLimit($classId, $categ);
                       $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $object->id(), 'specialty_id' => $specialit));
                       if ($courses){
@@ -556,7 +556,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                             $status = $this-> findStatus($object->id(),$classId, $sector, $specialit);
                             $stat = intval($status);
                             $lim = intval($limit);
-                            if ($stat < $limit && $stat !=0) 
+                            if ($stat < $limit && $stat !=0)
                             {
                                 $list[] = array(
                                 'id' => $object->id(),
@@ -569,8 +569,8 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                         }
                     }
 
-                    
-                }   
+
+                }
 
                 return $this->respondWithStatus($list, Response::HTTP_OK);
             } else {
@@ -610,7 +610,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
             }
 
             $postData = null;
-            if ($content = $request->getContent()) 
+            if ($content = $request->getContent())
             {
                 $postData = json_decode($content);
 
@@ -629,10 +629,10 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                 {
                     $recordsforundomerge = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('initial_epal_id' => $firstid, 'specialization_id' => $speciality, 'currentclass' => $classId));
 
-                }    
+                }
 
-               
-                if ($recordsforundomerge) 
+
+                if ($recordsforundomerge)
                 {
                     $merging_role = reset($recordsforundomerge);
                     $role_forundomerge = $merging_role -> merging_role -> value;
@@ -645,14 +645,14 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                     else
                     {
                     foreach ($recordsforundomerge as $recordsforundomerges)
-                        { 
+                        {
                             $recordsforundomerges->set('initial_epal_id', 0);
                             $recordsforundomerges->set('epal_id', $firstid);
                             $recordsforundomerges->set('merging_role', null);
                             $recordsforundomerges->save();
                         }
-                    }                   
-                             
+                    }
+
                 } else {
                     return $this->respondWithStatus([
                         'error_code' => '1001',
@@ -718,21 +718,21 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                 $recordsforundomerge = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('initial_epal_id' => $old_schoolid ));
                 else
                 $recordsforundomerge = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('initial_epal_id' => $old_schoolid, 'merging_role' => 'eduadmin'));
-                    
-              
-               
-                if ($recordsforundomerge) 
+
+
+
+                if ($recordsforundomerge)
                 {
-                    
+
                     foreach ($recordsforundomerge as $recordsforundomerges)
-                        { 
+                        {
                             $recordsforundomerges->set('initial_epal_id', 0);
                             $recordsforundomerges->set('epal_id', $old_schoolid);
                             $recordsforundomerges->set('merging_role', null);
                             $recordsforundomerges->save();
                         }
-                }                   
-                             
+                }
+
                }
                 return $this->respondWithStatus([
                     'error_code' => '0' ,
@@ -748,7 +748,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                     'error_code' => '1003',
                 ], Response::HTTP_FORBIDDEN);
         }
-       
+
     }
 
 
@@ -783,7 +783,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                     $classesForConfirm = $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(['id' => $valnew]);
                     if ($taxi === 3 || $taxi === 4)
                     $classesForConfirm = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(['id' => $valnew]);
-                    
+
                     $classConfirm = reset($classesForConfirm);
                     if ($classConfirm) {
                         if ($typen === 1) {
@@ -799,7 +799,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                             return $this->respondWithStatus(['message' => t('saved')], Response::HTTP_OK);
                         } elseif ($typen === 2) {
                             if ($taxi === 1)
-                               $classConfirm->set('approved_a', 1);
+                               $classConfirm->set('approved_a', 0);
                             if ($taxi === 2)
                                $classConfirm->set('approved_sector', 1);
                             if ($taxi === 3)
@@ -824,7 +824,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
             return $this->respondWithStatus(['message' => t('EPAL user not found')], Response::HTTP_FORBIDDEN);
         }
     }
-    
+
 
 
 }

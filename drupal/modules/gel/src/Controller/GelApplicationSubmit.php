@@ -92,6 +92,30 @@ class GelApplicationSubmit extends ControllerBase
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        //user role validation
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if (!$user) {
+           return $this->respondWithStatus([
+                   'message' => t("User not found"),
+               ], Response::HTTP_FORBIDDEN);
+        }
+
+ 			  $roles = $user->getRoles();
+ 			  $validRole = false;
+ 			  foreach ($roles as $role)
+ 				 if ($role === "applicant") {
+ 					 $validRole = true;
+ 					 break;
+ 				 }
+ 			  if (!$validRole) {
+ 					 return $this->respondWithStatus([
+ 									 'message' => t("User Invalid Role"),
+ 							 ], Response::HTTP_FORBIDDEN);
+ 			  }
+
+        //epal configuration validation
         $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
         $epalConfig = reset($epalConfigs);
         if (!$epalConfig) {
