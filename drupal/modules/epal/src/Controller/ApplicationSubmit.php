@@ -90,6 +90,30 @@ class ApplicationSubmit extends ControllerBase
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        //user role validation
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if (!$user) {
+           return $this->respondWithStatus([
+                   'message' => t("User not found"),
+               ], Response::HTTP_FORBIDDEN);
+        }
+
+        $roles = $user->getRoles();
+        $validRole = false;
+        foreach ($roles as $role)
+         if ($role === "applicant") {
+           $validRole = true;
+           break;
+         }
+        if (!$validRole) {
+           return $this->respondWithStatus([
+                   'message' => t("User Invalid Role"),
+               ], Response::HTTP_FORBIDDEN);
+        }
+
+        //epal configuration validation
         $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
         $epalConfig = reset($epalConfigs);
         if (!$epalConfig) {
@@ -747,7 +771,22 @@ class ApplicationSubmit extends ControllerBase
             return 1023;
         }
 
+
+        // check if application exists in either gel_student or epal_student entity
+        if (/*$student['second_period'] == 1 &&*/ $epalUser !== null && $appUpdate == false) {
+            $retCode = $this->existApp("epal_student", "epaluser_id", $epalUser, $student);
+            if ($retCode === -1) {
+              $retCode = $this->existApp("gel_student", "gel_userid", $epalUser, $student);
+            }
+            if ($retCode !== -1)
+              return $retCode;
+        }
+
+
+
         // second period: check if application exists
+        //old version
+        /*
         if ($student['second_period'] == 1 && $epalUser !== null && $appUpdate == false) {
 
             $esQuery = $this->connection->select('epal_student', 'es')
@@ -772,6 +811,9 @@ class ApplicationSubmit extends ControllerBase
                 }
             }
         }
+        */
+
+
 
         // check as per specs:
         // - can't check certification prior to 2014, pass through
@@ -833,6 +875,28 @@ class ApplicationSubmit extends ControllerBase
     }
 
 
+    private function existApp($entityName, $userIdField, $applicantUser, $student) {
+      $esQuery = $this->connection->select($entityName, 'es')
+                              ->fields('es',
+                              array('name',
+                                      'studentsurname',
+                                      'birthdate',
+                                  ));
+      $esQuery->condition('es.' . $userIdField, $applicantUser->id(), '=');
+      $existing = $esQuery->execute()->fetchAll(\PDO::FETCH_OBJ);
+      if ($existing && sizeof($existing) > 0) {
+          $crypt = new Crypt();
+          foreach ($existing as $candidate) {
+              if (($crypt->decrypt($candidate->name) == $student['name'])
+                  && ($crypt->decrypt($candidate->studentsurname) == $student['studentsurname'])
+                  && ($candidate->birthdate == $student['birthdate'])
+                  ) {
+                  return 8004;
+              }
+          }
+      }
+      return -1;
+    }
 
 
     //functionality related to occupancy
@@ -850,7 +914,7 @@ class ApplicationSubmit extends ControllerBase
         $numStudentsLimit = $schoolCapacity * $classLimitup;
         $numStudentsFinalized = $this->countStudents($epalId, $classId, $secId);
 
-        if ($numStudents === self::ERROR_DB) {
+        if ($numStudentsFinalized === self::ERROR_DB) {
             return self::ERROR_DB;
         }
         if ($numStudentsFinalized >= $numStudentsLimit ) {
