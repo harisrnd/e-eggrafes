@@ -43,7 +43,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                         [class.oddin]="isOdd2" [class.evenin]="isEven2" [class.changecolor]="calccolor(CoursesNames$.size,CoursesNames$.limitdown)"
                         [class.selectedappout]="regionActive === j"
                         [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
-                       <div class="col-md-8">{{CoursesNames$.name}}</div>
+                        <div class="col-md-8">{{CoursesNames$.name}}</div>
                         <div class="col-md-2">{{CoursesNames$.size}}</div>
                         <div class="col-md-2">{{CoursesNames$.capc}}</div>
                     </div>
