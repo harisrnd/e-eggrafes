@@ -131,8 +131,8 @@ class CBController extends ControllerBase
                 /* $this->logger->notice('$configRowName='.$configRowName.'***url='.$this->redirect_url);
                 $cookie = new Cookie('auth_token', $schoolToken, 0, '/', null, false, false);
                 $cookie2 = new Cookie('auth_role', 'student', 0, '/', null, false, false); */
-                //return new RedirectResponseWithCookieExt($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
-                return new RedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
+                \Drupal::service('page_cache_kill_switch')->trigger();
+                return new RedirectResponseWithCookieExt($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
             } else {
                 \Drupal::service('page_cache_kill_switch')->trigger();
                 return new RedirectResponseWithCookieExt($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
