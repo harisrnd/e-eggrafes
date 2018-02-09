@@ -131,6 +131,7 @@ class CBController extends ControllerBase
                 /* $this->logger->notice('$configRowName='.$configRowName.'***url='.$this->redirect_url);
                 $cookie = new Cookie('auth_token', $schoolToken, 0, '/', null, false, false);
                 $cookie2 = new Cookie('auth_role', 'student', 0, '/', null, false, false); */
+                //return new RedirectResponseWithCookieExt($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
                 return new RedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
             } else {
                 \Drupal::service('page_cache_kill_switch')->trigger();
@@ -153,7 +154,7 @@ class CBController extends ControllerBase
             $taxis_userid = null;
             $trx = $this->connection->startTransaction();
             $oauth = new OAuth($this->consumer_key, $this->consumer_secret, OAUTH_SIG_METHOD_PLAINTEXT, OAUTH_AUTH_TYPE_URI);
-            $oauth->disableSSLChecks();
+            //$oauth->disableSSLChecks();
             //$oauth->enableDebug();
             $oauth->setToken($authToken, $this->requestTokenSecret);
             $accessToken = $oauth->getAccessToken($this->access_token_url, '', $authVerifier);

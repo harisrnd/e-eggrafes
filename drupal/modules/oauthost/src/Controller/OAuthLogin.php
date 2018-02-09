@@ -106,7 +106,7 @@ class OAuthLogin extends ControllerBase
 
         try {
             $oauth = new OAuth($this->consumer_key, $this->consumer_secret, OAUTH_SIG_METHOD_PLAINTEXT, OAUTH_AUTH_TYPE_URI);
-            $oauth->disableSSLChecks();
+            //$oauth->disableSSLChecks();
             //$oauth->enableDebug();
 
             $uniqid = uniqid('sid');
