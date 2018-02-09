@@ -39,14 +39,23 @@ import { HelperDataService } from "../../services/helper-data-service";
                         <div class="col-md-10">Τμήματα</div>
                         <div class="col-md-2">Εγγεκριμένο</div>
                     </div>
+                 </li>
+                     <div class="col-md-8">&nbsp;</div>
+                     <div  [hidden]="SchoolNames$.id !== regionActive" class="col-md-4 pull-right" style="color: black;" > 
+                     <span aria-hidden="true">
+                            <button type="button" class="btn-primary btn-sm pull-right" (click) ="setActiveRegion(SchoolNames$.id)">Κλείσιμο</button>
+                          </span> 
+                     </div>
+          
                     <div class = "row" *ngFor="let CoursesNames$  of CoursesPerPerf$  | async; let j=index; let isOdd2=odd; let isEven2=even"
                         [class.oddin]="isOdd2" [class.evenin]="isEven2" 
                         [class.selectedappout]="regionActive === j"
-                        [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
-                        <li  class="list-group-item isclickable" class="col-md-12" *ngIf ="calccolor(CoursesNames$.size,CoursesNames$.limitdown) === true">
-                            <div class="col-md-6">{{CoursesNames$.name}}</div>
+                        [hidden]="SchoolNames$.id !== regionActive" >
+  
 
-                            <div class="col-md-4">
+                        <div  class="row" style="margin-bottom: 20px;" *ngIf ="calccolor(CoursesNames$.size,CoursesNames$.limitdown) === true">
+                            <div class="col-md-6">{{CoursesNames$.name}}</div>
+                            <div class="col-md-4 pull-right">
                               <strong><label>Έγκριση Ολιγομελούς:</label> </strong>
                               <select class="form-control pull-right" #cb name="{{CoursesNames$.id}}" (change)="confirmApproved(CoursesNames$.classes,CoursesNames$.approved_id, cb, j)" >
                                   <option value="1" [selected]="CoursesNames$.approved === '1' ">Ναι</option>
@@ -54,10 +63,9 @@ import { HelperDataService } from "../../services/helper-data-service";
                               </select>
                             </div>
                                                
-                        </li>
+                         </div>
                         </div>
-                </li>
-            </div>
+                      </div>
         </form>
      </div>
 
@@ -124,11 +132,14 @@ import { HelperDataService } from "../../services/helper-data-service";
 
     setActiveRegion(ind) {
         this.CoursesPerPerf$.next([{}]);
+        console.log(this.regionActive , ind, "test");
         if (ind === this.regionActive) {
             ind = -1;
             this.regionActive = ind;
+            console.log("kleisimo");
         }
         else {
+            console.log("anoigma");
             this.regionActive = ind;
             this.showLoader.next(true);
             this.CoursesPerPerfSub = this._hds.getCoursePerPerfecture(this.regionActive)
@@ -146,8 +157,6 @@ import { HelperDataService } from "../../services/helper-data-service";
                 });
         }
     }
-
-
 
     confirmApproved(taxi, classid, cb, ind) {
         let rtype;
