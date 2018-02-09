@@ -2,7 +2,7 @@ import { List } from "immutable";
 import { TypedRecord } from "typed-immutable-record";
 
 export interface IOrientationGroupObj {
-	id: number;
+		id: number;
     name: string;
     selected: boolean;
 }

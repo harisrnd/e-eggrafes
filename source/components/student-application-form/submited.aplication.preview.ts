@@ -13,6 +13,11 @@ import { RegionSchoolsActions } from "../../actions/regionschools.actions";
 import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
 import { SectorFieldsActions } from "../../actions/sectorfields.actions";
 
+import { GelClassesActions } from "../../actions/gelclasses.actions";
+import { IGelClass, IGelClassRecord, IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
+import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
+import { IElectiveCourseFieldRecords } from "../../store/electivecoursesfields/electivecoursesfields.types";
+
 import { HelperDataService } from "../../services/helper-data-service";
 import { IAppState } from "../../store/store";
 
@@ -256,6 +261,11 @@ import { IAppState } from "../../store/store";
                   </div>
               </div>
 
+
+              <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 9em;" (click)="editGelApplication()" >
+                  <span style="font-size: 0.9em; font-weight: bold;">Τεστ</span>
+              </button>
+
               </div>
 
    `
@@ -281,6 +291,10 @@ import { IAppState } from "../../store/store";
         private _csa: SectorCoursesActions,
         private _sfa: SectorFieldsActions,
         private _rsa: RegionSchoolsActions,
+
+        private _gca: GelClassesActions,
+        private _ecf: ElectiveCourseFieldsActions,
+
         private _hds: HelperDataService,
         private activatedRoute: ActivatedRoute,
         private router: Router,
@@ -305,6 +319,10 @@ import { IAppState } from "../../store/store";
     }
 
     ngOnInit() {
+
+        this._gca.resetGelClassesSelected();
+        //this._ecf.initElectiveCourseFields();
+        this._ecf.getElectiveCourseFields(false, /*classId*/3);
 
         (<any>jQuery("#applicationDeleteConfirm")).appendTo("body");
         (<any>jQuery("#applicationDeleteError")).appendTo("body");
@@ -429,6 +447,17 @@ import { IAppState } from "../../store/store";
 
     public goHome(): void {
         this.router.navigate([""]);
+    }
+
+    editGelApplication()  {
+
+      this._gca.saveGelClassesSelected(-1, 0);
+
+      this._ecf.saveElectiveCourseFieldsSelected(2, 0, 0);
+      this._ecf.saveElectiveCourseFieldsSelected(4, 0, 0);
+
+      this.router.navigate(["/gel-class-select"]);
+
     }
 
 }
