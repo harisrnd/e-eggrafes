@@ -37,41 +37,35 @@ import { HelperDataService } from "../../services/helper-data-service";
                     <div [class.changelistcolor]= "SchoolNames$.status === false" class="col-md-12">{{SchoolNames$.name}}</div>
                     <div class = "row" [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
                         <div class="col-md-10">Τμήματα</div>
-                         <div class="col-md-2">Εγγεκριμένο</div>
+                        <div class="col-md-2">Εγγεκριμένο</div>
                     </div>
                  </li>
-                 <div class = "row" style="margin: 0px 2px 0px 2px;">
-                 <div class="col-md-8">&nbsp;</div>
+                     <div class="col-md-8">&nbsp;</div>
                      <div  [hidden]="SchoolNames$.id !== regionActive" class="col-md-4 pull-right" style="color: black;" > 
                      <span aria-hidden="true">
                             <button type="button" class="btn-primary btn-sm pull-right" (click) ="setActiveRegion(SchoolNames$.id)">Κλείσιμο</button>
                           </span> 
                      </div>
-                  </div>        
-                   
-                    <div  *ngFor="let CoursesNames$  of CoursesPerPerf$  | async; let j=index; let isOdd2=odd; let isEven2=even"
-                        [hidden]="(SchoolNames$.id !== regionActive)"
-                        [hidden]="(calccolor(CoursesNames$.size,CoursesNames$.limitdown) === false)">
-                        
-                         
-                         <li class="list-group-item " [class.oddin]="isOdd2" [class.evenin]="isEven2" 
-                        [class.selectedappout]="regionActive === j" style="margin: 0px 2px 0px 2px;">
-                        
-                        <div *ngIf ="(SchoolNames$.id === regionActive) &&(calccolor(CoursesNames$.size,CoursesNames$.limitdown) === true)" class="row" style="margin: 0px 2px 0px 2px;">
-                            <div class="col-md-9">{{CoursesNames$.name}}</div>
-                            <div class="col-md-3 pull-right">
+          
+                    <div class = "row" *ngFor="let CoursesNames$  of CoursesPerPerf$  | async; let j=index; let isOdd2=odd; let isEven2=even"
+                        [class.oddin]="isOdd2" [class.evenin]="isEven2" 
+                        [class.selectedappout]="regionActive === j"
+                        [hidden]="SchoolNames$.id !== regionActive" >
+  
+
+                        <div  class="row" style="margin-bottom: 20px;" *ngIf ="calccolor(CoursesNames$.size,CoursesNames$.limitdown) === true">
+                            <div class="col-md-6">{{CoursesNames$.name}}</div>
+                            <div class="col-md-4 pull-right">
                               <strong><label>Έγκριση Ολιγομελούς:</label> </strong>
-                              <select class="form-control" #cb name="{{CoursesNames$.id}}" 
-                                  (change)="confirmApproved(CoursesNames$.classes,CoursesNames$.approved_id, cb, j)" >
+                              <select class="form-control pull-right" #cb name="{{CoursesNames$.id}}" (change)="confirmApproved(CoursesNames$.classes,CoursesNames$.approved_id, cb, j)" >
                                   <option value="1" [selected]="CoursesNames$.approved === '1' ">Ναι</option>
                                   <option value="2" [selected]="CoursesNames$.approved === '0' ">Όχι</option>
                               </select>
                             </div>
                                                
                          </div>
-                        </li>
                         </div>
-                  </div>
+                      </div>
         </form>
      </div>
 
