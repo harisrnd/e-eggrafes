@@ -8,15 +8,29 @@ import { DataModeActions } from "../../actions/datamode.actions";
 import { DATAMODE_INITIAL_STATE } from "../../store/datamode/datamode.initial-state";
 import { IDataModeRecords } from "../../store/datamode/datamode.types";
 
+import { EpalClassesActions } from "../../actions/epalclass.actions";
+import { IEpalClassRecords } from "../../store/epalclasses/epalclasses.types";
 import { StudentDataFieldsActions } from "../../actions/studentdatafields.actions";
 import { RegionSchoolsActions } from "../../actions/regionschools.actions";
+import { IRegionRecords } from "../../store/regionschools/regionschools.types";
 import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
+import { ISectorRecords } from "../../store/sectorcourses/sectorcourses.types";
 import { SectorFieldsActions } from "../../actions/sectorfields.actions";
+import { ISectorFieldRecords } from "../../store/sectorfields/sectorfields.types";
 
+
+
+import { SchoolTypeActions } from "../../actions/schooltype.actions";
+import { ISchoolTypeRecords } from "../../store/schooltype/schooltype.types";
 import { GelClassesActions } from "../../actions/gelclasses.actions";
-import { IGelClass, IGelClassRecord, IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
+import { IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
 import { IElectiveCourseFieldRecords } from "../../store/electivecoursesfields/electivecoursesfields.types";
+import { OrientationGroupActions } from "../../actions/orientationgroup.action";
+import { IOrientationGroupRecords } from "../../store/orientationgroup/orientationgroup.types";
+import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
+import { IGelStudentDataFieldRecords } from "../../store/gelstudentdatafields/gelstudentdatafields.types";
+
 
 import { HelperDataService } from "../../services/helper-data-service";
 import { IAppState } from "../../store/store";
@@ -262,7 +276,7 @@ import { IAppState } from "../../store/store";
               </div>
 
 
-              <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 9em;" (click)="editGelApplication()" >
+              <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 9em;" (click)="editEpalApplication()" >
                   <span style="font-size: 0.9em; font-weight: bold;">Τεστ</span>
               </button>
 
@@ -277,23 +291,58 @@ import { IAppState } from "../../store/store";
     private SubmitedUsersSub: Subscription;
     private SubmitedDetails$: BehaviorSubject<any>;
     private SubmitedDetailsSub: Subscription;
+
+    private electivecourseFieldsSub: Subscription;
+    private OrientationGroupSub: Subscription;
+    private sectorFieldsSub: Subscription;
+    private regionsSub: Subscription;
+    private sectorsSub: Subscription;
+
     private showLoader$: BehaviorSubject<boolean>;
     private isModalShown: BehaviorSubject<boolean>;
     private applicationIdActive = <number>-1;
 
     private applicationId = <number>0;
 
+    //demo data
+    private schooltype_id = <number>1;
+    private schooltype_name = <string>"ΓΕΛ";
+    private class_id = <number>2;
+    private electiveCourse_id = <string>"4";
+    private electiveCourse_index = <number>-1;
+    private orientationGroup_id = <string>"16";
+    private orientationGroup_index = <number>-1;
+
+    private class_epal_id = <string>"1";
+    private sector_id = <string>"8";
+    private sector_index = <number>-1;
+    private school_id = <string>"25"; //152
+    private school_index = <number>-1;
+    private region_index = <number>-1;
+    private course_id = <string>"17";
+    private course_index = <number>-1;
+    private sectorcourse_index = <number>-1;
+
+    //private class_name_epal = <string>"Γ' Λυκείου";
+
+    //end demo data
+
     @ViewChild("target") element: ElementRef;
 
     constructor(private _ngRedux: NgRedux<IAppState>,
         private _cfa: DataModeActions,
+
+        private _eca: EpalClassesActions,
         private _sdfa: StudentDataFieldsActions,
         private _csa: SectorCoursesActions,
         private _sfa: SectorFieldsActions,
         private _rsa: RegionSchoolsActions,
 
+        private _sta: SchoolTypeActions,
         private _gca: GelClassesActions,
         private _ecf: ElectiveCourseFieldsActions,
+        private _ogs: OrientationGroupActions,
+        private _gsdf: GelStudentDataFieldsActions,
 
         private _hds: HelperDataService,
         private activatedRoute: ActivatedRoute,
@@ -314,15 +363,25 @@ import { IAppState } from "../../store/store";
             this.SubmitedUsersSub.unsubscribe();
         if (this.SubmitedDetailsSub)
             this.SubmitedDetailsSub.unsubscribe();
+        if (this.electivecourseFieldsSub)
+            this.electivecourseFieldsSub.unsubscribe();
+        if (this.OrientationGroupSub)
+            this.OrientationGroupSub.unsubscribe();
+        if (this.sectorFieldsSub)
+            this.sectorFieldsSub.unsubscribe();
+        if (this.regionsSub)
+            this.regionsSub.unsubscribe();
+        if (this.sectorsSub)
+            this.sectorsSub.unsubscribe();
         // if (this.datamodeSub)
         // this.datamodeSub.unsubscribe();
     }
 
     ngOnInit() {
 
-        this._gca.resetGelClassesSelected();
-        //this._ecf.initElectiveCourseFields();
-        this._ecf.getElectiveCourseFields(false, /*classId*/3);
+        this.createStoreWithEpalAppData();
+
+
 
         (<any>jQuery("#applicationDeleteConfirm")).appendTo("body");
         (<any>jQuery("#applicationDeleteError")).appendTo("body");
@@ -451,13 +510,194 @@ import { IAppState } from "../../store/store";
 
     editGelApplication()  {
 
-      this._gca.saveGelClassesSelected(-1, 0);
+      this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
 
-      this._ecf.saveElectiveCourseFieldsSelected(2, 0, 0);
-      this._ecf.saveElectiveCourseFieldsSelected(4, 0, 0);
+      this._gca.saveGelClassesSelected(-1, this.class_id-1);
+
+      if (this.electiveCourse_index != -1)
+        this._ecf.saveElectiveCourseFieldsSelected(this.electiveCourse_index, 0, 0);
+        //this._ecf.saveElectiveCourseFieldsSelected(4, 0, 0);
+
+      if (this.orientationGroup_index != -1)
+        this._ogs.saveOrientationGroupSelected(this.orientationGroup_index, 0);
 
       this.router.navigate(["/gel-class-select"]);
 
     }
+
+    editEpalApplication() {
+
+      this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
+
+      this._eca.saveEpalClassesSelected({name: this.class_epal_id});
+
+      if (this.sector_index != -1)
+        this._sfa.saveSectorFieldsSelected(-1, this.sector_index);
+
+      if (this.school_index != -1 && this.region_index != -1)
+        this._rsa.saveRegionSchoolsSelected(true, this.region_index, this.school_index);
+
+      if (this.course_index != -1 && this.sectorcourse_index != -1)
+        this._csa.saveSectorCoursesSelected(-1, -1, true, this.sectorcourse_index, this.course_index);
+
+      this.router.navigate(["/epal-class-select"]);
+
+    }
+
+    createStoreWithEpalAppData()  {
+
+        this._eca.initEpalClasses();
+
+        if (this.class_epal_id === "2" ) {
+          console.log("Mpika");
+          this._sfa.getSectorFields(false);
+        }
+
+        if (this.class_epal_id === "3" || this.class_epal_id === "4" ) {
+          console.log("Mpika edo");
+          this._csa.getSectorCourses(false);
+        }
+
+        if (this.class_epal_id === "1" )
+          this._rsa.getRegionSchools(parseInt(this.class_epal_id), "-1", false);
+        else if (this.class_epal_id === "2" )
+          this._rsa.getRegionSchools(parseInt(this.class_epal_id), parseInt(this.sector_id), false);
+        else if (this.class_epal_id === "3" || this.class_epal_id === "4" )
+          this._rsa.getRegionSchools(parseInt(this.class_epal_id), parseInt(this.course_id), false);
+
+
+
+        this.sectorFieldsSub = this._ngRedux.select("sectorFields")
+              .map(sectorFields => <ISectorFieldRecords>sectorFields)
+              .subscribe(sfds => {
+                  let seccnt = 0;
+                  sfds.reduce(({}, sectorField) => {
+                      ++seccnt;
+                      if (sectorField.get("id") === this.sector_id ) {
+                        this.sector_index = seccnt -1;
+                        console.log("sector index:");
+                        console.log(seccnt);
+                      }
+
+                      return sectorField;
+                  }, {});
+              }, error => { console.log("error selecting sectorFields"); });
+
+
+          this.regionsSub = this._ngRedux.select("regions")
+                  .subscribe(regions => {
+                      let rgns = <IRegionRecords>regions;
+                      let numsel = 0;
+                      let numreg = 0;
+                      rgns.reduce((prevRegion, region) => {
+                          numreg++;
+                          numsel = 0;
+                          region.get("epals").reduce((prevEpal, epal) => {
+                              ++numsel;
+                              if (epal.get("epal_id") === this.school_id ) {
+                                this.school_index = numsel -1;
+                                this.region_index = numreg - 1;
+                                console.log("school index:");
+                                console.log(numsel);
+                                console.log("region index:");
+                                console.log(numreg);
+                              }
+                              return epal;
+                          }, {});
+                          return region;
+                      }, {});
+                }, error => { console.log("error selecting regions"); });
+
+
+              //let ids = 0, idc = 0;
+              this.sectorsSub = this._ngRedux.select("sectors")
+                    //.map(sectors => <ISectorRecords>sectors)
+                    .subscribe(sectors => {
+                        let secs = <ISectorRecords>sectors;
+                        let numcour = 0;
+                        let numsec = 0;
+                        secs.reduce((prevSector, sector) => {
+                            ++numsec;
+                            numcour = 0;
+                            sector.get("courses").reduce((prevCourse, course) => {
+                                ++numcour;
+                                if (course.get("course_id") === this.course_id ) {
+                                  this.course_index = numcour -1;
+                                  this.sectorcourse_index = numsec - 1;
+                                  console.log("course index:");
+                                  console.log(numcour);
+                                  console.log("sector index:");
+                                  console.log(numsec);
+                                }
+                                return course;
+                            }, {});
+                            return sector;
+                        }, {});
+                    }, error => { console.log("error selecting sectors"); });
+
+    }
+
+    createStoreWithGelAppData()  {
+
+      this._gca.resetGelClassesSelected();
+
+      if (this.class_id === 1 || this.class_id === 3 || this.class_id === 4)
+        this._ecf.getElectiveCourseFields(false, this.class_id);
+
+      if (this.class_id === 2 || this.class_id === 3 || this.class_id === 6 || this.class_id === 7)
+        this._ogs.getOrientationGroups(false, this.class_id, 'ΟΠ');
+
+      this._gsdf.saveGelStudentDataFields([{name: "ΑΛΙΚΗ", studentsurname: "ΚΑΤΣΑΟΥΝΟΥ",
+          fatherfirstname: "ΑΝΑΣΤΑΣΙΟΣ", motherfirstname: "ΦΡΕΙΔΕΡΙΚΗ",
+          regionaddress: "ΧΑΤΖΗ Β. 16", regiontk: "26334", regionarea: "ΠΑΤΡΑ",
+          lastschool_schoolname: {registry_no: "0656010", name: "ΛΑΠΠΑ", unit_type_id: 4},
+          lastschool_schoolyear: "1998-1999", lastschool_class: "2",
+          relationtostudent: "Γονέας/Κηδεμόνας", telnum: "2610331498",
+          studentbirthdate: {date: {year: 1995, month: 2, day: 25}}
+        }]);
+
+
+
+      this.electivecourseFieldsSub = this._ngRedux.select("electivecourseFields")
+          .map(electivecourseFields => <IElectiveCourseFieldRecords>electivecourseFields)
+          .subscribe(sfds => {
+              let electcnt = 0;
+              sfds.reduce(({}, electivecourseField) => {
+                  ++electcnt;
+                  //console.log("size of electivecourses list:");
+                  //console.log(cnt);
+                  console.log(electivecourseField.get("id"));
+                  if (electivecourseField.get("id")=== this.electiveCourse_id ) {
+                    this.electiveCourse_index = electcnt -1;
+                    console.log("elective index:");
+                    console.log(electcnt);
+                  }
+                  return electivecourseField;
+              }, {});
+              //this.electivecourseFields$.next(sfds);
+          }, error => { console.log("error selecting electivecourseFields"); });
+
+
+          this.OrientationGroupSub = this._ngRedux.select("orientationGroup")
+              .map(orientationGroup => <IOrientationGroupRecords>orientationGroup)
+              .subscribe(ogs => {
+                    let orientcnt = 0;
+                    ogs.reduce(({}, orientationgroup) => {
+                      ++orientcnt;
+                      console.log(orientationgroup.get("id"));
+                      if (orientationgroup.get("id") === this.orientationGroup_id) {
+                          this.orientationGroup_index = orientcnt-1;
+                          console.log("orientation index:");
+                          console.log(orientcnt);
+                      }
+                      return orientationgroup;
+                    }, {});
+                    //this.OrientationGroup$.next(ogs);
+              }, error => { console.log("error selecting orientation"); });
+
+    }
+
+
+
 
 }

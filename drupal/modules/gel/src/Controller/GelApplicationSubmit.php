@@ -286,8 +286,8 @@ class GelApplicationSubmit extends ControllerBase
 
 
 
-    /*
-    public function appUpdate(Request $request, $studentId, $schNonCheckOccup)
+
+    public function appUpdate(Request $request, $studentId)
     {
       if (!$request->isMethod('POST')) {
           return $this->respondWithStatus([
@@ -305,6 +305,30 @@ class GelApplicationSubmit extends ControllerBase
           ], Response::HTTP_BAD_REQUEST);
       }
 
+      //user role validation
+      $authToken = $request->headers->get('PHP_AUTH_USER');
+      $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+      $user = reset($users);
+      if (!$user) {
+         return $this->respondWithStatus([
+                 'message' => t("User not found"),
+             ], Response::HTTP_FORBIDDEN);
+      }
+
+      $roles = $user->getRoles();
+      $validRole = false;
+      foreach ($roles as $role)
+       if ($role === "applicant") {
+         $validRole = true;
+         break;
+       }
+      if (!$validRole) {
+         return $this->respondWithStatus([
+                 'message' => t("User Invalid Role"),
+             ], Response::HTTP_FORBIDDEN);
+      }
+
+      //epal configuration validation
       $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
       $epalConfig = reset($epalConfigs);
       if (!$epalConfig) {
@@ -318,55 +342,6 @@ class GelApplicationSubmit extends ControllerBase
           ], Response::HTTP_FORBIDDEN);
       }
 
-      //έλεγχος πληρότητας τμήματος
-      if ( $epalConfig->activate_second_period->value === "1")
-      {
-        $classIdChecked = $applicationForm[0]['currentclass'];
-        $secIdChecked = "-1";
-
-        if ($classIdChecked === "2")
-          $secIdChecked = $applicationForm[3]['sectorfield_id'];
-        else if ($classIdChecked === "3" || $classIdChecked === "4")
-          $secIdChecked =  $applicationForm[3]['coursefield_id'];
-
-        for ($i = 0; $i < sizeof($applicationForm[1]); $i++) {
-            $epalIdChecked = $applicationForm[1][$i]['epal_id'];
-            //αν δεν βρει το σχολείο στη λίστα που είναι προς μη έλεγχο πληρότητας)
-            if  (strpos($schNonCheckOccup, "$" . $epalIdChecked . "$") === false)
-            {
-              $retval = $this->isFull($epalIdChecked, $classIdChecked, $secIdChecked);
-              if ($retval !== self::NON_FULL_CLASS) {
-                  if ($retval === self::FULL_CLASS) {
-                    $err_code = 9001;
-                    $schoolName = $this->retrieveSchoolName($epalIdChecked);
-
-                    if ($schoolName !== self::ERROR_DB)
-                        return $this->respondWithStatus([
-                              "error_code" => $err_code,
-                              "school_name" => $schoolName
-                          ], Response::HTTP_OK);
-                    else {
-                      $err_code = 9002;
-                      return $this->respondWithStatus([
-                            "error_code" => $err_code,
-                        ], Response::HTTP_FORBIDDEN);
-                    }
-                  }
-
-                  else {  //if ($retval === self::ERROR_DB)  {
-                    $err_code = 9002;
-                    return $this->respondWithStatus([
-                          "error_code" => $err_code,
-                      ], Response::HTTP_FORBIDDEN);
-                  }
-
-                }
-            }
-        } //end for
-      }
-      //τέλος ελέγχου πληρότητας
-
-
       $crypt = new Crypt();
       try {
           $name_encoded = $crypt->encrypt($applicationForm[0]['name']);
@@ -376,7 +351,6 @@ class GelApplicationSubmit extends ControllerBase
           $regionaddress_encoded = $crypt->encrypt($applicationForm[0]['regionaddress']);
           $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
           $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
-          //$relationtostudent_encoded = $crypt->encrypt($applicationForm[0]['relationtostudent']);
           $relationtostudent = $applicationForm[0]['relationtostudent'];
           $telnum_encoded = $crypt->encrypt($applicationForm[0]['telnum']);
           $guardian_name_encoded = $crypt->encrypt($applicationForm[0]['cu_name']);
@@ -393,21 +367,22 @@ class GelApplicationSubmit extends ControllerBase
 
       $transaction = $this->connection->startTransaction();
       try {
-          //insert records in entity: epal_student
+          //insert records in entity: gel_student
           $authToken = $request->headers->get('PHP_AUTH_USER');
-          $epalUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
-          $epalUser = reset($epalUsers);
-          if (!$epalUser) {
+          $applicantUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
+          $applicantUser = reset($applicantUsers);
+          if (!$applicantUser) {
               return $this->respondWithStatus([
                   "error_code" => 4003
               ], Response::HTTP_FORBIDDEN);
           }
 
-          //$second_period = $epalConfig->activate_second_period->value;
+          $second_period = $epalConfig->activate_second_period->value;
+
           $student = array(
               'langcode' => 'el',
-              'user_id' => $epalUser->user_id->target_id,
-              'epaluser_id' => $epalUser->id(),
+              'user_id' => $applicantUser->user_id->target_id,
+              'gel_userid' => $applicantUser->id(),
               'name' => $name_encoded,
               'studentsurname' => $studentsurname_encoded,
               'birthdate' => $applicationForm[0]['studentbirthdate'],
@@ -421,15 +396,16 @@ class GelApplicationSubmit extends ControllerBase
               'lastschool_schoolname' => $applicationForm[0]['lastschool_schoolname'],
               'lastschool_schoolyear' => $applicationForm[0]['lastschool_schoolyear'],
               'lastschool_class' => $applicationForm[0]['lastschool_class'],
-              'currentclass' => $applicationForm[0]['currentclass'],
+              'nextclass' => $applicationForm[0]['nextclass'],
               'guardian_name' => $guardian_name_encoded,
               'guardian_surname' => $guardian_surname_encoded,
               'guardian_fathername' => $guardian_fathername_encoded,
               'guardian_mothername' => $guardian_mothername_encoded,
               'agreement' => $applicationForm[0]['disclaimer_checked'],
+              'hasright' => $applicationForm[0]['hasright'],
               'relationtostudent' => $relationtostudent,
               'telnum' => $telnum_encoded,
-              'second_period' => $epalConfig->activate_second_period->value,
+              'second_period' => $second_period,
           );
 
           if (($errorCode = $this->validateStudent(array_merge(
@@ -447,134 +423,96 @@ class GelApplicationSubmit extends ControllerBase
                       'guardian_surname' => $applicationForm[0]['cu_surname'],
                       'guardian_fathername' => $applicationForm[0]['cu_fathername'],
                       'guardian_mothername' => $applicationForm[0]['cu_mothername']
-                  ]), sizeof($applicationForm[1]), $applicationForm[0]['currentclass'],
-                  $applicationForm[3]['sectorfield_id'],
-                  $applicationForm[3]['coursefield_id'],
-                  $epalUser, true)) > 0) {
+                  ]),
+                  $applicationForm[0]['nextclass'],
+                  $applicationForm[1]['choice_id'],
+                  $applicationForm[2][0]['choice_id'],
+                  $applicantUser, false)) > 0) {
               return $this->respondWithStatus([
                   "error_code" => $errorCode
               ], Response::HTTP_OK);
           }
 
-          $lastSchoolRegistryNumber = $student['lastschool_registrynumber'];
-          $lastSchoolYear = (int)(substr($student['lastschool_schoolyear'], -4));
-          if ((int)date("Y") === $lastSchoolYear && (int)$student['lastschool_unittypeid'] === 5) {
-              $epalSchools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('registry_no' => $lastSchoolRegistryNumber));
-              $epalSchool = reset($epalSchools);
 
-              if ($epalSchool) {
-                  $student['currentepal'] = $epalSchool->id();
-              } else {
-                  $student['currentepal'] = 0;
-              }
-          } else {
-              $student['currentepal'] = 0;
+          //NEW
+          //ενημέρωση (update) του gel_student
+          $entity_storage_student = $this->entityTypeManager->getStorage('gel_student');
+          $gelStudents = $entity_storage_student->loadByProperties(array('id' => $studentId));
+          $gelStudent = reset($gelStudents);
+          if (!$gelStudent) {
+             return $this->respondWithStatus([
+                     'message' => t("GelStudent Enity not found"),
+                 ], Response::HTTP_FORBIDDEN);
+          }
+          else  {
+            $gelStudent->set('name', $name_encoded);
+            $gelStudent->set('studentsurname', $studentsurname_encoded);
+            $gelStudent->set('birthdate', $applicationForm[0]['studentbirthdate']);
+            $gelStudent->set('fatherfirstname', $fatherfirstname_encoded);
+            $gelStudent->set('motherfirstname', $motherfirstname_encoded);
+            $gelStudent->set('regionaddress', $regionaddress_encoded);
+            $gelStudent->set('regionarea', $regionarea_encoded);
+            $gelStudent->set('regiontk', $regiontk_encoded);
+            $gelStudent->set('lastschool_registrynumber', $applicationForm[0]['lastschool_registrynumber']);
+            $gelStudent->set('lastschool_unittypeid', $applicationForm[0]['lastschool_unittypeid']);
+            $gelStudent->set('lastschool_schoolname', $applicationForm[0]['lastschool_schoolname']);
+            $gelStudent->set('lastschool_schoolyear', $applicationForm[0]['lastschool_schoolyear']);
+            $gelStudent->set('lastschool_class', $applicationForm[0]['lastschool_class']);
+            $gelStudent->set('lastschool_schoolyear', $applicationForm[0]['lastschool_schoolyear']);
+            $gelStudent->set('nextclass', $applicationForm[0]['nextclass']);
+            $gelStudent->set('guardian_name', $guardian_name_encoded);
+            $gelStudent->set('guardian_surname', $guardian_surname_encoded);
+            $gelStudent->set('guardian_fathername', $guardian_fathername_encoded);
+            $gelStudent->set('guardian_mothername', $guardian_mothername_encoded);
+            $gelStudent->set('relationtostudent', $relationtostudent);
+            $gelStudent->set('telnum', $telnum_encoded);
+
+            $gelStudent->save();
+          }
+          $entity_storage_student->resetCache();
+
+          //διαγραφή αντίστοιχων εγγραφών από gel_student_choices
+          $entity_storage_gel_student_choices = $this->entityTypeManager->getStorage('gel_student_choices');
+          $ids  = $entity_storage_gel_student_choices->getQuery()
+            ->condition('student_id', $studentId, '=')
+            ->execute();
+          $choices = $entity_storage_gel_student_choices->loadMultiple($ids);
+          $entity_storage_gel_student_choices->delete($choices);
+          $entity_storage_gel_student_choices->resetCache();
+
+          //εισαγωγή νέων εγγραφών στo gel_student_choices (ομάδα προσανατολισμού)
+          $classIds = array("2", "3", "6", "7");
+          if (in_array($applicationForm[0]['nextclass'], $classIds))  {
+              $orientationchosen = array(
+                  'student_id' => $studentId,
+                  'choice_id' => $applicationForm[1]['choice_id']
+                );
+              $entity_storage_studentorientation = $this->entityTypeManager->getStorage('gel_student_choices');
+              $entity_object = $entity_storage_studentorientation->create($orientationchosen);
+              $entity_storage_studentorientation->save($entity_object);
           }
 
+          //εισαγωγή νέων εγγραφών στo gel_student_choices (μαθήματα επιλογής)
+          $classIds = array("1", "3", "4");
+          if (in_array($applicationForm[0]['nextclass'], $classIds))  {
+              for ($i = 0; $i < sizeof($applicationForm[2]); $i++) {
+                  $coursechosen = array(
+                      'student_id' => $studentId,
+                      'choice_id' => $applicationForm[2][$i]['choice_id'],
+                      'order_id' => $applicationForm[2][$i]['order_id']
+                  );
+                  $entity_storage_studentchoices = $this->entityTypeManager->getStorage('gel_student_choices');
+                  $entity_object = $entity_storage_studentchoices->create($coursechosen);
+                  $entity_storage_studentchoices->save($entity_object);
+              }
+          }
 
-           //NEW!!!
-           //ενημέρωση (update) του epal_student
-           $entity_storage_student = $this->entityTypeManager->getStorage('epal_student');
-           $epalStudents = $entity_storage_student->loadByProperties(array('id' => $studentId));
-           $epalStudent = reset($epalStudents);
-           if (!$epalStudent) {
-       				return $this->respondWithStatus([
-       								'message' => t("EpalStudent Enity not found"),
-       						], Response::HTTP_FORBIDDEN);
-       		 }
-           else  {
-             $epalStudent->set('name', $name_encoded);
-             $epalStudent->set('studentsurname', $studentsurname_encoded);
-             $epalStudent->set('birthdate', $applicationForm[0]['studentbirthdate']);
-             $epalStudent->set('fatherfirstname', $fatherfirstname_encoded);
-             $epalStudent->set('motherfirstname', $motherfirstname_encoded);
-             $epalStudent->set('regionaddress', $regionaddress_encoded);
-             $epalStudent->set('regionarea', $regionarea_encoded);
-             $epalStudent->set('regiontk', $regiontk_encoded);
-             $epalStudent->set('lastschool_registrynumber', $applicationForm[0]['lastschool_registrynumber']);
-             $epalStudent->set('lastschool_unittypeid', $applicationForm[0]['lastschool_unittypeid']);
-             $epalStudent->set('lastschool_schoolname', $applicationForm[0]['lastschool_schoolname']);
-             $epalStudent->set('lastschool_schoolyear', $applicationForm[0]['lastschool_schoolyear']);
-             $epalStudent->set('lastschool_class', $applicationForm[0]['lastschool_class']);
-             $epalStudent->set('lastschool_schoolyear', $applicationForm[0]['lastschool_schoolyear']);
-             $epalStudent->set('currentclass', $applicationForm[0]['currentclass']);
-             $epalStudent->set('guardian_name', $guardian_name_encoded);
-             $epalStudent->set('guardian_surname', $guardian_surname_encoded);
-             $epalStudent->set('guardian_fathername', $guardian_fathername_encoded);
-             $epalStudent->set('guardian_mothername', $guardian_mothername_encoded);
-             //$epalStudent->set('relationtostudent', $relationtostudent_encoded);
-             $epalStudent->set('relationtostudent', $relationtostudent);
-             $epalStudent->set('telnum', $telnum_encoded);
-
-             $epalStudent->save();
-           }
-           $entity_storage_student->resetCache();
-
-           //διαγραφή αντίστοιχων εγγραφών από epal_student_epal_chosen
-           $entity_storage_epal_chosen = $this->entityTypeManager->getStorage('epal_student_epal_chosen');
-           $idsEpals  = $entity_storage_epal_chosen->getQuery()
-             ->condition('student_id', $studentId, '=')
-             ->execute();
-           $epals = $entity_storage_epal_chosen->loadMultiple($idsEpals);
-           $entity_storage_epal_chosen->delete($epals);
-           $entity_storage_epal_chosen->resetCache();
-
-           //διαγραφή αντίστοιχων (πιθανών) εγγραφών από epal_student_sector_field
-           $entity_storage_sector_field = $this->entityTypeManager->getStorage('epal_student_sector_field');
-           $idsSectors  = $entity_storage_sector_field->getQuery()
-             ->condition('student_id', $studentId, '=')
-             ->execute();
-           $sectors = $entity_storage_sector_field->loadMultiple($idsSectors);
-           $entity_storage_sector_field->delete($sectors);
-           $entity_storage_sector_field->resetCache();
-
-           //διαγραφή αντίστοιχων (πιθανών) εγγραφών από epal_student_course_field
-           $entity_storage_course_field = $this->entityTypeManager->getStorage('epal_student_course_field');
-           $idsCourses  = $entity_storage_course_field->getQuery()
-             ->condition('student_id', $studentId, '=')
-             ->execute();
-           $courses = $entity_storage_course_field->loadMultiple($idsCourses);
-           $entity_storage_course_field->delete($courses);
-           $entity_storage_course_field->resetCache();
-
-           //εισαγωγή νέων εγγραφών στα epal_student_epal_chosen, epal_student_sector_field, epal_student_course_field
-           for ($i = 0; $i < sizeof($applicationForm[1]); $i++) {
-               $epalchosen = array(
-                   'student_id' => $studentId,
-                   'epal_id' => $applicationForm[1][$i]['epal_id'],
-                   'choice_no' => $applicationForm[1][$i]['choice_no']
-               );
-               $entity_storage_epalchosen = $this->entityTypeManager->getStorage('epal_student_epal_chosen');
-               $entity_object = $entity_storage_epalchosen->create($epalchosen);
-               $entity_storage_epalchosen->save($entity_object);
-           }
-
-           if ($applicationForm[0]['currentclass'] === "3" || $applicationForm[0]['currentclass'] === "4") {
-               $course = array(
-                   'student_id' => $studentId,
-                   'coursefield_id' => $applicationForm[3]['coursefield_id']
-               );
-               $entity_storage_course = $this->entityTypeManager->getStorage('epal_student_course_field');
-               $entity_object = $entity_storage_course->create($course);
-               $entity_storage_course->save($entity_object);
-           } elseif ($applicationForm[0]['currentclass'] === "2") {
-               $sector = array(
-                   'student_id' => $studentId,
-                   'sectorfield_id' => $applicationForm[3]['sectorfield_id']
-               );
-               $entity_storage_sector = $this->entityTypeManager->getStorage('epal_student_sector_field');
-               $entity_object = $entity_storage_sector->create($sector);
-               $entity_storage_sector->save($entity_object);
-           }
-
-           //END NEW!
-
-
-
+          ///end new...
 
           return $this->respondWithStatus([
               "error_code" => 0
           ], Response::HTTP_OK);
+
       } catch (\Exception $e) {
           $this->logger->warning($e->getMessage());
           $transaction->rollback();
@@ -586,7 +524,7 @@ class GelApplicationSubmit extends ControllerBase
 
 
     }
-    */
+
 
 
 

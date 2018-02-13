@@ -175,10 +175,10 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         this._ogs.initOrientationGroup();
         this._cfe.initElectiveCourseFields();
         if (this.formGroup.value.typeId === "1"){
-            this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"Γενικό Λύκειο (ΓΕΛ)");
+            this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"ΓΕΛ");
         }
         else if (this.formGroup.value.typeId === "2"){
-            this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"Επαγγελματικό Λύκειο (ΕΠΑΛ)");
+            this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"ΕΠΑΛ");
         }
 
     }
