@@ -173,7 +173,7 @@ import { IAppState } from "../../store/store";
                     </div>
                 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center">Μαθημα Επιλογης</div>
+                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center">Επιλογές Μαθητή</div>
                     </div>
                    
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -191,14 +191,20 @@ import { IAppState } from "../../store/store";
                         <div *ngIf="gelChoices$.choice_type === 'ΟΠ' " class="col-md-3" style="font-size: 0.8em;">Ομαδα Προσανατολισμου</div>
                         <div *ngIf="gelChoices$.choice_type === 'ΟΠ' " class="col-md-9" style="font-size: 0.8em; font-weight: bold">{{gelChoices$.choice_name}}</div>
                     </div>
+
+                    <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-6" style="font-size: 0.8em; font-weight: bold;">Μάθημα Επιλογης:</div>
+                    </div>
                     
-                    <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-6" style="font-size: 1em; font-weight: bold; text-align: center;">Σειρά Προτίμησης</div>
-                        <div class="col-md-6" style="font-size: 1em; font-weight: bold;">Μάθημα Επιλογής</div>
+                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-2" style="font-size: 0.8em;"></div>
+                        <div class="col-md-4" style="font-size: 0.8em;">Σειρά Προτίμησης</div>
+                        <div class="col-md-6" style="font-size: 0.8em;">Τίτλος Μαθήματος</div>
                     </div>
                     
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;" *ngFor="let gelChoices$  of GelStudentDetails$['gelStudentChoices']; let i=index; let isOdd=odd; let isEven=even" [hidden]="UserData$.id !== applicationGelIdActive">
-                        <div *ngIf="gelChoices$.choice_type === 'ΕΠΙΛΟΓΗ' " class="col-md-6" style="font-size: 0.8em; font-weight: bold; text-align: center;">{{gelChoices$.order_id}}</div>
+                        <div *ngIf="gelChoices$.choice_type === 'ΕΠΙΛΟΓΗ' " class="col-md-2" style="font-size: 0.8em;"></div>
+                        <div *ngIf="gelChoices$.choice_type === 'ΕΠΙΛΟΓΗ' " class="col-md-4" style="font-size: 0.8em; font-weight: bold; text-align: center;">{{gelChoices$.order_id}}</div>
                         <div *ngIf="gelChoices$.choice_type === 'ΕΠΙΛΟΓΗ' " class="col-md-6" style="font-size: 0.8em; font-weight: bold;">{{gelChoices$.choice_name}}</div>
                     </div>
 
@@ -210,7 +216,7 @@ import { IAppState } from "../../store/store";
                                     <span style="font-size: 0.9em; font-weight: bold;">Επεξεργασία&nbsp;&nbsp;&nbsp;</span>
                                 </button>
                             <!-- </div> -->
-                            <button type="button" class="btn-primary btn-lg pull-right isclickable" style="width: 10em;" (click)="createPdfServerSide()">
+                            <button type="button" class="btn-primary btn-lg pull-right isclickable" style="width: 10em;" (click)="createGelPdfServerSide()">
                                 <span style="font-size: 0.9em; font-weight: bold;">Εκτύπωση(PDF)&nbsp;&nbsp;&nbsp;</span>
                             </button>
                         </div>
@@ -531,6 +537,11 @@ import { IAppState } from "../../store/store";
 
     createPdfServerSide() {
         this._hds.createPdfServerSide(this.applicationIdActive, this.SubmitedDetails$.getValue()[0].status);
+    }
+
+    createGelPdfServerSide() {
+        this._hds.createGelPdfServerSide(this.applicationGelIdActive,3);
+        //this._hds.createGelPdfServerSide(this.applicationGelIdActive, this.GelSubmittedDetails$.getValue()[0].status);
     }
 
 
