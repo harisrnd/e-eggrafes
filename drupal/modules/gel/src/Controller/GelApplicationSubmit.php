@@ -427,7 +427,7 @@ class GelApplicationSubmit extends ControllerBase
                   $applicationForm[0]['nextclass'],
                   $applicationForm[1]['choice_id'],
                   $applicationForm[2][0]['choice_id'],
-                  $applicantUser, false)) > 0) {
+                  $applicantUser, true)) > 0) {
               return $this->respondWithStatus([
                   "error_code" => $errorCode
               ], Response::HTTP_OK);

@@ -12,3 +12,21 @@ gel.application_update:
     _auth: [ 'basic_auth' ]
   defaults:
     _controller: '\Drupal\gel\Controller\GelApplicationSubmit::appUpdate'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.submitedapplications:
+  path: '/gel/subapplic'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelSubmittedApplications::getGelSubmittedApplications'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.applicationdetails:
+  path: '/gel/application/{studentId}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelSubmittedApplications::getGelApplicationDetails'
+  requirements:
+    _user_is_logged_in: 'TRUE'

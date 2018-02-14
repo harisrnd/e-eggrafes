@@ -10,7 +10,7 @@ import { IAppState } from "../../store/store";
 import { HelperDataService } from "../../services/helper-data-service";
 
 
-//import { DataModeActions } from "../../actions/datamode.actions";
+import { DataModeActions } from "../../actions/datamode.actions";
 //import { EpalClassesActions } from "../../actions/epalclass.actions";
 //import { RegionSchoolsActions } from "../../actions/regionschools.actions";
 //import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
@@ -30,7 +30,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
 //import { EPALCLASSES_INITIAL_STATE } from "../../store/epalclasses/epalclasses.initial-state";
 //import { STUDENT_DATA_FIELDS_INITIAL_STATE } from "../../store/studentdatafields/studentdatafields.initial-state";
 
-//import { IDataModeRecords } from "../../store/datamode/datamode.types";
+import { IDataModeRecords } from "../../store/datamode/datamode.types";
 //import { IEpalClassRecords } from "../../store/epalclasses/epalclasses.types";
 //import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 //import { IRegionRecords } from "../../store/regionschools/regionschools.types";
@@ -172,6 +172,7 @@ import { StudentGelCourseChosen } from "../students/student";
     private gelstudentDataFields$: BehaviorSubject<IGelStudentDataFieldRecords>;
 
     private loginInfoSub: Subscription;
+    private datamodeSub: Subscription;
     private gelclassesSub: Subscription;
     private orientationGroupSub: Subscription;
     private electivecourseFieldsSub: Subscription;
@@ -228,6 +229,7 @@ import { StudentGelCourseChosen } from "../students/student";
     ngOnInit() {
 
         (<any>$("#studentFormSentNotice")).appendTo("body");
+
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(linfo => {
@@ -248,6 +250,20 @@ import { StudentGelCourseChosen } from "../students/student";
                 this.loginInfo$.next(linfo);
             }, error => { console.log("error selecting loginInfo"); });
 
+
+         this.datamodeSub = this._ngRedux.select("datamode")
+                .map(datamode => <IDataModeRecords>datamode)
+                .subscribe(ecs => {
+                    if (ecs.size > 0) {
+                        ecs.reduce(({}, datamode,i) => {
+                            if (datamode.get("app_update") === true) {
+                                this.app_update.next(true);
+                                this.appId.next(datamode.get("appid"));
+                            }
+                            return datamode;
+                        }, {});
+                    }
+                }, error => { console.log("error selecting datamode"); });
 
         this.gelclassesSub = this._ngRedux.select("gelclasses")
             .map(gelClasses => <IGelClassRecords>gelClasses)
@@ -316,6 +332,8 @@ import { StudentGelCourseChosen } from "../students/student";
         if (this.loginInfoSub) {
             this.loginInfoSub.unsubscribe();
         }
+        if (this.datamodeSub)
+            this.datamodeSub.unsubscribe();
     }
 
 
@@ -444,10 +462,9 @@ import { StudentGelCourseChosen } from "../students/student";
 
         let options = new RequestOptions({ headers: headers, method: "post", withCredentials: true });
         let connectionString = `${AppSettings.API_ENDPOINT}/gel/appsubmit`;
-        /*
         if (!newapp)
-          connectionString = `${AppSettings.API_ENDPOINT}/gel/appupdate/` + this.appId.getValue() + '/' + nonCheckOccupancy;
-        */
+          connectionString = `${AppSettings.API_ENDPOINT}/gel/appupdate/` + this.appId.getValue() ;
+
         this.showLoader.next(true);
         this.http.post(connectionString, record, options)
             .map((res: Response) => res.json())
