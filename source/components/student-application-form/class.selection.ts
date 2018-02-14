@@ -112,6 +112,7 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
 
     ngOnInit() {
         (<any>$("#gelClassNotice")).appendTo("body");
+        window.scrollTo(0, 0);
 
         this._gca.getClassesList(false);
         this.gelclassesSub = this._ngRedux.select("gelclasses")
