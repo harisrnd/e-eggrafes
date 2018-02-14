@@ -19,6 +19,13 @@ import { SectorFieldsActions } from "../actions/sectorfields.actions";
 import { DataModeActions } from "../actions/datamode.actions";
 import { EpalClassesActions } from "../actions/epalclass.actions";
 
+import { SchoolTypeActions } from "../actions/schooltype.actions";
+import { GelClassesActions } from "../actions/gelclasses.actions";
+import { ElectiveCourseFieldsActions } from "../actions/electivecoursesfields.actions";
+import { OrientationGroupActions } from "../actions/orientationgroup.action";
+import { LangCourseFieldsActions } from "../actions/langcoursesfields.actions";
+import { GelStudentDataFieldsActions } from "../actions/gelstudentdatafields.actions";
+
 
 @Component({
     selector: "home",
@@ -33,11 +40,11 @@ import { EpalClassesActions } from "../actions/epalclass.actions";
                 <ul>
                 <li> Την Τρίτη 12/9/2017 στις 8:30
                 </li>
-                
+
                 </ul>
             </div>
             <div> <p></p><p></p></div>
-            
+
 
             <div *ngFor="let loginInfoToken$ of loginInfo$ | async; let i=index"></div>
             <div class="row" style="min-height: 300px; margin-top: 100px;">
@@ -72,6 +79,12 @@ export default class Home implements OnInit, OnDestroy {
         private _csa: SectorCoursesActions,
         private _sfa: SectorFieldsActions,
         private _rsa: RegionSchoolsActions,
+        private _sta: SchoolTypeActions,
+        private _gca: GelClassesActions,
+        private _ecfa: ElectiveCourseFieldsActions,
+        private _oga: OrientationGroupActions,
+        private _lcfa: LangCourseFieldsActions,
+        private _gsdfa: GelStudentDataFieldsActions,
         private _ngRedux: NgRedux<IAppState>,
         private activatedRoute: ActivatedRoute,
         private _hds: HelperDataService,
@@ -101,6 +114,13 @@ export default class Home implements OnInit, OnDestroy {
                             this._sfa.initSectorFields();
                             this._rsa.initRegionSchools();
                             this._csa.initSectorCourses();
+
+                            this._sta.initSchoolType();
+                            this._gca.initGelClasses();
+                            this._ecfa.initElectiveCourseFields();
+                            this._oga.initOrientationGroup();
+                            this._lcfa.initLangCourseFields();
+                            this._gsdfa.initGelStudentDataFields();
 
                             this.router.navigate(["/parent-form"]);
                         }

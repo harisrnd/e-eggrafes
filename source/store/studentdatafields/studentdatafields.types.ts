@@ -2,7 +2,6 @@ import { List } from "immutable";
 import { TypedRecord } from "typed-immutable-record";
 
 export interface IStudentDataField {
-    epaluser_id: number;
     name: string;
     studentsurname: string;
     fatherfirstname: string;
@@ -10,7 +9,6 @@ export interface IStudentDataField {
     motherfirstname: string;
     mothersurname: string;
     studentbirthdate: Date;
-    studentamka: string;
     regionaddress: string;
     regiontk: string;
     regionarea: string;
@@ -19,7 +17,6 @@ export interface IStudentDataField {
     lastschool_class: string;
     relationtostudent: string;
     currentclass: string;
-    points: number;
     telnum: string;
 }
 

@@ -192,6 +192,7 @@ class GelSubmittedApplications extends ControllerBase
 
                 foreach ($gelStudents as $gelstu) {
                     array_push($gelStudentChoices, array(
+                        'choice_id' => $gelstu->choice_id,
                         'choice_name' => $gelstu->gel_ch_name,
                         'choice_type' => $gelstu->choicetype,
                         'order_id'=> $gelstu->order_id,
