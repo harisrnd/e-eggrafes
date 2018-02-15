@@ -21,7 +21,7 @@ import { IAppState } from "../../store/store";
              <breadcrumbs></breadcrumbs>
     </div>
 
-    <div class = "loading" *ngIf="!(regions$ | async) ">
+    <div class = "loading" *ngIf="!(regions$ | async) || (regions$ | async).size===0 ">
     </div>
     <!-- <div class="row equal">
       <div class="col-md-12"> -->

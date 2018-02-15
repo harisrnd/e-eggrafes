@@ -859,12 +859,12 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
             $lockSmallClasses = $epalConfig->lock_small_classes->getString();
             if ($lockSmallClasses !== "1" ) 
             {
-                 $list[] = array('res' => "0");
+                 $list[] = array('res' => 0);
                return $this->respondWithStatus($list, Response::HTTP_OK);
             }
             else
             {
-                 $list[] = array('res' => "1");
+                 $list[] = array('res' => 1);
                 return $this->respondWithStatus($list, Response::HTTP_OK);
             }
         }

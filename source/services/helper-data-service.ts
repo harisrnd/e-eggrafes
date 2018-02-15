@@ -229,10 +229,12 @@ export class HelperDataService implements OnInit, OnDestroy {
                  this.lockApprov$.next(data);
                  this.lockApprov$.getValue().forEach(lockapp => 
                      {
-                         this.lockapp = lockapp.res; 
+                         this.lockapp = lockapp.res;
+                         console.log(this.lockapp,"lookapp"); 
                          
                   if (this.lockapp === 0){
-                            if (classActive === 1)
+                             console.log("1");
+;                            if (classActive === 1)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/regions/list`;
                             else if (classActive === 2)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/sectorsperschool/list?sector_id=${courseActive}`;
@@ -244,6 +246,7 @@ export class HelperDataService implements OnInit, OnDestroy {
                   }
                   else
                   {
+                             console.log("2");
                             if (classActive === 1)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getregions`;
                             else if (classActive === 2)
