@@ -44,17 +44,28 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
 
     <h4> Επιλογή Τύπου Σχολείου </h4>
     <form [formGroup]="formGroup">
-    <p style="margin-top: 5px; line-height: 2em;"> Παρακαλώ καθορίστε τον τύπο σχολείου που θα φοιτήσει ο μαθητής
-            κατά το σχολικό έτος 2018-19,  επιλέγοντας Γενικό Λύκειο (ΓΕΛ) ή Επαγγελματικό Λύκειο (ΕΠΑΛ), και έπειτα πατήστε <i>Συνέχεια</i>.</p>
-        <div class="form-group" style= "margin-top: 50px; margin-bottom: 100px;">
+    <p style="margin-top: 5px; line-height: 2em;"> Παρακαλώ επιλέξτε τον τύπο σχολείου που θα φοιτήσει ο μαθητής
+            κατά το σχολικό έτος 2018-19,  πατώντας Γενικό Λύκειο (ΓΕΛ) ή Επαγγελματικό Λύκειο (ΕΠΑΛ)</p>
+        <!-- <div class="form-group" style= "margin-top: 50px; margin-bottom: 100px;">
             <label for="typeId">Τύπος Σχολείου:</label><br/>
             <select class="form-control" formControlName="typeId" (change)="initializestore()">
               <option value="0">Επιλέξτε Τύπο Σχολείου</option>
               <option value="1">ΓΕΛ - Γενικό Λύκειο</option>
               <option value="2">ΕΠΑΛ - Επαγγελματικό Λύκειο</option>
             </select>
+        </div> -->
+
+        <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+        <div class="col-md-6">
+            <button class="buttonGelHov pull-center" (click)="GelSelected()"><span>Γενικό Λυκειο</span></button>
+        </div>
+        
+        <div class="col-md-6">
+            <button class="buttonGelHov pull-center" (click)="EpalSelected()"><span>Επαγγελματικό Λύκειο</span></button>
+        </div>
         </div>
 
+        <!--
         <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
             <div class="col-md-6">
                 <button type="button" class="btn-primary btn-lg pull-left" (click)="navigateBack()">
@@ -62,11 +73,11 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
                 </button>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn-primary btn-lg pull-right isclickable" style="width: 9em;" (click)="saveSelected()">
+                <button type="button" class="btn-primary btn-lg pull-right isclickable" style="width: 9em;" (click)="Selected()">
                <span style="font-size: 0.9em; font-weight: bold;">Συνέχεια&nbsp;&nbsp;&nbsp;</span><i class="fa fa-forward"></i>
                 </button>
             </div>
-        </div>
+        </div>-->
 
     </form>
    `
@@ -103,21 +114,31 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
     };
 
     ngOnInit() {
+
+        this._sta.initSchoolType();
+        this._eca.initEpalClasses();
+        this._sfa.initSectorFields();
+        this._rsa.initRegionSchools();
+        this._sca.initSectorCourses();
+        this._gca.initGelClasses();
+        this._ogs.initOrientationGroup();
+        this._cfe.initElectiveCourseFields();
+
         (<any>$("#SchoolTypeNotice")).appendTo("body");
 
-        this.schooltypeSub = this._ngRedux.select("schooltype")
+/*         this.schooltypeSub = this._ngRedux.select("schooltype")
             .map(schooltype => <ISchoolTypeRecords>schooltype)
             .subscribe(ecs => {
                 if (ecs.size > 0) {
                       ecs.reduce(({}, type) => {
-                        this.formGroup.controls["typeId"].setValue(type.get("id"));
+                        //this.formGroup.controls["typeId"].setValue(type.get("id"));
                         return type;
                     }, {});
                 } else {
-                    this.formGroup.controls["typeId"].setValue("0");
+                    //this.formGroup.controls["typeId"].setValue("0");
                 }
                 this.schooltype$.next(ecs);
-            }, error => { console.log("error selecting schooltype"); });
+            }, error => { console.log("error selecting schooltype"); }); */
 
     }
 
@@ -146,7 +167,7 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
     }
 
 
-    saveSelected() {
+/*     saveSelected() {
         if (this.formGroup.controls["typeId"].value === "0") {
             this.modalTitle.next("Δεν επιλέχθηκε τύπος Σχολείου");
             this.modalText.next("Παρακαλούμε να επιλέξετε πρώτα τον τύπο Σχολείου φοίτησης του μαθητή για το νέο σχολικό έτος");
@@ -181,6 +202,16 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
             this._sta.saveSchoolTypeSelected(this.formGroup.value.typeId,"ΕΠΑΛ");
         }
 
+    } */
+
+    GelSelected() {
+        this._sta.saveSchoolTypeSelected(1,"ΓΕΛ");
+        this.router.navigate(["/gel-class-select"]);
+    }
+
+    EpalSelected() {
+        this._sta.saveSchoolTypeSelected(2,"ΕΠΑΛ");
+        this.router.navigate(["/epal-class-select"]);
     }
 
 }
