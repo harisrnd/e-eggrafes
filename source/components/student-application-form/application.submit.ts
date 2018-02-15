@@ -129,7 +129,6 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private sectorSelectedName;
     private epalSelectedName: Array<string> = new Array();
     private epalSelectedId: Array<string> = new Array();
-    private totalPoints = <number>0;
     private studentDataFields$: BehaviorSubject<IStudentDataFieldRecords>;
     private epalclasses$: BehaviorSubject<IEpalClassRecords>;
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;

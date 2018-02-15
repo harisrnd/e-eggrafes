@@ -1339,6 +1339,7 @@ saveApprovedClasses(taxi, classid, type)
 }
 
 
+
 getStatusofLockSmallClasses()
 {
          this.loginInfo$.getValue().forEach(loginInfoToken => {
@@ -1356,5 +1357,55 @@ getStatusofLockSmallClasses()
 
 }
 
+
+getGelSubmittedPreview() {
+
+    this.loginInfo$.getValue().forEach(loginInfoToken => {
+        this.authToken = loginInfoToken.auth_token;
+        this.authRole = loginInfoToken.auth_role;
+    });
+    let headers = new Headers({
+        "Content-Type": "application/json",
+    });
+    this.createAuthorizationHeader(headers);
+    let options = new RequestOptions({ headers: headers });
+    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/subapplic`, options)
+        .map(response => response.json());
+}
+
+getGelStudentDetails(headerid) {
+    let headerIdNew = headerid.toString();
+    this.loginInfo$.getValue().forEach(loginInfoToken => {
+        this.authToken = loginInfoToken.auth_token;
+        this.authRole = loginInfoToken.auth_role;
+    });
+    let headers = new Headers({
+        "Content-Type": "application/json",
+    });
+    this.createAuthorizationHeader(headers);
+    let options = new RequestOptions({ headers: headers });
+    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/application/` + headerIdNew, options)
+        .map(response => response.json());
+}
+
+createGelPdfServerSide(headerid, status) {
+
+    let headers = new Headers({
+        "Content-Type": "application/json",
+    });
+    this.createAuthorizationHeader(headers);
+
+    let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob });
+    let headerIdStr = headerid.toString();
+    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/pdf-application/` + headerIdStr + "/" + status, options)
+        .map((res) => {
+            return new Blob([res["_body"]], { type: "application/octet-stream" });
+        })
+        .subscribe(
+        data => {
+            FileSaver.saveAs(data, "appConfirmation.pdf");
+        },
+        err => console.error(err));
+}
 
 }

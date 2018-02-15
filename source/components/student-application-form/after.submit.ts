@@ -9,6 +9,12 @@ import { RegionSchoolsActions } from "../../actions/regionschools.actions";
 import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
 import { SectorFieldsActions } from "../../actions/sectorfields.actions";
 import { StudentDataFieldsActions } from "../../actions/studentdatafields.actions";
+import { SchoolTypeActions } from "../../actions/schooltype.actions";
+import { GelClassesActions } from "../../actions/gelclasses.actions";
+import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
+import { OrientationGroupActions } from "../../actions/orientationgroup.action";
+import { LangCourseFieldsActions } from "../../actions/langcoursesfields.actions";
+import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
 import { HelperDataService } from "../../services/helper-data-service";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { IAppState } from "../../store/store";
@@ -48,6 +54,12 @@ import { IAppState } from "../../store/store";
         private _rsa: RegionSchoolsActions,
         private _eca: EpalClassesActions,
         private _sdfa: StudentDataFieldsActions,
+        private _sta: SchoolTypeActions,
+        private _gca: GelClassesActions,
+        private _ecfa: ElectiveCourseFieldsActions,
+        private _oga: OrientationGroupActions,
+        private _lcfa: LangCourseFieldsActions,
+        private _gsdfa: GelStudentDataFieldsActions,
         private _ngRedux: NgRedux<IAppState>,
         private router: Router
     ) {
@@ -83,6 +95,14 @@ import { IAppState } from "../../store/store";
             this._rsa.initRegionSchools();
             this._csa.initSectorCourses();
             this._sdfa.initStudentDataFields();
+
+            this._sta.initSchoolType();
+            this._gca.initGelClasses();
+            this._ecfa.initElectiveCourseFields();
+            this._oga.initOrientationGroup();
+            this._lcfa.initLangCourseFields();
+            this._gsdfa.initGelStudentDataFields();
+            
             this.router.navigate([""]);
             this.authToken = "";
             this.authRole = "";
