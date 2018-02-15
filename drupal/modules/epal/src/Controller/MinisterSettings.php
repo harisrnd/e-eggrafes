@@ -103,6 +103,7 @@ class MinisterSettings extends ControllerBase {
 					$applicantsResultsDisabled = $epalConfig->lock_results->getString();
 					$secondPeriodEnabled = $epalConfig->activate_second_period->getString();
 					$dateStart = $epalConfig->date_start_b_period->getString();
+					$smallClassApproved = $epalConfig->lock_small_classes->getString();
 	 		 }
 	 		 $config_storage->resetCache();
 
@@ -116,6 +117,7 @@ class MinisterSettings extends ControllerBase {
 					'applicantsResultsDisabled' => $applicantsResultsDisabled,
 					'secondPeriodEnabled' => $secondPeriodEnabled,
 					'dateStart' => $dateStart,
+					'smallClassApproved' => $smallClassApproved
 			], Response::HTTP_OK);
 
 		}	//end try
@@ -133,10 +135,11 @@ class MinisterSettings extends ControllerBase {
 
 
 public function storeSettings(Request $request, $capacityDisabled, $directorViewDisabled, $applicantsLoginDisabled, $applicantsAppModifyDisabled,
-		$applicantsAppDeleteDisabled, $applicantsResultsDisabled, $secondPeriodEnabled, $dateStart ) {
+		$applicantsAppDeleteDisabled, $applicantsResultsDisabled,
+		 $secondPeriodEnabled, $dateStart, $smallClassApproved ) {
 
 	try {
-		 if (!$request->isMethod('GET')) {
+		if (!$request->isMethod('GET')) {
 				return $this->respondWithStatus([
 					 "message" => t("Method Not Allowed")
 						], Response::HTTP_METHOD_NOT_ALLOWED);
@@ -175,7 +178,8 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
  						], Response::HTTP_FORBIDDEN);
  		 }
  		 else {
- 				  $epalConfig->set('lock_school_capacity', $capacityDisabled);
+ 		 			
+ 				  	$epalConfig->set('lock_school_capacity', $capacityDisabled);
 					$epalConfig->set('lock_school_students_view', $directorViewDisabled);
 					$epalConfig->set('lock_application', $applicantsLoginDisabled);
 					$epalConfig->set('lock_modify', $applicantsAppModifyDisabled);
@@ -183,7 +187,7 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
 					$epalConfig->set('lock_results', $applicantsResultsDisabled);
 					$epalConfig->set('activate_second_period', $secondPeriodEnabled);
 					$epalConfig->set('date_start_b_period', $dateStart);
-
+					$epalConfig->set('lock_small_classes', $smallClassApproved);
 					$epalConfig->save();
  		 }
  		 $config_storage->resetCache();
@@ -199,6 +203,7 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
 				'applicantsResultsDisabled' => $applicantsResultsDisabled,
 				'secondPeriodEnabled' => $secondPeriodEnabled,
 				'dateStart' => $dateStart,
+				'smallClassApproved' =>$smallClassApproved,
 		], Response::HTTP_OK);
 
 	}	//end try

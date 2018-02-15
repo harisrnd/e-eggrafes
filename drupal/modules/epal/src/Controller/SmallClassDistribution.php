@@ -151,7 +151,7 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
                     ->loadByProperties(array('edu_admin_id' => $selectionId));
             } else {
                 $schools = [];
-            }
+            } 
 
             if ($schools) {
                 $list = array();
@@ -824,6 +824,297 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
             return $this->respondWithStatus(['message' => t('EPAL user not found')], Response::HTTP_FORBIDDEN);
         }
     }
+
+
+ public function FindSmallClassesApproved(Request $request)
+ {
+
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if (!$user) {
+            return $this->respondWithStatus([
+                'message' => t("User not found"),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+//        if (false === in_array('ministry', $user->getRoles())) {
+//            return $this->respondWithStatus([
+//                'message' => t("User Invalid Role"),
+ //           ], Response::HTTP_FORBIDDEN);
+ //       }
+
+        $config_storage = $this->entityTypeManager->getStorage('epal_config');
+        $epalConfigs = $config_storage->loadByProperties(array('id' => 1));
+        $epalConfig = reset($epalConfigs);
+        if (!$epalConfig)
+         {
+             return $this->respondWithStatus([
+                'message' => t("EpalConfig Enity not found"),
+             ], Response::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $list = array();
+            $lockSmallClasses = $epalConfig->lock_small_classes->getString();
+            if ($lockSmallClasses !== "1" ) 
+            {
+                 $list[] = array('res' => "0");
+               return $this->respondWithStatus($list, Response::HTTP_OK);
+            }
+            else
+            {
+                 $list[] = array('res' => "1");
+                return $this->respondWithStatus($list, Response::HTTP_OK);
+            }
+        }
+ }     
+
+
+
+public function GetRegions(Request $request)
+    {
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if (!$user) {
+            return $this->respondWithStatus([
+                'message' => t("User not found"),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array());
+        if ($schools) {
+                $list = array();
+                foreach ($schools as $object)
+                {     $SmallClassesAppr =  $object -> approved_a -> value ;
+                      $categ = $object->metathesis_region->value;
+                      $limit = $this->getLimit(1, $categ);
+                      $status = $this-> findStatus($object->id(),1, 0, 0);
+                      $stat = intval($status);
+                      $lim = intval($limit);
+                            if ($stat >= $lim || $SmallClassesAppr == 1)
+                            {
+                            $prefid = intval($object->getperfecture());
+                            $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
+                            $prefname = reset($prefectionname);
+                        
+                            $namepref = $prefname->name->value;
+                            $list[] = array(
+                                'epal_id' => $object->id(),
+                                'epal_name' => $object->name->value,
+                                'epal_special_case' => $object-> special_case ->value,
+                                'region_id' => $object->getperfecture(),
+                                'region_name' => $namepref,
+                                                                     );
+                          }
+                }
+                return $this->respondWithStatus($list, Response::HTTP_OK);
+        }
+        else
+             return $this->respondWithStatus([
+                    'message' => t("Schools not found"),
+                ], Response::HTTP_FORBIDDEN);
+}
+
+
+
+public function GetSectorsperschool(Request $request, $courseActive )
+    {
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if (!$user) {
+            return $this->respondWithStatus([
+                'message' => t("User not found"),
+            ], Response::HTTP_FORBIDDEN);
+        }
+        else
+        {
+        $schools = $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(array('sector_id' => $courseActive));
+        if ($schools) {
+                $list = array();
+                foreach ($schools as $object)
+                {    
+                    $lala = $object->epal_id -> entity ->id();
+                    $this->logger->notice($lala);
+                    $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $lala));
+                     $sdata = reset($schooldata);
+                    if (!$sdata){
+                         return $this->respondWithStatus([
+                            'message' => t("School not found"),
+                            ], Response::HTTP_FORBIDDEN); 
+                      }
+                      else
+                    {
+                      $categ = $sdata -> metathesis_region->value;
+                      $SmallClassesAppr =  $object -> approved_sector -> value ;
+                      $limit = $this->getLimit(2, $categ);
+                      $status = $this-> findStatus($object->id(),2, $courseActive, 0);
+                      $stat = intval($status);
+                      $lim = intval($limit);
+                            if ($stat >= $lim || $SmallClassesAppr == 1)
+                            {
+                            $prefid = intval($sdata->getperfecture());
+                            $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
+                            $prefname = reset($prefectionname);
+                        
+                            $namepref = $prefname->name->value;
+                            $list[] = array(
+                                'epal_id' => $sdata->id(),
+                                'epal_name' => $sdata->name->value,
+                                'epal_special_case' => $sdata-> special_case ->value,
+                                'region_id' => $sdata->getperfecture(),
+                                'region_name' => $namepref,
+                                                                     );
+                          }
+                
+                return $this->respondWithStatus($list, Response::HTTP_OK);
+                 }
+             }
+        }
+        else
+        {
+             return $this->respondWithStatus([
+                    'message' => t("Schools not found"),
+                ], Response::HTTP_FORBIDDEN);
+         }
+        }
+
+        }
+
+
+
+public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive )
+    {
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if (!$user) {
+            return $this->respondWithStatus([
+                'message' => t("User not found"),
+            ], Response::HTTP_FORBIDDEN);
+        }
+        else
+        {
+        $schools = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('specialty_id' => $courseActive));
+        if ($schools) {
+                $list = array();
+                foreach ($schools as $object)
+                {    
+                    $lala = $object->epal_id -> entity ->id();
+                    $this->logger->notice($lala);
+                    $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $lala));
+                     $sdata = reset($schooldata);
+                    if (!$sdata){
+                         return $this->respondWithStatus([
+                            'message' => t("School not found"),
+                            ], Response::HTTP_FORBIDDEN); 
+                      }
+                      else
+                    {
+                      $categ = $sdata -> metathesis_region->value;
+                      $SmallClassesAppr =  $object -> approved_sector -> value ;
+                      $limit = $this->getLimit(3, $categ);
+                      $status = $this-> findStatus($object->id(),3,  0, $courseActive);
+                      $stat = intval($status);
+                      $lim = intval($limit);
+                            if ($stat >= $lim || $SmallClassesAppr == 1)
+                            {
+                            $prefid = intval($sdata->getperfecture());
+                            $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
+                            $prefname = reset($prefectionname);
+                        
+                            $namepref = $prefname->name->value;
+                            $list[] = array(
+                                'epal_id' => $sdata->id(),
+                                'epal_name' => $sdata->name->value,
+                                'epal_special_case' => $sdata-> special_case ->value,
+                                'region_id' => $sdata->getperfecture(),
+                                'region_name' => $namepref,
+                                                                     );
+                          }
+                
+                return $this->respondWithStatus($list, Response::HTTP_OK);
+                 }
+             }
+        }
+        else
+        {
+             return $this->respondWithStatus([
+                    'message' => t("Schools not found"),
+                ], Response::HTTP_FORBIDDEN);
+         }
+        }
+
+        }
+
+
+public function getCoursesPerSchoolSmallClassesNight(Request $request, $courseActive )
+    {
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if (!$user) {
+            return $this->respondWithStatus([
+                'message' => t("User not found"),
+            ], Response::HTTP_FORBIDDEN);
+        }
+        else
+        {
+        $schools = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('specialty_id' => $courseActive));
+        if ($schools) {
+                $list = array();
+                foreach ($schools as $object)
+                {    
+                    $lala = $object->epal_id -> entity ->id();
+                    $this->logger->notice($lala);
+                    $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $lala));
+                     $sdata = reset($schooldata);
+                    if (!$sdata){
+                         return $this->respondWithStatus([
+                            'message' => t("School not found"),
+                            ], Response::HTTP_FORBIDDEN); 
+                      }
+                      else
+                    {
+                      $categ = $sdata -> metathesis_region->value;
+                      $SmallClassesAppr =  $object -> approved_sector -> value ;
+                      $limit = $this->getLimit(4, $categ);
+                      $status = $this-> findStatus($object->id(),4,  0, $courseActive);
+                      $stat = intval($status);
+                      $lim = intval($limit);
+                            if ($stat >= $lim || $SmallClassesAppr == 1)
+                            {
+                            $prefid = intval($sdata->getperfecture());
+                            $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
+                            $prefname = reset($prefectionname);
+                        
+                            $namepref = $prefname->name->value;
+                            $list[] = array(
+                                'epal_id' => $sdata->id(),
+                                'epal_name' => $sdata->name->value,
+                                'epal_special_case' => $sdata-> special_case ->value,
+                                'region_id' => $sdata->getperfecture(),
+                                'region_name' => $namepref,
+                                                                     );
+                          }
+                
+                return $this->respondWithStatus($list, Response::HTTP_OK);
+                 }
+             }
+        }
+        else
+        {
+             return $this->respondWithStatus([
+                    'message' => t("Schools not found"),
+                ], Response::HTTP_FORBIDDEN);
+         }
+        }
+
+        }
+
+
 
 
 
