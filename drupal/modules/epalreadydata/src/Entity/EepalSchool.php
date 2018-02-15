@@ -145,6 +145,12 @@ class EepalSchool extends ContentEntityBase implements EepalSchoolInterface {
     return $this;
   }
 
+
+public function getperfecture() {
+    return $this->get('region_edu_admin_id')->target_id;
+  }
+
+
   /**
    * {@inheritdoc}
    */

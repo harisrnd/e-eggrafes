@@ -30,16 +30,20 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     private authToken: string;
     private loginInfoSub: Subscription;
+    private lockApprovSub: Subscription;
     private authRole: string;
     private minedu_userName: string;
     private minedu_userPassword: string;
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
+    private lockApprov$: BehaviorSubject<any>;
+    private lockapp: number;
 
     constructor(
         private http: Http,
         private _ngRedux: NgRedux<IAppState>,
         private _cookieService: CookieService) {
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
+        this.lockApprov$ = new BehaviorSubject([{}]);
     };
 
     ngOnInit() {
@@ -220,24 +224,59 @@ export class HelperDataService implements OnInit, OnDestroy {
         return new Promise((resolve, reject) => {
             let getConnectionString = null;
 
-            if (classActive === 1)
-                getConnectionString = `${AppSettings.API_ENDPOINT}/regions/list`;
-            else if (classActive === 2)
-                getConnectionString = `${AppSettings.API_ENDPOINT}/sectorsperschool/list?sector_id=${courseActive}`;
-            else if (classActive === 3)
-                getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool/list?course_id=${courseActive}`;
-            else if (classActive === 4)
-                getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool_night/list?course_id=${courseActive}`;
 
-            this.http.get(getConnectionString, options)
-                .map(response => response.json())
-                .subscribe(data => {
-                    resolve(this.transformRegionSchoolsSchema(data));
-                },
-                error => {
-                    console.log("Error HTTP GET Service in getRegionsWithSchools method");
-                    reject("Error HTTP GET Service");
-                });
+        this.lockApprovSub = this.getStatusofLockSmallClasses().subscribe(data => {
+                 this.lockApprov$.next(data);
+                 this.lockApprov$.getValue().forEach(lockapp => 
+                     {
+                         this.lockapp = lockapp.res; 
+                         
+                  if (this.lockapp === 0){
+                            if (classActive === 1)
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/regions/list`;
+                            else if (classActive === 2)
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/sectorsperschool/list?sector_id=${courseActive}`;
+                            else if (classActive === 3)
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool/list?course_id=${courseActive}`;
+                            else if (classActive === 4)
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool_night/list?course_id=${courseActive}`;
+     
+                  }
+                  else
+                  {
+                            if (classActive === 1)
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getregions`;
+                            else if (classActive === 2)
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/epal/sectorsperschool/`+ courseActive;
+                            else if (classActive === 3)
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getcoursesperschoolsmallclasses/`+ courseActive;
+                            else if (classActive === 4)
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getcoursesperschoolsmallclasses_night/`+ courseActive;
+                            
+
+
+                  }
+
+                            this.http.get(getConnectionString, options)
+                            .map(response => response.json())
+                            .subscribe(data => {
+                               resolve(this.transformRegionSchoolsSchema(data));
+                            },
+                            error => {
+                                console.log("Error HTTP GET Service in getRegionsWithSchools method");
+                                reject("Error HTTP GET Service");
+                            });
+
+
+
+                     })
+          },
+            error => {
+                this.lockApprov$.next([{}]);
+                console.log("Error getting Settings");
+               }); 
+           
+
         });
     };
 
@@ -282,6 +321,7 @@ export class HelperDataService implements OnInit, OnDestroy {
             rsa[trackIndex].epals.push(<IRRegionSchool>{ "epal_id": regionSchool.epal_id, "epal_name": regionSchool.epal_name, "epal_special_case": regionSchool.epal_special_case, "globalIndex": j, "selected": false, "order_id": 0 });
             j++;
         });
+       
         return rsa;
     }
 
@@ -790,7 +830,7 @@ export class HelperDataService implements OnInit, OnDestroy {
             .map(response => response.json());
     }
 
-    storeAdminSettings(username, userpassword, capac, dirview, applogin, appmodify, appdelete, appresults, secondperiod, datestart) {
+    storeAdminSettings(username, userpassword, capac, dirview, applogin, appmodify, appdelete, appresults, secondperiod, datestart, smallClassApproved) {
 
         let headers = new Headers({
             "Content-Type": "application/json",
@@ -801,7 +841,7 @@ export class HelperDataService implements OnInit, OnDestroy {
 
         return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings/` +
             Number(capac) + "/" + Number(dirview) + "/" + Number(applogin) + "/" + Number(appmodify) + "/" +
-            Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart, options)
+            Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" + Number(smallClassApproved) , options)
             .map(response => response.json());
     }
 
@@ -1280,7 +1320,7 @@ export class HelperDataService implements OnInit, OnDestroy {
                     reject("Error HTTP GET Service");
                 });
         });
-    };
+    }
 
 saveApprovedClasses(taxi, classid, type)
 {
@@ -1297,5 +1337,24 @@ saveApprovedClasses(taxi, classid, type)
             .map(response => response.json());
 
 }
+
+
+getStatusofLockSmallClasses()
+{
+         this.loginInfo$.getValue().forEach(loginInfoToken => {
+             this.authToken = loginInfoToken.auth_token;
+             this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        console.log("test");
+        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/locksmallclasses`, options)
+            .map(response => response.json());
+
+}
+
 
 }

@@ -356,6 +356,26 @@ class EpalConfig extends ContentEntityBase implements EpalConfigInterface {
             ->setDisplayConfigurable('form', true)
             ->setDisplayConfigurable('view', true);
 
+          $fields['lock_small_classes'] = BaseFieldDefinition::create('boolean')
+              ->setLabel(t('Ενεργοποίηση της επιλογής για περιορισμό των μη εγκεκριμένων ολιγομελών τμημάτων'))
+              ->setDescription(t('Ενεργοποίηση της επιλογής για περιορισμό των μη εγκεκριμένων ολιγομελών τμημάτων'))
+              ->setSettings(array(
+                'text_processing' => 0,
+              ))
+              ->setRequired(FALSE)
+              ->setDefaultValue(FALSE)
+              ->setDisplayOptions('view', array(
+                'label' => 'above',
+                'type' => 'boolean',
+                'weight' => -4,
+              ))
+              ->setDisplayOptions('form', array(
+                'type' => 'boolean',
+                'weight' => -4,
+              ))
+              ->setDisplayConfigurable('form', TRUE)
+              ->setDisplayConfigurable('view', TRUE);
+
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the Epal config is published.'))
