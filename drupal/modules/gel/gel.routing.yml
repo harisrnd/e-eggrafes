@@ -30,3 +30,11 @@ gel.applicationdetails:
     _controller: '\Drupal\gel\Controller\GelSubmittedApplications::getGelApplicationDetails'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.applicant.creationpdf:
+  path: '/gel/pdf-application/{studentId}/{status}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\PdfCreator::createApplicantPDF'
+  requirements:
+    _user_is_logged_in: 'TRUE'
