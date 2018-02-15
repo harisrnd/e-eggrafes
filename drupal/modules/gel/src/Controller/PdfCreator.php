@@ -80,12 +80,12 @@ class PDFCreator extends ControllerBase {
 			 //Gel-user validation
 
 			 $authToken = $request->headers->get('PHP_AUTH_USER');
-			 $epalUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
-			 $epalUser = reset($epalUsers);
-			 if ($epalUser) {
-					 $userid = $epalUser->id();
-					 $epalStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('gel_userid' => $userid));
-					   if (!$epalStudents) {
+			 $gelUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
+			 $gelUser = reset($gelUsers);
+			 if ($gelUser) {
+					 $userid = $gelUser->id();
+					 $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('gel_userid' => $userid));
+					   if (!$gelStudents) {
 							 return $this->respondWithStatus([
 											'message' => t("EPAL User not found"),
 									], Response::HTTP_FORBIDDEN);
@@ -111,22 +111,6 @@ class PDFCreator extends ControllerBase {
 			 $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id'=> $studentId));
 			  if (sizeof($gelStudents) === 1) {
 						$gelStudent = reset($gelStudents);
-
-						/*
-						//ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
-						$config_storage = $this->entityTypeManager->getStorage('epal_config');
-						$epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-						$epalConfig = reset($epalConfigs);
-						if (!$epalConfig) {
-							 return $this->respondWithStatus([
-											 'message' => t("EpalConfig Enity not found"),
-									 ], Response::HTTP_FORBIDDEN);
-						}
-						else {
-							 $this->applicantsResultsDisabled = $epalConfig->lock_results->getString();
-						}
-						*/
-
 				}
 				else {
 					return $this->respondWithStatus([
@@ -153,7 +137,6 @@ class PDFCreator extends ControllerBase {
 	 			], Response::HTTP_INTERNAL_SERVER_ERROR);
 			 $this->createStudentChoices($gelStudent);
 
-			 //$this->pdf->Close(); // Δεν χρειάζεται, το κάνει η Output
 			 $s = $this->pdf->Output("S", "export.pdf", true);
 
 			 $response = new Response($s, Response::HTTP_OK, ['Content-Type', 'application/pdf']);
@@ -259,14 +242,11 @@ class PDFCreator extends ControllerBase {
 		$y = ($y_col1 > $y_col2) ? $y_col1 : $y_col2;
 		$this->pdf->SetXY($x,$y);
 
-		//$fullAddressTxt = $student->regionaddress->value . ', ΤΚ: ' . $student->regiontk->value . ', ' . $student->regionarea->value;
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
-		//$regAddressTxt = 'ΤΚ: ' . $student->regiontk->value . ', ' . $student->regionarea->value;
 		$regAddressTxt = 'ΤΚ: ' . $regiontk_decoded . ', ' . $regionarea_decoded;
 		$this->pdf->Cell($width, $height, $this->prepareString('Διεύθυνση κατοικίας: '), 0, 'L');
 		$x=$this->pdf->GetX(); $y=$this->pdf->GetY();
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		//$this->pdf->multiCell($width, $height, $this->prepareString($student->regionaddress->value), 0, 'L');
 		$this->pdf->multiCell($width, $height, $this->prepareString($regionaddress_decoded), 0, 'L');
 		$x_col1=$this->pdf->GetX();$y_col1=$this->pdf->GetY();
 
@@ -282,8 +262,6 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetXY($x,$y);
 
 		$this->pdf->Ln();
-		//$this->pdf->Ln();
-
 	}
 
 	private function createStudentInfo($student)	{
@@ -320,7 +298,6 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetXY($x+$width,$y);
 		$this->pdf->Cell($width, $height, $this->prepareString('Επώνυμο μαθητή:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		//$this->pdf->multiCell($width, $height, $this->prepareString($student->studentsurname->value), 0, 'L');
 		$this->pdf->multiCell($width, $height, $this->prepareString($studentsurname_decoded), 0, 'L');
 		$x_col2=$this->pdf->GetX();;$y_col2=$this->pdf->GetY();
 
@@ -332,7 +309,6 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->Cell($width, $height, $this->prepareString('Όνομα πατέρα:'), 0, 'L');
 		$x=$this->pdf->GetX(); $y=$this->pdf->GetY();
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		//$this->pdf->multiCell($width, $height, $this->prepareString($student->fatherfirstname->value), 0, 'L');
 		$this->pdf->multiCell($width, $height, $this->prepareString($fatherfirstname_decoded), 0, 'L');
 		$x_col1=$this->pdf->GetX();$y_col1=$this->pdf->GetY();
 
@@ -340,7 +316,6 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetXY($x+$width,$y);
 		$this->pdf->Cell($width, $height, $this->prepareString('Όνομα μητέρας:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		//$this->pdf->multiCell($width, $height, $this->prepareString($student->motherfirstname->value), 0, 'L');
 		$this->pdf->multiCell($width, $height, $this->prepareString($motherfirstname_decoded), 0, 'L');
 		$x_col2=$this->pdf->GetX();;$y_col2=$this->pdf->GetY();
 
@@ -352,18 +327,13 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->Cell($width, $height, $this->prepareString('Ημ/νία γέννησης:'), 0, 'L');
 		$x=$this->pdf->GetX(); $y=$this->pdf->GetY();
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		//$temp = $student->birthdate->value;
-		//$temp2 = date_format(date($temp),'d-m-Y');
-		//$temp2 = date("d-m-Y", strtotime($temp));
 		$this->pdf->multiCell($width, $height, $this->prepareString(date("d-m-Y", strtotime($student->birthdate->value))), 0, 'L');
-		//$this->pdf->multiCell($width, $height, $this->prepareString( $student->birthdate->value), 0, 'L');
 		$x_col1=$this->pdf->GetX();$y_col1=$this->pdf->GetY();
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->SetXY($x+$width,$y);
 		$this->pdf->Cell($width, $height, $this->prepareString('Τηλ. επικ/νίας:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		//$this->pdf->multiCell($width, $height, $this->prepareString($student->telnum->value), 0, 'L');
 		$this->pdf->multiCell($width, $height, $this->prepareString($telnum_decoded), 0, 'L');
 		$x_col2=$this->pdf->GetX();;$y_col2=$this->pdf->GetY();
 
@@ -394,7 +364,6 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->Cell($width+15, $height, $this->prepareString('Δήλωση από:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		//$this->pdf->Cell($width, $height, $this->prepareString($relationtostudent_decoded), 0, 'L');
 		$this->pdf->Cell($width, $height, $this->prepareString($student->relationtostudent->value), 0, 'L');
 		$this->pdf->Ln();
 		$this->pdf->Ln();
@@ -415,9 +384,9 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->Cell($width, $height, $this->prepareString('Τάξη εγγραφής:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
         
-        $this->pdf->Cell($width, $height, $this->prepareString($this->retrieveGelClassName($student->nextclass->entity->get('id')->value )), 0, 'L');
+        //$this->pdf->Cell($width, $height, $this->prepareString($this->retrieveGelClassName($student->nextclass->entity->get('id')->value )), 0, 'L');
         //both work
-        //$this->pdf->Cell($width, $height, $this->prepareString($this->retrieveGelClassName($student->nextclass->getString() )), 0, 'L');
+        $this->pdf->Cell($width, $height, $this->prepareString($this->retrieveGelClassName($student->nextclass->getString() )), 0, 'L');
 
 		$this->pdf->Ln();
 
@@ -456,7 +425,7 @@ class PDFCreator extends ControllerBase {
         $this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 
         $result = \Drupal::entityQuery('gel_student_choices')
-        ->condition('student_id', $student->id->value)
+		->condition('student_id', $student->id->value)
         ->sort('order_id')
         ->execute();
         $ElectiveCourses = \Drupal::entityTypeManager()->getStorage('gel_student_choices')->loadMultiple($result);

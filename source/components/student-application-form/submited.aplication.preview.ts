@@ -42,13 +42,13 @@ import { IAppState } from "../../store/store";
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header modal-header-danger">
-              <h3 class="modal-title pull-left"><i class="fa fa-close"></i>&nbsp;&nbsp;Διαγραφή Δήλωσης Προτίμησης ΕΠΑΛ</h3>
+              <h3 class="modal-title pull-left"><i class="fa fa-close"></i>&nbsp;&nbsp;Διαγραφή Δήλωσης Προτίμησης</h3>
             <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
               <span aria-hidden="true"><i class="fa fa-times"></i></span>
             </button>
           </div>
           <div class="modal-body">
-              <p>Επιλέξατε να διαγράψετε τη δήλωση προτίμησης ΕΠΑΛ. Παρακαλούμε επιλέξτε Επιβεβαίωση</p>
+              <p>Επιλέξατε να διαγράψετε τη δήλωση προτίμησης σας. Παρακαλούμε επιλέξτε Επιβεβαίωση</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal" (click)="hideConfirmModal()">Ακύρωση</button>
@@ -62,7 +62,7 @@ import { IAppState } from "../../store/store";
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header modal-header-danger">
-              <h3 class="modal-title pull-left"><i class="fa fa-ban"></i>&nbsp;&nbsp;Αποτυχία Διαγραφής Δήλωσης Προτίμησης ΕΠΑΛ</h3>
+              <h3 class="modal-title pull-left"><i class="fa fa-ban"></i>&nbsp;&nbsp;Αποτυχία Διαγραφής Δήλωσης Προτίμησης</h3>
             <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
               <span aria-hidden="true"><i class="fa fa-times"></i></span>
             </button>
@@ -107,7 +107,7 @@ import { IAppState } from "../../store/store";
                 <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.studentsurname}}</div>
                 <div class="col-md-4" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.name}}</div>
                 <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">ΓΕΛ</div>
-                <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteApplication(UserData$.id)"></i></div>
+                <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteGelApplication(UserData$.id)"></i></div>
                 <div *ngIf="UserData$.candelete === 0" class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
 
                 <div style="width: 100%">
@@ -197,13 +197,13 @@ import { IAppState } from "../../store/store";
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Τάξη φοίτησης για το νέο σχολικό έτος</div>
-                        <div *ngIf="GelStudentDetails$.nextclass === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α - ΗΜΕΡΗΣΙΟ</div>
-                        <div *ngIf="GelStudentDetails$.nextclass === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β - ΗΜΕΡΗΣΙΟ</div>
-                        <div *ngIf="GelStudentDetails$.nextclass === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ - ΗΜΕΡΗΣΙΟ</div>
-                        <div *ngIf="GelStudentDetails$.nextclass === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α - ΕΣΠΕΡΙΝΟ</div>
-                        <div *ngIf="GelStudentDetails$.nextclass === '5'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β - ΕΣΠΕΡΙΝΟ</div>
-                        <div *ngIf="GelStudentDetails$.nextclass === '6'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ - ΕΣΠΕΡΙΝΟ</div>
-                        <div *ngIf="GelStudentDetails$.nextclass === '7'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ - ΕΣΠΕΡΙΝΟ</div>
+                        <div *ngIf="GelStudentDetails$.nextclass === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α τάξη - ΗΜΕΡΗΣΙΟ ΓΕ.Λ.</div>
+                        <div *ngIf="GelStudentDetails$.nextclass === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β τάξη - ΗΜΕΡΗΣΙΟ ΓΕ.Λ.</div>
+                        <div *ngIf="GelStudentDetails$.nextclass === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ τάξη - ΗΜΕΡΗΣΙΟ ΓΕ.Λ.</div>
+                        <div *ngIf="GelStudentDetails$.nextclass === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α τάξη - ΕΣΠΕΡΙΝΟ ΓΕ.Λ.</div>
+                        <div *ngIf="GelStudentDetails$.nextclass === '5'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β τάξη - ΕΣΠΕΡΙΝΟ ΓΕ.Λ.</div>
+                        <div *ngIf="GelStudentDetails$.nextclass === '6'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ τάξη - ΕΣΠΕΡΙΝΟ ΓΕ.Λ.</div>
+                        <div *ngIf="GelStudentDetails$.nextclass === '7'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ τάξη - ΕΣΠΕΡΙΝΟ ΓΕ.Λ.</div>
                     </div>
 
                     <div *ngFor="let gelChoices$ of GelStudentDetails$['gelStudentChoices'];" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -215,7 +215,7 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-6" style="font-size: 0.8em; font-weight: bold;">Μάθημα Επιλογης:</div>
                     </div>
                     
-                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                    <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-2" style="font-size: 0.8em;"></div>
                         <div class="col-md-4" style="font-size: 0.8em;">Σειρά Προτίμησης</div>
                         <div class="col-md-6" style="font-size: 0.8em;">Τίτλος Μαθήματος</div>
@@ -257,9 +257,7 @@ import { IAppState } from "../../store/store";
                 <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveUser(UserData$.id)">ΕΠΑΛ</div>
                 <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteApplication(UserData$.id)"></i></div>
                 <div *ngIf="UserData$.candelete === 0" class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
-<!--
-                <div  class="col-md-1" style="font-size: 1em; font-weight: bold;"><i class="fa fa-edit isclickable" (click)="editApplication(UserData$.id)" ></i></div>
--->
+
                 <div style="width: 100%">
                 <div *ngFor="let StudentDetails$  of SubmitedDetails$ | async" [hidden]="UserData$.id !== applicationIdActive" style="margin: 10px 10px 10px 10px;">
 
@@ -452,6 +450,8 @@ import { IAppState } from "../../store/store";
     private GelSubmittedDetailsSub: Subscription;
 
     private applicationId = <number>0;
+    private applicationGelId = <number>0;
+
 
     //demo data
     private schooltype_id = <number>1;
@@ -626,6 +626,11 @@ import { IAppState } from "../../store/store";
 
     deleteApplication(appId: number): void {
         this.applicationId = appId;
+        this.showConfirmModal();
+    }
+
+    deleteGelApplication(appId: number): void {
+        this.applicationGelId = appId;
         this.showConfirmModal();
     }
 
