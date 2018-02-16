@@ -59,6 +59,7 @@ import { IAppState } from "../../store/store";
     };
 
     ngOnInit() {
+        window.scrollTo(0, 0);
         this.regionsSub = this._ngRedux.select("regions")
             .subscribe(regions => {
                 let rgns = <IRegionRecords>regions;

@@ -103,6 +103,7 @@ import { IAppState } from "../../store/store";
     ngOnInit() {
 
         (<any>$("#OrientationGroupNotice")).appendTo("body");
+        window.scrollTo(0, 0);
 
         this.selectClass();
 

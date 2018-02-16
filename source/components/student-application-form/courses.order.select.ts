@@ -106,6 +106,7 @@ import { IAppState } from "../../store/store";
     ngOnInit() {
 
       (<any>$("#electivecourseNotice")).appendTo("body");
+      window.scrollTo(0, 0);
 
       this._cfb.getClassesList(false);
       this.gelclassesSub = this._ngRedux.select("gelclasses")

@@ -38,13 +38,14 @@ export class RegionSchoolsActions {
         });
     };
 
-    saveRegionSchoolsSelected = (checked, i, j) => {
+    saveRegionSchoolsSelected = (checked, i, j, orderId: number) => {
         return this._ngRedux.dispatch({
             type: REGIONSCHOOLS_SELECTED_SAVE,
             payload: {
                 checked: checked,
                 rIndex: i,
-                sIndex: j
+                sIndex: j,
+                orderId: orderId
             }
         });
     };

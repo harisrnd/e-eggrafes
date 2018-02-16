@@ -229,6 +229,7 @@ import { StudentGelCourseChosen } from "../students/student";
     ngOnInit() {
 
         (<any>$("#studentFormSentNotice")).appendTo("body");
+        window.scrollTo(0, 0);
 
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)

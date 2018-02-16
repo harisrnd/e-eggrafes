@@ -38,6 +38,7 @@ export function regionSchoolsReducer(state: IRegionRecords = REGION_SCHOOLS_INIT
         case REGIONSCHOOLS_SELECTED_SAVE:
             return state.withMutations(function(list) {
                 list.setIn([action.payload.rIndex, "epals"], list.get(action.payload.rIndex).get("epals").setIn([action.payload.sIndex, "selected"], action.payload.checked));
+                list.setIn([action.payload.rIndex, "epals"], list.get(action.payload.rIndex).get("epals").setIn([action.payload.sIndex, "order_id"], action.payload.orderId));
             });
 
         case REGIONSCHOOLS_ORDER_SAVE:

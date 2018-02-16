@@ -114,6 +114,8 @@ import { IAppState } from "../../store/store";
 
     ngOnInit() {
         (<any>$("#sectorCourseNotice")).appendTo("body");
+        window.scrollTo(0, 0);
+
         this._sca.getSectorCourses(false);
         let ids = 0, idc = 0;
         this.sectorsSub = this._ngRedux.select("sectors")

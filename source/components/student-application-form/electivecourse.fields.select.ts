@@ -54,6 +54,7 @@ import { IAppState } from "../../store/store";
     ngOnInit() {
 
       //this.activeClassId = -1;
+      window.scrollTo(0, 0);
       this.selectClass();
 
     }
