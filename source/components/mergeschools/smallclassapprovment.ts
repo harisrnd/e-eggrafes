@@ -25,10 +25,12 @@ import { HelperDataService } from "../../services/helper-data-service";
             </div>
         </div>
       </div>
-      <div style="min-height: 500px;">
+      
+
+          <div style="min-height: 500px;">
         <form>
             <p style="margin-top: 20px; line-height: 2em;">Στην παρακάτω λίστα βλέπετε τα σχολεία ευθύνης σας.
-            <br/>Επιλέξτε σχολείο για να εμφανιστούν τα τμήματα του σχολείου.</p>
+            <br/>Επιλέξτε σχολείο για να εμφανιστούν τα ολιγομελή τμήματα του σχολείου.</p>
             <div class="row" style="margin-top: 20px; line-height: 2em;"><p><strong>Τα τμήματα</strong></p></div>
             <div *ngFor="let SchoolNames$  of SchoolsPerPerf$  | async; let i=index; let isOdd=odd; let isEven=even" style="font-size: 0.8em; font-weight: bold;">
                 <li class="list-group-item isclickable" (click)="setActiveRegion(SchoolNames$.id)"
@@ -36,38 +38,47 @@ import { HelperDataService } from "../../services/helper-data-service";
                     [class.evenout]="isEven" [class.selectedout]="regionActive === SchoolNames$.id" >
                     <div [class.changelistcolor]= "SchoolNames$.status === false" class="col-md-12">{{SchoolNames$.name}}</div>
                     <div class = "row" [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
-                        <div class="col-md-10">Τμήματα</div>
-                        <div class="col-md-2">Εγγεκριμένο</div>
+                        <div class="col-md-8">Τμήματα</div>
+                        <div class="col-md-4">Έγκριση Ολιγομελούς</div>
                     </div>
-                 </li>
-                     <div class="col-md-8">&nbsp;</div>
-                     <div  [hidden]="SchoolNames$.id !== regionActive" class="col-md-4 pull-right" style="color: black;" > 
-                     <span aria-hidden="true">
-                            <button type="button" class="btn-primary btn-sm pull-right" (click) ="setActiveRegion(SchoolNames$.id)">Κλείσιμο</button>
-                          </span> 
-                     </div>
-          
-                    <div class = "row" *ngFor="let CoursesNames$  of CoursesPerPerf$  | async; let j=index; let isOdd2=odd; let isEven2=even"
-                        [class.oddin]="isOdd2" [class.evenin]="isEven2" 
-                        [class.selectedappout]="regionActive === j"
-                        [hidden]="SchoolNames$.id !== regionActive" >
-  
+                    </li>
+                    <p></p>
+                    <div class = "row" [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
+                         <div class="col-md-8">&nbsp;</div>
+                         <div  [hidden]="SchoolNames$.id !== regionActive" class="col-md-4 pull-right" style="color: black;" > 
+                         <span aria-hidden="true">
+                                <button type="button" class="btn-primary btn-sm pull-right" (click) ="setActiveRegion(SchoolNames$.id)">Κλείσιμο</button>
+                              </span> 
+                         </div>
+                    </div>
 
-                        <div  class="row" style="margin-bottom: 20px;" *ngIf ="calccolor(CoursesNames$.size,CoursesNames$.limitdown) === true">
-                            <div class="col-md-6">{{CoursesNames$.name}}</div>
-                            <div class="col-md-4 pull-right">
+                    <div class = "row" *ngFor="let CoursesNames$  of CoursesPerPerf$  | async; let j=index; let isOdd2=odd; let isEven2=even"
+                        [class.oddin]="isOdd2" [class.evenin]="isEven2" [class.changecolor]="calccolor(CoursesNames$.size,CoursesNames$.limitdown)"
+                        [class.changecolorbalck]="calccolor(CoursesNames$.limitdown, CoursesNames$.size)"
+                        [class.selectedappout]="regionActive === j"
+                        [hidden]="(SchoolNames$.id !== regionActive) ||(calccolor(CoursesNames$.size,CoursesNames$.limitdown) === false) " 
+                        style="margin: 0px 2px 0px 2px;" >
+
+
+                        <div class="col-md-8">{{CoursesNames$.name}}</div>
+                        <div class="col-md-4">
                               <strong><label>Έγκριση Ολιγομελούς:</label> </strong>
                               <select class="form-control pull-right" #cb name="{{CoursesNames$.id}}" (change)="confirmApproved(CoursesNames$.classes,CoursesNames$.approved_id, cb, j)" >
                                   <option value="1" [selected]="CoursesNames$.approved === '1' ">Ναι</option>
                                   <option value="2" [selected]="CoursesNames$.approved === '0' ">Όχι</option>
                               </select>
                             </div>
-                                               
-                         </div>
-                        </div>
-                      </div>
+                    </div>
+
+
+            </div>
         </form>
      </div>
+
+
+
+
+
 
    `
 })

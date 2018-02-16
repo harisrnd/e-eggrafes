@@ -365,3 +365,59 @@ label {
 .smart-table-container {
     overflow-x: scroll;
 }
+
+  .buttonGelHov {
+    display: inline-block;
+    background-color: #fd9665;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 28px;
+    width: 75%;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 20px;
+    border-radius: 5%;
+    box-shadow: 0 12px #999;
+    padding: 15px 25px;
+    text-decoration: none;
+    outline: none;
+    height: 120px;
+  }
+  
+  .buttonGelHov span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+  
+.buttonGelHov span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }
+  
+.buttonGelHov:hover span {
+    padding-right: 25px;
+  }
+  
+.buttonGelHov:hover span:after {
+    opacity: 1;
+    right: 0;
+  }
+
+.buttonGelHov:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(5px);
+    transition: 0.5s;
+  }
+
+.buttonGelHov:hover {
+    opacity: 1;
+    background-color: #3e8e41;
+  }

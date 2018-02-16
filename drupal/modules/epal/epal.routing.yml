@@ -189,7 +189,7 @@ epal.ministry.retrievesettings:
   requirements:
     _user_is_logged_in: 'TRUE'
 epal.ministry.storesettings:
-  path: '/ministry/store-settings/{capacityDisabled}/{directorViewDisabled}/{applicantsLoginDisabled}/{applicantsAppModifyDisabled}/{applicantsAppDeleteDisabled}/{applicantsResultsDisabled}/{secondPeriodEnabled}/{dateStart}'
+  path: '/ministry/store-settings/{capacityDisabled}/{directorViewDisabled}/{applicantsLoginDisabled}/{applicantsAppModifyDisabled}/{applicantsAppDeleteDisabled}/{applicantsResultsDisabled}/{secondPeriodEnabled}/{dateStart}/{smallClassApproved}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:
@@ -402,5 +402,45 @@ epal.approveclasses:
     _auth: [ 'basic_auth' ]
   defaults:
     _controller: '\Drupal\epal\Controller\SmallClassDistribution::ApproveClasses'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.locksmallclasses:
+  path: '/epal/locksmallclasses'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\SmallClassDistribution::FindSmallClassesApproved'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.getregions:
+  path: '/epal/getregions'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\SmallClassDistribution::GetRegions'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.sectorsperschool:
+  path: '/epal/sectorsperschool/{courseActive}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\SmallClassDistribution::GetSectorsperschool'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.getcoursesperschoolsmallclasses:
+  path: '/epal/getcoursesperschoolsmallclasses/{courseActive}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\SmallClassDistribution::getCoursesPerSchoolSmallClasses'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.getcoursesperschoolsmallclasses_night:
+  path: '/epal/getcoursesperschoolsmallclasses_night/{courseActive}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\SmallClassDistribution::getCoursesPerSchoolSmallClassesNight'
   requirements:
     _user_is_logged_in: 'TRUE'
