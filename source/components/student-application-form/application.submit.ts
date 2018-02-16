@@ -200,7 +200,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
         (<any>$("#studentFormSentNotice")).appendTo("body");
         window.scrollTo(0, 0);
-        
+
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(linfo => {
@@ -241,6 +241,14 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                             if (datamode.get("app_update") === true) {
                                 this.app_update.next(true);
                                 this.appId.next(datamode.get("appid"));
+                                this.previousClass.next(datamode.get("currentclass"));
+                                this.previousSector.next(datamode.get("sector_id"));
+                                this.previousCourse.next(datamode.get("course_id"));
+                                for (let i=0; i < datamode.get("epal_choice").length; i++)
+                                  this.previousSchools.next(datamode.get("epal_choice")[i].id + "," + this.previousSchools.getValue());
+
+                                console.log("Test datamode");
+                                console.log(this.previousSchools.getValue());
                             }
 
                             return datamode;
