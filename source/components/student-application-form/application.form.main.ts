@@ -136,14 +136,50 @@ import {
 
     ngOnInit() {
         (<any>$("#applicationFormNotice")).appendTo("body");
+        window.scrollTo(0, 0);
 
-        //new
-        //this.showLoader.next(true);
         this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             this.epalUserData$.next(x);
             this.numAppSelf.next(Number(x.numAppSelf));
             this.numAppChildren.next(Number(x.numAppChildren));
             this.numChildren.next(Number(x.numChildren));
+
+            this.studentDataFieldsSub = this._ngRedux.select("studentDataFields")
+                .subscribe(studentDataFields => {
+                    let sdfds = <IStudentDataFieldRecords>studentDataFields;
+                    if (sdfds.size > 0) {
+                        sdfds.reduce(({}, studentDataField) => {
+                            //if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
+                            this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                            if (typeof this.lastSchName.getValue() === "undefined" )
+                              this.lastSchName.next("");
+
+                            this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
+                            this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
+                            this.studentDataGroup.controls["fatherfirstname"].setValue(studentDataField.get("fatherfirstname"));
+                            this.studentDataGroup.controls["motherfirstname"].setValue(studentDataField.get("motherfirstname"));
+                            this.studentDataGroup.controls["regionaddress"].setValue(studentDataField.get("regionaddress"));
+                            this.studentDataGroup.controls["regiontk"].setValue(studentDataField.get("regiontk"));
+                            this.studentDataGroup.controls["regionarea"].setValue(studentDataField.get("regionarea"));
+                            this.studentDataGroup.controls["lastschool_schoolname"].setValue(studentDataField.get("lastschool_schoolname"));
+                            this.studentDataGroup.controls["lastschool_schoolyear"].setValue(studentDataField.get("lastschool_schoolyear"));
+                            this.studentDataGroup.controls["lastschool_class"].setValue(studentDataField.get("lastschool_class"));
+                            this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
+                            this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
+                            this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
+
+                            if (this.appUpdate.getValue() === true) {
+                                if (studentDataField.get("relationtostudent") === 'Γονέας/Κηδεμόνας')
+                                  this.numAppChildren.next(this.numAppChildren.getValue() -1) ;
+                                else if (studentDataField.get("relationtostudent") === 'Μαθητής')
+                                  this.numAppSelf.next(this.numAppSelf.getValue() - 1);
+                            }
+
+                            return studentDataField;
+                        }, {});
+                    }
+                    this.studentDataFields$.next(sdfds);
+                }, error => { console.log("error selecting studentDataFields"); });
         });
         //end new
 
@@ -211,7 +247,7 @@ import {
 
               }, error => { console.log("error selecting datamode"); });
 
-
+        /*
         this.studentDataFieldsSub = this._ngRedux.select("studentDataFields")
             .subscribe(studentDataFields => {
                 let sdfds = <IStudentDataFieldRecords>studentDataFields;
@@ -241,6 +277,7 @@ import {
                 }
                 this.studentDataFields$.next(sdfds);
             }, error => { console.log("error selecting studentDataFields"); });
+          */
 
     };
 

@@ -199,6 +199,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     ngOnInit() {
 
         (<any>$("#studentFormSentNotice")).appendTo("body");
+        window.scrollTo(0, 0);
+        
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(linfo => {
@@ -224,6 +226,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                 .subscribe(ecs => {
                     if (ecs.size > 0) {
                         ecs.reduce(({}, datamode,i) => {
+                           //ΠΡΟΣΟΧΗ: να τροποποιήσω τον τρόπο για έλεγχο πληρότητας..
+                            /*
                             if (datamode.get("app_update") === true) {
                                 this.app_update.next(true);
                                 this.appId.next(datamode.get("appid"));
@@ -233,6 +237,12 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                                 for (let i=0; i < datamode.get("epal_name_choice").length; i++)
                                   this.previousSchools.next(datamode.get("epal_name_choice")[i].epal_id + "," + this.previousSchools.getValue());
                             }
+                            */
+                            if (datamode.get("app_update") === true) {
+                                this.app_update.next(true);
+                                this.appId.next(datamode.get("appid"));
+                            }
+
                             return datamode;
                         }, {});
                     } else {

@@ -142,6 +142,7 @@ import { IAppState } from "../../store/store";
     ngOnInit() {
 
         (<any>$("#choiceSentNotice")).appendTo("body");
+        window.scrollTo(0, 0);
 
         this.selectEpalClasses();
 
@@ -304,7 +305,7 @@ import { IAppState } from "../../store/store";
     }
 
     saveSelected(checked, i, j) {
-        this._rsa.saveRegionSchoolsSelected(checked, i, j);
+        this._rsa.saveRegionSchoolsSelected(checked, i, j, 0);
     }
 
     navigateToApplication() {

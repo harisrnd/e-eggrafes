@@ -198,8 +198,8 @@
         <option *ngIf = "!(appUpdate | async) && !(numAppSelf | async)"  value="Μαθητής">Μαθητής</option>
 
         <option *ngIf = "(appUpdate | async)" [selected]="true" value={{reltostud.value}}>{{reltostud.value}}</option>
-        <option *ngIf = "(appUpdate | async) && (reltostud.value != 'Γονέας/Κηδεμόνας') && (numAppChildren | async) <  (numChildren | async)" value="Γονέας/Κηδεμόνας">Γονέας/Κηδεμόνας</option>
-        <option *ngIf = "(appUpdate | async) && (reltostud.value != 'Μαθητής') && !(numAppSelf | async)" value="Μαθητής">Μαθητής</option>
+        <option *ngIf = "(appUpdate | async) && (reltostud.value != 'Γονέας/Κηδεμόνας') && (numAppChildren| async) <  (numChildren | async)" value="Γονέας/Κηδεμόνας">Γονέας/Κηδεμόνας</option>
+        <option *ngIf = "(appUpdate | async) && (reltostud.value != 'Μαθητής') && (numAppSelf | async) == 0 " value="Μαθητής">Μαθητής</option>
 
     </select>
 

@@ -105,6 +105,7 @@ import { IAppState } from "../../store/store";
 
     ngOnInit() {
         (<any>$("#epalClassNotice")).appendTo("body");
+        window.scrollTo(0, 0);
 
         this.datamodeSub = this._ngRedux.select("datamode")
             .map(datamode => <IDataModeRecords>datamode)
