@@ -227,12 +227,11 @@ export class HelperDataService implements OnInit, OnDestroy {
 
         this.lockApprovSub = this.getStatusofLockSmallClasses().subscribe(data => {
                  this.lockApprov$.next(data);
-                 this.lockApprov$.getValue().forEach(lockapp => 
-                     {
-                         this.lockapp = lockapp.res;
-                         console.log(this.lockapp,"lookapp"); 
-                         
-                  if (this.lockapp === 0){
+                 this.lockApprov$.getValue().forEach(lockapp =>
+                  {
+                     this.lockapp = lockapp.res;
+
+                     if (this.lockapp === 0){
                              console.log("1");
 ;                            if (classActive === 1)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/regions/list`;
@@ -242,11 +241,9 @@ export class HelperDataService implements OnInit, OnDestroy {
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool/list?course_id=${courseActive}`;
                             else if (classActive === 4)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool_night/list?course_id=${courseActive}`;
-     
-                  }
-                  else
-                  {
-                             console.log("2");
+                      }
+                      else
+                      {
                             if (classActive === 1)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getregions`;
                             else if (classActive === 2)
@@ -255,10 +252,7 @@ export class HelperDataService implements OnInit, OnDestroy {
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getcoursesperschoolsmallclasses/`+ courseActive;
                             else if (classActive === 4)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getcoursesperschoolsmallclasses_night/`+ courseActive;
-                            
-
-
-                  }
+                       }
 
                             this.http.get(getConnectionString, options)
                             .map(response => response.json())
@@ -277,8 +271,8 @@ export class HelperDataService implements OnInit, OnDestroy {
             error => {
                 this.lockApprov$.next([{}]);
                 console.log("Error getting Settings");
-               }); 
-           
+               });
+
 
         });
     };
@@ -324,7 +318,7 @@ export class HelperDataService implements OnInit, OnDestroy {
             rsa[trackIndex].epals.push(<IRRegionSchool>{ "epal_id": regionSchool.epal_id, "epal_name": regionSchool.epal_name, "epal_special_case": regionSchool.epal_special_case, "globalIndex": j, "selected": false, "order_id": 0 });
             j++;
         });
-       
+
         return rsa;
     }
 
@@ -1354,7 +1348,6 @@ getStatusofLockSmallClasses()
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        console.log("test");
         return this.http.get(`${AppSettings.API_ENDPOINT}/epal/locksmallclasses`, options)
             .map(response => response.json());
 

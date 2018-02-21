@@ -310,6 +310,7 @@ import {
             this.showModal();
         } else {
             this._sdfa.saveStudentDataFields([this.studentDataGroup.value]);
+            /*
             if (this.appUpdate.getValue() === true) {
               this._cfa.saveDataModeSelected({edit: false, app_update: true, appid: this.appId.getValue(),
                           currentclass: this.previousClass.getValue(), sector_name: this.previousSector.getValue(),
@@ -320,6 +321,7 @@ import {
           else {
               this._cfa.saveDataModeSelected({edit: false, app_update: false});
           }
+          */
 
             this.router.navigate(["/application-submit"]);
         }

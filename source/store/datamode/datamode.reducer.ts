@@ -22,7 +22,7 @@ export function datamodeReducer(state: IDataModeRecords = DATAMODE_INITIAL_STATE
                 lastschool_schoolyear: action.payload.dataMode.lastschool_schoolyear, lastschool_class: action.payload.dataMode.lastschool_class,
                 relationtostudent: action.payload.dataMode.relationtostudent, telnum: action.payload.dataMode.telnum,*/
                 sector_id: action.payload.dataMode.sector_id, course_id: action.payload.dataMode.course_id,
-                epal_name_choice: action.payload.dataMode.epal_name_choice, currentclass: action.payload.dataMode.currentclass
+                epal_choice: action.payload.dataMode.epal_choice, currentclass: action.payload.dataMode.currentclass
               }));
             return List(newDataMode);
 

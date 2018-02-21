@@ -24,7 +24,7 @@ export interface IDataMode {
     currentclass: string;
     sector_id: string;
     course_id: string;
-    epal_name_choice: string;
+    epal_choice: string;
 }
 
 export interface IDataModeRecord extends TypedRecord<IDataModeRecord>, IDataMode { };

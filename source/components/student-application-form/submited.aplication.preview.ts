@@ -536,6 +536,8 @@ import { IAppState } from "../../store/store";
         (<any>jQuery("#applicationDeleteError")).appendTo("body");
         this.showLoader$.next(true);
 
+        this.resetStore();
+
         this.SubmitedUsersSub = this._hds.getSubmittedPreviw().subscribe(
             data => {
                 this.SubmitedApplic$.next(data);
@@ -561,12 +563,15 @@ import { IAppState } from "../../store/store";
 
 
     setActiveEpalUser(ind: number): void {
+
         if (ind === this.applicationEpalIdActive) {
             this.applicationEpalIdActive = 0;
             return;
         }
-        if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
-          this.resetStore();
+
+        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
+        this.resetStore();
+
         this.applicationEpalIdActive = ind;
         this.showLoader$.next(true);
 
@@ -585,12 +590,15 @@ import { IAppState } from "../../store/store";
     }
 
     setActiveGelUser(ind: number): void {
+
         if (ind === this.applicationGelIdActive) {
             this.applicationGelIdActive = 0;
             return;
         }
-        if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
-          this.resetStore();
+
+        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
+        this.resetStore();
+
         this.applicationGelIdActive = ind;
         this.showLoader$.next(true);
 
@@ -640,6 +648,7 @@ import { IAppState } from "../../store/store";
         this.showConfirmModal();
     }
 
+    /*
     editApplication(appId: number): void {
 
         this.applicationId = appId;
@@ -665,6 +674,7 @@ import { IAppState } from "../../store/store";
         });
 
     }
+    */
 
     deleteApplicationDo(): void {
         this.hideConfirmModal();
@@ -724,7 +734,10 @@ import { IAppState } from "../../store/store";
 
       //this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
 
-      this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
+      //this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
+      //this._eca.saveEpalClassesSelected({name: "2"});
+      //console.log("Test");
+    //  console.log(this.EpalSubmittedDetails$.getValue()[0].currentclass);
 
       /*
       if (this.sector_index != -1)
@@ -746,8 +759,9 @@ import { IAppState } from "../../store/store";
     createStoreWithEpalAppData()  {
 
         //to be considered
-        this._eca.initEpalClasses();
+        //this._eca.initEpalClasses();
         //
+        this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
 
         let class_id = this.EpalSubmittedDetails$.getValue()[0].currentclass;
         if (class_id === "2" )
@@ -766,7 +780,7 @@ import { IAppState } from "../../store/store";
         this._cfa.saveDataModeSelected({
           app_update: true, appid: this.EpalSubmittedDetails$.getValue()[0].applicationId,
           sector_id: this.EpalSubmittedDetails$.getValue()[0].currentsector_id, course_id: this.EpalSubmittedDetails$.getValue()[0].currentcourse_id,
-          epal_name_choice: this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen, currentclass: this.EpalSubmittedDetails$.getValue()[0].currentclass
+          epal_choice: this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen, currentclass: this.EpalSubmittedDetails$.getValue()[0].currentclass
         });
         this._sta.saveSchoolTypeSelected(2, "ΕΠΑΛ");
 
