@@ -5,7 +5,6 @@ import { Injectable } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, Subscription } from "rxjs/Rx";
 import { DataModeActions } from "../../actions/datamode.actions";
-import { DATAMODE_INITIAL_STATE } from "../../store/datamode/datamode.initial-state";
 import { IDataModeRecords } from "../../store/datamode/datamode.types";
 
 import { EpalClassesActions } from "../../actions/epalclass.actions";
@@ -212,7 +211,7 @@ import { IAppState } from "../../store/store";
                     <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-6" style="font-size: 0.8em; font-weight: bold;">Μάθημα Επιλογης:</div>
                     </div>
-                    
+
                     <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-2" style="font-size: 0.8em;"></div>
                         <div class="col-md-4" style="font-size: 0.8em;">Σειρά Προτίμησης</div>
@@ -496,7 +495,6 @@ import { IAppState } from "../../store/store";
         private router: Router,
         private loc: Location
     ) {
-        // this.datamode$ = new BehaviorSubject(DATAMODE_INITIAL_STATE);
         this.SubmitedApplic$ = new BehaviorSubject([{}]);
         this.EpalSubmittedDetails$ = new BehaviorSubject([{}]);
         this.showLoader$ = new BehaviorSubject(false);
@@ -538,6 +536,8 @@ import { IAppState } from "../../store/store";
         (<any>jQuery("#applicationDeleteError")).appendTo("body");
         this.showLoader$.next(true);
 
+        this.resetStore();
+
         this.SubmitedUsersSub = this._hds.getSubmittedPreviw().subscribe(
             data => {
                 this.SubmitedApplic$.next(data);
@@ -563,12 +563,15 @@ import { IAppState } from "../../store/store";
 
 
     setActiveEpalUser(ind: number): void {
+
         if (ind === this.applicationEpalIdActive) {
             this.applicationEpalIdActive = 0;
             return;
         }
-        if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
-          this.resetStore();
+
+        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
+        this.resetStore();
+
         this.applicationEpalIdActive = ind;
         this.showLoader$.next(true);
 
@@ -587,12 +590,15 @@ import { IAppState } from "../../store/store";
     }
 
     setActiveGelUser(ind: number): void {
+
         if (ind === this.applicationGelIdActive) {
             this.applicationGelIdActive = 0;
             return;
         }
-        if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
-          this.resetStore();
+
+        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
+        this.resetStore();
+
         this.applicationGelIdActive = ind;
         this.showLoader$.next(true);
 
@@ -642,6 +648,7 @@ import { IAppState } from "../../store/store";
         this.showConfirmModal();
     }
 
+    /*
     editApplication(appId: number): void {
 
         this.applicationId = appId;
@@ -667,6 +674,7 @@ import { IAppState } from "../../store/store";
         });
 
     }
+    */
 
     deleteApplicationDo(): void {
         this.hideConfirmModal();
@@ -726,7 +734,10 @@ import { IAppState } from "../../store/store";
 
       //this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
 
-      this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
+      //this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
+      //this._eca.saveEpalClassesSelected({name: "2"});
+      //console.log("Test");
+    //  console.log(this.EpalSubmittedDetails$.getValue()[0].currentclass);
 
       /*
       if (this.sector_index != -1)
@@ -748,8 +759,9 @@ import { IAppState } from "../../store/store";
     createStoreWithEpalAppData()  {
 
         //to be considered
-        this._eca.initEpalClasses();
+        //this._eca.initEpalClasses();
         //
+        this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
 
         let class_id = this.EpalSubmittedDetails$.getValue()[0].currentclass;
         if (class_id === "2" )
@@ -765,7 +777,11 @@ import { IAppState } from "../../store/store";
         else if (class_id === "3" || class_id === "4" )
           this._rsa.getRegionSchools(parseInt(class_id), parseInt(this.EpalSubmittedDetails$.getValue()[0].currentcourse_id), false);
 
-        this._cfa.saveDataModeSelected({app_update: true, appid: this.EpalSubmittedDetails$.getValue()[0].applicationId});
+        this._cfa.saveDataModeSelected({
+          app_update: true, appid: this.EpalSubmittedDetails$.getValue()[0].applicationId,
+          sector_id: this.EpalSubmittedDetails$.getValue()[0].currentsector_id, course_id: this.EpalSubmittedDetails$.getValue()[0].currentcourse_id,
+          epal_choice: this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen, currentclass: this.EpalSubmittedDetails$.getValue()[0].currentclass
+        });
         this._sta.saveSchoolTypeSelected(2, "ΕΠΑΛ");
 
         let birthdate = this.EpalSubmittedDetails$.getValue()[0].birthdate;
@@ -878,10 +894,6 @@ import { IAppState } from "../../store/store";
 
 
     editGelApplication()  {
-
-      //this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
-      //this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
-      //this._gca.saveGelClassesSelected(-1, parseInt(this.GelSubmittedDetails$.getValue()[0].nextclass) -1 );
 
       this.router.navigate(["/gel-class-select"]);
 
