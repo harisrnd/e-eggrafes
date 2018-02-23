@@ -16,10 +16,10 @@ export class RegionSchoolsActions {
         private _ngRedux: NgRedux<IAppState>,
         private _hds: HelperDataService) { }
 
-    getRegionSchools = (classActive, courseActive, reload) => {
+    getRegionSchools = (classActive, courseActive, editApp, reload) => {
         const { regions } = this._ngRedux.getState();
         if (reload === true || (reload === false && regions.size === 0)) {
-            return this._hds.getRegionsWithSchools(classActive, courseActive).then(regions => {
+            return this._hds.getRegionsWithSchools(classActive, courseActive, editApp).then(regions => {
                 return this._ngRedux.dispatch({
                     type: REGIONSCHOOLS_RECEIVED,
                     payload: {

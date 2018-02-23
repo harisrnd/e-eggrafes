@@ -184,20 +184,6 @@ import { IAppState } from "../../store/store";
         }
     }
 
-    /*
-    private saveSelected(ind: number): void {
-      console.log("Test value:");
-      console.log(this.activechoice);
-      console.log(ind);
-      if (this.activechoice == ind)
-            return;
-
-      this._ogs.saveOrientationGroupSelected(this.activechoice, ind);
-      this.activechoice = ind;
-
-    }
-    */
-
 
     private saveSelected(ind: number , sel: number): void {
         for (let i=0; i<this.listsize; i++)

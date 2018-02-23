@@ -11,8 +11,6 @@ import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
 import { SectorFieldsActions } from "../../actions/sectorfields.actions";
 import { EPALCLASSES_INITIAL_STATE } from "../../store/epalclasses/epalclasses.initial-state";
 import { IEpalClassRecords } from "../../store/epalclasses/epalclasses.types";
-import { IDataModeRecords } from "../../store/datamode/datamode.types";
-import { DataModeActions } from "../../actions/datamode.actions";
 import { IAppState } from "../../store/store";
 
 @Component({
@@ -76,9 +74,6 @@ import { IAppState } from "../../store/store";
 @Injectable() export default class EpalClassesSelect implements OnInit, OnDestroy {
     private epalclasses$: BehaviorSubject<IEpalClassRecords>;
     private epalclassesSub: Subscription;
-    private datamodeSub: Subscription;
-    private datamode$: BehaviorSubject<IDataModeRecords>;
-
     private formGroup: FormGroup;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
@@ -87,7 +82,6 @@ import { IAppState } from "../../store/store";
 
     constructor(private fb: FormBuilder,
         private _cfa: EpalClassesActions,
-        private _cfd: DataModeActions,
         private _ngRedux: NgRedux<IAppState>,
         private _csa: SectorCoursesActions,
         private _sfa: SectorFieldsActions,
@@ -107,38 +101,6 @@ import { IAppState } from "../../store/store";
         (<any>$("#epalClassNotice")).appendTo("body");
         window.scrollTo(0, 0);
 
-        this.datamodeSub = this._ngRedux.select("datamode")
-            .map(datamode => <IDataModeRecords>datamode)
-            .subscribe(ecs => {
-                if (ecs.size > 0) {
-                    ecs.reduce(({}, datamode,i) => {
-                        if (datamode.get("edit_class") === true) {
-                            //console.log("edit class is true!");
-                            this._cfa.saveEpalClassesSelected({name: datamode.get("currentclass")});
-
-                            //this._cfd.saveDataModeSelected({edit: true, edit_class: false, app_update: true});
-                            /*
-                            this._cfd.saveDataModeSelected({edit: true, edit_class: false, app_update: true, currentclass: datamode.get("currentclass"),
-                              appid: datamode.get("appid"),  studentfirstname: datamode.get("studentfirstname"),
-                              studentsurname: datamode.get("studentsurname"), fatherfirstname: datamode.get("fatherfirstname"),
-                              motherfirstname: datamode.get("motherfirstname"), studentbirthdate: datamode.get("studentbirthdate"),
-                              regionaddress: datamode.get("regionaddress"), regiontk: datamode.get("regiontk"),
-                              regionarea: datamode.get("regionarea"), lastschool_schoolname: datamode.get("lastschool_schoolname"),
-                              lastschool_registrynumber: datamode.get("lastschool_registrynumber"), lastschool_unittypeid: datamode.get("lastschool_unittypeid"),
-                              lastschool_schoolyear: datamode.get("lastschool_schoolyear"), lastschool_class: datamode.get("lastschool_class"),
-                              relationtostudent: datamode.get("relationtostudent"), telnum: datamode.get("telnum"),
-                              sector_name: datamode.get("sector_name"), course_name: datamode.get("course_name"),
-                              epal_name_choice: datamode.get("epal_name_choice")
-                              });
-                              */
-                        }
-                        return datamode;
-                    }, {});
-                } else {
-
-                }
-            }, error => { console.log("error selecting datamode"); });
-
         this.epalclassesSub = this._ngRedux.select("epalclasses")
             .map(epalClasses => <IEpalClassRecords>epalClasses)
             .subscribe(ecs => {
@@ -156,11 +118,10 @@ import { IAppState } from "../../store/store";
     }
 
     ngOnDestroy() {
+        (<any>$("#epalClassNotice")).remove();
+
         if (this.epalclassesSub)
             this.epalclassesSub.unsubscribe();
-        if (this.datamodeSub)
-          this.datamodeSub.unsubscribe();
-        (<any>$("#epalClassNotice")).remove();
     }
 
     public showModal(): void {

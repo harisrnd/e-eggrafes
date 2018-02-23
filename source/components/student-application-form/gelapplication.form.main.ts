@@ -6,8 +6,8 @@ import { Http } from "@angular/http";
 import { Router } from "@angular/router";
 import { IMyDpOptions } from "mydatepicker";
 import { BehaviorSubject, Observable, Subscription } from "rxjs/Rx";
-import { IDataModeRecords } from "../../store/datamode/datamode.types";
-import { DataModeActions } from "../../actions/datamode.actions";
+//import { IDataModeRecords } from "../../store/datamode/datamode.types";
+//import { DataModeActions } from "../../actions/datamode.actions";
 import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
@@ -35,12 +35,12 @@ import {
 
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private studentDataFields$: BehaviorSubject<IGelStudentDataFieldRecords>;
-    private datamode$: BehaviorSubject<IDataModeRecords>;
+    //private datamode$: BehaviorSubject<IDataModeRecords>;
 
     private studentDataFieldsSub: Subscription;
     private loginInfoSub: Subscription;
     private criteriaSub: Subscription;
-    private datamodeSub: Subscription;
+    //private datamodeSub: Subscription;
     private gelUserDataSub: Subscription;
     private gelclassesSub: Subscription;
 
@@ -63,7 +63,7 @@ import {
     private numAppSelf: BehaviorSubject<number>;
     private numAppChildren: BehaviorSubject<number>;
     private numChildren: BehaviorSubject<number>;
-    private gelUserData$: BehaviorSubject<any>;
+    //private gelUserData$: BehaviorSubject<any>;
     private activeClassId = -1;
 
     private myDatePickerOptions: IMyDpOptions = {
@@ -97,7 +97,7 @@ import {
         private _sdfa: GelStudentDataFieldsActions,
         private _cfb: GelClassesActions,
         private hds: HelperDataService,
-        private _cfa: DataModeActions,
+        //private _cfa: DataModeActions,
         private _ngRedux: NgRedux<IAppState>,
         private router: Router,
         private http: Http) {
@@ -119,8 +119,8 @@ import {
         this.numAppSelf = new BehaviorSubject(0);
         this.numAppChildren = new BehaviorSubject(0);
         this.numChildren = new BehaviorSubject(0);
-        this.gelUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
-                                                        representRole: "", numAppSelf: 0, numAppChildren: 0, numChildren: 0 });
+        //this.gelUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
+        //                                                representRole: "", numAppSelf: 0, numAppChildren: 0, numChildren: 0 });
 
         this.studentDataFields$ = new BehaviorSubject(GELSTUDENT_DATA_FIELDS_INITIAL_STATE);
         this.studentDataGroup = this.fb.group({
@@ -160,7 +160,7 @@ import {
             }, error => { console.log("error selecting gelclasses"); });
 
         this.gelUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
-            this.gelUserData$.next(x);
+            //this.gelUserData$.next(x);
             this.numAppSelf.next(Number(x.numAppSelf));
             this.numAppChildren.next(Number(x.numAppChildren));
             this.numChildren.next(Number(x.numChildren));
@@ -189,15 +189,15 @@ import {
                             this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
                             this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
 
+                            //εναλλακτικός τρόπος για προβλήματος πεδίου "Αίτηση από" στο edit app
+
                             if (this.appUpdate.getValue() === true) {
                                 if (studentDataField.get("relationtostudent") === 'Γονέας/Κηδεμόνας')
                                   this.numAppChildren.next(this.numAppChildren.getValue() -1) ;
                                 else if (studentDataField.get("relationtostudent") === 'Μαθητής')
                                   this.numAppSelf.next(this.numAppSelf.getValue() - 1);
-                                console.log("Test drive:");
-                                console.log(this.numAppSelf.getValue());
-                                console.log(this.numAppChildren.getValue());
                             }
+                            
 
                             return studentDataField;
                         }, {});
@@ -215,19 +215,18 @@ import {
           }, error => { console.log("error selecting loginInfo"); });
 
 
+          /*
           this.datamodeSub = this._ngRedux.select("datamode")
               .map(datamode => <IDataModeRecords>datamode)
               .subscribe(ecs => {
                   if (ecs.size > 0) {
                       ecs.reduce(({}, datamode,i) => {
                           this.appUpdate.next(datamode.get("app_update"));
-                          if (this.appUpdate.getValue() === true) {
-                            ;
-                          }
                           return datamode;
                       }, {});
                   }
               }, error => { console.log("error selecting datamode"); });
+          */
 
     };
 
@@ -268,18 +267,6 @@ import {
             this.showModal();
         } else {
             this._sdfa.saveGelStudentDataFields([this.studentDataGroup.value]);
-            /*
-            if (this.appUpdate.getValue() === true) {
-              this._cfa.saveDataModeSelected({edit: false, app_update: true, appid: this.appId.getValue(),
-                          currentclass: this.previousClass.getValue(), sector_name: this.previousSector.getValue(),
-                          course_name: this.previousCourse.getValue(), epal_name_choice: this.previousSchools.getValue(),
-                          relationtostudent: this.reltostud.getValue()
-            });
-          }
-          else {
-              this._cfa.saveDataModeSelected({edit: false, app_update: false});
-          }
-          */
 
           this.router.navigate(["/gel-application-submit"]);
 

@@ -439,39 +439,13 @@ import { IAppState } from "../../store/store";
     private applicationEpalIdActive = <number>-1;
     private applicationGelIdActive = <number>-1;
 
-
     private GelSubmittedApplic$: BehaviorSubject<any>;
     private SubmittedGelUsersSub: Subscription;
-
     private GelSubmittedDetails$: BehaviorSubject<any>;
     private GelSubmittedDetailsSub: Subscription;
 
     private applicationId = <number>0;
     private applicationGelId = <number>0;
-
-
-    //demo data
-    private schooltype_id = <number>1;
-    private schooltype_name = <string>"ΓΕΛ";
-    //private class_id = <number>3;
-    //private electiveCourse_id = <string>"4";
-    //private electiveCourse_index = <number>-1;
-    //private orientationGroup_id = <string>"16";
-    //private orientationGroup_index = <number>-1;
-
-    private class_epal_id = <string>"1";
-    private sector_id = <string>"8";
-    private sector_index = <number>-1;
-    private school_id = <string>"25"; //152
-    private school_index = <number>-1;
-    private region_index = <number>-1;
-    private course_id = <string>"17";
-    private course_index = <number>-1;
-    private sectorcourse_index = <number>-1;
-
-    //private class_name_epal = <string>"Γ' Λυκείου";
-
-    //end demo data
 
     @ViewChild("target") element: ElementRef;
 
@@ -615,6 +589,7 @@ import { IAppState } from "../../store/store";
     }
 
     resetStore() {
+
       this._eca.initEpalClasses();
       this._cfa.initDataMode();
       this._sdfa.initStudentDataFields();
@@ -648,33 +623,6 @@ import { IAppState } from "../../store/store";
         this.showConfirmModal();
     }
 
-    /*
-    editApplication(appId: number): void {
-
-        this.applicationId = appId;
-        this.router.navigate(["/epal-class-select"]);
-        // this.router.navigate(["/intro-statement"]);
-
-        this._sfa.initSectorFields();
-        this._rsa.initRegionSchools();
-        this._csa.initSectorCourses();
-
-        // this._cfa.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass, appmode: "edit", studentfirsttname: this.EpalSubmittedDetails$.getValue()[0].name});
-        this._cfa.saveDataModeSelected({edit: true, edit_class: true, app_update: true, currentclass: this.EpalSubmittedDetails$.getValue()[0].currentclass,
-          appid: this.EpalSubmittedDetails$.getValue()[0].applicationId,  studentfirstname: this.EpalSubmittedDetails$.getValue()[0].name,
-          studentsurname: this.EpalSubmittedDetails$.getValue()[0].studentsurname, fatherfirstname: this.EpalSubmittedDetails$.getValue()[0].fatherfirstname,
-          motherfirstname: this.EpalSubmittedDetails$.getValue()[0].motherfirstname, studentbirthdate: this.EpalSubmittedDetails$.getValue()[0].birthdate,
-          regionaddress: this.EpalSubmittedDetails$.getValue()[0].regionaddress, regiontk: this.EpalSubmittedDetails$.getValue()[0].regiontk,
-          regionarea: this.EpalSubmittedDetails$.getValue()[0].regionarea, lastschool_schoolname: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolname,
-          lastschool_registrynumber: this.EpalSubmittedDetails$.getValue()[0].lastschool_registrynumber, lastschool_unittypeid: this.EpalSubmittedDetails$.getValue()[0].lastschool_unittypeid,
-          lastschool_schoolyear: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolyear, lastschool_class: this.EpalSubmittedDetails$.getValue()[0].lastschool_class,
-          relationtostudent: this.EpalSubmittedDetails$.getValue()[0].relationtostudent, telnum: this.EpalSubmittedDetails$.getValue()[0].telnum,
-          sector_name: this.EpalSubmittedDetails$.getValue()[0].currentsector, course_name: this.EpalSubmittedDetails$.getValue()[0].currentcourse,
-          epal_name_choice: this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen
-        });
-
-    }
-    */
 
     deleteApplicationDo(): void {
         this.hideConfirmModal();
@@ -729,28 +677,7 @@ import { IAppState } from "../../store/store";
     }
 
 
-
     editEpalApplication() {
-
-      //this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
-
-      //this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
-      //this._eca.saveEpalClassesSelected({name: "2"});
-      //console.log("Test");
-    //  console.log(this.EpalSubmittedDetails$.getValue()[0].currentclass);
-
-      /*
-      if (this.sector_index != -1)
-        this._sfa.saveSectorFieldsSelected(-1, this.sector_index);
-
-      if (this.school_index != -1 && this.region_index != -1)
-        this._rsa.saveRegionSchoolsSelected(true, this.region_index, this.school_index);
-
-      if (this.course_index != -1 && this.sectorcourse_index != -1)
-        this._csa.saveSectorCoursesSelected(-1, -1, true, this.sectorcourse_index, this.course_index);
-      */
-
-      //this._rsa.saveRegionSchoolsOrder(this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen);
 
       this.router.navigate(["/epal-class-select"]);
 
@@ -758,9 +685,6 @@ import { IAppState } from "../../store/store";
 
     createStoreWithEpalAppData()  {
 
-        //to be considered
-        //this._eca.initEpalClasses();
-        //
         this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
 
         let class_id = this.EpalSubmittedDetails$.getValue()[0].currentclass;
@@ -770,12 +694,12 @@ import { IAppState } from "../../store/store";
           this._csa.getSectorCourses(false);
 
         if (class_id === "1" )
-          this._rsa.getRegionSchools(parseInt(class_id), "-1", false);
+          this._rsa.getRegionSchools(parseInt(class_id), "-1", true, false);
         else if (class_id === "2" ) {
-          this._rsa.getRegionSchools(parseInt(class_id), parseInt(this.EpalSubmittedDetails$.getValue()[0].currentsector_id), false);
+          this._rsa.getRegionSchools(parseInt(class_id), parseInt(this.EpalSubmittedDetails$.getValue()[0].currentsector_id), true, false);
         }
         else if (class_id === "3" || class_id === "4" )
-          this._rsa.getRegionSchools(parseInt(class_id), parseInt(this.EpalSubmittedDetails$.getValue()[0].currentcourse_id), false);
+          this._rsa.getRegionSchools(parseInt(class_id), parseInt(this.EpalSubmittedDetails$.getValue()[0].currentcourse_id), true, false);
 
         this._cfa.saveDataModeSelected({
           app_update: true, appid: this.EpalSubmittedDetails$.getValue()[0].applicationId,
@@ -805,19 +729,6 @@ import { IAppState } from "../../store/store";
                   day: Number(birthparts[0])}}
             }]);
 
-        /*
-        if (this.class_epal_id === "2" )
-          this._sfa.getSectorFields(false);
-        else if (this.class_epal_id === "3" || this.class_epal_id === "4" )
-          this._csa.getSectorCourses(false);
-
-        if (this.class_epal_id === "1" )
-          this._rsa.getRegionSchools(parseInt(this.class_epal_id), "-1", false);
-        else if (this.class_epal_id === "2" )
-          this._rsa.getRegionSchools(parseInt(this.class_epal_id), parseInt(this.sector_id), false);
-        else if (this.class_epal_id === "3" || this.class_epal_id === "4" )
-          this._rsa.getRegionSchools(parseInt(this.class_epal_id), parseInt(this.course_id), false);
-        */
 
         this.sectorFieldsSub = this._ngRedux.select("sectorFields")
               .map(sectorFields => <ISectorFieldRecords>sectorFields)
@@ -858,7 +769,6 @@ import { IAppState } from "../../store/store";
                 }, error => { console.log("error selecting regions"); });
 
 
-              //let ids = 0, idc = 0;
               this.sectorsSub = this._ngRedux.select("sectors")
                     //.map(sectors => <ISectorRecords>sectors)
                     .subscribe(sectors => {
@@ -870,18 +780,8 @@ import { IAppState } from "../../store/store";
                             numcour = 0;
                             sector.get("courses").reduce((prevCourse, course) => {
                                 ++numcour;
-                                //if (course.get("course_id") === this.course_id ) {
                                 if (course.get("course_id") === this.EpalSubmittedDetails$.getValue()[0].currentcourse_id ) {
                                   this._csa.saveSectorCoursesSelected(-1, -1, true, numsec-1, numcour-1);
-
-                                  /*
-                                  this.course_index = numcour -1;
-                                  this.sectorcourse_index = numsec - 1;
-                                  console.log("course index:");
-                                  console.log(numcour);
-                                  console.log("sector index:");
-                                  console.log(numsec);
-                                  */
                                 }
                                 return course;
                             }, {});
@@ -895,7 +795,53 @@ import { IAppState } from "../../store/store";
 
     editGelApplication()  {
 
+      this.gelclassesSub = this._ngRedux.select("gelclasses")
+            .map(gelclasses => <IGelClassRecords>gelclasses)
+            .subscribe(ecs => {
+                if (ecs.size > 0) {
+                     ecs.reduce(({}, gelclass) => {
+                        if (gelclass.get("id") === this.GelSubmittedDetails$.getValue()[0].nextclass ){
+                            this._gca.saveGelClassesSelected(-1, this.GelSubmittedDetails$.getValue()[0].nextclass -1 );
+                        }
+                        return gelclass;
+                    }, {});
+                }
+            }, error => { console.log("error selecting gelclasses"); });
+
+      this.electivecourseFieldsSub = this._ngRedux.select("electivecourseFields")
+        .map(electivecourseFields => <IElectiveCourseFieldRecords>electivecourseFields)
+        .subscribe(sfds => {
+            let electcnt = 0;
+            sfds.reduce(({}, electivecourseField) => {
+                ++electcnt;
+                for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
+                    if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΕΠΙΛΟΓΗ"  &&
+                         electivecourseField.get("id") === this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id) {
+                            this._ecf.saveElectiveCourseFieldsSelected(electcnt-1, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
+                    }
+                }
+                return electivecourseField;
+            }, {});
+        }, error => { console.log("error selecting electivecourseFields"); });
+
       this.router.navigate(["/gel-class-select"]);
+
+      this.OrientationGroupSub = this._ngRedux.select("orientationGroup")
+           .map(orientationGroup => <IOrientationGroupRecords>orientationGroup)
+           .subscribe(ogs => {
+                 let orientcnt = 0;
+                 ogs.reduce(({}, orientationgroup) => {
+                   ++orientcnt;
+                   //if (orientationgroup.get("id") === this.orientationGroup_id) {
+                   for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
+                       if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΟΠ"  &&
+                            orientationgroup.get("id") === this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id) {
+                               this._ogs.saveOrientationGroupSelected(orientcnt-1, 0);
+                       }
+                   }
+                   return orientationgroup;
+                 }, {});
+           }, error => { console.log("error selecting orientation"); });
 
     }
 
@@ -935,12 +881,12 @@ import { IAppState } from "../../store/store";
           }]);
 
 
+        /*
         this.gelclassesSub = this._ngRedux.select("gelclasses")
               .map(gelclasses => <IGelClassRecords>gelclasses)
               .subscribe(ecs => {
                   if (ecs.size > 0) {
                        ecs.reduce(({}, gelclass) => {
-                          //if (gelclass.get("selected")===true ){
                           if (gelclass.get("id") === this.GelSubmittedDetails$.getValue()[0].nextclass ){
                               this._gca.saveGelClassesSelected(-1, this.GelSubmittedDetails$.getValue()[0].nextclass -1 );
                           }
@@ -949,11 +895,16 @@ import { IAppState } from "../../store/store";
                   }
               }, error => { console.log("error selecting gelclasses"); });
 
+        */
+
+        /*
         this.electivecourseFieldsSub = this._ngRedux.select("electivecourseFields")
           .map(electivecourseFields => <IElectiveCourseFieldRecords>electivecourseFields)
           .subscribe(sfds => {
+              console.log("Mpika1");
               let electcnt = 0;
               sfds.reduce(({}, electivecourseField) => {
+                  console.log("Mpika2");
                   ++electcnt;
                   //if (electivecourseField.get("id")=== this.electiveCourse_id ) {
                   for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
@@ -965,7 +916,9 @@ import { IAppState } from "../../store/store";
                   return electivecourseField;
               }, {});
           }, error => { console.log("error selecting electivecourseFields"); });
+        */
 
+        /*
          this.OrientationGroupSub = this._ngRedux.select("orientationGroup")
               .map(orientationGroup => <IOrientationGroupRecords>orientationGroup)
               .subscribe(ogs => {
@@ -982,6 +935,7 @@ import { IAppState } from "../../store/store";
                       return orientationgroup;
                     }, {});
               }, error => { console.log("error selecting orientation"); });
+              */
 
     }
 

@@ -15,9 +15,9 @@ export interface ILoginInfoObj {
     lock_students: number;
     lock_application: number;
     disclaimer_checked: number;
-    numapp_self: number;
-    numapp_children: number;
-    numchildren: number;
+    //numapp_self: number;
+    //numapp_children: number;
+    //numchildren: number;
 }
 
 export interface ILoginInfoRecord extends TypedRecord<ILoginInfoRecord>, ILoginInfoObj { };
