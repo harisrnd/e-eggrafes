@@ -25,7 +25,7 @@ import { HelperDataService } from "../../services/helper-data-service";
             </div>
         </div>
       </div>
-      
+
 
           <div style="min-height: 500px;">
         <form>
@@ -45,10 +45,10 @@ import { HelperDataService } from "../../services/helper-data-service";
                     <p></p>
                     <div class = "row" [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
                          <div class="col-md-8">&nbsp;</div>
-                         <div  [hidden]="SchoolNames$.id !== regionActive" class="col-md-4 pull-right" style="color: black;" > 
+                         <div  [hidden]="SchoolNames$.id !== regionActive" class="col-md-4 pull-right" style="color: black;" >
                          <span aria-hidden="true">
                                 <button type="button" class="btn-primary btn-sm pull-right" (click) ="setActiveRegion(SchoolNames$.id)">Κλείσιμο</button>
-                              </span> 
+                              </span>
                          </div>
                     </div>
 
@@ -56,7 +56,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                         [class.oddin]="isOdd2" [class.evenin]="isEven2" [class.changecolor]="calccolor(CoursesNames$.size,CoursesNames$.limitdown)"
                         [class.changecolorbalck]="calccolor(CoursesNames$.limitdown, CoursesNames$.size)"
                         [class.selectedappout]="regionActive === j"
-                        [hidden]="(SchoolNames$.id !== regionActive) ||(calccolor(CoursesNames$.size,CoursesNames$.limitdown) === false) " 
+                        [hidden]="(SchoolNames$.id !== regionActive) ||(calccolor(CoursesNames$.size,CoursesNames$.limitdown) === false) "
                         style="margin: 0px 2px 0px 2px;" >
 
 
@@ -143,14 +143,11 @@ import { HelperDataService } from "../../services/helper-data-service";
 
     setActiveRegion(ind) {
         this.CoursesPerPerf$.next([{}]);
-        console.log(this.regionActive , ind, "test");
         if (ind === this.regionActive) {
             ind = -1;
             this.regionActive = ind;
-            console.log("kleisimo");
         }
         else {
-            console.log("anoigma");
             this.regionActive = ind;
             this.showLoader.next(true);
             this.CoursesPerPerfSub = this._hds.getCoursePerPerfecture(this.regionActive)
@@ -176,7 +173,6 @@ import { HelperDataService } from "../../services/helper-data-service";
         if (cb.value === 2)
             rtype = "0";
         let type = cb.value;
-        console.log(type,"type");
 
         let std = this.CoursesPerPerf$.getValue();
         std[ind].approved = rtype;
@@ -188,7 +184,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                 this.SavedSApproved$.next([{}]);
                 console.log("Error saving Approved");
                 this.showLoader.next(false);
-               }); 
+               });
     }
 
 

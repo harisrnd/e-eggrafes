@@ -658,6 +658,7 @@ class GelApplicationSubmit extends ControllerBase
                                       'birthdate',
                                   ));
       $esQuery->condition('es.' . $userIdField, $applicantUser->id(), '=');
+      $esQuery->condition('es.delapp' , 0, '=');
       $existing = $esQuery->execute()->fetchAll(\PDO::FETCH_OBJ);
       if ($existing && sizeof($existing) > 0) {
           $crypt = new Crypt();

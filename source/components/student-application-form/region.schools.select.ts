@@ -11,6 +11,8 @@ import { REGION_SCHOOLS_INITIAL_STATE } from "../../store/regionschools/regionsc
 import { IRegionRecords } from "../../store/regionschools/regionschools.types";
 import { ISectorRecords } from "../../store/sectorcourses/sectorcourses.types";
 import { ISectorFieldRecords } from "../../store/sectorfields/sectorfields.types";
+//import { DataModeActions } from "../../actions/datamode.actions";
+//import { IDataModeRecords } from "../../store/datamode/datamode.types";
 import { IAppState } from "../../store/store";
 
 @Component({
@@ -94,10 +96,12 @@ import { IAppState } from "../../store/store";
 })
 @Injectable() export default class RegionSchoolsSelect implements OnInit, OnDestroy {
     private regions$: BehaviorSubject<IRegionRecords>;
+    //private datamode$: BehaviorSubject<IDataModeRecords>;
     private epalclassesSub: Subscription;
     private regionsSub: Subscription;
     private sectorsSub: Subscription;
     private sectorFieldsSub: Subscription;
+    //private datamodeSub: Subscription;
 
     private formGroup: FormGroup;
     private rss = new FormArray([]);
@@ -114,10 +118,12 @@ import { IAppState } from "../../store/store";
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
+    private appUpdate: BehaviorSubject<boolean>;
 
 
     constructor(private fb: FormBuilder,
         private _rsa: RegionSchoolsActions,
+        //private _dma: DataModeActions,
         private _ngRedux: NgRedux<IAppState>,
         private router: Router
 
@@ -132,7 +138,7 @@ import { IAppState } from "../../store/store";
         this.selectionLimit = new BehaviorSubject(3);
         this.selectionLimitOptional = new BehaviorSubject(false);
         this.classNight = new BehaviorSubject(false);
-
+        this.appUpdate = new BehaviorSubject(false);
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
         this.modalHeader = new BehaviorSubject("");
@@ -144,6 +150,21 @@ import { IAppState } from "../../store/store";
         (<any>$("#choiceSentNotice")).appendTo("body");
         window.scrollTo(0, 0);
 
+        /*
+        this.datamodeSub = this._ngRedux.select("datamode")
+            .map(datamode => <IDataModeRecords>datamode)
+            .subscribe(ecs => {
+                if (ecs.size > 0) {
+                    ecs.reduce(({}, datamode,i) => {
+                        this.appUpdate.next(datamode.get("app_update"));
+                        if (datamode.get("edit") === true)
+                            this.appUpdate.next(true);
+                        return datamode;
+                    }, {});
+                }
+            }, error => { console.log("error selecting datamode"); });
+        */
+
         this.selectEpalClasses();
 
         this.selectRegionSchools();
@@ -153,18 +174,16 @@ import { IAppState } from "../../store/store";
 
         (<any>$("#choiceSentNotice")).remove();
 
-        if (this.epalclassesSub) {
+        if (this.epalclassesSub)
             this.epalclassesSub.unsubscribe();
-        }
-        if (this.regionsSub) {
+        if (this.regionsSub)
             this.regionsSub.unsubscribe();
-        }
-        if (this.sectorsSub) {
+        if (this.sectorsSub)
             this.sectorsSub.unsubscribe();
-        }
-        if (this.sectorFieldsSub) {
+        if (this.sectorFieldsSub)
             this.sectorFieldsSub.unsubscribe();
-        }
+        //if (this.datamodeSub)
+        //    this.datamodeSub.unsubscribe();
 
     }
 
@@ -246,7 +265,7 @@ import { IAppState } from "../../store/store";
     getAppropriateSchools(epalClass) {
 
         if (epalClass === "1") {
-            this._rsa.getRegionSchools(1, "-1", false);
+            this._rsa.getRegionSchools(1, "-1", false,/*this.appUpdate.getValue()*/ false);
         }
         else if (epalClass === "2") {
             this.sectorFieldsSub = this._ngRedux.select("sectorFields")
@@ -255,7 +274,7 @@ import { IAppState } from "../../store/store";
                     sfds.reduce(({}, sectorField) => {
                         if (sectorField.selected === true) {
                             this.courseActive = sectorField.id;
-                            this._rsa.getRegionSchools(2, this.courseActive, false);
+                            this._rsa.getRegionSchools(2, this.courseActive, false, /*this.appUpdate.getValue()*/ false);
                         }
                         return sectorField;
                     }, {});
@@ -275,7 +294,7 @@ import { IAppState } from "../../store/store";
                                 if (course.get("selected") === true) {
                                     this.courseActive = parseInt(course.get("course_id"));
                                     // this._rsa.getRegionSchools(3,this.courseActive, false);
-                                    this._rsa.getRegionSchools(parseInt(epalClass), this.courseActive, false);
+                                    this._rsa.getRegionSchools(parseInt(epalClass), this.courseActive, false, /*this.appUpdate.getValue()*/false);
                                 }
                                 return course;
                             }, {});
