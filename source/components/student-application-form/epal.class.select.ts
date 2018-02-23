@@ -105,6 +105,7 @@ import { IAppState } from "../../store/store";
 
     ngOnInit() {
         (<any>$("#epalClassNotice")).appendTo("body");
+        window.scrollTo(0, 0);
 
         this.datamodeSub = this._ngRedux.select("datamode")
             .map(datamode => <IDataModeRecords>datamode)
@@ -116,6 +117,7 @@ import { IAppState } from "../../store/store";
                             this._cfa.saveEpalClassesSelected({name: datamode.get("currentclass")});
 
                             //this._cfd.saveDataModeSelected({edit: true, edit_class: false, app_update: true});
+                            /*
                             this._cfd.saveDataModeSelected({edit: true, edit_class: false, app_update: true, currentclass: datamode.get("currentclass"),
                               appid: datamode.get("appid"),  studentfirstname: datamode.get("studentfirstname"),
                               studentsurname: datamode.get("studentsurname"), fatherfirstname: datamode.get("fatherfirstname"),
@@ -128,6 +130,7 @@ import { IAppState } from "../../store/store";
                               sector_name: datamode.get("sector_name"), course_name: datamode.get("course_name"),
                               epal_name_choice: datamode.get("epal_name_choice")
                               });
+                              */
                         }
                         return datamode;
                     }, {});

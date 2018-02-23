@@ -177,6 +177,8 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
     };
 
     ngOnInit() {
+        window.scrollTo(0, 0);
+
         this.currentUrl = this.router.url;
         this.sectorsSub = this._ngRedux.select("sectors")
             .map(sectors => <ISectorRecords>sectors)

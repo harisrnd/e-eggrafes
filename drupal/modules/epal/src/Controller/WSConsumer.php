@@ -65,12 +65,12 @@ class WSConsumer extends ControllerBase
             ->setStatusCode(Response::HTTP_OK);
     }
 
-    public function getStudentEpalPromotion($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $level_name)
+    public function getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
         $ts_start = microtime(true);
 
         try {
-            $result = $this->client->getStudentEpalPromotion($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $level_name);
+            $result = $this->client->getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no);
         } catch (\Exception $e) {
             return (new JsonResponse(['message' => $e->getMessage()]))
                 ->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code);
@@ -86,12 +86,12 @@ class WSConsumer extends ControllerBase
             ->setStatusCode(Response::HTTP_OK);
     }
 
-    public function getStudentEpalCertification($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $level_name)
+    public function getStudentEpalCertification($id)
     {
         $ts_start = microtime(true);
 
         try {
-            $result = $this->client->getStudentEpalCertification($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $level_name);
+            $result = $this->client->getStudentEpalCertification($id);
         } catch (\Exception $e) {
             return (new JsonResponse(['message' => $e->getMessage()]))
                 ->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code);

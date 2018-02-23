@@ -134,14 +134,13 @@ import { IAppState } from "../../store/store";
               </div>
             </div>
           </div>
-          <br>
            <div class="row">
             <div class="col-md-1 ">
               <input type="checkbox" [checked]="smallClassApproved"  formControlName="smallClassApproved"
               (click)="toggleSmallClassesFilter()" >
             </div>
             <div class="col-md-9">
-              <label for="smallClassApproved">Ενεργοποίηση της επιλογής για περιορισμό των μη εγκεκριμένων ολιγομελών τμημάτων</label>
+              <label for="smallClassApproved">Ενεργοποίηση μη διαθεσιμότητας μη εγκεκριμένων τμημάτων</label>
             </div>
           </div>
           <br>

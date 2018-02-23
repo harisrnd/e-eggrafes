@@ -5,7 +5,6 @@ import { Injectable } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, Subscription } from "rxjs/Rx";
 import { DataModeActions } from "../../actions/datamode.actions";
-import { DATAMODE_INITIAL_STATE } from "../../store/datamode/datamode.initial-state";
 import { IDataModeRecords } from "../../store/datamode/datamode.types";
 
 import { EpalClassesActions } from "../../actions/epalclass.actions";
@@ -17,8 +16,6 @@ import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
 import { ISectorRecords } from "../../store/sectorcourses/sectorcourses.types";
 import { SectorFieldsActions } from "../../actions/sectorfields.actions";
 import { ISectorFieldRecords } from "../../store/sectorfields/sectorfields.types";
-
-
 
 import { SchoolTypeActions } from "../../actions/schooltype.actions";
 import { ISchoolTypeRecords } from "../../store/schooltype/schooltype.types";
@@ -214,7 +211,7 @@ import { IAppState } from "../../store/store";
                     <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-6" style="font-size: 0.8em; font-weight: bold;">Μάθημα Επιλογης:</div>
                     </div>
-                    
+
                     <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-2" style="font-size: 0.8em;"></div>
                         <div class="col-md-4" style="font-size: 0.8em;">Σειρά Προτίμησης</div>
@@ -250,16 +247,16 @@ import { IAppState } from "../../store/store";
 
 
         <div *ngIf="(SubmitedApplic$ | async).length > 0">
-            <div class="row list-group-item isclickable"  style="margin: 0px 2px 0px 2px;" [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedappout]="applicationIdActive === UserData$.id"
+            <div class="row list-group-item isclickable"  style="margin: 0px 2px 0px 2px;" [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedappout]="applicationEpalIdActive === UserData$.id"
             *ngFor="let UserData$  of SubmitedApplic$ | async; let i=index; let isOdd=odd; let isEven=even" >
-                <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveUser(UserData$.id)">{{UserData$.studentsurname}}</div>
-                <div class="col-md-4" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveUser(UserData$.id)">{{UserData$.name}}</div>
-                <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveUser(UserData$.id)">ΕΠΑΛ</div>
+                <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.studentsurname}}</div>
+                <div class="col-md-4" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.name}}</div>
+                <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">ΕΠΑΛ</div>
                 <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteApplication(UserData$.id)"></i></div>
                 <div *ngIf="UserData$.candelete === 0" class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
 
                 <div style="width: 100%">
-                <div *ngFor="let StudentDetails$  of SubmitedDetails$ | async" [hidden]="UserData$.id !== applicationIdActive" style="margin: 10px 10px 10px 10px;">
+                <div *ngFor="let StudentDetails$  of EpalSubmittedDetails$ | async" [hidden]="UserData$.id !== applicationEpalIdActive" style="margin: 10px 10px 10px 10px;">
 
                     <div *ngIf = "StudentDetails$.applicantsResultsDisabled == '0'  && !(showLoader$ | async)" >
                         <div *ngIf = "StudentDetails$.status == '1'" >
@@ -376,7 +373,7 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-6" style="font-size: 1em; font-weight: bold;">Επιλογή ΕΠΑΛ</div>
                     </div>
 
-                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;" *ngFor="let epalChoices$  of StudentDetails$['epalSchoolsChosen']; let i=index; let isOdd=odd; let isEven=even" [hidden]="UserData$.id !== applicationIdActive">
+                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;" *ngFor="let epalChoices$  of StudentDetails$['epalSchoolsChosen']; let i=index; let isOdd=odd; let isEven=even" [hidden]="UserData$.id !== applicationEpalIdActive">
                         <div class="col-md-6" style="font-size: 0.8em; font-weight: bold; text-align: center;">{{epalChoices$.choice_no}}</div>
                         <div class="col-md-6" style="font-size: 0.8em; font-weight: bold;">{{epalChoices$.epal_id}}</div>
                     </div>
@@ -388,7 +385,7 @@ import { IAppState } from "../../store/store";
                           ΚΑΙ επιτρέπεται η τροποποίηση αιτήσεων
                           -->
                             <div *ngIf = "StudentDetails$.status == '3' || StudentDetails$.status == '4' || StudentDetails$.status == '0'" >
-                                <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 10em;" (click)="editApplication()">
+                                <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 10em;" (click)="editEpalApplication()">
                                     <span style="font-size: 0.9em; font-weight: bold;">Επεξεργασία&nbsp;&nbsp;&nbsp;</span>
                                 </button>
                             </div>
@@ -427,7 +424,7 @@ import { IAppState } from "../../store/store";
 
     private SubmitedApplic$: BehaviorSubject<any>;
     private SubmitedUsersSub: Subscription;
-    private SubmitedDetails$: BehaviorSubject<any>;
+    private EpalSubmittedDetails$: BehaviorSubject<any>;
     private SubmitedDetailsSub: Subscription;
 
     private gelclassesSub: Subscription;
@@ -439,7 +436,7 @@ import { IAppState } from "../../store/store";
 
     private showLoader$: BehaviorSubject<boolean>;
     private isModalShown: BehaviorSubject<boolean>;
-    private applicationIdActive = <number>-1;
+    private applicationEpalIdActive = <number>-1;
     private applicationGelIdActive = <number>-1;
 
 
@@ -498,9 +495,8 @@ import { IAppState } from "../../store/store";
         private router: Router,
         private loc: Location
     ) {
-        // this.datamode$ = new BehaviorSubject(DATAMODE_INITIAL_STATE);
         this.SubmitedApplic$ = new BehaviorSubject([{}]);
-        this.SubmitedDetails$ = new BehaviorSubject([{}]);
+        this.EpalSubmittedDetails$ = new BehaviorSubject([{}]);
         this.showLoader$ = new BehaviorSubject(false);
         this.isModalShown = new BehaviorSubject(false);
 
@@ -536,13 +532,11 @@ import { IAppState } from "../../store/store";
 
     ngOnInit() {
 
-        //this.createStoreWithGelAppData();
-
-
-
         (<any>jQuery("#applicationDeleteConfirm")).appendTo("body");
         (<any>jQuery("#applicationDeleteError")).appendTo("body");
         this.showLoader$.next(true);
+
+        this.resetStore();
 
         this.SubmitedUsersSub = this._hds.getSubmittedPreviw().subscribe(
             data => {
@@ -568,39 +562,48 @@ import { IAppState } from "../../store/store";
     }
 
 
-    setActiveUser(ind: number): void {
-        if (ind === this.applicationIdActive) {
-            this.applicationIdActive = 0;
+    setActiveEpalUser(ind: number): void {
+
+        if (ind === this.applicationEpalIdActive) {
+            this.applicationEpalIdActive = 0;
             return;
         }
-        this.applicationIdActive = ind;
+
+        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
+        this.resetStore();
+
+        this.applicationEpalIdActive = ind;
         this.showLoader$.next(true);
 
 
-        this.SubmitedDetailsSub = this._hds.getStudentDetails(this.applicationIdActive).subscribe(data => {
-            this.SubmitedDetails$.next(data);
+        this.SubmitedDetailsSub = this._hds.getStudentDetails(this.applicationEpalIdActive).subscribe(data => {
+            this.EpalSubmittedDetails$.next(data);
             this.showLoader$.next(false);
+            this.createStoreWithEpalAppData();
         },
             error => {
-                this.SubmitedDetails$.next([{}]);
+                this.EpalSubmittedDetails$.next([{}]);
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
 
-
     }
 
     setActiveGelUser(ind: number): void {
+
         if (ind === this.applicationGelIdActive) {
             this.applicationGelIdActive = 0;
             return;
         }
+
+        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
+        this.resetStore();
+
         this.applicationGelIdActive = ind;
         this.showLoader$.next(true);
 
         this.GelSubmittedDetailsSub = this._hds.getGelStudentDetails(this.applicationGelIdActive).subscribe(data => {
             this.GelSubmittedDetails$.next(data);
-            console.log("Yes!!!");
             this.showLoader$.next(false);
             this.createStoreWithGelAppData();
         },
@@ -609,13 +612,24 @@ import { IAppState } from "../../store/store";
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
+    }
 
-        //this.createStoreWithGelAppData();
-
+    resetStore() {
+      this._eca.initEpalClasses();
+      this._cfa.initDataMode();
+      this._sdfa.initStudentDataFields();
+      this._sfa.initSectorFields();
+      this._rsa.initRegionSchools();
+      this._csa.initSectorCourses();
+      this._sta.initSchoolType();
+      this._gca.initGelClasses();
+      this._ecf.initElectiveCourseFields();
+      this._ogs.initOrientationGroup();
+      this._gsdf.initGelStudentDataFields();
     }
 
     createPdfServerSide() {
-        this._hds.createPdfServerSide(this.applicationIdActive, this.SubmitedDetails$.getValue()[0].status);
+        this._hds.createPdfServerSide(this.applicationEpalIdActive, this.EpalSubmittedDetails$.getValue()[0].status);
     }
 
     createGelPdfServerSide() {
@@ -634,6 +648,7 @@ import { IAppState } from "../../store/store";
         this.showConfirmModal();
     }
 
+    /*
     editApplication(appId: number): void {
 
         this.applicationId = appId;
@@ -644,21 +659,22 @@ import { IAppState } from "../../store/store";
         this._rsa.initRegionSchools();
         this._csa.initSectorCourses();
 
-        // this._cfa.saveEpalClassesSelected({name: this.SubmitedDetails$.getValue()[0].currentclass, appmode: "edit", studentfirsttname: this.SubmitedDetails$.getValue()[0].name});
-        this._cfa.saveDataModeSelected({edit: true, edit_class: true, app_update: true, currentclass: this.SubmitedDetails$.getValue()[0].currentclass,
-          appid: this.SubmitedDetails$.getValue()[0].applicationId,  studentfirstname: this.SubmitedDetails$.getValue()[0].name,
-          studentsurname: this.SubmitedDetails$.getValue()[0].studentsurname, fatherfirstname: this.SubmitedDetails$.getValue()[0].fatherfirstname,
-          motherfirstname: this.SubmitedDetails$.getValue()[0].motherfirstname, studentbirthdate: this.SubmitedDetails$.getValue()[0].birthdate,
-          regionaddress: this.SubmitedDetails$.getValue()[0].regionaddress, regiontk: this.SubmitedDetails$.getValue()[0].regiontk,
-          regionarea: this.SubmitedDetails$.getValue()[0].regionarea, lastschool_schoolname: this.SubmitedDetails$.getValue()[0].lastschool_schoolname,
-          lastschool_registrynumber: this.SubmitedDetails$.getValue()[0].lastschool_registrynumber, lastschool_unittypeid: this.SubmitedDetails$.getValue()[0].lastschool_unittypeid,
-          lastschool_schoolyear: this.SubmitedDetails$.getValue()[0].lastschool_schoolyear, lastschool_class: this.SubmitedDetails$.getValue()[0].lastschool_class,
-          relationtostudent: this.SubmitedDetails$.getValue()[0].relationtostudent, telnum: this.SubmitedDetails$.getValue()[0].telnum,
-          sector_name: this.SubmitedDetails$.getValue()[0].currentsector, course_name: this.SubmitedDetails$.getValue()[0].currentcourse,
-          epal_name_choice: this.SubmitedDetails$.getValue()[0].epalSchoolsChosen
+        // this._cfa.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass, appmode: "edit", studentfirsttname: this.EpalSubmittedDetails$.getValue()[0].name});
+        this._cfa.saveDataModeSelected({edit: true, edit_class: true, app_update: true, currentclass: this.EpalSubmittedDetails$.getValue()[0].currentclass,
+          appid: this.EpalSubmittedDetails$.getValue()[0].applicationId,  studentfirstname: this.EpalSubmittedDetails$.getValue()[0].name,
+          studentsurname: this.EpalSubmittedDetails$.getValue()[0].studentsurname, fatherfirstname: this.EpalSubmittedDetails$.getValue()[0].fatherfirstname,
+          motherfirstname: this.EpalSubmittedDetails$.getValue()[0].motherfirstname, studentbirthdate: this.EpalSubmittedDetails$.getValue()[0].birthdate,
+          regionaddress: this.EpalSubmittedDetails$.getValue()[0].regionaddress, regiontk: this.EpalSubmittedDetails$.getValue()[0].regiontk,
+          regionarea: this.EpalSubmittedDetails$.getValue()[0].regionarea, lastschool_schoolname: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolname,
+          lastschool_registrynumber: this.EpalSubmittedDetails$.getValue()[0].lastschool_registrynumber, lastschool_unittypeid: this.EpalSubmittedDetails$.getValue()[0].lastschool_unittypeid,
+          lastschool_schoolyear: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolyear, lastschool_class: this.EpalSubmittedDetails$.getValue()[0].lastschool_class,
+          relationtostudent: this.EpalSubmittedDetails$.getValue()[0].relationtostudent, telnum: this.EpalSubmittedDetails$.getValue()[0].telnum,
+          sector_name: this.EpalSubmittedDetails$.getValue()[0].currentsector, course_name: this.EpalSubmittedDetails$.getValue()[0].currentcourse,
+          epal_name_choice: this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen
         });
 
     }
+    */
 
     deleteApplicationDo(): void {
         this.hideConfirmModal();
@@ -716,10 +732,14 @@ import { IAppState } from "../../store/store";
 
     editEpalApplication() {
 
-      this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
+      //this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
 
-      this._eca.saveEpalClassesSelected({name: this.class_epal_id});
+      //this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
+      //this._eca.saveEpalClassesSelected({name: "2"});
+      //console.log("Test");
+    //  console.log(this.EpalSubmittedDetails$.getValue()[0].currentclass);
 
+      /*
       if (this.sector_index != -1)
         this._sfa.saveSectorFieldsSelected(-1, this.sector_index);
 
@@ -728,6 +748,9 @@ import { IAppState } from "../../store/store";
 
       if (this.course_index != -1 && this.sectorcourse_index != -1)
         this._csa.saveSectorCoursesSelected(-1, -1, true, this.sectorcourse_index, this.course_index);
+      */
+
+      //this._rsa.saveRegionSchoolsOrder(this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen);
 
       this.router.navigate(["/epal-class-select"]);
 
@@ -735,8 +758,54 @@ import { IAppState } from "../../store/store";
 
     createStoreWithEpalAppData()  {
 
-        this._eca.initEpalClasses();
+        //to be considered
+        //this._eca.initEpalClasses();
+        //
+        this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
 
+        let class_id = this.EpalSubmittedDetails$.getValue()[0].currentclass;
+        if (class_id === "2" )
+          this._sfa.getSectorFields(false);
+        else if (class_id === "3" || class_id === "4" )
+          this._csa.getSectorCourses(false);
+
+        if (class_id === "1" )
+          this._rsa.getRegionSchools(parseInt(class_id), "-1", false);
+        else if (class_id === "2" ) {
+          this._rsa.getRegionSchools(parseInt(class_id), parseInt(this.EpalSubmittedDetails$.getValue()[0].currentsector_id), false);
+        }
+        else if (class_id === "3" || class_id === "4" )
+          this._rsa.getRegionSchools(parseInt(class_id), parseInt(this.EpalSubmittedDetails$.getValue()[0].currentcourse_id), false);
+
+        this._cfa.saveDataModeSelected({
+          app_update: true, appid: this.EpalSubmittedDetails$.getValue()[0].applicationId,
+          sector_id: this.EpalSubmittedDetails$.getValue()[0].currentsector_id, course_id: this.EpalSubmittedDetails$.getValue()[0].currentcourse_id,
+          epal_choice: this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen, currentclass: this.EpalSubmittedDetails$.getValue()[0].currentclass
+        });
+        this._sta.saveSchoolTypeSelected(2, "ΕΠΑΛ");
+
+        let birthdate = this.EpalSubmittedDetails$.getValue()[0].birthdate;
+        let birthparts = birthdate.split("/",3);
+        this._sdfa.saveStudentDataFields([{name: this.EpalSubmittedDetails$.getValue()[0].name,
+              studentsurname: this.EpalSubmittedDetails$.getValue()[0].studentsurname,
+              fatherfirstname: this.EpalSubmittedDetails$.getValue()[0].fatherfirstname,
+              motherfirstname: this.EpalSubmittedDetails$.getValue()[0].motherfirstname,
+              regionaddress: this.EpalSubmittedDetails$.getValue()[0].regionaddress,
+              regiontk: this.EpalSubmittedDetails$.getValue()[0].regiontk,
+              regionarea: this.EpalSubmittedDetails$.getValue()[0].regionarea,
+              lastschool_schoolname: {registry_no: this.EpalSubmittedDetails$.getValue()[0].lastschool_registrynumber,
+                  name: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolname,
+                  unit_type_id: this.EpalSubmittedDetails$.getValue()[0].lastschool_unittypeid},
+              lastschool_schoolyear: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolyear,
+              lastschool_class: this.EpalSubmittedDetails$.getValue()[0].lastschool_class,
+              relationtostudent: this.EpalSubmittedDetails$.getValue()[0].relationtostudent,
+              telnum: this.EpalSubmittedDetails$.getValue()[0].telnum,
+              studentbirthdate: {date: {year: Number(birthparts[2]),
+                  month: Number(birthparts[1]),
+                  day: Number(birthparts[0])}}
+            }]);
+
+        /*
         if (this.class_epal_id === "2" )
           this._sfa.getSectorFields(false);
         else if (this.class_epal_id === "3" || this.class_epal_id === "4" )
@@ -748,6 +817,7 @@ import { IAppState } from "../../store/store";
           this._rsa.getRegionSchools(parseInt(this.class_epal_id), parseInt(this.sector_id), false);
         else if (this.class_epal_id === "3" || this.class_epal_id === "4" )
           this._rsa.getRegionSchools(parseInt(this.class_epal_id), parseInt(this.course_id), false);
+        */
 
         this.sectorFieldsSub = this._ngRedux.select("sectorFields")
               .map(sectorFields => <ISectorFieldRecords>sectorFields)
@@ -755,10 +825,10 @@ import { IAppState } from "../../store/store";
                   let seccnt = 0;
                   sfds.reduce(({}, sectorField) => {
                       ++seccnt;
-                      if (sectorField.get("id") === this.sector_id ) {
-                        this.sector_index = seccnt -1;
-                        console.log("sector index:");
-                        console.log(seccnt);
+                      //if (sectorField.get("id") === this.sector_id ) {
+                      if (sectorField.get("id") === this.EpalSubmittedDetails$.getValue()[0].currentsector_id ) {
+                        //this.sector_index = seccnt -1;
+                        this._sfa.saveSectorFieldsSelected(-1, seccnt-1);
                       }
                       return sectorField;
                   }, {});
@@ -775,13 +845,11 @@ import { IAppState } from "../../store/store";
                           numsel = 0;
                           region.get("epals").reduce((prevEpal, epal) => {
                               ++numsel;
-                              if (epal.get("epal_id") === this.school_id ) {
-                                this.school_index = numsel -1;
-                                this.region_index = numreg - 1;
-                                console.log("school index:");
-                                console.log(numsel);
-                                console.log("region index:");
-                                console.log(numreg);
+                              //if (epal.get("epal_id") === this.school_id ) {
+                              for (let k=0; k < (this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen).length; k++)  {
+                                  if (epal.get("epal_id") === this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].id) {
+                                      this._rsa.saveRegionSchoolsSelected(true, numreg-1, numsel-1, this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].choice_no );
+                                  }
                               }
                               return epal;
                           }, {});
@@ -802,13 +870,18 @@ import { IAppState } from "../../store/store";
                             numcour = 0;
                             sector.get("courses").reduce((prevCourse, course) => {
                                 ++numcour;
-                                if (course.get("course_id") === this.course_id ) {
+                                //if (course.get("course_id") === this.course_id ) {
+                                if (course.get("course_id") === this.EpalSubmittedDetails$.getValue()[0].currentcourse_id ) {
+                                  this._csa.saveSectorCoursesSelected(-1, -1, true, numsec-1, numcour-1);
+
+                                  /*
                                   this.course_index = numcour -1;
                                   this.sectorcourse_index = numsec - 1;
                                   console.log("course index:");
                                   console.log(numcour);
                                   console.log("sector index:");
                                   console.log(numsec);
+                                  */
                                 }
                                 return course;
                             }, {});
@@ -821,10 +894,6 @@ import { IAppState } from "../../store/store";
 
 
     editGelApplication()  {
-
-      //this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
-      //this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
-      //this._gca.saveGelClassesSelected(-1, parseInt(this.GelSubmittedDetails$.getValue()[0].nextclass) -1 );
 
       this.router.navigate(["/gel-class-select"]);
 
@@ -842,7 +911,7 @@ import { IAppState } from "../../store/store";
         this._ogs.getOrientationGroups(false, class_id, 'ΟΠ');
 
       this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
-      this._sta.saveSchoolTypeSelected(this.schooltype_id, this.schooltype_name);
+      this._sta.saveSchoolTypeSelected(1, "ΓΕΛ");
 
       let birthdate = this.GelSubmittedDetails$.getValue()[0].birthdate;
       let birthparts = birthdate.split("/",3);
@@ -873,7 +942,6 @@ import { IAppState } from "../../store/store";
                        ecs.reduce(({}, gelclass) => {
                           //if (gelclass.get("selected")===true ){
                           if (gelclass.get("id") === this.GelSubmittedDetails$.getValue()[0].nextclass ){
-                              console.log("YESSSSSS!!!!");
                               this._gca.saveGelClassesSelected(-1, this.GelSubmittedDetails$.getValue()[0].nextclass -1 );
                           }
                           return gelclass;

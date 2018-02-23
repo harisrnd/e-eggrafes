@@ -84,6 +84,8 @@ import { IAppState } from "../../store/store";
 
     ngOnInit() {
         (<any>$("#sectorFieldsNotice")).appendTo("body");
+        window.scrollTo(0, 0);
+        
         this._cfa.getSectorFields(false);
         this.sectorFieldsSub = this._ngRedux.select("sectorFields")
             .map(sectorFields => <ISectorFieldRecords>sectorFields)

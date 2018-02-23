@@ -470,13 +470,16 @@ class SubmitedApplications extends ControllerBase
                                     array('choice_no'
                                     ))
                                     ->fields('eesch',
-                                    array('name'
+                                    array('id',
+                                          'name'
                                     ))
                                     ->fields('eese',
-                                    array('name',
+                                    array('id',
+                                          'name'
                                     ))
                                     ->fields('eesp',
-                                    array('name',
+                                    array('id',
+                                          'name',
                                     ))
                                     ->fields('esc',
                                     array('finalized',
@@ -506,6 +509,7 @@ class SubmitedApplications extends ControllerBase
                 $epalSchoolsChosen = array();
                 foreach ($epalStudents as $es) {
                     array_push($epalSchoolsChosen, array(
+                        'id' => $es->eesch_id,
                         'epal_id' => $es->eesch_name,
                         'choice_no' => $es->choice_no,
                       ));
@@ -576,14 +580,15 @@ class SubmitedApplications extends ControllerBase
                             'lastschool_class' => $epalStudent->lastschool_class,
                             'currentclass' => $epalStudent->currentclass,
                             'currentsector' => $epalStudent->eese_name,
+                            'currentsector_id' => $epalStudent->eese_id,
                             'currentcourse' => $epalStudent->eesp_name,
+                            'currentcourse_id' => $epalStudent->eesp_id,
                             'regionaddress' => $regionaddress_decoded,
                             'regiontk' => $regiontk_decoded,
                             'regionarea' => $regionarea_decoded,
                             'telnum' => $telnum_decoded,
                             'relationtostudent' => $epalStudent->relationtostudent,
                             'birthdate' => substr($epalStudent->birthdate, 8, 2).'/'.substr($epalStudent->birthdate, 5, 2).'/'.substr($epalStudent->birthdate, 0, 4),
-                            //'created' => date('d/m/Y H:i', $epalStudent->created),
                             'changed' => date('d/m/Y H:i', $epalStudent->changed),
                             'epalSchoolsChosen' => $epalSchoolsChosen,
                             'applicantsResultsDisabled' => $applicantsResultsDisabled,
@@ -593,7 +598,6 @@ class SubmitedApplications extends ControllerBase
                             'schoolAddress' => $epalStudent->street_address,
                             'schoolTel' => $epalStudent->phone_number,
                             'secondPeriod' => $epalStudent->second_period,
-                            //'secondPeriodSettingEnabled' => $secondPeriodEnabled,
                         );
 
                 return $this->respondWithStatus(

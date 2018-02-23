@@ -227,12 +227,11 @@ export class HelperDataService implements OnInit, OnDestroy {
 
         this.lockApprovSub = this.getStatusofLockSmallClasses().subscribe(data => {
                  this.lockApprov$.next(data);
-                 this.lockApprov$.getValue().forEach(lockapp => 
-                     {
-                         this.lockapp = lockapp.res;
-                         
-                         
-                  if (this.lockapp === 0){
+                 this.lockApprov$.getValue().forEach(lockapp =>
+                  {
+                     this.lockapp = lockapp.res;
+
+                     if (this.lockapp === 0){
                              if (classActive === 1)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/regions/list`;
                             else if (classActive === 2)
@@ -241,10 +240,9 @@ export class HelperDataService implements OnInit, OnDestroy {
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool/list?course_id=${courseActive}`;
                             else if (classActive === 4)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool_night/list?course_id=${courseActive}`;
-     
-                  }
-                  else
-                  {
+                      }
+                      else
+                      {
                             if (classActive === 1)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getregions`;
                             else if (classActive === 2)
@@ -253,10 +251,7 @@ export class HelperDataService implements OnInit, OnDestroy {
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getcoursesperschoolsmallclasses/`+ courseActive;
                             else if (classActive === 4)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/epal/getcoursesperschoolsmallclasses_night/`+ courseActive;
-                            
-
-
-                  }
+                       }
 
                             this.http.get(getConnectionString, options)
                             .map(response => response.json())
@@ -275,8 +270,8 @@ export class HelperDataService implements OnInit, OnDestroy {
             error => {
                 this.lockApprov$.next([{}]);
                 console.log("Error getting Settings");
-               }); 
-           
+               });
+
 
         });
     };
@@ -322,7 +317,7 @@ export class HelperDataService implements OnInit, OnDestroy {
             rsa[trackIndex].epals.push(<IRRegionSchool>{ "epal_id": regionSchool.epal_id, "epal_name": regionSchool.epal_name, "epal_special_case": regionSchool.epal_special_case, "globalIndex": j, "selected": false, "order_id": 0 });
             j++;
         });
-       
+
         return rsa;
     }
 
@@ -952,7 +947,7 @@ export class HelperDataService implements OnInit, OnDestroy {
             .map(response => response.json());
     }
 
-    getServiceStudentPromotion(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, level_name) {
+    getServiceStudentPromotion(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -962,22 +957,25 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        let rpath = [didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, level_name].join("/");
-        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-promotion/` + rpath, options)
+        let rpath = [didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no].join("/");
+        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-info/` + rpath, options)
             .map(response => response.json());
     }
 
-    getServiceStudentCertification(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, level_name) {
+    getServiceStudentCertification(id) {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
         });
+        console.log("a");
+
+
         let headers = new Headers({
             "Content-Type": "application/json",
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        let rpath = [didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, level_name].join("/");
+        let rpath = [id].join("/");
         return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-certification/` + rpath, options)
             .map(response => response.json());
     }
@@ -1352,7 +1350,6 @@ getStatusofLockSmallClasses()
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        console.log("test");
         return this.http.get(`${AppSettings.API_ENDPOINT}/epal/locksmallclasses`, options)
             .map(response => response.json());
 

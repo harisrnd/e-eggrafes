@@ -6,8 +6,8 @@ import { Http } from "@angular/http";
 import { Router } from "@angular/router";
 import { IMyDpOptions } from "mydatepicker";
 import { BehaviorSubject, Observable, Subscription } from "rxjs/Rx";
-//import { IDataModeRecords } from "../../store/datamode/datamode.types";
-//import { DataModeActions } from "../../actions/datamode.actions";
+import { IDataModeRecords } from "../../store/datamode/datamode.types";
+import { DataModeActions } from "../../actions/datamode.actions";
 import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
@@ -35,13 +35,13 @@ import {
 
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private studentDataFields$: BehaviorSubject<IGelStudentDataFieldRecords>;
-    //private datamode$: BehaviorSubject<IDataModeRecords>;
+    private datamode$: BehaviorSubject<IDataModeRecords>;
 
     private studentDataFieldsSub: Subscription;
     private loginInfoSub: Subscription;
     private criteriaSub: Subscription;
-    //private datamodeSub: Subscription;
-    private epalUserDataSub: Subscription;
+    private datamodeSub: Subscription;
+    private gelUserDataSub: Subscription;
     private gelclassesSub: Subscription;
 
     private studentDataGroup: FormGroup;
@@ -63,7 +63,7 @@ import {
     private numAppSelf: BehaviorSubject<number>;
     private numAppChildren: BehaviorSubject<number>;
     private numChildren: BehaviorSubject<number>;
-    private epalUserData$: BehaviorSubject<any>;
+    private gelUserData$: BehaviorSubject<any>;
     private activeClassId = -1;
 
     private myDatePickerOptions: IMyDpOptions = {
@@ -97,7 +97,7 @@ import {
         private _sdfa: GelStudentDataFieldsActions,
         private _cfb: GelClassesActions,
         private hds: HelperDataService,
-        //private _cfa: DataModeActions,
+        private _cfa: DataModeActions,
         private _ngRedux: NgRedux<IAppState>,
         private router: Router,
         private http: Http) {
@@ -119,7 +119,7 @@ import {
         this.numAppSelf = new BehaviorSubject(0);
         this.numAppChildren = new BehaviorSubject(0);
         this.numChildren = new BehaviorSubject(0);
-        this.epalUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
+        this.gelUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
                                                         representRole: "", numAppSelf: 0, numAppChildren: 0, numChildren: 0 });
 
         this.studentDataFields$ = new BehaviorSubject(GELSTUDENT_DATA_FIELDS_INITIAL_STATE);
@@ -143,6 +143,7 @@ import {
 
     ngOnInit() {
         (<any>$("#applicationFormNotice")).appendTo("body");
+        window.scrollTo(0, 0);
 
         //this._cfb.getClassesList(false);
         this.gelclassesSub = this._ngRedux.select("gelclasses")
@@ -158,11 +159,53 @@ import {
                 }
             }, error => { console.log("error selecting gelclasses"); });
 
-        this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
-            this.epalUserData$.next(x);
+        this.gelUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
+            this.gelUserData$.next(x);
             this.numAppSelf.next(Number(x.numAppSelf));
             this.numAppChildren.next(Number(x.numAppChildren));
             this.numChildren.next(Number(x.numChildren));
+
+            this.studentDataFieldsSub = this._ngRedux.select("gelstudentDataFields")
+                .subscribe(studentDataFields => {
+                    let sdfds = <IGelStudentDataFieldRecords>studentDataFields;
+                    if (sdfds.size > 0) {
+                        sdfds.reduce(({}, studentDataField) => {
+                            //if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
+                            this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
+                            if (typeof this.lastSchName.getValue() === "undefined" )
+                              this.lastSchName.next("");
+
+                            this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
+                            this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
+                            this.studentDataGroup.controls["fatherfirstname"].setValue(studentDataField.get("fatherfirstname"));
+                            this.studentDataGroup.controls["motherfirstname"].setValue(studentDataField.get("motherfirstname"));
+                            this.studentDataGroup.controls["regionaddress"].setValue(studentDataField.get("regionaddress"));
+                            this.studentDataGroup.controls["regiontk"].setValue(studentDataField.get("regiontk"));
+                            this.studentDataGroup.controls["regionarea"].setValue(studentDataField.get("regionarea"));
+                            this.studentDataGroup.controls["lastschool_schoolname"].setValue(studentDataField.get("lastschool_schoolname"));
+                            this.studentDataGroup.controls["lastschool_schoolyear"].setValue(studentDataField.get("lastschool_schoolyear"));
+                            this.studentDataGroup.controls["lastschool_class"].setValue(studentDataField.get("lastschool_class"));
+                            this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
+                            this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
+                            this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
+
+                            if (this.appUpdate.getValue() === true) {
+                                if (studentDataField.get("relationtostudent") === 'Γονέας/Κηδεμόνας')
+                                  this.numAppChildren.next(this.numAppChildren.getValue() -1) ;
+                                else if (studentDataField.get("relationtostudent") === 'Μαθητής')
+                                  this.numAppSelf.next(this.numAppSelf.getValue() - 1);
+                                console.log("Test drive:");
+                                console.log(this.numAppSelf.getValue());
+                                console.log(this.numAppChildren.getValue());
+                            }
+
+                            return studentDataField;
+                        }, {});
+                    }
+                    this.studentDataFields$.next(sdfds);
+                }, error => { console.log("error selecting studentDataFields"); });
+
+
         });
 
          this.loginInfoSub = this._ngRedux.select("loginInfo")
@@ -171,77 +214,20 @@ import {
                 this.loginInfo$.next(linfo);
           }, error => { console.log("error selecting loginInfo"); });
 
-          /*
+
           this.datamodeSub = this._ngRedux.select("datamode")
               .map(datamode => <IDataModeRecords>datamode)
               .subscribe(ecs => {
                   if (ecs.size > 0) {
                       ecs.reduce(({}, datamode,i) => {
-                          this.appId.next(datamode.get("appid"));
                           this.appUpdate.next(datamode.get("app_update"));
-                          this.previousClass.next(datamode.get("currentclass"));
-                          this.previousSector.next(datamode.get("sector_name"));
-                          this.previousCourse.next(datamode.get("course_name"));
-                          this.previousSchools.next(datamode.get("epal_name_choice"));
-                          this.reltostud.next(datamode.get("relationtostudent"));
-
-                          if (datamode.get("edit") === true) {
-                              this.dataEdit.next(true);
-                              this.lastSchName.next(datamode.get("lastschool_schoolname"));
-                              let birthdate = datamode.get("studentbirthdate");
-                              let birthparts = birthdate.split("/",3);
-                              this._sdfa.saveGelStudentDataFields([{name: datamode.get("studentfirstname"), studentsurname: datamode.get("studentsurname"),
-                                fatherfirstname: datamode.get("fatherfirstname"), motherfirstname: datamode.get("motherfirstname"),
-                                regionaddress: datamode.get("regionaddress"), regiontk: datamode.get("regiontk"), regionarea: datamode.get("regionarea"),
-                                lastschool_schoolname: {registry_no: datamode.get("lastschool_registrynumber"), name: datamode.get("lastschool_schoolname"), unit_type_id: Number(datamode.get("lastschool_unittypeid"))},
-                                lastschool_schoolyear: datamode.get("lastschool_schoolyear"), lastschool_class: datamode.get("lastschool_class"),
-                                relationtostudent: datamode.get("relationtostudent"), telnum: datamode.get("telnum"),
-                                studentbirthdate: {date: {year: Number(birthparts[2]), month: Number(birthparts[1]), day: Number(birthparts[0])}}
-                            }]);
+                          if (this.appUpdate.getValue() === true) {
+                            ;
                           }
-
-                          else  {
-
-                          }
-
                           return datamode;
                       }, {});
-                  } else {
-
                   }
-
               }, error => { console.log("error selecting datamode"); });
-        */
-
-        this.studentDataFieldsSub = this._ngRedux.select("gelstudentDataFields")
-            .subscribe(studentDataFields => {
-                let sdfds = <IGelStudentDataFieldRecords>studentDataFields;
-                if (sdfds.size > 0) {
-                    sdfds.reduce(({}, studentDataField) => {
-                        //if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
-                        this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
-                        if (typeof this.lastSchName.getValue() === "undefined" )
-                          this.lastSchName.next("");
-
-                        this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
-                        this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
-                        this.studentDataGroup.controls["fatherfirstname"].setValue(studentDataField.get("fatherfirstname"));
-                        this.studentDataGroup.controls["motherfirstname"].setValue(studentDataField.get("motherfirstname"));
-                        this.studentDataGroup.controls["regionaddress"].setValue(studentDataField.get("regionaddress"));
-                        this.studentDataGroup.controls["regiontk"].setValue(studentDataField.get("regiontk"));
-                        this.studentDataGroup.controls["regionarea"].setValue(studentDataField.get("regionarea"));
-                        this.studentDataGroup.controls["lastschool_schoolname"].setValue(studentDataField.get("lastschool_schoolname"));
-                        this.studentDataGroup.controls["lastschool_schoolyear"].setValue(studentDataField.get("lastschool_schoolyear"));
-                        this.studentDataGroup.controls["lastschool_class"].setValue(studentDataField.get("lastschool_class"));
-                        this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
-                        this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
-                        this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
-
-                        return studentDataField;
-                    }, {});
-                }
-                this.studentDataFields$.next(sdfds);
-            }, error => { console.log("error selecting studentDataFields"); });
 
     };
 
@@ -249,7 +235,7 @@ import {
         (<any>$("#applicationFormNotice")).remove();
         if (this.studentDataFieldsSub) this.studentDataFieldsSub.unsubscribe();
         //if (this.datamodeSub) this.datamodeSub.unsubscribe();
-        if (this.epalUserDataSub) this.epalUserDataSub.unsubscribe();
+        if (this.gelUserDataSub) this.gelUserDataSub.unsubscribe();
     }
 
     navigateBack() {

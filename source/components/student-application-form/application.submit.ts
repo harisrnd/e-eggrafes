@@ -125,8 +125,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private courseSelected;
     private sectorSelected;
     private classSelected;
-    private courseSelectedName;
-    private sectorSelectedName;
+    //private courseSelectedName;
+    //private sectorSelectedName;
     private epalSelectedName: Array<string> = new Array();
     private epalSelectedId: Array<string> = new Array();
     private studentDataFields$: BehaviorSubject<IStudentDataFieldRecords>;
@@ -139,12 +139,14 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private epalclassesSub: Subscription;
     private loginInfoSub: Subscription;
     private datamodeSub: Subscription;
+    private ServiceStudentCertifSub: Subscription;
     private datamode$: BehaviorSubject<IDataModeRecords>;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
     private showLoader: BehaviorSubject<boolean>;
+    private ServiceStudentCertif$: BehaviorSubject<any>;
     private currentUrl: string;
     private cu_name: string;
     private cu_surname: string;
@@ -190,15 +192,20 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         this.previousCourse = new BehaviorSubject("");
         this.previousSchools = new BehaviorSubject("");
 
-        this.sectorSelectedName = null;
-        this.courseSelectedName = null;
+        //this.sectorSelectedName = null;
+        //this.courseSelectedName = null;
+        this.sectorSelected = null;
+        this.courseSelected = null;
         this.hasright = 1;
         this.previousSchools.next("");
+        this.ServiceStudentCertif$ = new BehaviorSubject([{}]);
     };
 
     ngOnInit() {
 
         (<any>$("#studentFormSentNotice")).appendTo("body");
+        window.scrollTo(0, 0);
+
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(linfo => {
@@ -224,6 +231,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                 .subscribe(ecs => {
                     if (ecs.size > 0) {
                         ecs.reduce(({}, datamode,i) => {
+                           //ΠΡΟΣΟΧΗ: να τροποποιήσω τον τρόπο για έλεγχο πληρότητας..
+                            /*
                             if (datamode.get("app_update") === true) {
                                 this.app_update.next(true);
                                 this.appId.next(datamode.get("appid"));
@@ -233,6 +242,17 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                                 for (let i=0; i < datamode.get("epal_name_choice").length; i++)
                                   this.previousSchools.next(datamode.get("epal_name_choice")[i].epal_id + "," + this.previousSchools.getValue());
                             }
+                            */
+                            if (datamode.get("app_update") === true) {
+                                this.app_update.next(true);
+                                this.appId.next(datamode.get("appid"));
+                                this.previousClass.next(datamode.get("currentclass"));
+                                this.previousSector.next(datamode.get("sector_id"));
+                                this.previousCourse.next(datamode.get("course_id"));
+                                for (let i=0; i < datamode.get("epal_choice").length; i++)
+                                  this.previousSchools.next(datamode.get("epal_choice")[i].id + "," + this.previousSchools.getValue());
+                            }
+
                             return datamode;
                         }, {});
                     } else {
@@ -290,7 +310,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                     sector.get("courses").reduce((prevCourse, course) => {
                         if (course.get("selected") === true) {
                             this.courseSelected = course.get("course_id");
-                            this.courseSelectedName = course.get("course_name");
+                            //this.courseSelectedName = course.get("course_name");
                         }
                         return course;
                     }, {});
@@ -304,7 +324,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                 sfds.reduce(({ }, sectorField) => {
                     if (sectorField.selected === true) {
                         this.sectorSelected = sectorField.id;
-                        this.sectorSelectedName = sectorField.name;
+                        //this.sectorSelectedName = sectorField.name;
                     }
                     return sectorField;
                 }, {});
@@ -341,16 +361,36 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         //έλεγχος αν πρέπει να γίνει έλεγχος πληρότητας
         let nonCheckOccupancy = "$";
         if (newapp === false) {
+          /*
           if (this.classSelected === this.previousClass.getValue() && this.sectorSelectedName === this.previousSector.getValue() && this.courseSelectedName === this.previousCourse.getValue()) {
-            //for (let entry of this.epalSelectedName) {
             for (let i=0; i < this.epalSelectedName.length; i++) {
                 if (this.previousSchools.getValue().indexOf(this.epalSelectedName[i]) !== -1) {
                   nonCheckOccupancy += this.epalSelectedId[i] + "$";
                 }
             }
           }
-          //return;
+          */
+          if (this.classSelected === this.previousClass.getValue() && this.sectorSelected === this.previousSector.getValue() && this.courseSelected === this.previousCourse.getValue()) {
+            for (let i=0; i < this.epalSelectedId.length; i++) {
+                if (this.previousSchools.getValue().indexOf(this.epalSelectedId[i]) !== -1) {
+                  nonCheckOccupancy += this.epalSelectedId[i] + "$";
+                }
+            }
+          }
+          /*
+          console.log(this.classSelected);
+          console.log(this.previousClass.getValue());
+          console.log(this.sectorSelected);
+          console.log(this.previousSector.getValue());
+          console.log(this.courseSelected);
+          console.log(this.previousCourse.getValue());
+          console.log(this.previousSchools.getValue());
+          console.log(this.epalSelectedId);
+
+          console.log(nonCheckOccupancy);
+          */
         }
+
 
         if (this.studentDataFields$.getValue().size === 0 || this.epalSelected$.getValue().length === 0 || this.epalclasses$.getValue().size === 0 || this.loginInfo$.getValue().size === 0)
             return;
@@ -400,6 +440,19 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         } else if (aitisiObj[0]["currentclass"] === "3" || aitisiObj[0]["currentclass"] === "4") {
             aitisiObj["3"] = new StudentCourseChosen(null, this.courseSelected);
         }
+
+            console.log("testmyschool");
+            
+     //       this.ServiceStudentCertifSub = this._hds.getServiceStudentCertification(8)
+              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')     
+                .subscribe(data => {
+                    this.ServiceStudentCertif$.next(data);
+                    
+                },
+                error => {
+                    console.log("Error Getting Courses");
+                });
+        
 
         this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
     }
