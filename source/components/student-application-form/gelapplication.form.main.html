@@ -192,14 +192,15 @@
         <label for="relationtostudent">Η δήλωση προτίμησης γίνεται από:(<span style="color: #ff0000;">*</span>)</label><br/>
         <select class="form-control" formControlName="relationtostudent">
         <option value="">Παρακαλώ επιλέξτε...</option>
-        <!-- [selected] = "(numAppSelf | async) !== 0" -->
-        <option *ngIf = "!(appUpdate | async) && (numAppChildren | async) <  (numChildren | async) " value="Γονέας/Κηδεμόνας">Γονέας/Κηδεμόνας</option>
-        <!-- [selected] = "(numAppChildren | async) ===  (numChildren | async)" -->
-        <option *ngIf = "!(appUpdate | async) && !(numAppSelf | async)"  value="Μαθητής">Μαθητής</option>
-
+        <!--
         <option *ngIf = "(appUpdate | async)" [selected]="true" value={{reltostud.value}}>{{reltostud.value}}</option>
+       -->
+        <option *ngIf = "(numAppChildren | async) <  (numChildren | async) " value="Γονέας/Κηδεμόνας">Γονέας/Κηδεμόνας</option>
+        <option *ngIf = "!(numAppSelf | async)"  value="Μαθητής">Μαθητής</option>
+        <!--
         <option *ngIf = "(appUpdate | async) && (reltostud.value != 'Γονέας/Κηδεμόνας') && (numAppChildren | async) <  (numChildren | async)" value="Γονέας/Κηδεμόνας">Γονέας/Κηδεμόνας</option>
         <option *ngIf = "(appUpdate | async) && (reltostud.value != 'Μαθητής') && (numAppSelf | async) == 0 " value="Μαθητής">Μαθητής</option>
+        -->
 
     </select>
 

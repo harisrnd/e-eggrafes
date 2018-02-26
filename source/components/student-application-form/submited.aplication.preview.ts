@@ -445,7 +445,8 @@ import { IAppState } from "../../store/store";
     private GelSubmittedDetailsSub: Subscription;
 
     private applicationId = <number>0;
-    private applicationGelId = <number>0;
+    //private applicationGelId = <number>0;
+    private schooltype: string;
 
     @ViewChild("target") element: ElementRef;
 
@@ -561,6 +562,8 @@ import { IAppState } from "../../store/store";
                 this.showLoader$.next(false);
             });
 
+        this.schooltype = "ΕΠΑΛ";
+
     }
 
     setActiveGelUser(ind: number): void {
@@ -586,7 +589,10 @@ import { IAppState } from "../../store/store";
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
+
+        this.schooltype = "ΓΕΛ";
     }
+
 
     resetStore() {
 
@@ -612,14 +618,13 @@ import { IAppState } from "../../store/store";
         //this._hds.createGelPdfServerSide(this.applicationGelIdActive, this.GelSubmittedDetails$.getValue()[0].status);
     }
 
-
     deleteApplication(appId: number): void {
         this.applicationId = appId;
         this.showConfirmModal();
     }
 
     deleteGelApplication(appId: number): void {
-        this.applicationGelId = appId;
+        this.applicationId = appId;
         this.showConfirmModal();
     }
 
@@ -627,7 +632,7 @@ import { IAppState } from "../../store/store";
     deleteApplicationDo(): void {
         this.hideConfirmModal();
         this.showLoader$.next(true);
-        this._hds.deleteApplication(this.applicationId).then(data => {
+        this._hds.deleteApplication(this.applicationId, this.schooltype).then(data => {
             this.SubmitedUsersSub.unsubscribe();
 
             this.SubmitedUsersSub = this._hds.getSubmittedPreviw().subscribe(
