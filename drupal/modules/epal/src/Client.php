@@ -1,5 +1,5 @@
 <?php
-
+ 
 namespace Drupal\epal;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +32,7 @@ class Client
         $this->_settings = array_merge($this->_settings, $settings);
         $this->_settings['ws_endpoint_token'] = "{$this->_settings['ws_endpoint']}/oauth2/token";
         $this->_settings['ws_endpoint_token_granttype'] = 'password';
-        $this->_settings['ws_endpoint_studentepalcertification'] = "{$this->_settings['ws_endpoint']}/api/epal/GetStudentEpalCertification";
+        $this->_settings['ws_endpoint_studentepalInfo'] = "{$this->_settings['ws_endpoint']}/api/epal/GetStudentEpalInfo";
         $this->_settings['ws_endpoint_studentepalpromotion'] = "{$this->_settings['ws_endpoint']}/api/epal/GetStudentEpalPromotion";
         $this->_settings['ws_endpoint_alldidactiyear'] = "{$this->_settings['ws_endpoint']}/api/general/GetAllDidactiYear";
     }
@@ -135,14 +135,52 @@ class Client
      * @return boolean|null
      * @throws \Exception Σε περίπτωση οποιουδήποτε λάθους
      */
-    public function getStudentEpalPromotionOrCertification($endpoint_base_url, $didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $level_name)
+    public function getStudentEpalPromotionOrCertification($endpoint_base_url, $id)
+    {
+        
+        if (mb_strlen($id) == 0) {
+            $this->log(__METHOD__ . " Missing parameters", "error");
+            throw new Exception('Όλες οι παράμετροι είναι υποχρεωτικοί!!!'.$id, Response::HTTP_BAD_REQUEST);
+        }
+
+        $headers = [
+            'Accept: application/json',
+            // 'Accept-Language: en-gb',
+            'Accept-Language: {"Accept-Language":"en-gb"}', // as per spec provided...
+            'Audience: Any',
+            'Authorization: ' . $this->getTokenBearer(),
+            'User-Agent: OSTEAM Client/v1.1 osteam'
+        ];
+
+        $endpoint = $endpoint_base_url."/".intval($id);
+  
+        $result = $this->get($endpoint, [], $headers); // data as path params...
+        try {
+            $crypt = new Crypt();
+            $val = 'call:' . print_r($endpoint, true) . ':rcv:' . print_r($result, true);
+            $val_enc = $crypt->encrypt($val); 
+            $this->log(__METHOD__ . $val_enc, 'info');
+        } catch (\Exception $e) {
+            $this->log(__METHOD__ . " cannot log encrypted", 'info');
+        }
+
+        if ($result['success'] === false) {
+            $this->log(__METHOD__ . " Error while calling ws. Diagnostic: {$result['response']}. Response code: {$result['http_status']}", "error");
+            throw new Exception("Προέκυψε λάθος κατά την άντληση των στοιχείων.");
+        }
+
+        return $result['response'];
+    }
+
+
+    public function getStudentEpalInfoNew($endpoint_base_url, $didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
         $parts = explode('-', $birthdate, 3);
         if (($parts === false) || count($parts) != 3 || checkdate(intval($parts[1]), intval($parts[0]), intval($parts[2])) === false) {
             $this->log(__METHOD__ . " Mallformed birthdate", "error");
             throw new Exception('Η ημερομηνία γέννησης πρέπει να είναι της μορφής Η/Μ/Ε', Response::HTTP_BAD_REQUEST);
         }
-        if (mb_strlen($lastname) == 0 || mb_strlen($firstname) == 0 || mb_strlen($father_firstname) == 0 || mb_strlen($mother_firstname) == 0) {
+        if (mb_strlen($registration_no) == 0 || mb_strlen($registry_no) == 0 ) {
             $this->log(__METHOD__ . " Missing parameters", "error");
             throw new Exception('Όλες οι παράμετροι είναι υποχρεωτικοί', Response::HTTP_BAD_REQUEST);
         }
@@ -155,7 +193,7 @@ class Client
             'MotherFirstname' => $mother_firstname,
             'BirthDate' => $birthdate,
             'RegistryNo' => $registry_no,
-            'LevelName' => $level_name
+            'RegistrationNo' => $registration_no
         ];
 
         $headers = [
@@ -190,16 +228,16 @@ class Client
         return $result['response'];
     }
 
-    public function getStudentEpalPromotion($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $level_name)
+    public function getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
         $this->log(__METHOD__);
-        return $this->getStudentEpalPromotionOrCertification($this->_settings['ws_endpoint_studentepalpromotion'], $didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $level_name);
+        return $this->getStudentEpalInfoNew($this->_settings['ws_endpoint_studentepalInfo'], $didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no);
     }
 
-    public function getStudentEpalCertification($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $level_name)
+    public function getStudentEpalCertification($id)
     {
         $this->log(__METHOD__);
-        return $this->getStudentEpalPromotionOrCertification($this->_settings['ws_endpoint_studentepalcertification'], $didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $level_name);
+        return $this->getStudentEpalPromotionOrCertification($this->_settings['ws_endpoint_studentepalpromotion'], $id);
     }
 
     protected function setCommonCurlOptions($ch, $uri, $headers)

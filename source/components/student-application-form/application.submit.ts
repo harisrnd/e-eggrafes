@@ -139,6 +139,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private epalclassesSub: Subscription;
     private loginInfoSub: Subscription;
     private datamodeSub: Subscription;
+    private ServiceStudentCertifSub: Subscription;
     private epalUserDataSub: Subscription;
     private datamode$: BehaviorSubject<IDataModeRecords>;
     private modalTitle: BehaviorSubject<string>;
@@ -146,6 +147,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
     private showLoader: BehaviorSubject<boolean>;
+    private ServiceStudentCertif$: BehaviorSubject<any>;
     private currentUrl: string;
     private cu_name: string;
     private cu_surname: string;
@@ -197,6 +199,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         this.courseSelected = null;
         this.hasright = 1;
         this.previousSchools.next("");
+        this.ServiceStudentCertif$ = new BehaviorSubject([{}]);
     };
 
     ngOnInit() {
@@ -406,6 +409,18 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             aitisiObj["3"] = new StudentCourseChosen(null, this.courseSelected);
         }
 
+            console.log("testmyschool");
+            
+     //       this.ServiceStudentCertifSub = this._hds.getServiceStudentCertification(8)
+              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')     
+                .subscribe(data => {
+                    this.ServiceStudentCertif$.next(data);
+                    
+                },
+                error => {
+                    console.log("Error Getting Courses");
+                });
+        
 
         this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
     }
