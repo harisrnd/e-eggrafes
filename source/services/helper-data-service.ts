@@ -211,7 +211,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
     };
 
-    getRegionsWithSchools(classActive, courseActive) {
+    getRegionsWithSchools(classActive, courseActive, editApp) {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -231,8 +231,10 @@ export class HelperDataService implements OnInit, OnDestroy {
                   {
                      this.lockapp = lockapp.res;
 
-                     if (this.lockapp === 0){
-                             if (classActive === 1)
+                     if ( (this.lockapp === 0) ||
+                          (this.lockapp === 1 && editApp === true)  )
+                     {
+                            if (classActive === 1)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/regions/list`;
                             else if (classActive === 2)
                                 getConnectionString = `${AppSettings.API_ENDPOINT}/sectorsperschool/list?sector_id=${courseActive}`;
@@ -395,10 +397,9 @@ export class HelperDataService implements OnInit, OnDestroy {
             "lock_students": parseInt(userlogin.lock_students),
             "lock_application": parseInt(userlogin.lock_application),
             "disclaimer_checked": parseInt(userlogin.disclaimer_checked),
-
-            "numapp_self": parseInt(userlogin.numapp_self),
-            "numapp_children": parseInt(userlogin.numapp_children),
-            "numchildren": parseInt(userlogin.numchildren)
+            //"numapp_self": parseInt(userlogin.numapp_self),
+            //"numapp_children": parseInt(userlogin.numapp_children),
+            //"numchildren": parseInt(userlogin.numchildren)
         });
         return rsa;
 

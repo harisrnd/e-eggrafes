@@ -355,7 +355,7 @@ class ApplicationSubmit extends ControllerBase
       }
 
       //έλεγχος πληρότητας τμήματος
-      if ( $epalConfig->activate_second_period->value === "1")
+      if ( $epalConfig->lock_small_classes->value === "1")
       {
         $classIdChecked = $applicationForm[0]['currentclass'];
         $secIdChecked = "-1";
@@ -401,6 +401,35 @@ class ApplicationSubmit extends ControllerBase
         } //end for
       }
       //τέλος ελέγχου πληρότητας
+
+      //έλεγχος μη εγκεκριμένων τμημάτων - γίνεται στην τροποποίηση αίτησης και όταν είναι ενεργή η μη προβολή μη εγκεκριμένων τμημάτων
+      if ($epalConfig->lock_small_classes) {
+        for ($i = 0; $i < sizeof($applicationForm[1]); $i++) {
+            if ($applicationForm[0]['currentclass'] === "1")
+              $epalSchools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(
+                array('id' => $applicationForm[1][$i]['epal_id'], 'approved_a' => 1));
+            else if ($applicationForm[0]['currentclass'] === "2")
+              $epalSchools = $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(
+                array('epal_id' => $applicationForm[1][$i]['epal_id'] ,'sector_id' => $applicationForm[3]['sectorfield_id'], 'approved_sector' => 1));
+            else if ($applicationForm[0]['currentclass'] === "3")
+              $epalSchools = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(
+                array('epal_id' => $applicationForm[1][$i]['epal_id'] ,'specialty_id' => $applicationForm[3]['coursefield_id'], 'approved_speciality' => 1));
+            else if ($applicationForm[0]['currentclass'] === "4")
+              $epalSchools = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(
+                array('epal_id' => $applicationForm[1][$i]['epal_id'] ,'specialty_id' => $applicationForm[3]['coursefield_id'], 'approved_speciality_d' => 1));
+
+            $epalSchool = reset($epalSchools);
+            if (!$epalSchool) {
+                $schoolName = $this->retrieveSchoolName($applicationForm[1][$i]['epal_id']);
+                $err_code = 9003;
+                return $this->respondWithStatus([
+                      "error_code" => $err_code,
+                      "school_name" => $schoolName
+                  ], Response::HTTP_OK);
+            }
+          }
+      }
+      //end
 
 
       $crypt = new Crypt();
@@ -883,6 +912,7 @@ class ApplicationSubmit extends ControllerBase
                                       'birthdate',
                                   ));
       $esQuery->condition('es.' . $userIdField, $applicantUser->id(), '=');
+      $esQuery->condition('es.delapp' , 0, '=');
       $existing = $esQuery->execute()->fetchAll(\PDO::FETCH_OBJ);
       if ($existing && sizeof($existing) > 0) {
           $crypt = new Crypt();

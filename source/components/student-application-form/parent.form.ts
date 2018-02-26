@@ -16,8 +16,8 @@ import { HelperDataService } from "../../services/helper-data-service";
 
     public formGroup: FormGroup;
     private respond: any;
-    private epalUserData$: BehaviorSubject<any>;
-    private epalUserDataSub: Subscription;
+    private applicantUserData$: BehaviorSubject<any>;
+    private applicantUserDataSub: Subscription;
     private showLoader: BehaviorSubject<boolean>;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
@@ -46,8 +46,8 @@ import { HelperDataService } from "../../services/helper-data-service";
         });
 
 
-        //this.epalUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" , representRole: "" });
-        this.epalUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
+        //this.applicantUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" , representRole: "" });
+        this.applicantUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
                                                         representRole: "0", numAppSelf: 0, numAppChildren: 0, numChildren: 0 });
         this.showLoader = new BehaviorSubject(false);
         this.modalTitle = new BehaviorSubject("");
@@ -69,9 +69,9 @@ import { HelperDataService } from "../../services/helper-data-service";
     ngOnInit() {
         (<any>$("#emailSentNotice")).appendTo("body");
         this.showLoader.next(true);
-        this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
+        this.applicantUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             this.showLoader.next(false);
-            this.epalUserData$.next(x);
+            this.applicantUserData$.next(x);
             this.formGroup.get("userEmail").setValue(x.userEmail);
             this.formGroup.get("userName").setValue(x.userName);
             this.formGroup.get("userSurname").setValue(x.userSurname);
@@ -103,7 +103,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 
     ngOnDestroy() {
         (<any>$("#emailSentNotice")).remove();
-        if (this.epalUserDataSub) this.epalUserDataSub.unsubscribe();
+        if (this.applicantUserDataSub) this.applicantUserDataSub.unsubscribe();
     }
 
     saveProfileAndContinue(): void {

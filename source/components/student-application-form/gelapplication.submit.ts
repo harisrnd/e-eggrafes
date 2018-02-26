@@ -9,13 +9,8 @@ import { AppSettings } from "../../app.settings";
 import { IAppState } from "../../store/store";
 import { HelperDataService } from "../../services/helper-data-service";
 
-
 import { DataModeActions } from "../../actions/datamode.actions";
-//import { EpalClassesActions } from "../../actions/epalclass.actions";
-//import { RegionSchoolsActions } from "../../actions/regionschools.actions";
-//import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
-//import { SectorFieldsActions } from "../../actions/sectorfields.actions";
-//import { StudentDataFieldsActions } from "../../actions/studentdatafields.actions";
+
 import { SchoolTypeActions } from "../../actions/schooltype.actions";
 import { GelClassesActions } from "../../actions/gelclasses.actions";
 import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
@@ -27,16 +22,8 @@ import { GELCLASSES_INITIAL_STATE } from "../../store/gelclasses/gelclasses.init
 import { GELSTUDENT_DATA_FIELDS_INITIAL_STATE } from "../../store/gelstudentdatafields/gelstudentdatafields.initial-state";
 import { ORIENTATIONGROUP_INITIAL_STATE } from "../../store/orientationgroup/orientationgroup.initial-state";
 import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecoursesfields/electivecoursesfields.initial-state";
-//import { EPALCLASSES_INITIAL_STATE } from "../../store/epalclasses/epalclasses.initial-state";
-//import { STUDENT_DATA_FIELDS_INITIAL_STATE } from "../../store/studentdatafields/studentdatafields.initial-state";
 
 import { IDataModeRecords } from "../../store/datamode/datamode.types";
-//import { IEpalClassRecords } from "../../store/epalclasses/epalclasses.types";
-//import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
-//import { IRegionRecords } from "../../store/regionschools/regionschools.types";
-//import { ISectorRecords } from "../../store/sectorcourses/sectorcourses.types";
-//import { ISectorFieldRecords } from "../../store/sectorfields/sectorfields.types";
-//import { IStudentDataFieldRecords } from "../../store/studentdatafields/studentdatafields.types";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { ISchoolTypeRecords } from "../../store/schooltype/schooltype.types";
 import { IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
@@ -158,12 +145,6 @@ import { StudentGelCourseChosen } from "../students/student";
     private orientationSelected: BehaviorSubject<number>;
 
     private courseSelected$: BehaviorSubject<Array<number>> = new BehaviorSubject(new Array());
-    //private orientationSelected;
-
-    //private electiveCoursesSelected$: BehaviorSubject<Array<number>> = new BehaviorSubject(new Array());
-    //private electiveCoursesSelectedOrder: Array<number> = new Array();
-    //private epalSelectedName: Array<string> = new Array();
-    //private epalSelectedId: Array<string> = new Array();
 
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private gelclasses$: BehaviorSubject<IGelClassRecords>;
@@ -177,6 +158,7 @@ import { StudentGelCourseChosen } from "../students/student";
     private orientationGroupSub: Subscription;
     private electivecourseFieldsSub: Subscription;
     private gelstudentDataFieldsSub: Subscription;
+    private gelUserDataSub: Subscription;
 
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
@@ -231,6 +213,11 @@ import { StudentGelCourseChosen } from "../students/student";
         (<any>$("#studentFormSentNotice")).appendTo("body");
         window.scrollTo(0, 0);
 
+        this.gelUserDataSub = this._hds.getApplicantUserData().subscribe(x => {
+            if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren))
+              this.hasright = 0;
+        });
+
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(linfo => {
@@ -242,9 +229,8 @@ import { StudentGelCourseChosen } from "../students/student";
                         this.cu_fathername = loginInfoObj.cu_fathername;
                         this.cu_mothername = loginInfoObj.cu_mothername;
                         this.disclaimer_checked = loginInfoObj.disclaimer_checked;
-                        if ( Number(loginInfoObj.numapp_self) > 0 && Number(loginInfoObj.numapp_children) >= Number(loginInfoObj.numchildren) )
-                          this.hasright = 0;
-
+                        //if ( Number(loginInfoObj.numapp_self) > 0 && Number(loginInfoObj.numapp_children) >= Number(loginInfoObj.numchildren) )
+                        //  this.hasright = 0;
                         return loginInfoObj;
                     }, {});
                 }
@@ -271,10 +257,7 @@ import { StudentGelCourseChosen } from "../students/student";
             .subscribe(ecs => {
             ecs.reduce(({ }, gelclass) => {
                 if (gelclass.get("selected") == true) {
-                    //this.classSelected = gelclass.get("id");
                       this.classSelected.next(gelclass.get("id"));
-                      console.log("Debug");
-                      console.log(this.classSelected.getValue());
                     }
                 return gelclass;
             }, {});
@@ -307,8 +290,6 @@ import { StudentGelCourseChosen } from "../students/student";
                         this.courseSelectedOrder.push(electivecourseField.order_id);
                         this.courseSelectedId.push(electivecourseField.id);
                     }
-                    //console.log("Test");
-                    //console.log(this.courseSelected$.length);
                     return electivecourseField;
                 }, {});
                 this.electivecourseFields$.next(sfds);
@@ -335,6 +316,8 @@ import { StudentGelCourseChosen } from "../students/student";
         }
         if (this.datamodeSub)
             this.datamodeSub.unsubscribe();
+        if (this.gelUserDataSub)
+            this.gelUserDataSub.unsubscribe();
     }
 
 
@@ -345,8 +328,6 @@ import { StudentGelCourseChosen } from "../students/student";
             return;
 
         let aitisiObj: Array<any> = [];
-        //let epalObj: Array<StudentEpalChosen> = [];
-
         let std = this.gelstudentDataFields$.getValue().get(0);
 
         //aitisiObj[0]: στοιχεία μαθητών
@@ -379,10 +360,7 @@ import { StudentGelCourseChosen } from "../students/student";
         aitisiObj[0].nextclass = this.classSelected.getValue();
 
         //aitisiObj[1]: ομάδα προσανατολισμού
-        //$classIds = array("2", "3", "6", "7");
         let classIds = ["2", "3", "6", "7"];
-        //if (aitisiObj[0]["nextclass"] === "2") {
-        //if (in_array(aitisiObj[0]["nextclass"], $classIds)) {
         if (classIds.indexOf(aitisiObj[0]["nextclass"]) != -1) {
           aitisiObj[1] = <any>{};
           aitisiObj[1].choice_id = this.orientationSelected.getValue();
@@ -396,33 +374,8 @@ import { StudentGelCourseChosen } from "../students/student";
           for (let i = 0; i < courseSelected.length; i++) {
               courseObj[i] = new StudentGelCourseChosen(null, courseSelected[i], this.courseSelectedOrder[i]);
           }
-          //courseObj[courseSelected.length] = new StudentGelCourseChosen(null, this.orientationSelected.getValue(), null);
           aitisiObj["2"] = courseObj;
         }
-
-        console.log("Debugging...");
-        console.log(aitisiObj);
-
-
-        /*
-        let epalSelected = this.epalSelected$.getValue();
-        for (let i = 0; i < epalSelected.length; i++) {
-            epalObj[i] = new StudentEpalChosen(null, epalSelected[i], this.epalSelectedOrder[i]);
-        }
-        aitisiObj["1"] = epalObj;
-        */
-
-
-        /*
-        if (aitisiObj[0]["currentclass"] === "2") {
-            aitisiObj["3"] = new StudentSectorChosen(null, this.sectorSelected);
-        } else if (aitisiObj[0]["currentclass"] === "3" || aitisiObj[0]["currentclass"] === "4") {
-            aitisiObj["3"] = new StudentCourseChosen(null, this.courseSelected);
-        }
-        */
-
-        //this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
-
 
         this.submitRecord(newapp, aitisiObj);
 

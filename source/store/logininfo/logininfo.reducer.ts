@@ -25,10 +25,10 @@ export function loginInfoReducer(state: ILoginInfoRecords = LOGININFO_INITIAL_ST
                     lock_capacity: loginInfo.lock_capacity,
                     lock_students: loginInfo.lock_students,
                     lock_application: loginInfo.lock_application,
-                    disclaimer_checked: loginInfo.disclaimer_checked,
-                    numapp_self: loginInfo.numapp_self,
-                    numapp_children: loginInfo.numapp_children,
-                    numchildren: loginInfo.numchildren
+                    disclaimer_checked: loginInfo.disclaimer_checked
+                    //numapp_self: loginInfo.numapp_self,
+                    //numapp_children: loginInfo.numapp_children,
+                    //numchildren: loginInfo.numchildren
                 }));
         });
 

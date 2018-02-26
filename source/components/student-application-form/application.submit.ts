@@ -140,6 +140,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private loginInfoSub: Subscription;
     private datamodeSub: Subscription;
     private ServiceStudentCertifSub: Subscription;
+    private epalUserDataSub: Subscription;
     private datamode$: BehaviorSubject<IDataModeRecords>;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
@@ -206,6 +207,11 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         (<any>$("#studentFormSentNotice")).appendTo("body");
         window.scrollTo(0, 0);
 
+        this.epalUserDataSub = this._hds.getApplicantUserData().subscribe(x => {
+            if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren))
+              this.hasright = 0;
+        });
+
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(linfo => {
@@ -217,8 +223,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                         this.cu_fathername = loginInfoObj.cu_fathername;
                         this.cu_mothername = loginInfoObj.cu_mothername;
                         this.disclaimer_checked = loginInfoObj.disclaimer_checked;
-                        if ( Number(loginInfoObj.numapp_self) > 0 && Number(loginInfoObj.numapp_children) >= Number(loginInfoObj.numchildren) )
-                          this.hasright = 0;
+                        //if ( Number(loginInfoObj.numapp_self) > 0 && Number(loginInfoObj.numapp_children) >= Number(loginInfoObj.numchildren) )
+                        //  this.hasright = 0;
 
                         return loginInfoObj;
                     }, {});
@@ -231,18 +237,6 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                 .subscribe(ecs => {
                     if (ecs.size > 0) {
                         ecs.reduce(({}, datamode,i) => {
-                           //ΠΡΟΣΟΧΗ: να τροποποιήσω τον τρόπο για έλεγχο πληρότητας..
-                            /*
-                            if (datamode.get("app_update") === true) {
-                                this.app_update.next(true);
-                                this.appId.next(datamode.get("appid"));
-                                this.previousClass.next(datamode.get("currentclass"));
-                                this.previousSector.next(datamode.get("sector_name"));
-                                this.previousCourse.next(datamode.get("course_name"));
-                                for (let i=0; i < datamode.get("epal_name_choice").length; i++)
-                                  this.previousSchools.next(datamode.get("epal_name_choice")[i].epal_id + "," + this.previousSchools.getValue());
-                            }
-                            */
                             if (datamode.get("app_update") === true) {
                                 this.app_update.next(true);
                                 this.appId.next(datamode.get("appid"));
@@ -252,7 +246,6 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                                 for (let i=0; i < datamode.get("epal_choice").length; i++)
                                   this.previousSchools.next(datamode.get("epal_choice")[i].id + "," + this.previousSchools.getValue());
                             }
-
                             return datamode;
                         }, {});
                     } else {
@@ -334,26 +327,22 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
     ngOnDestroy() {
         (<any>$("#studentFormSentNotice")).remove();
-        if (this.studentDataFieldsSub) {
+        if (this.studentDataFieldsSub)
             this.studentDataFieldsSub.unsubscribe();
-        }
-        if (this.regionsSub) {
+        if (this.regionsSub)
             this.regionsSub.unsubscribe();
-        }
-        if (this.sectorsSub) {
+        if (this.sectorsSub)
             this.sectorsSub.unsubscribe();
-        }
-        if (this.sectorFieldsSub) {
+        if (this.sectorFieldsSub)
             this.sectorFieldsSub.unsubscribe();
-        }
-        if (this.epalclassesSub) {
+        if (this.epalclassesSub)
             this.epalclassesSub.unsubscribe();
-        }
-        if (this.loginInfoSub) {
+        if (this.loginInfoSub)
             this.loginInfoSub.unsubscribe();
-        }
         if (this.datamodeSub)
-          this.datamodeSub.unsubscribe();
+            this.datamodeSub.unsubscribe();
+        if (this.epalUserDataSub)
+            this.epalUserDataSub.unsubscribe();
     }
 
     submitNow(newapp) {
@@ -361,15 +350,6 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         //έλεγχος αν πρέπει να γίνει έλεγχος πληρότητας
         let nonCheckOccupancy = "$";
         if (newapp === false) {
-          /*
-          if (this.classSelected === this.previousClass.getValue() && this.sectorSelectedName === this.previousSector.getValue() && this.courseSelectedName === this.previousCourse.getValue()) {
-            for (let i=0; i < this.epalSelectedName.length; i++) {
-                if (this.previousSchools.getValue().indexOf(this.epalSelectedName[i]) !== -1) {
-                  nonCheckOccupancy += this.epalSelectedId[i] + "$";
-                }
-            }
-          }
-          */
           if (this.classSelected === this.previousClass.getValue() && this.sectorSelected === this.previousSector.getValue() && this.courseSelected === this.previousCourse.getValue()) {
             for (let i=0; i < this.epalSelectedId.length; i++) {
                 if (this.previousSchools.getValue().indexOf(this.epalSelectedId[i]) !== -1) {
@@ -377,18 +357,6 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                 }
             }
           }
-          /*
-          console.log(this.classSelected);
-          console.log(this.previousClass.getValue());
-          console.log(this.sectorSelected);
-          console.log(this.previousSector.getValue());
-          console.log(this.courseSelected);
-          console.log(this.previousCourse.getValue());
-          console.log(this.previousSchools.getValue());
-          console.log(this.epalSelectedId);
-
-          console.log(nonCheckOccupancy);
-          */
         }
 
 
@@ -599,9 +567,14 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                         mHeader = "modal-header-danger";
                         break;
                     case 9001:
-                        let schoolName = success.school_name;
+                        //let schoolName = success.school_name;
                         mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
-                        mText =  "Το σχολείο " + schoolName + " που επιλέξατε, δεν έχει αυτή τη στιγμή διαθέσιμες θέσεις εγγραφής. Για να ολοκληρώσετε την υποβολή της αίτησης θα πρέπει να τροποποιήσετε τις επιλογές σχολικών μονάδων που κάνατε.";
+                        mText =  "Το σχολείο " + success.school_name + " που επιλέξατε, δεν έχει αυτή τη στιγμή διαθέσιμες θέσεις εγγραφής. Για να ολοκληρώσετε την υποβολή της αίτησης θα πρέπει να τροποποιήσετε τις επιλογές σχολικών μονάδων που κάνατε.";
+                        mHeader = "modal-header-danger";
+                        break;
+                    case 9003:
+                        mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
+                        mText =  "Το τμήμα στο σχολείο " + success.school_name + " που επιλέξατε, είναι ΜΗ ΕΓΚΕΚΡΙΜΕΝΟ. Για να ολοκληρώσετε την υποβολή της αίτησης θα πρέπει να τροποποιήσετε τις επιλογές σχολικών μονάδων που κάνατε.";
                         mHeader = "modal-header-danger";
                         break;
                     default:

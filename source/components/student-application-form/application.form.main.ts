@@ -6,8 +6,8 @@ import { Http } from "@angular/http";
 import { Router } from "@angular/router";
 import { IMyDpOptions } from "mydatepicker";
 import { BehaviorSubject, Observable, Subscription } from "rxjs/Rx";
-import { IDataModeRecords } from "../../store/datamode/datamode.types";
-import { DataModeActions } from "../../actions/datamode.actions";
+//import { IDataModeRecords } from "../../store/datamode/datamode.types";
+//import { DataModeActions } from "../../actions/datamode.actions";
 import { StudentDataFieldsActions } from "../../actions/studentdatafields.actions";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
@@ -33,12 +33,12 @@ import {
 
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private studentDataFields$: BehaviorSubject<IStudentDataFieldRecords>;
-    private datamode$: BehaviorSubject<IDataModeRecords>;
+    //private datamode$: BehaviorSubject<IDataModeRecords>;
 
     private studentDataFieldsSub: Subscription;
     private loginInfoSub: Subscription;
     private criteriaSub: Subscription;
-    private datamodeSub: Subscription;
+    //private datamodeSub: Subscription;
     private epalUserDataSub: Subscription;
 
     private studentDataGroup: FormGroup;
@@ -60,7 +60,7 @@ import {
     private numAppSelf: BehaviorSubject<number>;
     private numAppChildren: BehaviorSubject<number>;
     private numChildren: BehaviorSubject<number>;
-    private epalUserData$: BehaviorSubject<any>;
+    //private epalUserData$: BehaviorSubject<any>;
 
     private myDatePickerOptions: IMyDpOptions = {
         // other options...
@@ -92,7 +92,7 @@ import {
     constructor(private fb: FormBuilder,
         private _sdfa: StudentDataFieldsActions,
         private hds: HelperDataService,
-        private _cfa: DataModeActions,
+        //private _cfa: DataModeActions,
         private _ngRedux: NgRedux<IAppState>,
         private router: Router,
         private http: Http) {
@@ -113,8 +113,8 @@ import {
         this.numAppSelf = new BehaviorSubject(0);
         this.numAppChildren = new BehaviorSubject(0);
         this.numChildren = new BehaviorSubject(0);
-        this.epalUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
-                                                        representRole: "", numAppSelf: 0, numAppChildren: 0, numChildren: 0 });
+        //this.epalUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
+        //                                              representRole: "", numAppSelf: 0, numAppChildren: 0, numChildren: 0 });
 
         this.studentDataFields$ = new BehaviorSubject(STUDENT_DATA_FIELDS_INITIAL_STATE);
         this.studentDataGroup = this.fb.group({
@@ -139,7 +139,7 @@ import {
         window.scrollTo(0, 0);
 
         this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
-            this.epalUserData$.next(x);
+            //this.epalUserData$.next(x);
             this.numAppSelf.next(Number(x.numAppSelf));
             this.numAppChildren.next(Number(x.numAppChildren));
             this.numChildren.next(Number(x.numChildren));
@@ -168,6 +168,7 @@ import {
                             this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
                             this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
 
+                            //εναλλακτικός τρόπος για προβλήματος πεδίου "Αίτηση από" στο edit app 
                             if (this.appUpdate.getValue() === true) {
                                 if (studentDataField.get("relationtostudent") === 'Γονέας/Κηδεμόνας')
                                   this.numAppChildren.next(this.numAppChildren.getValue() -1) ;
@@ -181,25 +182,6 @@ import {
                     this.studentDataFields$.next(sdfds);
                 }, error => { console.log("error selecting studentDataFields"); });
         });
-        //end new
-
-        //obsolete
-        /*
-        this.loginInfoSub = this._ngRedux.select("loginInfo")
-            .map(loginInfo => <ILoginInfoRecords>loginInfo)
-            .subscribe(linfo => {
-                if (linfo.size > 0) {
-                    linfo.reduce(({}, loginInfoObj) => {
-                        //obsolete
-                        //this.numAppSelf.next(Number(loginInfoObj.numapp_self));
-                        //this.numAppChildren.next(Number(loginInfoObj.numapp_children));
-                        //this.numChildren.next(Number(loginInfoObj.numchildren));
-                        return loginInfoObj;
-                    }, {});
-                }
-                this.loginInfo$.next(linfo);
-            }, error => { console.log("error selecting loginInfo"); });
-         */
 
          this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
@@ -207,84 +189,12 @@ import {
                 this.loginInfo$.next(linfo);
           }, error => { console.log("error selecting loginInfo"); });
 
-          this.datamodeSub = this._ngRedux.select("datamode")
-              .map(datamode => <IDataModeRecords>datamode)
-              .subscribe(ecs => {
-                  if (ecs.size > 0) {
-                      ecs.reduce(({}, datamode,i) => {
-                          this.appId.next(datamode.get("appid"));
-                          this.appUpdate.next(datamode.get("app_update"));
-                          this.previousClass.next(datamode.get("currentclass"));
-                          this.previousSector.next(datamode.get("sector_name"));
-                          this.previousCourse.next(datamode.get("course_name"));
-                          this.previousSchools.next(datamode.get("epal_name_choice"));
-                          this.reltostud.next(datamode.get("relationtostudent"));
-
-                          if (datamode.get("edit") === true) {
-                              this.dataEdit.next(true);
-                              this.lastSchName.next(datamode.get("lastschool_schoolname"));
-                              let birthdate = datamode.get("studentbirthdate");
-                              let birthparts = birthdate.split("/",3);
-                              this._sdfa.saveStudentDataFields([{name: datamode.get("studentfirstname"), studentsurname: datamode.get("studentsurname"),
-                                fatherfirstname: datamode.get("fatherfirstname"), motherfirstname: datamode.get("motherfirstname"),
-                                regionaddress: datamode.get("regionaddress"), regiontk: datamode.get("regiontk"), regionarea: datamode.get("regionarea"),
-                                lastschool_schoolname: {registry_no: datamode.get("lastschool_registrynumber"), name: datamode.get("lastschool_schoolname"), unit_type_id: Number(datamode.get("lastschool_unittypeid"))},
-                                lastschool_schoolyear: datamode.get("lastschool_schoolyear"), lastschool_class: datamode.get("lastschool_class"),
-                                relationtostudent: datamode.get("relationtostudent"), telnum: datamode.get("telnum"),
-                                studentbirthdate: {date: {year: Number(birthparts[2]), month: Number(birthparts[1]), day: Number(birthparts[0])}}
-                            }]);
-                          }
-
-                          else  {
-
-                          }
-
-                          return datamode;
-                      }, {});
-                  } else {
-
-                  }
-
-              }, error => { console.log("error selecting datamode"); });
-
-        /*
-        this.studentDataFieldsSub = this._ngRedux.select("studentDataFields")
-            .subscribe(studentDataFields => {
-                let sdfds = <IStudentDataFieldRecords>studentDataFields;
-                if (sdfds.size > 0) {
-                    sdfds.reduce(({}, studentDataField) => {
-                        //if (this.appUpdate.getValue() &&  !this.dataEdit.getValue())
-                        this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
-                        if (typeof this.lastSchName.getValue() === "undefined" )
-                          this.lastSchName.next("");
-
-                        this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
-                        this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
-                        this.studentDataGroup.controls["fatherfirstname"].setValue(studentDataField.get("fatherfirstname"));
-                        this.studentDataGroup.controls["motherfirstname"].setValue(studentDataField.get("motherfirstname"));
-                        this.studentDataGroup.controls["regionaddress"].setValue(studentDataField.get("regionaddress"));
-                        this.studentDataGroup.controls["regiontk"].setValue(studentDataField.get("regiontk"));
-                        this.studentDataGroup.controls["regionarea"].setValue(studentDataField.get("regionarea"));
-                        this.studentDataGroup.controls["lastschool_schoolname"].setValue(studentDataField.get("lastschool_schoolname"));
-                        this.studentDataGroup.controls["lastschool_schoolyear"].setValue(studentDataField.get("lastschool_schoolyear"));
-                        this.studentDataGroup.controls["lastschool_class"].setValue(studentDataField.get("lastschool_class"));
-                        this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
-                        this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
-                        this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
-
-                        return studentDataField;
-                    }, {});
-                }
-                this.studentDataFields$.next(sdfds);
-            }, error => { console.log("error selecting studentDataFields"); });
-          */
-
     };
 
     ngOnDestroy() {
         (<any>$("#applicationFormNotice")).remove();
         if (this.studentDataFieldsSub) this.studentDataFieldsSub.unsubscribe();
-        if (this.datamodeSub) this.datamodeSub.unsubscribe();
+        //if (this.datamodeSub) this.datamodeSub.unsubscribe();
         if (this.epalUserDataSub) this.epalUserDataSub.unsubscribe();
     }
 
@@ -310,18 +220,6 @@ import {
             this.showModal();
         } else {
             this._sdfa.saveStudentDataFields([this.studentDataGroup.value]);
-            /*
-            if (this.appUpdate.getValue() === true) {
-              this._cfa.saveDataModeSelected({edit: false, app_update: true, appid: this.appId.getValue(),
-                          currentclass: this.previousClass.getValue(), sector_name: this.previousSector.getValue(),
-                          course_name: this.previousCourse.getValue(), epal_name_choice: this.previousSchools.getValue(),
-                          relationtostudent: this.reltostud.getValue()
-            });
-          }
-          else {
-              this._cfa.saveDataModeSelected({edit: false, app_update: false});
-          }
-          */
 
             this.router.navigate(["/application-submit"]);
         }
