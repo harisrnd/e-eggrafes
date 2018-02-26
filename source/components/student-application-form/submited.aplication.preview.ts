@@ -562,8 +562,6 @@ import { IAppState } from "../../store/store";
                 this.showLoader$.next(false);
             });
 
-        this.schooltype = "ΕΠΑΛ";
-
     }
 
     setActiveGelUser(ind: number): void {
@@ -590,7 +588,6 @@ import { IAppState } from "../../store/store";
                 this.showLoader$.next(false);
             });
 
-        this.schooltype = "ΓΕΛ";
     }
 
 
@@ -620,11 +617,13 @@ import { IAppState } from "../../store/store";
 
     deleteApplication(appId: number): void {
         this.applicationId = appId;
+        this.schooltype = "epal";
         this.showConfirmModal();
     }
 
     deleteGelApplication(appId: number): void {
         this.applicationId = appId;
+        this.schooltype = "gel";
         this.showConfirmModal();
     }
 

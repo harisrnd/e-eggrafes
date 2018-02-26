@@ -58,7 +58,6 @@ class SubmitedApplications extends ControllerBase
                 ], Response::HTTP_BAD_REQUEST);
         }
 
-
         $authToken = $request->headers->get('PHP_AUTH_USER');
         $transaction = $this->connection->startTransaction();
         try {
@@ -136,7 +135,7 @@ class SubmitedApplications extends ControllerBase
     }
 
     //λογική διαγραφή αίτησης μαθητή
-    public function deleteApplication(Request $request, $schtype)
+    public function deleteApplication(Request $request)
     {
         if (!$request->isMethod('POST')) {
             return $this->respondWithStatus([
@@ -181,16 +180,17 @@ class SubmitedApplications extends ControllerBase
             $applicantUser = reset($applicantUsers);
             if ($applicantUser) {
                 $userid = $applicantUser->id();
-
-                if ($schtype === "ΕΠΑΛ")
-                  $applicantStudents = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(array('epaluser_id' => $userid, 'id' => $applicationId));
-                else if ($schtype === "ΓΕΛ")
-                  $applicantStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('gel_userid' => $userid, 'id' => $applicationId));
+                //if ($schtype === "ΕΠΑΛ")
+                $applicantStudents = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(array('epaluser_id' => $userid, 'id' => $applicationId));
+                //else if ($schtype === "ΓΕΛ")
+                //  $applicantStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('gel_userid' => $userid, 'id' => $applicationId));
+                /*
                 else {
                   return $this->respondWithStatus([
                   'message' => t('error in school type name'),
                   ], Response::HTTP_FORBIDDEN);
                 }
+                */
 
                 $applicantStudent = reset($applicantStudents);
 
