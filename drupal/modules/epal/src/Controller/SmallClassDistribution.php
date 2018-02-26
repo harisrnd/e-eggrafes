@@ -887,13 +887,9 @@ public function GetRegions(Request $request)
         if ($schools) {
                 $list = array();
                 foreach ($schools as $object)
-                {     $SmallClassesAppr =  $object -> approved_a -> value ;
-                      $categ = $object->metathesis_region->value;
-                      $limit = $this->getLimit(1, $categ);
-                      $status = $this-> findStatus($object->id(),1, 0, 0);
-                      $stat = intval($status);
-                      $lim = intval($limit);
-                            if ($stat >= $lim || $SmallClassesAppr == 1)
+                {    
+                      $SmallClassesAppr =  $object -> approved_a -> value ;
+                       if ( $SmallClassesAppr == 1)
                             {
                             $prefid = intval($object->getperfecture());
                             $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
@@ -936,9 +932,8 @@ public function GetSectorsperschool(Request $request, $courseActive )
                 $list = array();
                 foreach ($schools as $object)
                 {    
-                    $lala = $object->epal_id -> entity ->id();
-                    $this->logger->notice($lala);
-                    $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $lala));
+                    $id_new = $object->epal_id -> entity ->id();
+                    $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $id_new));
                      $sdata = reset($schooldata);
                     if (!$sdata){
                          return $this->respondWithStatus([
@@ -947,13 +942,9 @@ public function GetSectorsperschool(Request $request, $courseActive )
                       }
                       else
                     {
-                      $categ = $sdata -> metathesis_region->value;
+                     
                       $SmallClassesAppr =  $object -> approved_sector -> value ;
-                      $limit = $this->getLimit(2, $categ);
-                      $status = $this-> findStatus($object->id(),2, $courseActive, 0);
-                      $stat = intval($status);
-                      $lim = intval($limit);
-                            if ($stat >= $lim || $SmallClassesAppr == 1)
+                        if ( $SmallClassesAppr == 1)
                             {
                             $prefid = intval($sdata->getperfecture());
                             $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
@@ -1002,9 +993,9 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
                 $list = array();
                 foreach ($schools as $object)
                 {    
-                    $lala = $object->epal_id -> entity ->id();
-                    $this->logger->notice($lala);
-                    $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $lala));
+                    $id_new = $object->epal_id -> entity ->id();
+                    $this->logger->notice($id_new);
+                    $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $id_new));
                      $sdata = reset($schooldata);
                     if (!$sdata){
                          return $this->respondWithStatus([
@@ -1013,13 +1004,9 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
                       }
                       else
                     {
-                      $categ = $sdata -> metathesis_region->value;
+                     
                       $SmallClassesAppr =  $object -> approved_sector -> value ;
-                      $limit = $this->getLimit(3, $categ);
-                      $status = $this-> findStatus($object->id(),3,  0, $courseActive);
-                      $stat = intval($status);
-                      $lim = intval($limit);
-                            if ($stat >= $lim || $SmallClassesAppr == 1)
+                      if ($SmallClassesAppr == 1)
                             {
                             $prefid = intval($sdata->getperfecture());
                             $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
@@ -1067,9 +1054,9 @@ public function getCoursesPerSchoolSmallClassesNight(Request $request, $courseAc
                 $list = array();
                 foreach ($schools as $object)
                 {    
-                    $lala = $object->epal_id -> entity ->id();
-                    $this->logger->notice($lala);
-                    $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $lala));
+                    $id_new = $object->epal_id -> entity ->id();
+                    $this->logger->notice($id_new);
+                    $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $id_new));
                      $sdata = reset($schooldata);
                     if (!$sdata){
                          return $this->respondWithStatus([
@@ -1078,13 +1065,8 @@ public function getCoursesPerSchoolSmallClassesNight(Request $request, $courseAc
                       }
                       else
                     {
-                      $categ = $sdata -> metathesis_region->value;
                       $SmallClassesAppr =  $object -> approved_sector -> value ;
-                      $limit = $this->getLimit(4, $categ);
-                      $status = $this-> findStatus($object->id(),4,  0, $courseActive);
-                      $stat = intval($status);
-                      $lim = intval($limit);
-                            if ($stat >= $lim || $SmallClassesAppr == 1)
+                            if ($SmallClassesAppr == 1)
                             {
                             $prefid = intval($sdata->getperfecture());
                             $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
@@ -1115,7 +1097,8 @@ public function getCoursesPerSchoolSmallClassesNight(Request $request, $courseAc
         }
 
 
-
+                
+                      
 
 
 }

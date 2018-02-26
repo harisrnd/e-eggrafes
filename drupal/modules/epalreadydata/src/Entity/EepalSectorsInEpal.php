@@ -309,6 +309,67 @@ class EepalSectorsInEpal extends ContentEntityBase implements EepalSectorsInEpal
           ->setDisplayConfigurable('view', TRUE);
 
 
+
+$fields['approv_decision'] = BaseFieldDefinition::create('string')
+          ->setLabel(t('Άριθμός Απόφασης'))
+          ->setDescription(t('Δώσε τον αριθμός απόφασης έγκρισης ολιγομελούς'))
+          ->setSettings(array(
+            'max_length' => 1000,
+            'text_processing' => 0,
+          ))
+          ->setRequired(false)
+          ->setDefaultValue('')
+          ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'string',
+            'weight' => -4,
+          ))
+          ->setDisplayOptions('form', array(
+            'type' => 'string_textfield',
+            'weight' => -4,
+          ))
+          ->setDisplayConfigurable('form', true)
+          ->setDisplayConfigurable('view', true);
+
+$fields['approv_role'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Ο ρόλος του χρήστη που κάνει έγκριση'))
+      ->setDescription(t('Ρόλος του χρήστη που κάνει έγκριση'))
+      ->setSettings(array(
+        'max_length' => 50,
+        'text_processing' => 0,
+      ))
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -4,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string_textfield',
+        'weight' => -4,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+
+
+      $fields['approvdate'] = BaseFieldDefinition::create('datetime')
+        ->setLabel(t('Ημερομηνία έγκρισης ολιγομελούς'))
+        ->setDescription(t('Δώσε την Ημερομηνία έγκρισης ολιγομελούς'))
+        ->setSetting('datetime_type', 'date')
+        ->setRequired(false)
+        ->setDisplayOptions('view', array(
+          'label' => 'above',
+          'type' => 'string',
+          'weight' => -4,
+        ))->setDisplayOptions('form', array(
+          'type' => 'string_textfield',
+          'weight' => -4,
+        ))
+        ->setDisplayConfigurable('form', true)
+        ->setDisplayConfigurable('view', true);
+
+
   $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the Eepal sectors in epal is published.'))
