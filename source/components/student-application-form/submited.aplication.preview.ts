@@ -538,15 +538,16 @@ import { IAppState } from "../../store/store";
 
     setActiveEpalUser(ind: number): void {
 
+        this.resetStore();
+
         if (ind === this.applicationEpalIdActive) {
             this.applicationEpalIdActive = 0;
+            this.applicationGelIdActive = 0;
             return;
         }
 
-        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
-        this.resetStore();
-
         this.applicationEpalIdActive = ind;
+        this.applicationGelIdActive = 0;
         this.showLoader$.next(true);
 
 
@@ -565,15 +566,16 @@ import { IAppState } from "../../store/store";
 
     setActiveGelUser(ind: number): void {
 
+        this.resetStore();
+
         if (ind === this.applicationGelIdActive) {
             this.applicationGelIdActive = 0;
+            this.applicationEpalIdActive = 0;
             return;
         }
 
-        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
-        this.resetStore();
-
         this.applicationGelIdActive = ind;
+        this.applicationEpalIdActive = 0;
         this.showLoader$.next(true);
 
         this.GelSubmittedDetailsSub = this._hds.getGelStudentDetails(this.applicationGelIdActive).subscribe(data => {
@@ -795,7 +797,7 @@ import { IAppState } from "../../store/store";
 
     editGelApplication()  {
 
-      this.gelclassesSub = this._ngRedux.select("gelclasses")
+/*       this.gelclassesSub = this._ngRedux.select("gelclasses")
             .map(gelclasses => <IGelClassRecords>gelclasses)
             .subscribe(ecs => {
                 if (ecs.size > 0) {
@@ -824,7 +826,6 @@ import { IAppState } from "../../store/store";
             }, {});
         }, error => { console.log("error selecting electivecourseFields"); });
 
-      this.router.navigate(["/gel-class-select"]);
 
       this.OrientationGroupSub = this._ngRedux.select("orientationGroup")
            .map(orientationGroup => <IOrientationGroupRecords>orientationGroup)
@@ -841,23 +842,52 @@ import { IAppState } from "../../store/store";
                    }
                    return orientationgroup;
                  }, {});
-           }, error => { console.log("error selecting orientation"); });
+           }, error => { console.log("error selecting orientation"); }); */
+
+           this.router.navigate(["/gel-class-select"]);
+
 
     }
 
     createStoreWithGelAppData()  {
 
-      //this._gca.resetGelClassesSelected();
-      this._gca.getClassesList(false);
+        this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
+        this._sta.saveSchoolTypeSelected(1, "ΓΕΛ");
+        
+        this._gca.getClassesList(false).then(()=>{
+            this._gca.saveGelClassesSelected(-1, this.GelSubmittedDetails$.getValue()[0].nextclass -1 );
+        });
 
-      let class_id = parseInt(this.GelSubmittedDetails$.getValue()[0].nextclass);
-      if (class_id === 1 || class_id === 3 || class_id === 4)
-        this._ecf.getElectiveCourseFields(false, class_id);
-      if (class_id === 2 || class_id === 3 || class_id === 6 || class_id === 7)
-        this._ogs.getOrientationGroups(false, class_id, 'ΟΠ');
+        let class_id = parseInt(this.GelSubmittedDetails$.getValue()[0].nextclass);
+        let index;
+         if (class_id === 1 || class_id === 3 || class_id === 4){
+            if (class_id===1){
+                index=4;
+            }
+            else{
+                index=8;
+            }
+            this._ecf.getElectiveCourseFields(false,class_id).then(()=>{
+                for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
+                    if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΕΠΙΛΟΓΗ") {
+                        this._ecf.saveElectiveCourseFieldsSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
+                    }
+                }
+            });
+        }
 
-      this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
-      this._sta.saveSchoolTypeSelected(1, "ΓΕΛ");
+         if (class_id === 2 || class_id === 3 || class_id === 6 || class_id === 7){
+             let index=15;
+             this._ogs.getOrientationGroups(false,class_id,"ΟΠ").then(()=>{
+                for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
+                    if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΟΠ") {
+                        this._ogs.saveOrientationGroupSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0);
+                    }
+                }
+             });
+         }
+
+
 
       let birthdate = this.GelSubmittedDetails$.getValue()[0].birthdate;
       let birthparts = birthdate.split("/",3);
