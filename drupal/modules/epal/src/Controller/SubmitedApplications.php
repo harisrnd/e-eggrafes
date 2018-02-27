@@ -58,7 +58,6 @@ class SubmitedApplications extends ControllerBase
                 ], Response::HTTP_BAD_REQUEST);
         }
 
-
         $authToken = $request->headers->get('PHP_AUTH_USER');
         $transaction = $this->connection->startTransaction();
         try {
@@ -157,7 +156,6 @@ class SubmitedApplications extends ControllerBase
                 ], Response::HTTP_BAD_REQUEST);
         }
 
-
         $authToken = $request->headers->get('PHP_AUTH_USER');
         $transaction = $this->connection->startTransaction();
         try {
@@ -178,15 +176,25 @@ class SubmitedApplications extends ControllerBase
                     ], Response::HTTP_FORBIDDEN);
             }
             */
-            $epalUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
-            $epalUser = reset($epalUsers);
-            if ($epalUser) {
-                $userid = $epalUser->id();
+            $applicantUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
+            $applicantUser = reset($applicantUsers);
+            if ($applicantUser) {
+                $userid = $applicantUser->id();
+                //if ($schtype === "ΕΠΑΛ")
+                $applicantStudents = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(array('epaluser_id' => $userid, 'id' => $applicationId));
+                //else if ($schtype === "ΓΕΛ")
+                //  $applicantStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('gel_userid' => $userid, 'id' => $applicationId));
+                /*
+                else {
+                  return $this->respondWithStatus([
+                  'message' => t('error in school type name'),
+                  ], Response::HTTP_FORBIDDEN);
+                }
+                */
 
-                $epalStudents = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(array('epaluser_id' => $userid, 'id' => $applicationId));
-                $epalStudent = reset($epalStudents);
+                $applicantStudent = reset($applicantStudents);
 
-                if ($epalStudent) {
+                if ($applicantStudent) {
                     /*
                     //άρνηση διαγραφής αν είμαστε στη δεύτερη περίοδο και η αίτηση είναι α' περιόδου
                     if (!$epalStudent->second_period->value && $epalConfig->activate_second_period->value) {
@@ -195,12 +203,12 @@ class SubmitedApplications extends ControllerBase
                             ], Response::HTTP_FORBIDDEN);
                     }
                     */
-                    $epalStudent->set('delapp', 1);
+                    $applicantStudent->set('delapp', 1);
                     $timestamp = strtotime(date("Y-m-d"));
-                    $epalStudent->set('delapp_changed', $timestamp);
-                    $epalStudent->set('delapp_role', 'student');
-                    $epalStudent->set('delapp_studentid',   $userid);
-                    $epalStudent->save();
+                    $applicantStudent->set('delapp_changed', $timestamp);
+                    $applicantStudent->set('delapp_role', 'student');
+                    $applicantStudent->set('delapp_studentid',   $userid);
+                    $applicantStudent->save();
 
                     return $this->respondWithStatus([
                       'error_code' => 0,
@@ -208,12 +216,12 @@ class SubmitedApplications extends ControllerBase
 
                 } else {
                     return $this->respondWithStatus([
-                    'message' => t('EPAL student not found'),
+                    'message' => t('applicant student not found'),
                 ], Response::HTTP_FORBIDDEN);
                 }
             } else {
                 return $this->respondWithStatus([
-                'message' => t('EPAL user not found'),
+                'message' => t('applicant user not found'),
                 ], Response::HTTP_FORBIDDEN);
             }
         } catch (\Exception $e) {
@@ -950,11 +958,11 @@ class SubmitedApplications extends ControllerBase
 //λογική διαγραφή αίτησης μαθητή από Διευθυντή
 public function deleteApplicationFromDirector(Request $request)
 {
-    if (!$request->isMethod('POST')) {
-        return $this->respondWithStatus([
-                "error_code" => 2001
-            ], Response::HTTP_METHOD_NOT_ALLOWED);
-    }
+        if (!$request->isMethod('POST')) {
+            return $this->respondWithStatus([
+                    "error_code" => 2001
+                ], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
         $authToken = $request->headers->get('PHP_AUTH_USER');
 
         $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));

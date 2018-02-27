@@ -40,6 +40,222 @@ class GelSubmittedApplications extends ControllerBase
         );
     }
 
+    //λογική διαγραφή αίτησης μαθητή
+    public function gelDeleteApplication(Request $request)
+    {
+        if (!$request->isMethod('POST')) {
+            return $this->respondWithStatus([
+                    "error_code" => 2001
+                ], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
+
+        $content = $request->getContent();
+
+        $applicationId = 0;
+        if (!empty($content)) {
+            $postArr = json_decode($content, TRUE);
+            $applicationId = $postArr['applicationId'];
+        }
+        else {
+            return $this->respondWithStatus([
+                    "error_code" => 5002
+                ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $transaction = $this->connection->startTransaction();
+        try {
+            //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
+            $config_storage = $this->entityTypeManager->getStorage('epal_config');
+            $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
+            $epalConfig = reset($epalConfigs);
+            if (!$epalConfig) {
+               return $this->respondWithStatus([
+                       'message' => t("EpalConfig Enity not found"),
+                   ], Response::HTTP_FORBIDDEN);
+            }
+
+            $applicantUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
+            $applicantUser = reset($applicantUsers);
+            if ($applicantUser) {
+                $userid = $applicantUser->id();
+                //$applicantStudents = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(array('epaluser_id' => $userid, 'id' => $applicationId));
+                $applicantStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('gel_userid' => $userid, 'id' => $applicationId));
+                $applicantStudent = reset($applicantStudents);
+
+                if ($applicantStudent) {
+                    $applicantStudent->set('delapp', 1);
+                    $timestamp = strtotime(date("Y-m-d"));
+                    $applicantStudent->set('delapp_changed', $timestamp);
+                    $applicantStudent->set('delapp_role', 'student');
+                    $applicantStudent->set('delapp_studentid',   $userid);
+                    $applicantStudent->save();
+
+                    return $this->respondWithStatus([
+                      'error_code' => 0,
+                  ], Response::HTTP_OK);
+
+                } else {
+                    return $this->respondWithStatus([
+                    'message' => t('applicant student not found'),
+                ], Response::HTTP_FORBIDDEN);
+                }
+            } else {
+                return $this->respondWithStatus([
+                'message' => t('applicant user not found'),
+                ], Response::HTTP_FORBIDDEN);
+            }
+        } catch (\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            $transaction->rollback();
+
+            return $this->respondWithStatus([
+                'error_code' => 5001,
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    //λογική διαγραφή αίτησης μαθητή από Διευθυντή
+    public function gelDeleteApplicationFromDirector(Request $request)
+    {
+      if (!$request->isMethod('POST')) {
+          return $this->respondWithStatus([
+                  "error_code" => 2001
+              ], Response::HTTP_METHOD_NOT_ALLOWED);
+      }
+      $authToken = $request->headers->get('PHP_AUTH_USER');
+
+      $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+      $user = reset($users);
+      if ($user) {
+          /*
+          //TO BE DONE: να ανακτείται ο κωδικός σχολείου. Προϋποθέτει: entity με ΓΕΛ σχολεία!!
+          $gelId = $user->init->value;
+
+          $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gelId));
+          $school = reset($schools);
+          if (!$school) {
+              $this->logger->warning('no access to this school='.$user->id());
+              return $this->respondWithStatus([
+                  "message" => "No access to this school"
+              ], Response::HTTP_FORBIDDEN);
+          }
+          */
+
+          $userRoles = $user->getRoles();
+          $userRole = '';
+          foreach ($userRoles as $tmpRole) {
+              if ($tmpRole === 'epal') {
+                  $userRole = $tmpRole;
+              }
+          }
+          if ($userRole === '') {
+              return $this->respondWithStatus([
+                       'error_code' => 4003,
+                   ], Response::HTTP_FORBIDDEN);
+          } elseif ($userRole === 'epal') {
+
+          $content = $request->getContent();
+
+          $applicationId = 0;
+          if (!empty($content)) {
+              $postArr = json_decode($content, TRUE);
+              $applicationId = $postArr['applicationId'];
+          }
+          else {
+              return $this->respondWithStatus([
+                      "error_code" => 5002
+                  ], Response::HTTP_BAD_REQUEST);
+          }
+
+
+      $transaction = $this->connection->startTransaction();
+      try {
+          //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_delete
+          $config_storage = $this->entityTypeManager->getStorage('epal_config');
+          $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
+          $epalConfig = reset($epalConfigs);
+          if (!$epalConfig) {
+             return $this->respondWithStatus([
+                     'message' => t("EpalConfig Enity not found"),
+                 ], Response::HTTP_FORBIDDEN);
+          }
+          /*
+          else if ($epalConfig->lock_school_students_view->value) {
+              return $this->respondWithStatus([
+                      "error_code" => 3002
+                  ], Response::HTTP_FORBIDDEN);
+          }
+          //μη διαγραφή αν δεν είναι ενεργή η περίοδος υποβολής αιτήσεων
+          else if ($epalConfig->lock_application->value) {
+              return $this->respondWithStatus([
+                      "error_code" => 3002
+                  ], Response::HTTP_FORBIDDEN);
+          }
+          */
+          else if ($epalConfig->lock_delete->value) {
+              return $this->respondWithStatus([
+                      "error_code" => 3002
+                  ], Response::HTTP_FORBIDDEN);
+          }
+
+
+          $applicantStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array( 'id' => $applicationId));
+          $applicantStudent = reset($applicantStudents);
+
+          if ($applicantStudent) {
+              /*
+              //ΔΙΑΓΡΑΦΗ ΑΠΟ ΠΙΝΑΚΑ ΑΠΟΤΕΛΕΣΜΑΤΩΝ -> ΘΑ ΥΠΑΡΧΕΙ ΣΤΟ ΓΕΛ??
+              $epalStudentClasses = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('student_id' => $applicationId));
+              $epalStudentClass = reset($epalStudentClasses);
+
+              if ($epalStudentClass)  {
+                if ($epalStudentClass->directorconfirm->value === "1")  {
+                  return $this->respondWithStatus([
+                          "error_code" => -1
+                      ], Response::HTTP_FORBIDDEN);
+                }
+              }
+              */
+
+              $applicantStudent->set('delapp', 1);
+              $timestamp = strtotime(date("Y-m-d"));
+              $applicantStudent->set('delapp_changed', $timestamp);
+              $applicantStudent->set('delapp_role', 'director');
+              //ΝΑ ΕΚΤΕΛΕΣΤΕΙ ΟΤΑΝ ΦΤΙΑΧΤΕΙ ΤΟ gel_sschools
+              //$epalStudent->set('delapp_epalid', $gelId);
+              $epalStudent->save();
+
+              /*
+              //ΔΙΑΓΡΑΦΗ ΑΠΟ ΠΙΝΑΚΑ ΑΠΟΤΕΛΕΣΜΑΤΩΝ -> ΘΑ ΥΠΑΡΧΕΙ ΣΤΟ ΓΕΛ??
+              $delQuery = $this->connection->delete('epal_student_class');
+              $delQuery->condition('student_id', $applicationId);
+              $delQuery->execute();
+              */
+
+              return $this->respondWithStatus([
+                'error_code' => 0,
+            ], Response::HTTP_OK);
+
+          } else {
+              return $this->respondWithStatus([
+              'message' => t('EPAL student not found'),
+          ], Response::HTTP_FORBIDDEN);
+          }
+      } catch (\Exception $e) {
+          $this->logger->warning($e->getMessage());
+          $transaction->rollback();
+
+          return $this->respondWithStatus([
+              'error_code' => 5001,
+          ], Response::HTTP_INTERNAL_SERVER_ERROR);
+          }
+      }
+  }
+
+}
+
 
     public function getGelSubmittedApplications(Request $request)
     {
@@ -54,7 +270,6 @@ class GelSubmittedApplications extends ControllerBase
             $list = array();
             if ($gelStudents) {
                 $crypt = new Crypt();
-
 
                 foreach ($gelStudents as $object) {
                     $canDelete = 1;
@@ -80,6 +295,10 @@ class GelSubmittedApplications extends ControllerBase
                     // else {
                     //     $canDelete = 0;
                     // }
+                    if (!$applicantsAppDelDisabled)
+                         $canDelete = 1;
+                     else
+                         $canDelete = 0;
 
                     try {
                         $name_decoded = $crypt->decrypt($object->name->value);
@@ -117,6 +336,8 @@ class GelSubmittedApplications extends ControllerBase
                 ], Response::HTTP_FORBIDDEN);
         }
     }
+
+
 
 
     public function getGelApplicationDetails(Request $request, $studentId)
@@ -268,6 +489,9 @@ class GelSubmittedApplications extends ControllerBase
                 ], Response::HTTP_FORBIDDEN);
         }
     }
+
+
+
 
 private function respondWithStatus($arr, $s)
     {
