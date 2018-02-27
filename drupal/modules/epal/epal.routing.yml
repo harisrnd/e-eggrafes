@@ -444,3 +444,11 @@ epal.svc.getstudentinfo:
     _controller: '\Drupal\epal\Controller\WSConsumer::getStudentEpalInfo'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.offlinecalculation:
+  path: '/epal/offlinecalculationsmallclasses'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\SmallClassDistribution::OffLineCalculationSmallClasses'
+  requirements:
+    _user_is_logged_in: 'TRUE'
