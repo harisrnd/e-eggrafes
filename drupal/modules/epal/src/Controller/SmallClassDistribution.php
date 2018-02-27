@@ -1097,7 +1097,160 @@ public function getCoursesPerSchoolSmallClassesNight(Request $request, $courseAc
         }
 
 
-                
+public function OffLineCalculationSmallClasses(Request $request)
+    {
+
+       try {
+             if (!$request->isMethod('GET')) {
+                    return $this->respondWithStatus([
+                         "message" => t("Method Not Allowed")
+                            ], Response::HTTP_METHOD_NOT_ALLOWED);
+             }
+
+            
+             $authToken = $request->headers->get('PHP_AUTH_USER');
+             $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+             $user = reset($users);
+             if (!$user) {
+                     return $this->respondWithStatus([
+                              'message' => t("User not found"),
+                             ], Response::HTTP_FORBIDDEN);
+             }
+
+            $selectionId = $user->init->value;
+            $userRoles = $user->getRoles();
+            $userRole = '';
+            foreach ($userRoles as $tmpRole) 
+            {
+                if  ($tmpRole === 'ministry') 
+                {
+                    $userRole = $tmpRole;
+                }
+            }
+
+            if ($userRole === '') 
+            {
+                return $this->respondWithStatus([
+                    'error_code' => 4003,
+                    "message" => t("1")
+                ], Response::HTTP_FORBIDDEN);
+            }
+            elseif ($userRole === 'ministry')
+            {
+                $schools = $this->entityTypeManager
+                    ->getStorage('eepal_school')
+                    ->loadByProperties(array());
+            }
+            else
+            {
+                $schools = [];
+            }
+
+            if ($schools) 
+            {
+                $list = array();
+                foreach ($schools as $object)
+                {
+                            $categ = $object->metathesis_region->value;
+                     
+                            $limit = $this->getLimit(1, $categ);
+                            $status = $this-> findStatus($object->id(),1,0,0);
+                            $stat = intval($status);
+                            $lim = intval($limit);
+                            if ($stat <= $limit )
+                            {
+                                $object->set('approved_a', 0);
+                                $object->save();
+                            }
+                      
+                     
+                           $limit = $this->getLimit(2, $categ);
+                           $courses =  $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(array('epal_id' => $object->id()));
+                          if ($courses){
+                          foreach ($courses as $key)
+                            {
+                                $sector = $key -> sector_id -> entity ->id();
+                                $status = $this-> findStatus($object->id(),$classId, $sector, 0);
+                                $stat = intval($status);
+                                $lim = intval($limit);
+                                if ($stat < $limit )
+                                {
+
+                                    $key->set('approved_sector', 0);
+                                    $key->save();
+                                  
+                                }
+                            }
+
+                      }
+                     
+                     
+                      $limit = $this->getLimit(3, $categ);
+                      $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $object->id()));
+                      if ($courses){
+                      foreach ($courses as $key)
+                        {
+                            $specialit = $key -> specialty_id -> entity -> id(); 
+                            $status = $this-> findStatus($object->id(),3, 0, $specialit);
+                            $stat = intval($status);
+                            $lim = intval($limit);
+                            if ($stat < $limit )
+                            {
+                                    $key->set('approved_speciality', 0);
+                                    $key->save();
+ 
+                            }
+                        }
+                        }
+
+                        $limit = $this->getLimit(4, $categ);
+                        $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $object->id()));
+                      if ($courses){
+                      foreach ($courses as $key)
+                        {
+                            $specialit = $key -> specialty_id -> entity -> id(); 
+                            $status = $this-> findStatus($object->id(),4, 0, $specialit);
+                            $stat = intval($status);
+                            $lim = intval($limit);
+                            if ($stat < $limit )
+                            {
+                                    $key->set('approved_speciality_d', 0);
+                                    $key->save();
+ 
+                            }
+                        }
+                        }
+                    
+                    
+
+
+                }
+
+                return $this->respondWithStatus($list, Response::HTTP_OK);
+            }
+            else 
+            {
+                return $this->respondWithStatus([
+                    'message' => t('No schools found!'),
+                ], Response::HTTP_FORBIDDEN);
+            }
+       
+    }  
+     //end try
+
+        catch (\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            return $this->respondWithStatus([
+                        "message" => t("An unexpected problem occured during retrieveSettings Method ")
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+
+
+}
+ 
+    
+   
                       
 
 
