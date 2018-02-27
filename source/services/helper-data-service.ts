@@ -164,7 +164,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
     }
 
-    deleteApplication(appId) {
+    deleteApplication(appId, schooltype) {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -173,10 +173,12 @@ export class HelperDataService implements OnInit, OnDestroy {
             "Content-Type": "application/json",
         });
         this.createAuthorizationHeader(headers);
-        //        let options = new RequestOptions({ headers: headers, withCredentials: true });
         let options = new RequestOptions({ headers: headers });
+        let getConnectionString = `${AppSettings.API_ENDPOINT}/` + schooltype +  `/application/delete/`;
+
         return new Promise((resolve, reject) => {
-            this.http.post(`${AppSettings.API_ENDPOINT}/epal/application/delete`, { applicationId: appId }, options)
+            //this.http.post(`${AppSettings.API_ENDPOINT}/epal/application/delete/` + schooltype, { applicationId: appId }, options)
+            this.http.post(getConnectionString, { applicationId: appId }, options)
                 .map(response => response.json())
                 .subscribe(data => {
                     resolve(<any>data);
@@ -463,7 +465,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
     }
 
-    getSubmittedPreviw() {
+    getSubmittedPreview() {
 
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;

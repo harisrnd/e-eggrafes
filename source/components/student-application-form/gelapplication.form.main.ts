@@ -6,8 +6,8 @@ import { Http } from "@angular/http";
 import { Router } from "@angular/router";
 import { IMyDpOptions } from "mydatepicker";
 import { BehaviorSubject, Observable, Subscription } from "rxjs/Rx";
-//import { IDataModeRecords } from "../../store/datamode/datamode.types";
-//import { DataModeActions } from "../../actions/datamode.actions";
+import { IDataModeRecords } from "../../store/datamode/datamode.types";
+import { DataModeActions } from "../../actions/datamode.actions";
 import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
@@ -40,7 +40,7 @@ import {
     private studentDataFieldsSub: Subscription;
     private loginInfoSub: Subscription;
     private criteriaSub: Subscription;
-    //private datamodeSub: Subscription;
+    private datamodeSub: Subscription;
     private gelUserDataSub: Subscription;
     private gelclassesSub: Subscription;
 
@@ -189,15 +189,14 @@ import {
                             this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
                             this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
 
-                            //εναλλακτικός τρόπος για προβλήματος πεδίου "Αίτηση από" στο edit app
-
+                            //λύση προβλήματος πεδίου "Αίτηση από" στο edit app
                             if (this.appUpdate.getValue() === true) {
                                 if (studentDataField.get("relationtostudent") === 'Γονέας/Κηδεμόνας')
                                   this.numAppChildren.next(this.numAppChildren.getValue() -1) ;
                                 else if (studentDataField.get("relationtostudent") === 'Μαθητής')
                                   this.numAppSelf.next(this.numAppSelf.getValue() - 1);
+
                             }
-                            
 
                             return studentDataField;
                         }, {});
@@ -214,9 +213,7 @@ import {
                 this.loginInfo$.next(linfo);
           }, error => { console.log("error selecting loginInfo"); });
 
-
-          /*
-          this.datamodeSub = this._ngRedux.select("datamode")
+         this.datamodeSub = this._ngRedux.select("datamode")
               .map(datamode => <IDataModeRecords>datamode)
               .subscribe(ecs => {
                   if (ecs.size > 0) {
@@ -226,14 +223,13 @@ import {
                       }, {});
                   }
               }, error => { console.log("error selecting datamode"); });
-          */
 
     };
 
     ngOnDestroy() {
         (<any>$("#applicationFormNotice")).remove();
         if (this.studentDataFieldsSub) this.studentDataFieldsSub.unsubscribe();
-        //if (this.datamodeSub) this.datamodeSub.unsubscribe();
+        if (this.datamodeSub) this.datamodeSub.unsubscribe();
         if (this.gelUserDataSub) this.gelUserDataSub.unsubscribe();
     }
 

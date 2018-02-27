@@ -22,6 +22,22 @@ gel.submitedapplications:
     _controller: '\Drupal\gel\Controller\GelSubmittedApplications::getGelSubmittedApplications'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.application_delete:
+  path: '/gel/application/delete'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelSubmittedApplications::gelDeleteApplication'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.application_delete_director:
+  path: '/gel/application/deleteFromDirector'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelSubmittedApplications::gelDeleteApplicationFromDirector'
+  requirements:
+    _user_is_logged_in: 'TRUE'
 gel.applicationdetails:
   path: '/gel/application/{studentId}'
   options:

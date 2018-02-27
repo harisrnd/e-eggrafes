@@ -80,6 +80,7 @@ import { IAppState } from "../../store/store";
              <breadcrumbs></breadcrumbs>
         </div>
 
+
         <div *ngIf="(SubmitedApplic$ | async).length > 0 || (GelSubmittedApplic$ | async).length > 0" class="row" style="margin: 10px 2px 10px 2px;">
             <p>Έχουν υποβληθεί οι παρακάτω δηλώσεις προτίμησης για το νέο σχολικό έτος.</p>
             <p>Επιλέξτε το όνομα ή το επώνυμο του μαθητή για να δείτε αναλυτικά τη δήλωσή σας και να την εκτυπώσετε σε μορφή PDF.</p>
@@ -98,6 +99,9 @@ import { IAppState } from "../../store/store";
             <div class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
         </div>
 
+<!--
+*ngIf="(GelSubmittedApplic$ | async).length > 0"
+-->
         <div *ngIf="(GelSubmittedApplic$ | async).length > 0">
             <div class="row list-group-item isclickable"  style="margin: 0px 2px 0px 2px;" [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedappout]="applicationGelIdActive === UserData$.id"
             *ngFor="let UserData$  of GelSubmittedApplic$ | async; let i=index; let isOdd=odd; let isEven=even" >
@@ -445,7 +449,8 @@ import { IAppState } from "../../store/store";
     private GelSubmittedDetailsSub: Subscription;
 
     private applicationId = <number>0;
-    private applicationGelId = <number>0;
+    //private applicationGelId = <number>0;
+    private schooltype: string;
 
     @ViewChild("target") element: ElementRef;
 
@@ -512,7 +517,7 @@ import { IAppState } from "../../store/store";
 
         this.resetStore();
 
-        this.SubmitedUsersSub = this._hds.getSubmittedPreviw().subscribe(
+        this.SubmitedUsersSub = this._hds.getSubmittedPreview().subscribe(
             data => {
                 this.SubmitedApplic$.next(data);
                 this.showLoader$.next(false);
@@ -538,15 +543,16 @@ import { IAppState } from "../../store/store";
 
     setActiveEpalUser(ind: number): void {
 
+        this.resetStore();
+
         if (ind === this.applicationEpalIdActive) {
             this.applicationEpalIdActive = 0;
+            this.applicationGelIdActive = 0;
             return;
         }
 
-        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
-        this.resetStore();
-
         this.applicationEpalIdActive = ind;
+        this.applicationGelIdActive = 0;
         this.showLoader$.next(true);
 
 
@@ -565,15 +571,16 @@ import { IAppState } from "../../store/store";
 
     setActiveGelUser(ind: number): void {
 
+        this.resetStore();
+
         if (ind === this.applicationGelIdActive) {
             this.applicationGelIdActive = 0;
+            this.applicationEpalIdActive = 0;
             return;
         }
 
-        //if (this.applicationGelIdActive != -1 || this.applicationEpalIdActive != -1)
-        this.resetStore();
-
         this.applicationGelIdActive = ind;
+        this.applicationEpalIdActive = 0;
         this.showLoader$.next(true);
 
         this.GelSubmittedDetailsSub = this._hds.getGelStudentDetails(this.applicationGelIdActive).subscribe(data => {
@@ -586,7 +593,9 @@ import { IAppState } from "../../store/store";
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
+
     }
+
 
     resetStore() {
 
@@ -612,14 +621,15 @@ import { IAppState } from "../../store/store";
         //this._hds.createGelPdfServerSide(this.applicationGelIdActive, this.GelSubmittedDetails$.getValue()[0].status);
     }
 
-
     deleteApplication(appId: number): void {
         this.applicationId = appId;
+        this.schooltype = "epal";
         this.showConfirmModal();
     }
 
     deleteGelApplication(appId: number): void {
-        this.applicationGelId = appId;
+        this.applicationId = appId;
+        this.schooltype = "gel";
         this.showConfirmModal();
     }
 
@@ -627,19 +637,33 @@ import { IAppState } from "../../store/store";
     deleteApplicationDo(): void {
         this.hideConfirmModal();
         this.showLoader$.next(true);
-        this._hds.deleteApplication(this.applicationId).then(data => {
-            this.SubmitedUsersSub.unsubscribe();
-
-            this.SubmitedUsersSub = this._hds.getSubmittedPreviw().subscribe(
-                data => {
-                    this.SubmitedApplic$.next(data);
-                    this.showLoader$.next(false);
-                },
-                error => {
-                    this.SubmitedApplic$.next([{}]);
-                    this.showLoader$.next(false);
-                    console.log("Error Getting Schools");
-                });
+        this._hds.deleteApplication(this.applicationId, this.schooltype).then(data => {
+            if (this.schooltype === "epal") {
+              this.SubmitedUsersSub.unsubscribe();
+              this.SubmitedUsersSub = this._hds.getSubmittedPreview().subscribe(
+                  data => {
+                      this.SubmitedApplic$.next(data);
+                      this.showLoader$.next(false);
+                  },
+                  error => {
+                      this.SubmitedApplic$.next([{}]);
+                      this.showLoader$.next(false);
+                      console.log("Error Getting Schools");
+                  });
+              }
+              else if (this.schooltype === "gel") {
+                this.SubmittedGelUsersSub.unsubscribe();
+                this.SubmittedGelUsersSub = this._hds.getGelSubmittedPreview().subscribe(
+                    data => {
+                        this.GelSubmittedApplic$.next(data);
+                        this.showLoader$.next(false);
+                    },
+                    error => {
+                        this.GelSubmittedApplic$.next([{}]);
+                        this.showLoader$.next(false);
+                        console.log("Error Getting Schools");
+                    });
+                }
 
         }).catch(err => {
             this.showLoader$.next(false);
@@ -795,7 +819,7 @@ import { IAppState } from "../../store/store";
 
     editGelApplication()  {
 
-      this.gelclassesSub = this._ngRedux.select("gelclasses")
+/*       this.gelclassesSub = this._ngRedux.select("gelclasses")
             .map(gelclasses => <IGelClassRecords>gelclasses)
             .subscribe(ecs => {
                 if (ecs.size > 0) {
@@ -824,7 +848,6 @@ import { IAppState } from "../../store/store";
             }, {});
         }, error => { console.log("error selecting electivecourseFields"); });
 
-      this.router.navigate(["/gel-class-select"]);
 
       this.OrientationGroupSub = this._ngRedux.select("orientationGroup")
            .map(orientationGroup => <IOrientationGroupRecords>orientationGroup)
@@ -841,23 +864,50 @@ import { IAppState } from "../../store/store";
                    }
                    return orientationgroup;
                  }, {});
-           }, error => { console.log("error selecting orientation"); });
+           }, error => { console.log("error selecting orientation"); }); */
+
+           this.router.navigate(["/gel-class-select"]);
+
 
     }
 
     createStoreWithGelAppData()  {
 
-      //this._gca.resetGelClassesSelected();
-      this._gca.getClassesList(false);
+        this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
+        this._sta.saveSchoolTypeSelected(1, "ΓΕΛ");
 
-      let class_id = parseInt(this.GelSubmittedDetails$.getValue()[0].nextclass);
-      if (class_id === 1 || class_id === 3 || class_id === 4)
-        this._ecf.getElectiveCourseFields(false, class_id);
-      if (class_id === 2 || class_id === 3 || class_id === 6 || class_id === 7)
-        this._ogs.getOrientationGroups(false, class_id, 'ΟΠ');
+        this._gca.getClassesList(false).then(()=>{
+            this._gca.saveGelClassesSelected(-1, this.GelSubmittedDetails$.getValue()[0].nextclass -1 );
+        });
 
-      this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
-      this._sta.saveSchoolTypeSelected(1, "ΓΕΛ");
+        let class_id = parseInt(this.GelSubmittedDetails$.getValue()[0].nextclass);
+        let index;
+         if (class_id === 1 || class_id === 3 || class_id === 4){
+            if (class_id===1){
+                index=4;
+            }
+            else{
+                index=8;
+            }
+            this._ecf.getElectiveCourseFields(false,class_id).then(()=>{
+                for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
+                    if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΕΠΙΛΟΓΗ") {
+                        this._ecf.saveElectiveCourseFieldsSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
+                    }
+                }
+            });
+        }
+
+         if (class_id === 2 || class_id === 3 || class_id === 6 || class_id === 7){
+             let index=15;
+             this._ogs.getOrientationGroups(false,class_id,"ΟΠ").then(()=>{
+                for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
+                    if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΟΠ") {
+                        this._ogs.saveOrientationGroupSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0);
+                    }
+                }
+             });
+         }
 
       let birthdate = this.GelSubmittedDetails$.getValue()[0].birthdate;
       let birthparts = birthdate.split("/",3);
@@ -896,46 +946,6 @@ import { IAppState } from "../../store/store";
               }, error => { console.log("error selecting gelclasses"); });
 
         */
-
-        /*
-        this.electivecourseFieldsSub = this._ngRedux.select("electivecourseFields")
-          .map(electivecourseFields => <IElectiveCourseFieldRecords>electivecourseFields)
-          .subscribe(sfds => {
-              console.log("Mpika1");
-              let electcnt = 0;
-              sfds.reduce(({}, electivecourseField) => {
-                  console.log("Mpika2");
-                  ++electcnt;
-                  //if (electivecourseField.get("id")=== this.electiveCourse_id ) {
-                  for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
-                      if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΕΠΙΛΟΓΗ"  &&
-                           electivecourseField.get("id") === this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id) {
-                              this._ecf.saveElectiveCourseFieldsSelected(electcnt-1, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
-                      }
-                  }
-                  return electivecourseField;
-              }, {});
-          }, error => { console.log("error selecting electivecourseFields"); });
-        */
-
-        /*
-         this.OrientationGroupSub = this._ngRedux.select("orientationGroup")
-              .map(orientationGroup => <IOrientationGroupRecords>orientationGroup)
-              .subscribe(ogs => {
-                    let orientcnt = 0;
-                    ogs.reduce(({}, orientationgroup) => {
-                      ++orientcnt;
-                      //if (orientationgroup.get("id") === this.orientationGroup_id) {
-                      for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
-                          if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΟΠ"  &&
-                               orientationgroup.get("id") === this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id) {
-                                  this._ogs.saveOrientationGroupSelected(orientcnt-1, 0);
-                          }
-                      }
-                      return orientationgroup;
-                    }, {});
-              }, error => { console.log("error selecting orientation"); });
-              */
 
     }
 

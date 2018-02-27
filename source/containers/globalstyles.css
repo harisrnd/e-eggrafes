@@ -372,8 +372,8 @@ label {
     border: none;
     color: #FFFFFF;
     text-align: center;
-    font-size: 28px;
-    width: 75%;
+    font-size: 18px;
+    width: 50%;
     transition: all 0.5s;
     cursor: pointer;
     margin: 20px;
@@ -382,7 +382,7 @@ label {
     padding: 15px 25px;
     text-decoration: none;
     outline: none;
-    height: 120px;
+    height: 80px;
   }
   
   .buttonGelHov span {
@@ -411,7 +411,6 @@ label {
   }
 
 .buttonGelHov:active {
-    background-color: #3e8e41;
     box-shadow: 0 5px #666;
     transform: translateY(5px);
     transition: 0.5s;
@@ -419,5 +418,4 @@ label {
 
 .buttonGelHov:hover {
     opacity: 1;
-    background-color: #3e8e41;
   }

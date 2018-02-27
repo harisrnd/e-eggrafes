@@ -154,6 +154,8 @@ class PDFCreator extends ControllerBase {
 
 			 $this->fontLight = "open-sans.light";
 			 $this->fontBold = "open-sans.bold";
+			 //$this->fontLight = "test2";
+			 //$this->fontBold = "test2";
 			 $this->fontSizeHeader = 14;
 			 $this->fontSizeRegular = 11;
 
@@ -196,6 +198,8 @@ class PDFCreator extends ControllerBase {
 
 		$this->pdf->AddFont($this->fontLight, '', 'open-sans.light.php');
 		$this->pdf->AddFont($this->fontBold, '', 'open-sans.bold.php');
+		//$this->pdf->AddFont($this->fontLight, '', 'test2.php');
+		//$this->pdf->AddFont($this->fontBold, '', 'test2.php');
 
 		$this->crypt = new Crypt();
 
