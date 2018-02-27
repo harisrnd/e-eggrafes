@@ -958,11 +958,11 @@ class SubmitedApplications extends ControllerBase
 //λογική διαγραφή αίτησης μαθητή από Διευθυντή
 public function deleteApplicationFromDirector(Request $request)
 {
-    if (!$request->isMethod('POST')) {
-        return $this->respondWithStatus([
-                "error_code" => 2001
-            ], Response::HTTP_METHOD_NOT_ALLOWED);
-    }
+        if (!$request->isMethod('POST')) {
+            return $this->respondWithStatus([
+                    "error_code" => 2001
+                ], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
         $authToken = $request->headers->get('PHP_AUTH_USER');
 
         $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));

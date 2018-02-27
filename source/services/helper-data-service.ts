@@ -174,19 +174,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        /*
-        let getConnectionString;
-        if (schooltype === "ΕΠΑΛ")
-          getConnectionString = `${AppSettings.API_ENDPOINT}/epal/application/delete/`;
-        else if (schooltype === "ΓΕΛ")
-          getConnectionString = `${AppSettings.API_ENDPOINT}/gel/application/delete/`;
-        */
         let getConnectionString = `${AppSettings.API_ENDPOINT}/` + schooltype +  `/application/delete/`;
-
-        console.log("Nikos");
-        console.log(schooltype);
-        console.log(appId);
-
 
         return new Promise((resolve, reject) => {
             //this.http.post(`${AppSettings.API_ENDPOINT}/epal/application/delete/` + schooltype, { applicationId: appId }, options)
@@ -477,7 +465,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
     }
 
-    getSubmittedPreviw() {
+    getSubmittedPreview() {
 
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
