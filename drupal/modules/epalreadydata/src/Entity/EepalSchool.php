@@ -534,6 +534,7 @@ public function getperfecture() {
          ->setDisplayConfigurable('form', TRUE)
          ->setDisplayConfigurable('view', TRUE);
 
+      /*
          $fields['students_added_class_a'] = BaseFieldDefinition::create('integer')
            ->setLabel(t('Επιπλέον αριθμός μαθητών για εγγραφή'))
            ->setDescription(t('Δώσε τον επιπλέον αριθμό μαθητών για εγγραφή.'))
@@ -554,6 +555,7 @@ public function getperfecture() {
               ))
            ->setDisplayConfigurable('form', TRUE)
            ->setDisplayConfigurable('view', TRUE);
+     */
 
      $fields['special_case'] = BaseFieldDefinition::create('boolean')
          ->setLabel(t('Ειδική περίπτωση'))
