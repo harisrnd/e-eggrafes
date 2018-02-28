@@ -15,6 +15,7 @@ export class ChartCreator {
     private xAxis: any;
     private yAxis: any;
 
+
     createChart() {
         let element = this.chartContainer.nativeElement;
         this.width = element.offsetWidth - this.margin.left - this.margin.right;
@@ -94,5 +95,7 @@ export class ChartCreator {
             .attr("y", d => this.yScale(d[1]))
             .attr("height", d => this.height - this.yScale(d[1]));
     }
+
+
 
 }

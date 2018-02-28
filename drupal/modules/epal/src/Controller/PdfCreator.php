@@ -152,10 +152,8 @@ class PDFCreator extends ControllerBase {
 					], Response::HTTP_INTERNAL_SERVER_ERROR);
 				}
 
-			 $this->fontLight = "open-sans.light";
-			 $this->fontBold = "open-sans.bold";
-			 //$this->fontLight = "test2";
-			 //$this->fontBold = "test2";
+			 $this->fontLight = "Ubuntu-Light";
+			 $this->fontBold = "Ubuntu-Bold";
 			 $this->fontSizeHeader = 14;
 			 $this->fontSizeRegular = 11;
 
@@ -196,10 +194,10 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->AliasNbPages();
 		$this->pdf->AddPage();
 
-		$this->pdf->AddFont($this->fontLight, '', 'open-sans.light.php');
-		$this->pdf->AddFont($this->fontBold, '', 'open-sans.bold.php');
-		//$this->pdf->AddFont($this->fontLight, '', 'test2.php');
-		//$this->pdf->AddFont($this->fontBold, '', 'test2.php');
+		//$this->pdf->AddFont($this->fontLight, '', 'open-sans.light.php');
+		//$this->pdf->AddFont($this->fontBold, '', 'open-sans.bold.php');
+		$this->pdf->AddFont($this->fontLight, '', 'Ubuntu-Light.php');
+		$this->pdf->AddFont($this->fontBold, '', 'Ubuntu-Bold.php');
 
 		$this->crypt = new Crypt();
 

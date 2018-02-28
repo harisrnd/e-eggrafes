@@ -264,6 +264,7 @@ class EepalSectorsInEpal extends ContentEntityBase implements EepalSectorsInEpal
      ->setDisplayConfigurable('form', TRUE)
      ->setDisplayConfigurable('view', TRUE);
 
+     /*
      $fields['students_added_class_sector'] = BaseFieldDefinition::create('integer')
        ->setLabel(t('Επιπλέον αριθμός μαθητών για εγγραφή'))
        ->setDescription(t('Δώσε τον επιπλέον αριθμό μαθητών για εγγραφή.'))
@@ -284,7 +285,7 @@ class EepalSectorsInEpal extends ContentEntityBase implements EepalSectorsInEpal
           ))
        ->setDisplayConfigurable('form', TRUE)
        ->setDisplayConfigurable('view', TRUE);
-
+      */
 
 
 
