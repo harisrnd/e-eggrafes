@@ -118,8 +118,8 @@ class PDFCreator extends ControllerBase {
 					], Response::HTTP_INTERNAL_SERVER_ERROR);
 				}
 
-			 $this->fontLight = "open-sans.light";
-			 $this->fontBold = "open-sans.bold";
+			 $this->fontLight = "Ubuntu-Light";
+			 $this->fontBold = "Ubuntu-Bold";
 			 $this->fontSizeHeader = 14;
 			 $this->fontSizeRegular = 11;
 
@@ -159,8 +159,8 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->AliasNbPages();
 		$this->pdf->AddPage();
 
-		$this->pdf->AddFont($this->fontLight, '', 'open-sans.light.php');
-		$this->pdf->AddFont($this->fontBold, '', 'open-sans.bold.php');
+		$this->pdf->AddFont($this->fontLight, '', 'Ubuntu-Light.php');
+		$this->pdf->AddFont($this->fontBold, '', 'Ubuntu-Bold.php');
 
 		$this->crypt = new Crypt();
 
@@ -352,7 +352,7 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->Cell($width+15, $height, $this->prepareString('Τάξη τελευταίας φοίτησης:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-        $this->pdf->Cell($width, $height, $this->prepareString($this->retrieveClassName($student->lastschool_class->value)), 0, 'L');        
+        $this->pdf->Cell($width, $height, $this->prepareString($this->retrieveClassName($student->lastschool_class->value)), 0, 'L');
         $this->pdf->Ln();
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
@@ -378,12 +378,12 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeHeader);
 		$this->pdf->SetFillColor(255,178,102);
 		$this->pdf->MultiCell(0, $height, $this->prepareString('Επιλογές Μαθητή'), 0, 'C',true);
-		$this->pdf->Ln(4); 
+		$this->pdf->Ln(4);
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->Cell($width, $height, $this->prepareString('Τάξη εγγραφής:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-        
+
         //$this->pdf->Cell($width, $height, $this->prepareString($this->retrieveGelClassName($student->nextclass->entity->get('id')->value )), 0, 'L');
         //both work
         $this->pdf->Cell($width, $height, $this->prepareString($this->retrieveGelClassName($student->nextclass->getString() )), 0, 'L');
@@ -392,7 +392,7 @@ class PDFCreator extends ControllerBase {
 
         if ($student->nextclass->getString() === "2" || $student->nextclass->getString() === "3" || $student->nextclass->getString() === "6"|| $student->nextclass->getString() === "7" )
             $this->createOrientationGroupChoice($student);
-            
+
         if ($student->nextclass->getString() === "1" || $student->nextclass->getString() === "3" || $student->nextclass->getString() === "4" )
             $this->createElectiveCourseChoices($student);
 	}
@@ -429,7 +429,7 @@ class PDFCreator extends ControllerBase {
         ->sort('order_id')
         ->execute();
         $ElectiveCourses = \Drupal::entityTypeManager()->getStorage('gel_student_choices')->loadMultiple($result);
-                
+
         $this->pdf->Ln();
         $this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
         $this->pdf->Cell(35, $height, $this->prepareString('Μάθημα Επιλογής:'), 0, 'L');

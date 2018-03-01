@@ -81,7 +81,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
                     <option *ngFor="let CourseSelection$  of CourseSelections$ | async; let i=index" [value] = "CourseSelection$.id"> {{CourseSelection$.name}}</option>
                 </select>
             </div>
-            
+
 
             <button type="submit" class="btn btn-alert"  (click)="createReport(regsel)" [hidden]="minedu_userName === ''" >
             <i class="fa fa-file-text"></i>
@@ -94,7 +94,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
 
         <div *ngIf="validCreator === 1 ">
             <input #search class="search" type="text" placeholder="Αναζήτηση..." (keydown.enter)="onSearch(search.value)">
-            <div class="smart-table-container table table-hover table-striped">            
+            <div class="smart-table-container table table-hover table-striped">
             <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
             </div>
         </div>

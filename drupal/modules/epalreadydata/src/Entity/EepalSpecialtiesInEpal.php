@@ -284,6 +284,7 @@ class EepalSpecialtiesInEpal extends ContentEntityBase implements EepalSpecialti
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+      /*
       $fields['students_added_class_specialty'] = BaseFieldDefinition::create('integer')
         ->setLabel(t('Επιπλέον αριθμός μαθητών για εγγραφή'))
         ->setDescription(t('Δώσε τον επιπλέον αριθμό μαθητών για εγγραφή.'))
@@ -325,6 +326,7 @@ class EepalSpecialtiesInEpal extends ContentEntityBase implements EepalSpecialti
            ))
         ->setDisplayConfigurable('form', TRUE)
         ->setDisplayConfigurable('view', TRUE);
+      */
 
   $fields['approved_speciality'] = BaseFieldDefinition::create('boolean')
           ->setLabel(t('Εγκεκριμένο'))
