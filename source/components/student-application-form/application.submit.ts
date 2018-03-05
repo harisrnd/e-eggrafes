@@ -157,11 +157,12 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private hasright: number;
     private app_update: BehaviorSubject<boolean>;
     private appId: BehaviorSubject<string>;
-
     private previousClass: BehaviorSubject<string>;
     private previousSector: BehaviorSubject<string>;
     private previousCourse: BehaviorSubject<string>;
     private previousSchools: BehaviorSubject<string>;
+    private wsIdentSub: Subscription;
+    private wsEnabled: number;
 
     constructor(
         private _hds: HelperDataService,
@@ -206,6 +207,10 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
         (<any>$("#studentFormSentNotice")).appendTo("body");
         window.scrollTo(0, 0);
+
+        this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
+            this.wsEnabled = Number(z.res) ;
+        });
 
         this.epalUserDataSub = this._hds.getApplicantUserData().subscribe(x => {
             if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren))
@@ -343,6 +348,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             this.datamodeSub.unsubscribe();
         if (this.epalUserDataSub)
             this.epalUserDataSub.unsubscribe();
+        if (this.wsIdentSub)
+            this.wsIdentSub.unsubscribe();
     }
 
     submitNow(newapp) {

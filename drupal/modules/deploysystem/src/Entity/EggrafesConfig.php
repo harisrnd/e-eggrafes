@@ -369,6 +369,26 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
               ->setDisplayConfigurable('form', TRUE)
               ->setDisplayConfigurable('view', TRUE);
 
+      $fields['ws_ident'] = BaseFieldDefinition::create('boolean')
+              ->setLabel(t('Ενεργοποίηση web service για ταυτοποίηση μαθητή'))
+              ->setDescription(t('Ενεργοποίηση web service για ταυτοποίηση μαθητή'))
+              ->setSettings(array(
+                'text_processing' => 0,
+              ))
+              ->setRequired(FALSE)
+              ->setDefaultValue(FALSE)
+              ->setDisplayOptions('view', array(
+                'label' => 'above',
+                'type' => 'boolean',
+                'weight' => -4,
+              ))
+              ->setDisplayOptions('form', array(
+                'type' => 'boolean',
+                'weight' => -4,
+              ))
+              ->setDisplayConfigurable('form', TRUE)
+              ->setDisplayConfigurable('view', TRUE);
+
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the Eggrafes config is published.'))

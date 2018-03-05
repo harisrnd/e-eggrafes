@@ -145,6 +145,18 @@ import { IAppState } from "../../store/store";
           </div>
           <br>
 
+          <div class="row">
+           <div class="col-md-1 ">
+             <input type="checkbox" [checked]="wsIdentEnabled"  formControlName="wsIdentEnabled"
+             (click)="toggleWsIdent()" >
+           </div>
+           <div class="col-md-9">
+             <label for="wsIdentEnabled">Ενεργοποίηση Web Service Ταυτοποίησης Μαθητή του ΠΣ Myschool</label>
+           </div>
+         </div>
+
+          <br>
+
           <button type="submit" class="btn btn-md pull-right"  (click)="storeSettings()" [disabled] = "secondPeriodEnabled && formGroup.get('distributionstartdate').hasError('required')" >
               Εφαρμογή
           </button>
@@ -176,6 +188,7 @@ import { IAppState } from "../../store/store";
     private dateStartBPeriod: string;
     private dataRetrieved: number;
     private smallClassApproved: boolean;
+    private wsIdentEnabled: boolean;
 
     private minedu_userName: string;
     private minedu_userPassword: string;
@@ -202,6 +215,7 @@ import { IAppState } from "../../store/store";
             secondPeriodEnabled: ["", []],
             distributionstartdate:["", [Validators.required]],
             smallClassApproved:["",[]],
+            wsIdentEnabled:["",[]],
         });
 
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
@@ -270,12 +284,13 @@ import { IAppState } from "../../store/store";
             this.applicantsResultsDisabled = Boolean(Number(this.settings$.value["applicantsResultsDisabled"]));
             this.secondPeriodEnabled = Boolean(Number(this.settings$.value["secondPeriodEnabled"]));
             this.dateStartBPeriod = this.settings$.value["dateStart"];
-            this.smallClassApproved = Boolean(Number(this.settings$.value["smallClassApproved"]))
             if (this.dateStartBPeriod != '')  {
               let dateparts = this.dateStartBPeriod.split("-",3);
               this.formGroup.controls["distributionstartdate"].setValue( {date: {year: Number(dateparts[2]), month: Number(dateparts[1]), day: Number(dateparts[0])}} );
             }
             //this.formGroup.controls["distributionstartdate"].setValue(this.populateDate(this.dateStartBPeriod));
+            this.smallClassApproved = Boolean(Number(this.settings$.value["smallClassApproved"]));
+            this.wsIdentEnabled = Boolean(Number(this.settings$.value["wsIdentEnabled"]));
 
             this.dataRetrieved = 1;
         },
@@ -302,7 +317,7 @@ import { IAppState } from "../../store/store";
         this.settingsSub = this._hds.storeAdminSettings(this.minedu_userName, this.minedu_userPassword,
             this.capacityDisabled, this.directorViewDisabled, this.applicantsLoginDisabled,
             this.applicantsAppModifyDisabled, this.applicantsAppDeleteDisabled, this.applicantsResultsDisabled,
-            this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved)
+            this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved, this.wsIdentEnabled)
             .subscribe(data => {
                 this.settings$.next(data);
                 this.dataRetrieved = 1;
@@ -354,6 +369,10 @@ import { IAppState } from "../../store/store";
 
     toggleSmallClassesFilter(){
        this.smallClassApproved =!this.smallClassApproved;
+    }
+
+    toggleWsIdent(){
+       this.wsIdentEnabled =!this.wsIdentEnabled;
     }
 
 }
