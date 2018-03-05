@@ -70,7 +70,7 @@ import { IAppState } from "../../store/store";
               (click)="toggleApplicantsLogin()" >
             </div>
             <div class="col-md-9">
-              <label for="applicantsLoginDisabled">Απενεργοποίηση δυνατότητας υποβολής δήλωσης προτίμησης ΕΠΑΛ</label>
+              <label for="applicantsLoginDisabled">Απενεργοποίηση δυνατότητας υποβολής δήλωσης προτίμησης</label>
             </div>
           </div>
           <br>
@@ -354,7 +354,6 @@ import { IAppState } from "../../store/store";
 
     toggleSmallClassesFilter(){
        this.smallClassApproved =!this.smallClassApproved;
-       console.log(this.smallClassApproved,'aaaaa');
     }
 
 }

@@ -12,7 +12,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { IAppState } from "../../store/store";
-import { ChartCreator } from "./chart-creator";
+//import { ChartCreator } from "./chart-creator";
 import { CsvCreator } from "./csv-creator";
 import { ReportsSchema, TableColumn } from "./reports-schema";
 
@@ -101,8 +101,10 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
 
 
         <button type="button" class="alert alert-info pull-right" (click)="export2Csv()" [hidden]="validCreator !== 1"><i class="fa fa-download"></i> Εξαγωγή σε csv</button>
+        <!--
         <button type="button" class="alert alert-info pull-left" (click)="createDiagram()" [hidden]="validCreator !== 1 || schSelected === 0 || (reportId !== 2 ) "><i class="fa fa-bar-chart"></i> Διάγραμμα</button>
         <div class="d3-chart" *ngIf = "validCreator === 1" #chart></div>
+        -->
 
     </div>
    `
@@ -156,11 +158,13 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
     // csvObj:CsvCreator ;
     private csvObj = new CsvCreator();
 
+    /*
     private createGraph: boolean;
     // d3 creator
     private chartObj = new ChartCreator();
     @ViewChild("chart") public chartContainer: ElementRef;
     private d3data: Array<any>;
+    */
 
     // private repid: number;
     private routerSub: any;
@@ -201,7 +205,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
         this.courseSelected = 0;
         this.enableRegionFilter = false;
         this.enableCourseFilter = false;
-        this.createGraph = false;
+        //this.createGraph = false;
 
     }
 
@@ -280,7 +284,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
     createReport(regionSel) {
 
         this.validCreator = 0;
-        this.createGraph = false;
+        //this.createGraph = false;
         let route = "/ministry/report-merged-classes/";
         this.distribFinalized = 0;
         this.settings = this.reportSchema.reportMergedClassesSchema;
@@ -449,7 +453,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
         this.csvObj.export2Csv();
     }
 
-
+    /*
     createDiagram() {
         if (!this.createGraph) {
             this.generateGraphData();
@@ -460,7 +464,9 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
             this.createGraph = true;
         }
     }
+    */
 
+    /*
     generateGraphData() {
         this.d3data = [];
         if (this.reportId === 2) {
@@ -493,4 +499,5 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
             ]);
         }
     }
+    */
 }

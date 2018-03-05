@@ -43,25 +43,25 @@ class DirectorView extends ControllerBase
         try {
             $authToken = $request->headers->get('PHP_AUTH_USER');
 
-            $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
-            $epalConfig = reset($epalConfigs);
-            if (!$epalConfig) {
+            $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfig = reset($eggrafesConfigs);
+            if (!$eggrafesConfig) {
                 return $this->respondWithStatus([
                         "error_code" => 3001
                     ], Response::HTTP_FORBIDDEN);
             }
 
             else
-              $lock_delete = $epalConfig->lock_delete->value;
+              $lock_delete = $eggrafesConfig->lock_delete->value;
             /*
-            if ($epalConfig->lock_school_students_view->value) {
+            if ($eggrafesConfig->lock_school_students_view->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);
             }
             */
             /*
-            if ($epalConfig->lock_delete->value) {
+            if ($eggrafesConfig->lock_delete->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);
@@ -265,14 +265,14 @@ class DirectorView extends ControllerBase
         }
         $authToken = $request->headers->get('PHP_AUTH_USER');
 
-        $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
-        $epalConfig = reset($epalConfigs);
-        if (!$epalConfig) {
+        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfig = reset($eggrafesConfigs);
+        if (!$eggrafesConfig) {
             return $this->respondWithStatus([
                     "error_code" => 3001
                 ], Response::HTTP_FORBIDDEN);
         }
-        if ($epalConfig->lock_capacity->value) {
+        if ($eggrafesConfig->lock_capacity->value) {
             return $this->respondWithStatus([
                     "error_code" => 3002
                 ], Response::HTTP_FORBIDDEN);

@@ -409,18 +409,17 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             aitisiObj["3"] = new StudentCourseChosen(null, this.courseSelected);
         }
 
-            console.log("testmyschool");
-            
+
      //       this.ServiceStudentCertifSub = this._hds.getServiceStudentCertification(8)
-              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')     
+              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {
                     this.ServiceStudentCertif$.next(data);
-                    
+
                 },
                 error => {
                     console.log("Error Getting Courses");
                 });
-        
+
 
         this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
     }

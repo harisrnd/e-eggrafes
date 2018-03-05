@@ -10,7 +10,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { IAppState } from "../../store/store";
-import { ChartCreator } from "./chart-creator";
+//import { ChartCreator } from "./chart-creator";
 import { CsvCreator } from "./csv-creator";
 import { ReportsSchema, TableColumn } from "./reports-schema";
 
@@ -35,8 +35,10 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
         </div>
 
         <button type="button" class="alert alert-info pull-right" (click)="export2Csv()" [hidden]="validCreator != 1"><i class="fa fa-download"></i> Εξαγωγή σε csv</button>
+        <!--
         <button type="button" class="alert alert-info pull-left" (click)="createDiagram()" [hidden]="validCreator != 1 "><i class="fa fa-bar-chart"></i> Διάγραμμα</button>
         <div class="d3-chart" *ngIf = "validCreator == 1" #chart></div>
+        -->
     </div>
    `
 })
@@ -53,7 +55,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
     private distStatus = "READY";
     private data: any;
     private validCreator: number;
-    private createGraph: boolean;
+    //private createGraph: boolean;
 
     private source: LocalDataSource;
     columnMap: Map<string, TableColumn> = new Map<string, TableColumn>();
@@ -61,9 +63,11 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
     private reportSchema = new ReportsSchema();
     private csvObj = new CsvCreator();
 
+    /*
     private chartObj = new ChartCreator();
     @ViewChild("chart") public chartContainer: ElementRef;
     private d3data: Array<any>;
+    */
 
     constructor(
         private _ngRedux: NgRedux<IAppState>,
@@ -75,7 +79,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
         this.generalReport$ = new BehaviorSubject([{}]);
         this.minedu_userName = "";
         this.validCreator = -1;
-        this.createGraph = false;
+        //this.createGraph = false;
     }
 
     ngOnInit() {
@@ -102,7 +106,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
 
     createReport() {
         this.validCreator = 0;
-        this.createGraph = false;
+        //this.createGraph = false;
 
         let route = "/ministry/general-report/";
         this.settings = this.reportSchema.genReportSchema;
@@ -139,7 +143,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
         this.csvObj.export2Csv();
     }
 
-
+    /*
     createDiagram() {
         if (!this.createGraph) {
             this.generateGraphData();
@@ -150,7 +154,9 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
             this.createGraph = true;
         }
     }
+    */
 
+    /*
     generateGraphData() {
         this.d3data = [];
 
@@ -167,5 +173,6 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
             ]);
         }
     }
+    */
 
 }

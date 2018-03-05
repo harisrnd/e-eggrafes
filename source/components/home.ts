@@ -33,8 +33,9 @@ import { GelStudentDataFieldsActions } from "../actions/gelstudentdatafields.act
   <div>
        <form  method = "POST" action="{{apiEndPoint}}/oauth/login{{apiEndPointParams}}" #form>
 
-
+            <!--
             <div class="bg-warning" style="padding: 2em;">
+
             <p>
             <strong>Ανακοίνωση:</strong> Σας ενημερώνουμε οτι το σύστημα θα κλείσει οριστικά
                 <ul>
@@ -43,6 +44,8 @@ import { GelStudentDataFieldsActions } from "../actions/gelstudentdatafields.act
 
                 </ul>
             </div>
+            -->
+            
             <div> <p></p><p></p></div>
 
 

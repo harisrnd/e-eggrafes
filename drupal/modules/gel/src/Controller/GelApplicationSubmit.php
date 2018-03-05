@@ -115,15 +115,15 @@ class GelApplicationSubmit extends ControllerBase
  							 ], Response::HTTP_FORBIDDEN);
  			  }
 
-        //epal configuration validation
-        $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
-        $epalConfig = reset($epalConfigs);
-        if (!$epalConfig) {
+        // configuration validation
+        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfig = reset($eggrafesConfigs);
+        if (!$eggrafesConfig) {
             return $this->respondWithStatus([
                 "error_code" => 3001
             ], Response::HTTP_FORBIDDEN);
         }
-        if ($epalConfig->lock_application->value) {
+        if ($eggrafesConfig->lock_application->value) {
             return $this->respondWithStatus([
                 "error_code" => 3002
             ], Response::HTTP_FORBIDDEN);
@@ -164,7 +164,7 @@ class GelApplicationSubmit extends ControllerBase
                 ], Response::HTTP_FORBIDDEN);
             }
 
-            $second_period = $epalConfig->activate_second_period->value;
+            $second_period = $eggrafesConfig->activate_second_period->value;
 
             $student = array(
                 'langcode' => 'el',
@@ -328,15 +328,15 @@ class GelApplicationSubmit extends ControllerBase
              ], Response::HTTP_FORBIDDEN);
       }
 
-      //epal configuration validation
-      $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
-      $epalConfig = reset($epalConfigs);
-      if (!$epalConfig) {
+      //configuration validation
+      $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+      $eggrafesConfig = reset($eggrafesConfigs);
+      if (!$eggrafesConfig) {
           return $this->respondWithStatus([
               "error_code" => 3001
           ], Response::HTTP_FORBIDDEN);
       }
-      if ($epalConfig->lock_application->value) {
+      if ($eggrafesConfig->lock_application->value) {
           return $this->respondWithStatus([
               "error_code" => 3002
           ], Response::HTTP_FORBIDDEN);
@@ -377,7 +377,7 @@ class GelApplicationSubmit extends ControllerBase
               ], Response::HTTP_FORBIDDEN);
           }
 
-          $second_period = $epalConfig->activate_second_period->value;
+          $second_period = $eggrafesConfig->activate_second_period->value;
 
           $student = array(
               'langcode' => 'el',

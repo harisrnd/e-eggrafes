@@ -114,14 +114,14 @@ class ApplicationSubmit extends ControllerBase
         }
 
         //epal configuration validation
-        $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
-        $epalConfig = reset($epalConfigs);
-        if (!$epalConfig) {
+        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfig = reset($eggrafesConfigs);
+        if (!$eggrafesConfig) {
             return $this->respondWithStatus([
                 "error_code" => 3001
             ], Response::HTTP_FORBIDDEN);
         }
-        if ($epalConfig->lock_application->value) {
+        if ($eggrafesConfig->lock_application->value) {
             return $this->respondWithStatus([
                 "error_code" => 3002
             ], Response::HTTP_FORBIDDEN);
@@ -199,7 +199,7 @@ class ApplicationSubmit extends ControllerBase
                 ], Response::HTTP_FORBIDDEN);
             }
 
-            $second_period = $epalConfig->activate_second_period->value;
+            $second_period = $eggrafesConfig->activate_second_period->value;
 
             $student = array(
                 'langcode' => 'el',
@@ -341,21 +341,21 @@ class ApplicationSubmit extends ControllerBase
           ], Response::HTTP_BAD_REQUEST);
       }
 
-      $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
-      $epalConfig = reset($epalConfigs);
-      if (!$epalConfig) {
+      $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+      $eggrafesConfig = reset($eggrafesConfigs);
+      if (!$eggrafesConfig) {
           return $this->respondWithStatus([
               "error_code" => 3001
           ], Response::HTTP_FORBIDDEN);
       }
-      if ($epalConfig->lock_application->value) {
+      if ($eggrafesConfig->lock_application->value) {
           return $this->respondWithStatus([
               "error_code" => 3002
           ], Response::HTTP_FORBIDDEN);
       }
 
       //έλεγχος πληρότητας τμήματος
-      if ( $epalConfig->lock_small_classes->value === "1")
+      if ( $eggrafesConfig->lock_small_classes->value === "1")
       {
         $classIdChecked = $applicationForm[0]['currentclass'];
         $secIdChecked = "-1";
@@ -403,7 +403,7 @@ class ApplicationSubmit extends ControllerBase
       //τέλος ελέγχου πληρότητας
 
       //έλεγχος μη εγκεκριμένων τμημάτων - γίνεται στην τροποποίηση αίτησης και όταν είναι ενεργή η μη προβολή μη εγκεκριμένων τμημάτων
-      if ($epalConfig->lock_small_classes) {
+      if ($eggrafesConfig->lock_small_classes) {
         for ($i = 0; $i < sizeof($applicationForm[1]); $i++) {
             if ($applicationForm[0]['currentclass'] === "1")
               $epalSchools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(
@@ -468,7 +468,7 @@ class ApplicationSubmit extends ControllerBase
               ], Response::HTTP_FORBIDDEN);
           }
 
-          //$second_period = $epalConfig->activate_second_period->value;
+          //$second_period = $eggrafesConfig->activate_second_period->value;
           $student = array(
               'langcode' => 'el',
               'user_id' => $epalUser->user_id->target_id,
@@ -494,7 +494,7 @@ class ApplicationSubmit extends ControllerBase
               'agreement' => $applicationForm[0]['disclaimer_checked'],
               'relationtostudent' => $relationtostudent,
               'telnum' => $telnum_encoded,
-              'second_period' => $epalConfig->activate_second_period->value,
+              'second_period' => $eggrafesConfig->activate_second_period->value,
           );
 
           if (($errorCode = $this->validateStudent(array_merge(

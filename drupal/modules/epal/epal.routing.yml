@@ -1,7 +1,7 @@
 epal.applicationdetails:
   path: '/epal/application/{studentId}'
   options:
-    _auth: [ 'basic_auth' ] 
+    _auth: [ 'basic_auth' ]
   defaults:
     _controller: '\Drupal\epal\Controller\SubmitedApplications::getApplicationDetails'
   requirements:
@@ -94,22 +94,6 @@ epal.savecapacity:
     _controller: '\Drupal\epal\Controller\DirectorView::SaveCapacity'
   requirements:
     _user_is_logged_in: 'TRUE'
-epal.ministry.log_in_go:
-  path: '/ministry/login'
-  options:
-    _auth: [ 'basic_auth' ]
-  defaults:
-    _controller: '\Drupal\epal\Controller\MinistryLogin::loginGo'
-  requirements:
-    _user_is_logged_in: 'TRUE'
-epal.ministry.log_out_go:
-  path: '/ministry/logout'
-  options:
-    _auth: [ 'basic_auth' ]
-  defaults:
-    _controller: '\Drupal\epal\Controller\MinistryLogin::logoutGo'
-  requirements:
-    _user_is_logged_in: 'TRUE'
 epal.ministry.report_users:
   path: '/ministry/report-users'
   options:
@@ -180,22 +164,6 @@ epal.ministry.massive_mail_located:
   requirements:
     _user_is_logged_in: 'TRUE'
     period: ^[0,1,2]$
-epal.ministry.retrievesettings:
-  path: '/ministry/retrieve-settings'
-  options:
-    _auth: [ 'basic_auth' ]
-  defaults:
-    _controller: '\Drupal\epal\Controller\MinisterSettings::retrieveSettings'
-  requirements:
-    _user_is_logged_in: 'TRUE'
-epal.ministry.storesettings:
-  path: '/ministry/store-settings/{capacityDisabled}/{directorViewDisabled}/{applicantsLoginDisabled}/{applicantsAppModifyDisabled}/{applicantsAppDeleteDisabled}/{applicantsResultsDisabled}/{secondPeriodEnabled}/{dateStart}/{smallClassApproved}'
-  options:
-    _auth: [ 'basic_auth' ]
-  defaults:
-    _controller: '\Drupal\epal\Controller\MinisterSettings::storeSettings'
-  requirements:
-    _user_is_logged_in: 'TRUE'
 epal.perfectureschools:
   path: '/epal/schools-per-perf'
   options:

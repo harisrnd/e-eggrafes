@@ -1,0 +1,22 @@
+{#
+/**
+ * @file eggrafes_config.html.twig
+ * Default theme implementation to present Eggrafes config data.
+ *
+ * This template is used when viewing Eggrafes config pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_eggrafes_config()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('eggrafes_config') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</div>
