@@ -1410,6 +1410,7 @@ createGelPdfServerSide(headerid, status) {
         err => console.error(err));
 }
 
+
 isWS_ident_enabled()
 {
          this.loginInfo$.getValue().forEach(loginInfoToken => {
@@ -1425,5 +1426,21 @@ isWS_ident_enabled()
             .map(response => response.json());
 
 }
+
+
+OffLinecalculationofSmallClasses(username, userpassword) {
+
+      let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+       this.createMinistryAuthorizationHeader(headers, username, userpassword);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/offlinecalculationsmallclasses` , options)
+            .map(response => response.json());
+
+    }
+
+
+
 
 }

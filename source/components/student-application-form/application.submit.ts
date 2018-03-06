@@ -417,6 +417,9 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         }
 
 
+
+
+                       
      //       this.ServiceStudentCertifSub = this._hds.getServiceStudentCertification(8)
               this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {

@@ -16,7 +16,7 @@ import { IAppState } from "../../store/store";
     template: `
 
     <div
-      class = "loading" *ngIf="dataRetrieved == -1 " >
+      class = "loading" *ngIf="(dataRetrieved == -1  || (showLoader | async) === true)" >
     </div>
 
     <div id="configNotice" (onHidden)="onHidden()" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -176,6 +176,8 @@ import { IAppState } from "../../store/store";
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
     private settings$: BehaviorSubject<any>;
+    private OffLineCalculation$: BehaviorSubject<any>;
+    private OffLineCalculationSub: Subscription;
     private loginInfoSub: Subscription;
     private settingsSub: Subscription;
     private capacityDisabled: boolean;
@@ -189,6 +191,7 @@ import { IAppState } from "../../store/store";
     private dataRetrieved: number;
     private smallClassApproved: boolean;
     private wsIdentEnabled: boolean;
+    private showLoader: BehaviorSubject<boolean>;
 
     private minedu_userName: string;
     private minedu_userPassword: string;
@@ -223,6 +226,8 @@ import { IAppState } from "../../store/store";
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
         this.modalHeader = new BehaviorSubject("");
+        this.OffLineCalculation$ = new BehaviorSubject([{}]);
+        this.showLoader = new BehaviorSubject(false);
 
     }
 
@@ -368,11 +373,24 @@ import { IAppState } from "../../store/store";
     }
 
     toggleSmallClassesFilter(){
+
+      this.showLoader.next(true);
+       this.OffLineCalculationSub = this._hds.OffLinecalculationofSmallClasses(this.minedu_userName, this.minedu_userPassword)
+                .subscribe(data => {
+                    this.showLoader.next(false);
+                    this.OffLineCalculation$.next(data);
+                },
+                error => {
+                    this.showLoader.next(false);
+                    console.log("Error for the offlineCalculation");
+                });
+
        this.smallClassApproved =!this.smallClassApproved;
     }
 
     toggleWsIdent(){
        this.wsIdentEnabled =!this.wsIdentEnabled;
     }
+      
 
 }
