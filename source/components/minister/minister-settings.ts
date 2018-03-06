@@ -358,10 +358,9 @@ import { IAppState } from "../../store/store";
     }
 
     toggleSmallClassesFilter(){
-         console.log("aaaaa111111");
        if (this.smallClassApproved == false)
        {
-         console.log("aaaaa");
+    
          this.showLoader.next(true);
          this.OffLineCalculationSub = this._hds.OffLinecalculationofSmallClasses(this.minedu_userName, this.minedu_userPassword)    
                   .subscribe(data => {
