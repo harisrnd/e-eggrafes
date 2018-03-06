@@ -829,7 +829,7 @@ export class HelperDataService implements OnInit, OnDestroy {
             .map(response => response.json());
     }
 
-    storeAdminSettings(username, userpassword, capac, dirview, applogin, appmodify, appdelete, appresults, secondperiod, datestart, smallClassApproved) {
+    storeAdminSettings(username, userpassword, capac, dirview, applogin, appmodify, appdelete, appresults, secondperiod, datestart, smallClassApproved, wsIdentEnabled) {
 
         let headers = new Headers({
             "Content-Type": "application/json",
@@ -840,7 +840,8 @@ export class HelperDataService implements OnInit, OnDestroy {
 
         return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings/` +
             Number(capac) + "/" + Number(dirview) + "/" + Number(applogin) + "/" + Number(appmodify) + "/" +
-            Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" + Number(smallClassApproved) , options)
+            Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" +
+            Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) , options)
             .map(response => response.json());
     }
 
@@ -1410,7 +1411,24 @@ createGelPdfServerSide(headerid, status) {
 }
 
 
-    OffLinecalculationofSmallClasses(username, userpassword) {
+isWS_ident_enabled()
+{
+         this.loginInfo$.getValue().forEach(loginInfoToken => {
+             this.authToken = loginInfoToken.auth_token;
+             this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/deploysystem/iswsenabled`, options)
+            .map(response => response.json());
+
+}
+
+
+OffLinecalculationofSmallClasses(username, userpassword) {
 
       let headers = new Headers({
             "Content-Type": "application/json",

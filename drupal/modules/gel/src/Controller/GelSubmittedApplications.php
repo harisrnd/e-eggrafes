@@ -66,12 +66,12 @@ class GelSubmittedApplications extends ControllerBase
         $transaction = $this->connection->startTransaction();
         try {
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
-            $config_storage = $this->entityTypeManager->getStorage('epal_config');
-            $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-            $epalConfig = reset($epalConfigs);
-            if (!$epalConfig) {
+            $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfig = reset($eggrafesConfigs);
+            if (!$eggrafesConfig) {
                return $this->respondWithStatus([
-                       'message' => t("EpalConfig Enity not found"),
+                       'message' => t("eggrafesConfig Enity not found"),
                    ], Response::HTTP_FORBIDDEN);
             }
 
@@ -173,28 +173,28 @@ class GelSubmittedApplications extends ControllerBase
       $transaction = $this->connection->startTransaction();
       try {
           //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_delete
-          $config_storage = $this->entityTypeManager->getStorage('epal_config');
-          $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-          $epalConfig = reset($epalConfigs);
-          if (!$epalConfig) {
+          $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+          $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+          $eggrafesConfig = reset($eggrafesConfigs);
+          if (!$eggrafesConfig) {
              return $this->respondWithStatus([
-                     'message' => t("EpalConfig Enity not found"),
+                     'message' => t("eggrafesConfig Enity not found"),
                  ], Response::HTTP_FORBIDDEN);
           }
           /*
-          else if ($epalConfig->lock_school_students_view->value) {
+          else if ($eggrafesConfig->lock_school_students_view->value) {
               return $this->respondWithStatus([
                       "error_code" => 3002
                   ], Response::HTTP_FORBIDDEN);
           }
           //μη διαγραφή αν δεν είναι ενεργή η περίοδος υποβολής αιτήσεων
-          else if ($epalConfig->lock_application->value) {
+          else if ($eggrafesConfig->lock_application->value) {
               return $this->respondWithStatus([
                       "error_code" => 3002
                   ], Response::HTTP_FORBIDDEN);
           }
           */
-          else if ($epalConfig->lock_delete->value) {
+          else if ($eggrafesConfig->lock_delete->value) {
               return $this->respondWithStatus([
                       "error_code" => 3002
                   ], Response::HTTP_FORBIDDEN);
@@ -275,16 +275,16 @@ class GelSubmittedApplications extends ControllerBase
                     $canDelete = 1;
 
                     //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_delete
-                    $config_storage = $this->entityTypeManager->getStorage('epal_config');
-                    $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-                    $epalConfig = reset($epalConfigs);
-                    if (!$epalConfig) {
+                    $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+                    $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+                    $eggrafesConfig = reset($eggrafesConfigs);
+                    if (!$eggrafesConfig) {
                        return $this->respondWithStatus([
-                               'message' => t("EpalConfig Enity not found"),
+                               'message' => t("eggrafesConfig Enity not found"),
                            ], Response::HTTP_FORBIDDEN);
                     }
                     else {
-                       $applicantsAppDelDisabled = $epalConfig->lock_delete->value;
+                       $applicantsAppDelDisabled = $eggrafesConfig->lock_delete->value;
                     }
 
                     // $gelStudentClasses = $this->entityTypeManager->getStorage('gel_student_class')->loadByProperties(array('student_id' => $object->id()));
@@ -347,17 +347,17 @@ class GelSubmittedApplications extends ControllerBase
         $gelUser = reset($gelUsers);
         if ($gelUser) {
 
-            $config_storage = $this->entityTypeManager->getStorage('epal_config');
-            $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-            $epalConfig = reset($epalConfigs);
-            if (!$epalConfig) {
+            $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfig = reset($eggrafesConfigs);
+            if (!$eggrafesConfig) {
                return $this->respondWithStatus([
-                       'message' => t("EpalConfig Enity not found"),
+                       'message' => t("eggrafesConfig Enity not found"),
                    ], Response::HTTP_FORBIDDEN);
             }
             else {
-               $applicantsResultsDisabled = $epalConfig->lock_results->value;
-               $applicantsAppModifyDisabled = $epalConfig->lock_modify->value;
+               $applicantsResultsDisabled = $eggrafesConfig->lock_results->value;
+               $applicantsAppModifyDisabled = $eggrafesConfig->lock_modify->value;
             }
 
             $status = "-1";

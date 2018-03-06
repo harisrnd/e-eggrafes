@@ -62,15 +62,15 @@ class SubmitedApplications extends ControllerBase
         $transaction = $this->connection->startTransaction();
         try {
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
-            $config_storage = $this->entityTypeManager->getStorage('epal_config');
-            $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-            $epalConfig = reset($epalConfigs);
-            if (!$epalConfig) {
+            $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfig = reset($eggrafesConfigs);
+            if (!$eggrafesConfig) {
                return $this->respondWithStatus([
-                       'message' => t("EpalConfig Enity not found"),
+                       'message' => t("eggrafesConfig Enity not found"),
                    ], Response::HTTP_FORBIDDEN);
             }
-            else if ($epalConfig->lock_application->value) {
+            else if ($eggrafesConfig->lock_application->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);
@@ -84,7 +84,7 @@ class SubmitedApplications extends ControllerBase
                 $epalStudent = reset($epalStudents);
 
                 if ($epalStudent) {
-                    if (!$epalStudent->second_period->value && $epalConfig->activate_second_period->value) {
+                    if (!$epalStudent->second_period->value && $eggrafesConfig->activate_second_period->value) {
                         return $this->respondWithStatus([
                                 "error_code" => 3002
                             ], Response::HTTP_FORBIDDEN);
@@ -160,17 +160,17 @@ class SubmitedApplications extends ControllerBase
         $transaction = $this->connection->startTransaction();
         try {
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
-            $config_storage = $this->entityTypeManager->getStorage('epal_config');
-            $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-            $epalConfig = reset($epalConfigs);
-            if (!$epalConfig) {
+            $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfig = reset($eggrafesConfigs);
+            if (!$eggrafesConfig) {
                return $this->respondWithStatus([
-                       'message' => t("EpalConfig Enity not found"),
+                       'message' => t("eggrafesConfig Enity not found"),
                    ], Response::HTTP_FORBIDDEN);
             }
             /*
             //μη διαγραφή αν δεν είναι ενεργή η περίοδος υποβολής αιτήσεων
-            else if ($epalConfig->lock_application->value) {
+            else if ($eggrafesConfig->lock_application->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);
@@ -197,7 +197,7 @@ class SubmitedApplications extends ControllerBase
                 if ($applicantStudent) {
                     /*
                     //άρνηση διαγραφής αν είμαστε στη δεύτερη περίοδο και η αίτηση είναι α' περιόδου
-                    if (!$epalStudent->second_period->value && $epalConfig->activate_second_period->value) {
+                    if (!$epalStudent->second_period->value && $eggrafesConfig->activate_second_period->value) {
                         return $this->respondWithStatus([
                                 "error_code" => 3002
                             ], Response::HTTP_FORBIDDEN);
@@ -253,16 +253,16 @@ class SubmitedApplications extends ControllerBase
                     $canDelete = 0;
 
                     //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_delete
-                    $config_storage = $this->entityTypeManager->getStorage('epal_config');
-                    $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-                    $epalConfig = reset($epalConfigs);
-                    if (!$epalConfig) {
+                    $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+                    $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+                    $eggrafesConfig = reset($eggrafesConfigs);
+                    if (!$eggrafesConfig) {
                        return $this->respondWithStatus([
-                               'message' => t("EpalConfig Enity not found"),
+                               'message' => t("eggrafesConfig Enity not found"),
                            ], Response::HTTP_FORBIDDEN);
                     }
                     else {
-                       $applicantsAppDelDisabled = $epalConfig->lock_delete->value;
+                       $applicantsAppDelDisabled = $eggrafesConfig->lock_delete->value;
                     }
 
                     $epalStudentClasses = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('student_id' => $object->id()));
@@ -417,19 +417,19 @@ class SubmitedApplications extends ControllerBase
         $epalUser = reset($epalUsers);
         if ($epalUser) {
 
-            $config_storage = $this->entityTypeManager->getStorage('epal_config');
-            $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-            $epalConfig = reset($epalConfigs);
-            if (!$epalConfig) {
+            $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfig = reset($eggrafesConfigs);
+            if (!$eggrafesConfig) {
                return $this->respondWithStatus([
-                       'message' => t("EpalConfig Enity not found"),
+                       'message' => t("eggrafesConfig Enity not found"),
                    ], Response::HTTP_FORBIDDEN);
             }
             else {
-               $applicantsResultsDisabled = $epalConfig->lock_results->value;
-               $applicantsAppModifyDisabled = $epalConfig->lock_modify->value;
-               //$secondPeriodEnabled = $epalConfig->activate_second_period->value;
-               $dateStartInt = strtotime($epalConfig->date_start_b_period->value);
+               $applicantsResultsDisabled = $eggrafesConfig->lock_results->value;
+               $applicantsAppModifyDisabled = $eggrafesConfig->lock_modify->value;
+               //$secondPeriodEnabled = $eggrafesConfig->activate_second_period->value;
+               $dateStartInt = strtotime($eggrafesConfig->date_start_b_period->value);
             }
 
             $status = "-1";
@@ -666,6 +666,8 @@ class SubmitedApplications extends ControllerBase
 
     public function getCritiria(Request $request, $studentId, $type)
     {
+        //obsolete
+        //epal_student_moria / epal_crieria refer to entities that no longer exist
         $authToken = $request->headers->get('PHP_AUTH_USER');
         $epalUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
         $epalUser = reset($epalUsers);
@@ -731,18 +733,18 @@ class SubmitedApplications extends ControllerBase
               $list = array();
 
               //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
-              $config_storage = $this->entityTypeManager->getStorage('epal_config');
-              $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-              $epalConfig = reset($epalConfigs);
-              if (!$epalConfig) {
+              $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+              $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+              $eggrafesConfig = reset($eggrafesConfigs);
+              if (!$eggrafesConfig) {
                  return $this->respondWithStatus([
-                         'message' => t("EpalConfig Enity not found"),
+                         'message' => t("eggrafesConfig Enity not found"),
                      ], Response::HTTP_FORBIDDEN);
               }
               else {
-                 $applicantsResultsDisabled = $epalConfig->lock_results->getString();
-                 //$applicantsAppModifyDisabled = $epalConfig->lock_modify->getString();
-                 //$secondPeriodEnabled = $epalConfig->activate_second_period->getString();
+                 $applicantsResultsDisabled = $eggrafesConfig->lock_results->getString();
+                 //$applicantsAppModifyDisabled = $eggrafesConfig->lock_modify->getString();
+                 //$secondPeriodEnabled = $eggrafesConfig->activate_second_period->getString();
               }
 
               $status = "0";
@@ -873,27 +875,27 @@ class SubmitedApplications extends ControllerBase
         try {
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_school_students_view, lock_application
 
-            $config_storage = $this->entityTypeManager->getStorage('epal_config');
-            $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-            $epalConfig = reset($epalConfigs);
-            if (!$epalConfig) {
+            $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfig = reset($eggrafesConfigs);
+            if (!$eggrafesConfig) {
                return $this->respondWithStatus([
-                       'message' => t("EpalConfig Enity not found"),
+                       'message' => t("eggrafesConfig Enity not found"),
                    ], Response::HTTP_FORBIDDEN);
             }
             /*
-            else if ($epalConfig->lock_school_students_view->value) {
+            else if ($eggrafesConfig->lock_school_students_view->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);
             }
-            else if ($epalConfig->lock_application->value) {
+            else if ($eggrafesConfig->lock_application->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);
             }
             */
-            else if ($epalConfig->lock_delete->value) {
+            else if ($eggrafesConfig->lock_delete->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);
@@ -1009,28 +1011,28 @@ public function deleteApplicationFromDirector(Request $request)
         $transaction = $this->connection->startTransaction();
         try {
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_delete
-            $config_storage = $this->entityTypeManager->getStorage('epal_config');
-            $epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-            $epalConfig = reset($epalConfigs);
-            if (!$epalConfig) {
+            $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfig = reset($eggrafesConfigs);
+            if (!$eggrafesConfig) {
                return $this->respondWithStatus([
-                       'message' => t("EpalConfig Enity not found"),
+                       'message' => t("eggrafesConfig Enity not found"),
                    ], Response::HTTP_FORBIDDEN);
             }
             /*
-            else if ($epalConfig->lock_school_students_view->value) {
+            else if ($eggrafesConfig->lock_school_students_view->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);
             }
             //μη διαγραφή αν δεν είναι ενεργή η περίοδος υποβολής αιτήσεων
-            else if ($epalConfig->lock_application->value) {
+            else if ($eggrafesConfig->lock_application->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);
             }
             */
-            else if ($epalConfig->lock_delete->value) {
+            else if ($eggrafesConfig->lock_delete->value) {
                 return $this->respondWithStatus([
                         "error_code" => 3002
                     ], Response::HTTP_FORBIDDEN);

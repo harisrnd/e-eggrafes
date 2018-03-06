@@ -11,7 +11,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { IAppState } from "../../store/store";
-import { ChartCreator } from "./chart-creator";
+//import { ChartCreator } from "./chart-creator";
 import { CsvCreator } from "./csv-creator";
 import { ReportsSchema, TableColumn } from "./reports-schema";
 
@@ -69,9 +69,11 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
     private reportSchema = new ReportsSchema();
     private csvObj = new CsvCreator();
 
+    /*
     private chartObj = new ChartCreator();
     @ViewChild("chart") public chartContainer: ElementRef;
     private d3data: Array<any>;
+    */
 
     constructor(private fb: FormBuilder,
         private _ngRedux: NgRedux<IAppState>,

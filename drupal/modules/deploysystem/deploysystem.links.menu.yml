@@ -1,0 +1,14 @@
+
+# Eggrafes config menu items definition
+entity.eggrafes_config.collection:
+  title: 'Eggrafes config list'
+  route_name: entity.eggrafes_config.collection
+  description: 'List Eggrafes config entities'
+  parent: system.admin_structure
+  weight: 100
+
+eggrafes_config.admin.structure.settings:
+  title: 'Eggrafes config settings'
+  description: 'Configure Eggrafes config entities'
+  route_name: eggrafes_config.settings
+  parent: system.admin_structure

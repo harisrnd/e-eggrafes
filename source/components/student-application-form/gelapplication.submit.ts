@@ -165,7 +165,6 @@ import { StudentGelCourseChosen } from "../students/student";
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
     private showLoader: BehaviorSubject<boolean>;
-
     private currentUrl: string;
     private cu_name: string;
     private cu_surname: string;
@@ -175,6 +174,8 @@ import { StudentGelCourseChosen } from "../students/student";
     private hasright: number;
     private app_update: BehaviorSubject<boolean>;
     private appId: BehaviorSubject<string>;
+    private wsIdentSub: Subscription;
+    private wsEnabled: number;
 
     constructor(
         private _hds: HelperDataService,
@@ -212,6 +213,10 @@ import { StudentGelCourseChosen } from "../students/student";
 
         (<any>$("#studentFormSentNotice")).appendTo("body");
         window.scrollTo(0, 0);
+
+        this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
+            this.wsEnabled = Number(z.res) ;
+        });
 
         this.gelUserDataSub = this._hds.getApplicantUserData().subscribe(x => {
             if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren))
@@ -305,21 +310,19 @@ import { StudentGelCourseChosen } from "../students/student";
 
     ngOnDestroy() {
         (<any>$("#studentFormSentNotice")).remove();
-        if (this.gelstudentDataFieldsSub) {
+        if (this.gelstudentDataFieldsSub)
             this.gelstudentDataFieldsSub.unsubscribe();
-        }
-        if (this.gelclassesSub) {
+        if (this.gelclassesSub)
             this.gelclassesSub.unsubscribe();
-        }
-        if (this.loginInfoSub) {
+        if (this.loginInfoSub)
             this.loginInfoSub.unsubscribe();
-        }
         if (this.datamodeSub)
             this.datamodeSub.unsubscribe();
         if (this.gelUserDataSub)
             this.gelUserDataSub.unsubscribe();
+        if (this.wsIdentSub)
+            this.wsIdentSub.unsubscribe();
     }
-
 
 
     submitNow(newapp) {
