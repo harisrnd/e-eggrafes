@@ -97,7 +97,10 @@ export default class SchoolHome implements OnInit, OnDestroy {
                                 this.router.navigate(["/school/director-buttons"]);
                             }
                             else if (this.authRole === "pde")
-                                this.router.navigate(["/school/perfecture-view"]);
+                            {
+                                 console.log("aaaaaaa!!!!");
+                                this.router.navigate(["/school/school-type-selection"]);
+                            }
                             else if (this.authRole === "dide")
                                 this.router.navigate(["/school/eduadmin-view"]);
                         }
