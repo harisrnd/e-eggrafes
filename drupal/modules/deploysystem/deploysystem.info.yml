@@ -1,0 +1,9 @@
+name: deploysystem
+type: module
+description: e-eggrafes Deploy System, Εγκατάσταση views και enity ρυθμίσεων. Ενεργοποίηση ΑΦΟΥ ενεργοποιηθούν πρώτα τα epalreadydata / epal / gel modules.
+core: 8.x
+package: E-EGGRAFES
+dependencies:
+      - epalreadydata
+      - epal
+      - gel

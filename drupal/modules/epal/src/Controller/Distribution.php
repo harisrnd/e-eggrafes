@@ -104,17 +104,17 @@ class Distribution extends ControllerBase
         }
 
         // check where distribution can be done now ($capacityDisabled / $directorViewDisabled settings)
-        $config_storage = $this->entityTypeManager->getStorage('epal_config');
-        $epalConfigs = $config_storage->loadByProperties(array('id' => 1));
-        $epalConfig = reset($epalConfigs);
-        if (!$epalConfig) {
+        $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+        $eggrafesConfigs = $config_storage->loadByProperties(array('id' => 1));
+        $eggrafesConfig = reset($eggrafesConfigs);
+        if (!$eggrafesConfig) {
              return $this->respondWithStatus([
-                'message' => t("EpalConfig Enity not found"),
+                'message' => t("eggrafesConfig Enity not found"),
              ], Response::HTTP_FORBIDDEN);
         } else {
-            $capacityDisabled = $epalConfig->lock_school_capacity->getString();
-            $directorViewDisabled = $epalConfig->lock_school_students_view->getString();
-            $applicantsResultsDisabled = $epalConfig->lock_results->getString();
+            $capacityDisabled = $eggrafesConfig->lock_school_capacity->getString();
+            $directorViewDisabled = $eggrafesConfig->lock_school_students_view->getString();
+            $applicantsResultsDisabled = $eggrafesConfig->lock_results->getString();
             if ($capacityDisabled !== "1" || $directorViewDisabled !== "1" || $applicantsResultsDisabled !== "1") {
                 return $this->respondWithStatus([
                     'message' => t("capacityDisabled and / or directorViewDisabled settings are false"),
@@ -735,15 +735,15 @@ class Distribution extends ControllerBase
         //check where distribution can be done now
         $secondPeriodEnabled = "0";
 
-        $config_storage = $this->entityTypeManager->getStorage('epal_config');
-        $epalConfigs = $config_storage->loadByProperties(array('id' => 1));
-        $epalConfig = reset($epalConfigs);
-        if (!$epalConfig) {
+        $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+        $eggrafesConfigs = $config_storage->loadByProperties(array('id' => 1));
+        $eggrafesConfig = reset($eggrafesConfigs);
+        if (!$eggrafesConfig) {
              return $this->respondWithStatus([
-				'message' => t("EpalConfig Enity not found"),
+				'message' => t("eggrafesConfig Enity not found"),
 			], Response::HTTP_FORBIDDEN);
         } else {
-             $secondPeriodEnabled = $epalConfig->activate_second_period->getString();
+             $secondPeriodEnabled = $eggrafesConfig->activate_second_period->getString();
         }
         if ($secondPeriodEnabled === "0") {
              return $this->respondWithStatus([

@@ -1,0 +1,19 @@
+add eggrafes config entities:
+  title: 'Create new Eggrafes config entities'
+
+administer eggrafes config entities:
+  title: 'Administer Eggrafes config entities'
+  description: 'Allow to access the administration form to configure Eggrafes config entities.'
+  restrict access: true
+
+delete eggrafes config entities:
+  title: 'Delete Eggrafes config entities'
+
+edit eggrafes config entities:
+  title: 'Edit Eggrafes config entities'
+
+view published eggrafes config entities:
+  title: 'View published Eggrafes config entities'
+
+view unpublished eggrafes config entities:
+  title: 'View unpublished Eggrafes config entities'

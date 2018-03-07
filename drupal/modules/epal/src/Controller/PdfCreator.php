@@ -132,16 +132,16 @@ class PDFCreator extends ControllerBase {
 
 						/*
 						//ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
-						$config_storage = $this->entityTypeManager->getStorage('epal_config');
-						$epalConfigs = $config_storage->loadByProperties(array('name' => 'epal_config'));
-						$epalConfig = reset($epalConfigs);
-						if (!$epalConfig) {
+						$config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+						$eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+						$eggrafesConfig = reset($eggrafesConfigs);
+						if (!$eggrafesConfig) {
 							 return $this->respondWithStatus([
-											 'message' => t("EpalConfig Enity not found"),
+											 'message' => t("eggrafesConfig Enity not found"),
 									 ], Response::HTTP_FORBIDDEN);
 						}
 						else {
-							 $this->applicantsResultsDisabled = $epalConfig->lock_results->getString();
+							 $this->applicantsResultsDisabled = $eggrafesConfig->lock_results->getString();
 						}
 						*/
 

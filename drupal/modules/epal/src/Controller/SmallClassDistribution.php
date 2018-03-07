@@ -151,7 +151,7 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
                     ->loadByProperties(array('edu_admin_id' => $selectionId));
             } else {
                 $schools = [];
-            } 
+            }
 
             if ($schools) {
                 $list = array();
@@ -844,20 +844,20 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
  //           ], Response::HTTP_FORBIDDEN);
  //       }
 
-        $config_storage = $this->entityTypeManager->getStorage('epal_config');
-        $epalConfigs = $config_storage->loadByProperties(array('id' => 1));
-        $epalConfig = reset($epalConfigs);
-        if (!$epalConfig)
+        $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+        $eggrafesConfigs = $config_storage->loadByProperties(array('id' => 1));
+        $eggrafesConfig = reset($eggrafesConfigs);
+        if (!$eggrafesConfig)
          {
              return $this->respondWithStatus([
-                'message' => t("EpalConfig Enity not found"),
+                'message' => t("eggrafesConfig Enity not found"),
              ], Response::HTTP_FORBIDDEN);
         }
         else
         {
             $list = array();
-            $lockSmallClasses = $epalConfig->lock_small_classes->getString();
-            if ($lockSmallClasses !== "1" ) 
+            $lockSmallClasses = $eggrafesConfig->lock_small_classes->getString();
+            if ($lockSmallClasses !== "1" )
             {
                  $list[] = array('res' => 0);
                return $this->respondWithStatus($list, Response::HTTP_OK);
@@ -868,7 +868,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
                 return $this->respondWithStatus($list, Response::HTTP_OK);
             }
         }
- }     
+ }
 
 
 
@@ -887,14 +887,14 @@ public function GetRegions(Request $request)
         if ($schools) {
                 $list = array();
                 foreach ($schools as $object)
-                {    
+                {
                       $SmallClassesAppr =  $object -> approved_a -> value ;
                        if ( $SmallClassesAppr == 1)
                             {
                             $prefid = intval($object->getperfecture());
                             $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
                             $prefname = reset($prefectionname);
-                        
+
                             $namepref = $prefname->name->value;
                             $list[] = array(
                                 'epal_id' => $object->id(),
@@ -931,25 +931,25 @@ public function GetSectorsperschool(Request $request, $courseActive )
         if ($schools) {
                 $list = array();
                 foreach ($schools as $object)
-                {    
+                {
                     $id_new = $object->epal_id -> entity ->id();
                     $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $id_new));
                      $sdata = reset($schooldata);
                     if (!$sdata){
                          return $this->respondWithStatus([
                             'message' => t("School not found"),
-                            ], Response::HTTP_FORBIDDEN); 
+                            ], Response::HTTP_FORBIDDEN);
                       }
                       else
                     {
-                     
+
                       $SmallClassesAppr =  $object -> approved_sector -> value ;
                         if ( $SmallClassesAppr == 1)
                             {
                             $prefid = intval($sdata->getperfecture());
                             $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
                             $prefname = reset($prefectionname);
-                        
+
                             $namepref = $prefname->name->value;
                             $list[] = array(
                                 'epal_id' => $sdata->id(),
@@ -959,7 +959,7 @@ public function GetSectorsperschool(Request $request, $courseActive )
                                 'region_name' => $namepref,
                                                                      );
                           }
-                
+
                 return $this->respondWithStatus($list, Response::HTTP_OK);
                  }
              }
@@ -992,7 +992,7 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
         if ($schools) {
                 $list = array();
                 foreach ($schools as $object)
-                {    
+                {
                     $id_new = $object->epal_id -> entity ->id();
                     $this->logger->notice($id_new);
                     $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $id_new));
@@ -1000,18 +1000,18 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
                     if (!$sdata){
                          return $this->respondWithStatus([
                             'message' => t("School not found"),
-                            ], Response::HTTP_FORBIDDEN); 
+                            ], Response::HTTP_FORBIDDEN);
                       }
                       else
                     {
-                     
+
                       $SmallClassesAppr =  $object -> approved_sector -> value ;
                       if ($SmallClassesAppr == 1)
                             {
                             $prefid = intval($sdata->getperfecture());
                             $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
                             $prefname = reset($prefectionname);
-                        
+
                             $namepref = $prefname->name->value;
                             $list[] = array(
                                 'epal_id' => $sdata->id(),
@@ -1021,7 +1021,7 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
                                 'region_name' => $namepref,
                                                                      );
                           }
-                
+
                 return $this->respondWithStatus($list, Response::HTTP_OK);
                  }
              }
@@ -1053,7 +1053,7 @@ public function getCoursesPerSchoolSmallClassesNight(Request $request, $courseAc
         if ($schools) {
                 $list = array();
                 foreach ($schools as $object)
-                {    
+                {
                     $id_new = $object->epal_id -> entity ->id();
                     $this->logger->notice($id_new);
                     $schooldata =  $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $id_new));
@@ -1061,7 +1061,7 @@ public function getCoursesPerSchoolSmallClassesNight(Request $request, $courseAc
                     if (!$sdata){
                          return $this->respondWithStatus([
                             'message' => t("School not found"),
-                            ], Response::HTTP_FORBIDDEN); 
+                            ], Response::HTTP_FORBIDDEN);
                       }
                       else
                     {
@@ -1071,7 +1071,7 @@ public function getCoursesPerSchoolSmallClassesNight(Request $request, $courseAc
                             $prefid = intval($sdata->getperfecture());
                             $prefectionname = $this -> entityTypeManager ->getStorage('eepal_region') ->loadByProperties(array('id' => $prefid));
                             $prefname = reset($prefectionname);
-                        
+
                             $namepref = $prefname->name->value;
                             $list[] = array(
                                 'epal_id' => $sdata->id(),
@@ -1081,7 +1081,7 @@ public function getCoursesPerSchoolSmallClassesNight(Request $request, $courseAc
                                 'region_name' => $namepref,
                                                                      );
                           }
-                
+
                 return $this->respondWithStatus($list, Response::HTTP_OK);
                  }
              }
@@ -1107,7 +1107,7 @@ public function OffLineCalculationSmallClasses(Request $request)
                             ], Response::HTTP_METHOD_NOT_ALLOWED);
              }
 
-            
+
              $authToken = $request->headers->get('PHP_AUTH_USER');
              $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
              $user = reset($users);
@@ -1120,15 +1120,15 @@ public function OffLineCalculationSmallClasses(Request $request)
             $selectionId = $user->init->value;
             $userRoles = $user->getRoles();
             $userRole = '';
-            foreach ($userRoles as $tmpRole) 
+            foreach ($userRoles as $tmpRole)
             {
-                if  ($tmpRole === 'ministry') 
+                if  ($tmpRole === 'ministry')
                 {
                     $userRole = $tmpRole;
                 }
             }
 
-            if ($userRole === '') 
+            if ($userRole === '')
             {
                 return $this->respondWithStatus([
                     'error_code' => 4003,
@@ -1146,13 +1146,14 @@ public function OffLineCalculationSmallClasses(Request $request)
                 $schools = [];
             }
 
-            if ($schools) 
+            if ($schools)
             {
                 $list = array();
                 foreach ($schools as $object)
                 {
                             $epal_id = $object->id();
                             $categ = $object->metathesis_region->value;
+
                             $operation_shift = $object -> operation_shift -> value;
                             $limit = $this->getLimit(1, $categ);
                             $status = $this-> findStatusNew($object->id(),1,0,0);
@@ -1165,8 +1166,8 @@ public function OffLineCalculationSmallClasses(Request $request)
                                     $query->condition('id', $epal_id);
                                     $query->execute();
                             }
-                      
-                     
+
+
                            $limit = $this->getLimit(2, $categ);
                            $courses =  $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(array('epal_id' => $object->id()));
                            
@@ -1179,6 +1180,7 @@ public function OffLineCalculationSmallClasses(Request $request)
                                 $lim = intval($limit);
                                 if ($stat < $limit )
                                 {
+
                                     $query = $this->connection->update('eepal_sectors_in_epal_field_data');
                                     $query->fields(['approved_sector' => 0]);
                                     $query->condition('epal_id', $epal_id);
@@ -1189,15 +1191,16 @@ public function OffLineCalculationSmallClasses(Request $request)
                             }
 
                       }
-                     
-                     
+
+
                       $limit = $this->getLimit(3, $categ);
                       $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $epal_id));
                       if ($courses){
                       foreach ($courses as $key)
                         {
                             $specialit = $key -> specialty_id -> entity -> id();
-                            $status = $this-> findStatusNew($epal_id,3, 0, $specialit);
+
+                            $status = $this-> findStatus($object->id(),3, 0, $specialit);
                             $stat = intval($status);
                             $lim = intval($limit);
                             if ($stat < $limit )
@@ -1220,6 +1223,7 @@ public function OffLineCalculationSmallClasses(Request $request)
                       if ($courses){
                       foreach ($courses as $key)
                         {
+
                             $specialit = $key -> specialty_id -> entity -> id(); 
                             $status = $this-> findStatusNew($object->id(),4, 0, $specialit);
                             $stat = intval($status);
@@ -1240,19 +1244,18 @@ public function OffLineCalculationSmallClasses(Request $request)
                     
                     
 
-
                 }
 
                 return $this->respondWithStatus($list, Response::HTTP_OK);
             }
-            else 
+            else
             {
                 return $this->respondWithStatus([
                     'message' => t('No schools found!'),
                 ], Response::HTTP_FORBIDDEN);
             }
-       
-    }  
+
+    }
      //end try
 
         catch (\Exception $e) {
@@ -1265,7 +1268,7 @@ public function OffLineCalculationSmallClasses(Request $request)
 
 
 }
- 
+
     
 
 public function findStatusNew($id, $classId, $sector, $specialit)
@@ -1369,9 +1372,7 @@ public function findStatusNew($id, $classId, $sector, $specialit)
 
     }
 
-
-
-   
+  
                       
 
 

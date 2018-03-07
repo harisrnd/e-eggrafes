@@ -53,9 +53,9 @@ class CurrentUser extends ControllerBase
                 ], Response::HTTP_FORBIDDEN);
         }
 
-        $epalConfigs = $this->entityTypeManager->getStorage('epal_config')->loadByProperties(array('name' => 'epal_config'));
-        $epalConfig = reset($epalConfigs);
-        if (!$epalConfig) {
+        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfig = reset($eggrafesConfigs);
+        if (!$eggrafesConfig) {
             return $this->respondWithStatus([
                     'message' => t("Configuration not found"),
                 ], Response::HTTP_FORBIDDEN);
@@ -72,9 +72,9 @@ class CurrentUser extends ControllerBase
                         'cu_email' => '',
                         'minedu_username' => '',
                         'minedu_userpassword' => '',
-                        'lock_capacity' => $epalConfig->lock_school_capacity->value,
-                        'lock_students' => $epalConfig->lock_school_students_view->value,
-                        'lock_application' => $epalConfig->lock_application->value,
+                        'lock_capacity' => $eggrafesConfig->lock_school_capacity->value,
+                        'lock_students' => $eggrafesConfig->lock_school_students_view->value,
+                        'lock_application' => $eggrafesConfig->lock_application->value,
                         'disclaimer_checked' => "0",
                         'title' => $user->init->value
                     ], Response::HTTP_OK);
@@ -125,9 +125,9 @@ class CurrentUser extends ControllerBase
                     'cu_email' => mb_substr($user->mail->value,0,4,'UTF-8') !== "####" ? $user->mail->value : '',
                     'minedu_username' => '',
                     'minedu_userpassword' => '',
-                    'lock_capacity' => $epalConfig->lock_school_capacity->value,
-                    'lock_students' => $epalConfig->lock_school_students_view->value,
-                    'lock_application' => $epalConfig->lock_application->value,
+                    'lock_capacity' => $eggrafesConfig->lock_school_capacity->value,
+                    'lock_students' => $eggrafesConfig->lock_school_students_view->value,
+                    'lock_application' => $eggrafesConfig->lock_application->value,
                     'disclaimer_checked' => "0",
                     'verificationCodeVerified' => $applicantUser->verificationcodeverified->value,
                     'numapp_self' => $numAppSelf,

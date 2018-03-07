@@ -157,11 +157,12 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private hasright: number;
     private app_update: BehaviorSubject<boolean>;
     private appId: BehaviorSubject<string>;
-
     private previousClass: BehaviorSubject<string>;
     private previousSector: BehaviorSubject<string>;
     private previousCourse: BehaviorSubject<string>;
     private previousSchools: BehaviorSubject<string>;
+    private wsIdentSub: Subscription;
+    private wsEnabled: number;
 
     constructor(
         private _hds: HelperDataService,
@@ -206,6 +207,10 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
         (<any>$("#studentFormSentNotice")).appendTo("body");
         window.scrollTo(0, 0);
+
+        this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
+            this.wsEnabled = Number(z.res) ;
+        });
 
         this.epalUserDataSub = this._hds.getApplicantUserData().subscribe(x => {
             if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren))
@@ -343,6 +348,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             this.datamodeSub.unsubscribe();
         if (this.epalUserDataSub)
             this.epalUserDataSub.unsubscribe();
+        if (this.wsIdentSub)
+            this.wsIdentSub.unsubscribe();
     }
 
     submitNow(newapp) {
@@ -409,17 +416,20 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             aitisiObj["3"] = new StudentCourseChosen(null, this.courseSelected);
         }
 
+
+
+
                        
-        //      this.ServiceStudentCertifSub = this._hds.getServiceStudentCertification(8)
-              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('25','null','null','null','null','11-02-2001','0540860','2044')     
+     //       this.ServiceStudentCertifSub = this._hds.getServiceStudentCertification(8)
+              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {
                     this.ServiceStudentCertif$.next(data);
-                    
+
                 },
                 error => {
                     console.log("Error Getting Courses");
                 });
-        
+
 
         this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
     }

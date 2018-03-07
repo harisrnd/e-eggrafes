@@ -1,0 +1,40 @@
+deploysystem.ministry.retrievesettings:
+  path: '/ministry/retrieve-settings'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\deploysystem\Controller\MinisterSettings::retrieveSettings'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+deploysystem.ministry.storesettings:
+  path: '/ministry/store-settings/{capacityDisabled}/{directorViewDisabled}/{applicantsLoginDisabled}/{applicantsAppModifyDisabled}/{applicantsAppDeleteDisabled}/{applicantsResultsDisabled}/{secondPeriodEnabled}/{dateStart}/{smallClassApproved}/{wsIdentEnabled}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\deploysystem\Controller\MinisterSettings::storeSettings'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+deploysystem.ministry.log_in_go:
+  path: '/ministry/login'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\deploysystem\Controller\MinistryLogin::loginGo'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+deploysystem.ministry.log_out_go:
+  path: '/ministry/logout'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\deploysystem\Controller\MinistryLogin::logoutGo'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+deploysystem.is_ws_enabled:
+  path: '/deploysystem/iswsenabled'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\deploysystem\Controller\MinisterSettings::isWSIdentEnabled'
+  requirements:
+    _user_is_logged_in: 'TRUE'

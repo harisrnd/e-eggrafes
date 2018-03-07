@@ -1,0 +1,22 @@
+# Eggrafes config routing definition
+eggrafes_config.settings_tab:
+  route_name: eggrafes_config.settings
+  title: 'Settings'
+  base_route: eggrafes_config.settings
+
+entity.eggrafes_config.canonical:
+  route_name: entity.eggrafes_config.canonical
+  base_route: entity.eggrafes_config.canonical
+  title: 'View'
+
+entity.eggrafes_config.edit_form:
+  route_name: entity.eggrafes_config.edit_form
+  base_route: entity.eggrafes_config.canonical
+  title: 'Edit'
+
+entity.eggrafes_config.delete_form:
+  route_name:  entity.eggrafes_config.delete_form
+  base_route:  entity.eggrafes_config.canonical
+  title: Delete
+  weight: 10
+

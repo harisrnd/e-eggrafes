@@ -109,50 +109,7 @@ view published epal student sector field entities:
 
 view unpublished epal student sector field entities:
   title: 'View unpublished Epal student sector field entities'
-add epal criteria entities:
-  title: 'Create new Epal criteria entities'
 
-administer epal criteria entities:
-  title: 'Administer Epal criteria entities'
-  description: 'Allow to access the administration form to configure Epal criteria entities.'
-  restrict access: true
-
-delete epal criteria entities:
-  title: 'Delete Epal criteria entities'
-
-edit epal criteria entities:
-  title: 'Edit Epal criteria entities'
-
-access epal criteria overview:
-  title: 'Access the Epal criteria overview page'
-
-view published epal criteria entities:
-  title: 'View published Epal criteria entities'
-
-view unpublished epal criteria entities:
-  title: 'View unpublished Epal criteria entities'
-add epal student moria entities:
-  title: 'Create new Epal student moria entities'
-
-administer epal student moria entities:
-  title: 'Administer Epal student moria entities'
-  description: 'Allow to access the administration form to configure Epal student moria entities.'
-  restrict access: true
-
-delete epal student moria entities:
-  title: 'Delete Epal student moria entities'
-
-edit epal student moria entities:
-  title: 'Edit Epal student moria entities'
-
-access epal student moria overview:
-  title: 'Access the Epal student moria overview page'
-
-view published epal student moria entities:
-  title: 'View published Epal student moria entities'
-
-view unpublished epal student moria entities:
-  title: 'View unpublished Epal student moria entities'
 add epal class limits entities:
   title: 'Create new Epal class limits entities'
 
@@ -175,22 +132,22 @@ view published epal class limits entities:
 
 view unpublished epal class limits entities:
   title: 'View unpublished Epal class limits entities'
-add epal config entities:
-  title: 'Create new Epal config entities'
+add eggrafes config entities:
+  title: 'Create new eggrafes config entities'
 
-administer epal config entities:
-  title: 'Administer Epal config entities'
-  description: 'Allow to access the administration form to configure Epal config entities.'
+administer eggrafes config entities:
+  title: 'Administer eggrafes config entities'
+  description: 'Allow to access the administration form to configure eggrafes config entities.'
   restrict access: true
 
-delete epal config entities:
-  title: 'Delete Epal config entities'
+delete eggrafes config entities:
+  title: 'Delete eggrafes config entities'
 
-edit epal config entities:
-  title: 'Edit Epal config entities'
+edit eggrafes config entities:
+  title: 'Edit eggrafes config entities'
 
-view published epal config entities:
-  title: 'View published Epal config entities'
+view published eggrafes config entities:
+  title: 'View published eggrafes config entities'
 
-view unpublished epal config entities:
-  title: 'View unpublished Epal config entities'
+view unpublished eggrafes config entities:
+  title: 'View unpublished eggrafes config entities'
