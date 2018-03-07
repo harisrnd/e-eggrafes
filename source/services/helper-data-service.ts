@@ -829,7 +829,8 @@ export class HelperDataService implements OnInit, OnDestroy {
             .map(response => response.json());
     }
 
-    storeAdminSettings(username, userpassword, capac, dirview, applogin, appmodify, appdelete, appresults, secondperiod, datestart, smallClassApproved, wsIdentEnabled) {
+    storeAdminSettings(username, userpassword, capac, dirview, applogin, appmodify, appdelete,
+                    appresults, secondperiod, datestart, smallClassApproved, wsIdentEnabled, gsisIdentEnabled) {
 
         let headers = new Headers({
             "Content-Type": "application/json",
@@ -841,7 +842,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings/` +
             Number(capac) + "/" + Number(dirview) + "/" + Number(applogin) + "/" + Number(appmodify) + "/" +
             Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" +
-            Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) , options)
+            Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) +  "/"  + Number(gsisIdentEnabled) , options)
             .map(response => response.json());
     }
 
@@ -1423,6 +1424,22 @@ isWS_ident_enabled()
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return this.http.get(`${AppSettings.API_ENDPOINT}/deploysystem/iswsenabled`, options)
+            .map(response => response.json());
+
+}
+
+isGSIS_ident_enabled()
+{
+         this.loginInfo$.getValue().forEach(loginInfoToken => {
+             this.authToken = loginInfoToken.auth_token;
+             this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/deploysystem/isgsisenabled`, options)
             .map(response => response.json());
 
 }
