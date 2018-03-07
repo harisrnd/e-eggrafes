@@ -374,16 +374,20 @@ import { IAppState } from "../../store/store";
 
     toggleSmallClassesFilter(){
 
-      this.showLoader.next(true);
-       this.OffLineCalculationSub = this._hds.OffLinecalculationofSmallClasses(this.minedu_userName, this.minedu_userPassword)
-                .subscribe(data => {
-                    this.showLoader.next(false);
-                    this.OffLineCalculation$.next(data);
-                },
-                error => {
-                    this.showLoader.next(false);
-                    console.log("Error for the offlineCalculation");
-                });
+       if (this.smallClassApproved == false)
+       {
+    
+         this.showLoader.next(true);
+         this.OffLineCalculationSub = this._hds.OffLinecalculationofSmallClasses(this.minedu_userName, this.minedu_userPassword)    
+                  .subscribe(data => {
+                      this.showLoader.next(false);
+                      this.OffLineCalculation$.next(data);
+                  },
+                  error => {
+                      this.showLoader.next(false);
+                      console.log("Error for the offlineCalculation");
+                  });
+       }
 
        this.smallClassApproved =!this.smallClassApproved;
     }
