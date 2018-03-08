@@ -131,3 +131,22 @@ view published gel admin area entities:
 
 view unpublished gel admin area entities:
   title: 'View unpublished Gel admin area entities'
+add gel_school entities:
+  title: 'Create new Gel_school entities'
+
+administer gel_school entities:
+  title: 'Administer Gel_school entities'
+  description: 'Allow to access the administration form to configure Gel_school entities.'
+  restrict access: true
+
+delete gel_school entities:
+  title: 'Delete Gel_school entities'
+
+edit gel_school entities:
+  title: 'Edit Gel_school entities'
+
+view published gel_school entities:
+  title: 'View published Gel_school entities'
+
+view unpublished gel_school entities:
+  title: 'View unpublished Gel_school entities'

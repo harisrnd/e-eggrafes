@@ -3,3 +3,8 @@ entity.eggrafes_config.add_form:
   title: 'Add Eggrafes config'
   appears_on:
     - entity.eggrafes_config.collection
+entity.school_list.add_form:
+  route_name: entity.school_list.add_form
+  title: 'Add School list'
+  appears_on:
+    - entity.school_list.collection

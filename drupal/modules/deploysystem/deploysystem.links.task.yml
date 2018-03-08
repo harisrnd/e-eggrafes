@@ -20,3 +20,25 @@ entity.eggrafes_config.delete_form:
   title: Delete
   weight: 10
 
+# School list routing definition
+school_list.settings_tab:
+  route_name: school_list.settings
+  title: 'Settings'
+  base_route: school_list.settings
+
+entity.school_list.canonical:
+  route_name: entity.school_list.canonical
+  base_route: entity.school_list.canonical
+  title: 'View'
+
+entity.school_list.edit_form:
+  route_name: entity.school_list.edit_form
+  base_route: entity.school_list.canonical
+  title: 'Edit'
+
+entity.school_list.delete_form:
+  route_name:  entity.school_list.delete_form
+  base_route:  entity.school_list.canonical
+  title: Delete
+  weight: 10
+
