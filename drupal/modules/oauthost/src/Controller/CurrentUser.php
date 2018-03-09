@@ -369,10 +369,14 @@ class CurrentUser extends ControllerBase
                 $postData = json_decode($content);
                 $crypt = new Crypt();
                 try  {
-                  $name_encoded = $crypt->encrypt($postData->userProfile->userName);
-                  $surname_encoded = $crypt->encrypt($postData->userProfile->userSurname);
-                  $fathername_encoded = $crypt->encrypt($postData->userProfile->userMothername);
-                  $mothername_encoded = $crypt->encrypt($postData->userProfile->userFathername);
+                  if (isset($postData->userProfile->userName))
+                    $name_encoded = $crypt->encrypt($postData->userProfile->userName);
+                  if (isset($postData->userProfile->userSurname))
+                    $surname_encoded = $crypt->encrypt($postData->userProfile->userSurname);
+                  if (isset($postData->userProfile->userFathername))
+                    $fathername_encoded = $crypt->encrypt($postData->userProfile->userFathername);
+                  if (isset($postData->userProfile->userMothername))
+                    $mothername_encoded = $crypt->encrypt($postData->userProfile->userMothername);
                 }
                 catch (\Exception $e) {
                     unset($crypt);
@@ -383,10 +387,14 @@ class CurrentUser extends ControllerBase
                 }
                 unset($crypt);
 
-                $applicantUser->set('name', $name_encoded);
-                $applicantUser->set('surname', $surname_encoded);
-                $applicantUser->set('mothername', $fathername_encoded);
-                $applicantUser->set('fathername', $mothername_encoded);
+                if (isset($postData->userProfile->userName))
+                  $applicantUser->set('name', $name_encoded);
+                if (isset($postData->userProfile->userSurname))
+                  $applicantUser->set('surname', $surname_encoded);
+                if (isset($postData->userProfile->userFathername))
+                  $applicantUser->set('fathername', $fathername_encoded);
+                if (isset($postData->userProfile->userMothername))
+                  $applicantUser->set('mothername', $mothername_encoded);
 
                 $representRole = "0";
                 if (isset($postData->userProfile->representRole)) {

@@ -67,7 +67,6 @@ class CBController extends ControllerBase
 
     public function loginCB(Request $request)
     {
-
         $oauthostSessions = $this->entityTypeManager->getStorage('oauthost_session')->loadByProperties(array('name' => $request->query->get('sid_ost')));
         $this->oauthostSession = reset($oauthostSessions);
         if ($this->oauthostSession) {
@@ -150,6 +149,15 @@ class CBController extends ControllerBase
 
     public function authenticatePhase2($request, $authToken, $authVerifier)
     {
+        $useGSIS = "0";
+        $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+        $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfig = reset($eggrafesConfigs);
+        if (!$eggrafesConfig)
+             return false;
+        else
+             $useGSIS = $eggrafesConfig->gsis_ident->value;
+
         try {
             $taxis_userid = null;
             $trx = $this->connection->startTransaction();
@@ -183,6 +191,7 @@ class CBController extends ControllerBase
                     $user->setPassword($schoolToken);
                     $user->setUsername($schoolToken);
                     $user->save();
+
                     $schoolUser->set('authtoken', $schoolToken);
                     $schoolUser->set('accesstoken', $accessToken['oauth_token']);
                     $schoolUser->set('accesstoken_secret', $accessToken['oauth_token_secret']);
@@ -223,6 +232,19 @@ class CBController extends ControllerBase
                     $crypt = new Crypt();
                     try  {
                       $name_encoded = $crypt->encrypt($unique_id);
+
+                      if ($useGSIS === "1") {
+                        $firstname_encoded = $crypt->encrypt($taxis_userData['firstName']);
+                        $surname_encoded = $crypt->encrypt($taxis_userData['surname']);
+                        $fathername_encoded = $crypt->encrypt($taxis_userData['fathersName']);
+                        $mothername_encoded = $crypt->encrypt("");
+                      }
+                      else {
+                        $firstname_encoded = $name_encoded;
+                        $surname_encoded = $name_encoded;
+                        $fathername_encoded = $name_encoded;
+                        $mothername_encoded = $name_encoded;
+                      }
                     }
                     catch (\Exception $e) {
                       unset($crypt);
@@ -239,15 +261,15 @@ class CBController extends ControllerBase
                     $schoolUser = $this->entityTypeManager()->getStorage('applicant_users')->create(array(
                         'langcode' => 'el',
                         'user_id' => $user->id(),
-                        //'drupaluser_id' => $user->id(),
-                        //'taxis_userid' => $taxis_userData['tin']),
                         'taxis_userid' => $hashId,
-                        //'taxis_taxid' => $taxis_userData['tin'],
-                        //'taxis_taxid' => $hashId,
-                        'name' => $name_encoded,
-                        'surname' => $name_encoded,
-                        'fathername' => $name_encoded,
-                        'mothername' => $name_encoded,
+                        //'name' => $name_encoded,
+                        //'surname' => $name_encoded,
+                        //'fathername' => $name_encoded,
+                        //'mothername' => $name_encoded,
+                        'name' => $firstname_encoded,
+                        'surname' => $surname_encoded,
+                        'fathername' => $fathername_encoded,
+                        'mothername' => $mothername_encoded,
                         'accesstoken' => $accessToken['oauth_token'],
                         'accesstoken_secret' => $accessToken['oauth_token_secret'],
                         'authtoken' => $schoolToken,
@@ -315,6 +337,7 @@ class CBController extends ControllerBase
         foreach( $webUserDetails as $element )
         {
             $comments = $element->getElementsByTagName( "comments" );
+            //$comments = $element->getElementsByTagName( "mothersName" );
             $comment = $comments->item(0)->nodeValue;
 
             $fathersNames = $element->getElementsByTagName( "fathersName" );

@@ -12,3 +12,17 @@ eggrafes_config.admin.structure.settings:
   description: 'Configure Eggrafes config entities'
   route_name: eggrafes_config.settings
   parent: system.admin_structure
+
+# School list menu items definition
+entity.school_list.collection:
+  title: 'School list list'
+  route_name: entity.school_list.collection
+  description: 'List School list entities'
+  parent: system.admin_structure
+  weight: 100
+
+school_list.admin.structure.settings:
+  title: 'School list settings'
+  description: 'Configure School list entities'
+  route_name: school_list.settings
+  parent: system.admin_structure

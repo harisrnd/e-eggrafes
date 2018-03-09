@@ -15,7 +15,7 @@ use Drupal\epal\Crypt;
 
 class SmallClassDistribution extends ControllerBase
 {
-    protected $entityTypeManager;
+   protected $entityTypeManager;
     protected $logger;
     protected $connection;
 
@@ -48,7 +48,7 @@ class SmallClassDistribution extends ControllerBase
         $SchoolCat = reset($SchoolCats);
         if ($SchoolCat) {
             $categ = $SchoolCat->metathesis_region->value;
-            $operation_shift = $school -> operation_shift -> value;
+            $operation_shift = $SchoolCat -> operation_shift -> value;
         } else {
             $categ = '-';
             $operation_shift ='-';
@@ -1151,34 +1151,42 @@ public function OffLineCalculationSmallClasses(Request $request)
                 $list = array();
                 foreach ($schools as $object)
                 {
+                            $epal_id = $object->id();
                             $categ = $object->metathesis_region->value;
 
+                            $operation_shift = $object -> operation_shift -> value;
                             $limit = $this->getLimit(1, $categ);
-                            $status = $this-> findStatus($object->id(),1,0,0);
+                            $status = $this-> findStatusNew($object->id(),1,0,0);
                             $stat = intval($status);
                             $lim = intval($limit);
                             if ($stat <= $limit )
                             {
-                                $object->set('approved_a', 0);
-                                $object->save();
+                                    $query = $this->connection->update('eepal_school_field_data');
+                                    $query->fields(['approved_a' => 0]);
+                                    $query->condition('id', $epal_id);
+                                    $query->execute();
                             }
 
 
                            $limit = $this->getLimit(2, $categ);
                            $courses =  $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(array('epal_id' => $object->id()));
+                           
                           if ($courses){
                           foreach ($courses as $key)
                             {
-                                $sector = $key -> sector_id -> entity ->id();
-                                $status = $this-> findStatus($object->id(),$classId, $sector, 0);
+                                $sector = $key -> sector_id -> value;
+                                $status = $this-> findStatusNew($epal_id,$classId, $sector, 0);
                                 $stat = intval($status);
                                 $lim = intval($limit);
                                 if ($stat < $limit )
                                 {
 
-                                    $key->set('approved_sector', 0);
-                                    $key->save();
-
+                                    $query = $this->connection->update('eepal_sectors_in_epal_field_data');
+                                    $query->fields(['approved_sector' => 0]);
+                                    $query->condition('epal_id', $epal_id);
+                                    $query->condition('sector_id', $sector);
+                                    $query->execute();
+                                  
                                 }
                             }
 
@@ -1186,43 +1194,55 @@ public function OffLineCalculationSmallClasses(Request $request)
 
 
                       $limit = $this->getLimit(3, $categ);
-                      $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $object->id()));
+                      $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $epal_id));
                       if ($courses){
                       foreach ($courses as $key)
                         {
                             $specialit = $key -> specialty_id -> entity -> id();
+
                             $status = $this-> findStatus($object->id(),3, 0, $specialit);
                             $stat = intval($status);
                             $lim = intval($limit);
                             if ($stat < $limit )
                             {
-                                    $key->set('approved_speciality', 0);
-                                    $key->save();
 
+                                    $query = $this->connection->update('eepal_specialties_in_epal_field_data');
+                                    $query->fields(['approved_speciality' => 0]);
+                                    $query->condition('epal_id', $epal_id);
+                                    $query->condition('specialty_id', $specialit);
+                                    $query->execute();
+                                   
                             }
                         }
                         }
+                      if ($operation_shift == 'ΕΣΠΕΡΙΝΟ')
+                       {
 
                         $limit = $this->getLimit(4, $categ);
                         $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $object->id()));
                       if ($courses){
                       foreach ($courses as $key)
                         {
-                            $specialit = $key -> specialty_id -> entity -> id();
-                            $status = $this-> findStatus($object->id(),4, 0, $specialit);
+
+                            $specialit = $key -> specialty_id -> entity -> id(); 
+                            $status = $this-> findStatusNew($object->id(),4, 0, $specialit);
                             $stat = intval($status);
                             $lim = intval($limit);
                             if ($stat < $limit )
                             {
-                                    $key->set('approved_speciality_d', 0);
-                                    $key->save();
-
+                                   
+                                    $query = $this->connection->update('eepal_specialties_in_epal_field_data');
+                                    $query->fields(['approved_speciality_d' => 0]);
+                                    $query->condition('epal_id', $epal_id);
+                                    $query->condition('specialty_id', $specialit);
+                                    $query->execute();
+                                   
                             }
                         }
                         }
-
-
-
+                        }
+                    
+                    
 
                 }
 
@@ -1249,8 +1269,111 @@ public function OffLineCalculationSmallClasses(Request $request)
 
 }
 
+    
+
+public function findStatusNew($id, $classId, $sector, $specialit)
+    {
+       
+
+        $this->logger->warning('id.'.$specialit.'id'.$id);
+
+        $schoolid = $id;
+        $SchoolCats = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $schoolid));
+        $SchoolCat = reset($SchoolCats);
+        if ($SchoolCat) {
+            $categ = $SchoolCat->metathesis_region->value;
+            $operation_shift = $SchoolCat -> operation_shift -> value;
+        } else {
+            $categ = '-';
+            $operation_shift ='-';
+        }
+
+        if ($classId == 1)
+        {
+
+            $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1));
+
+            $size = sizeof($studentPerSchool);
+                        return $size;
+
+        }
+        elseif ($classId == 2)
+        {
+        $sCon = $this->connection->select('eepal_sectors_in_epal_field_data', 'eSchool');
+        $sCon->leftJoin('epal_student_class', 'eStudent',
+            'eStudent.epal_id = ' . $schoolid . ' ' .
+            'AND eStudent.specialization_id = ' . $sector . ' ' .
+            'AND eStudent.currentclass = 2');
+        $sCon->fields('eSchool', array('sector_id'))
+            ->fields('eStudent', array('specialization_id'))
+            ->groupBy('specialization_id')
+            ->groupBy('sector_id')
+            ->condition('eSchool.epal_id', $schoolid, '=')
+            ->condition('eStudent.specialization_id', $sector, '=');
+        $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
+
+        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                       
+
+            foreach ($results as $result) {
+                $size = $result->eStudent_count;
+                return $size;
+            }
+        }
+        elseif ($classId == 3)
+        {
+                $sCon = $this->connection->select('eepal_specialties_in_epal_field_data', 'eSchool');
+                $sCon->leftJoin('epal_student_class', 'eStudent',
+                'eStudent.epal_id = ' . $schoolid . ' ' .
+                 'AND eStudent.specialization_id = ' . $specialit . ' ' .
+                 'AND eStudent.currentclass = 3');
+                 $sCon->fields('eSchool', array('specialty_id'))
+                ->fields('eStudent', array('specialization_id'))
+                ->groupBy('specialization_id')
+                ->groupBy('specialty_id')
+                ->condition('eSchool.epal_id', $schoolid, '=');
+                $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
+
+                $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+            foreach ($results as $result) {
+                $size = $result->eStudent_count ;
+                return $size;
+                }
+        
+        }
+        else
+        {
+            if ($operation_shift == 'ΕΣΠΕΡΙΝΟ')
+            {
+                $sCon = $this->connection->select('eepal_specialties_in_epal_field_data', 'eSchool');
+            $sCon->leftJoin('epal_student_class', 'eStudent',
+                'eStudent.epal_id = ' . $schoolid . ' ' .
+                'AND eStudent.specialization_id = ' . $specialit . ' '.
+                'AND eStudent.currentclass = 4');
+            $sCon->fields('eSchool', array('specialty_id'))
+                ->fields('eStudent', array('specialization_id'))
+                ->groupBy('specialization_id')
+                ->groupBy('specialty_id')
+                ->condition('eSchool.epal_id', $schoolid, '=')
+                ->condition('eStudent.specialization_id', $specialit, '=');
+            $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
+
+            $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+            foreach ($results as $result) {
+                $size = $result->eStudent_count ;
+                return $size;
+            }
+
+            }
+        }
+
+    }
 
   
+                      
 
 
 }

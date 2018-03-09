@@ -33,3 +33,8 @@ entity.gel_admin_area.add_form:
   title: 'Add Gel admin area'
   appears_on:
     - entity.gel_admin_area.collection
+entity.gel_school.add_form:
+  route_name: entity.gel_school.add_form
+  title: 'Add Gel_school'
+  appears_on:
+    - entity.gel_school.collection
