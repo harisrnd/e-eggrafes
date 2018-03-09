@@ -71,16 +71,29 @@ import {
 
     private observableSource = (keyword: any): Observable<any[]> => {
         let url: string = "https://mm.sch.gr/api/units?name=" + keyword;
+        //let url: string = "https://mm.sch.gr/api/units";
+        //let url: string = "http://eduslim2.minedu.gov.gr/e-eggrafes/drupal/schools_list?name=" + keyword;
+
         if (keyword) {
+            //console.log("mpika1");
             return this.http.get(url)
                 .map(res => {
                     let json = res.json();
                     let retArr = <any>Array();
+                    //console.log("mpika2");
+                    //console.log(json.length);
                     for (let i = 0; i < json.data.length; i++) {
+                    //for (let i = 0; i < json.length; i++) {
                         retArr[i] = {};
                         retArr[i].registry_no = json.data[i].registry_no;
                         retArr[i].name = json.data[i].name;
                         retArr[i].unit_type_id = json.data[i].unit_type_id;
+
+                        //retArr[i].registry_no = json[i].registry_no;
+                        //retArr[i].name = json[i].name;
+                        //retArr[i].unit_type_id = json[i].unit_type_id;
+
+                        //console.log(json[i].epal_name);
                     }
                     return retArr;
                 });

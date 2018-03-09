@@ -154,7 +154,17 @@ import { IAppState } from "../../store/store";
              <label for="wsIdentEnabled">Ενεργοποίηση Web Service Ταυτοποίησης Μαθητή του ΠΣ Myschool</label>
            </div>
          </div>
+         <br>
 
+         <div class="row">
+          <div class="col-md-1 ">
+            <input type="checkbox" [checked]="gsisIdentEnabled"  formControlName="gsisIdentEnabled"
+            (click)="toggleGsisIdent()" >
+          </div>
+          <div class="col-md-9">
+            <label for="gsisIdentEnabled">Ενεργοποίηση χρήσης δεδομένων από τη ΓΓΠΣ</label>
+          </div>
+        </div>
           <br>
 
           <button type="submit" class="btn btn-md pull-right"  (click)="storeSettings()" [disabled] = "secondPeriodEnabled && formGroup.get('distributionstartdate').hasError('required')" >
@@ -191,6 +201,7 @@ import { IAppState } from "../../store/store";
     private dataRetrieved: number;
     private smallClassApproved: boolean;
     private wsIdentEnabled: boolean;
+    private gsisIdentEnabled: boolean;
     private showLoader: BehaviorSubject<boolean>;
 
     private minedu_userName: string;
@@ -219,6 +230,7 @@ import { IAppState } from "../../store/store";
             distributionstartdate:["", [Validators.required]],
             smallClassApproved:["",[]],
             wsIdentEnabled:["",[]],
+            gsisIdentEnabled:["",[]],
         });
 
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
@@ -296,6 +308,7 @@ import { IAppState } from "../../store/store";
             //this.formGroup.controls["distributionstartdate"].setValue(this.populateDate(this.dateStartBPeriod));
             this.smallClassApproved = Boolean(Number(this.settings$.value["smallClassApproved"]));
             this.wsIdentEnabled = Boolean(Number(this.settings$.value["wsIdentEnabled"]));
+            this.gsisIdentEnabled = Boolean(Number(this.settings$.value["gsisIdentEnabled"]));
 
             this.dataRetrieved = 1;
         },
@@ -322,7 +335,7 @@ import { IAppState } from "../../store/store";
         this.settingsSub = this._hds.storeAdminSettings(this.minedu_userName, this.minedu_userPassword,
             this.capacityDisabled, this.directorViewDisabled, this.applicantsLoginDisabled,
             this.applicantsAppModifyDisabled, this.applicantsAppDeleteDisabled, this.applicantsResultsDisabled,
-            this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved, this.wsIdentEnabled)
+            this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved, this.wsIdentEnabled, this.gsisIdentEnabled)
             .subscribe(data => {
                 this.settings$.next(data);
                 this.dataRetrieved = 1;
@@ -395,6 +408,10 @@ import { IAppState } from "../../store/store";
     toggleWsIdent(){
        this.wsIdentEnabled =!this.wsIdentEnabled;
     }
-      
+
+    toggleGsisIdent(){
+       this.gsisIdentEnabled =!this.gsisIdentEnabled;
+    }
+
 
 }

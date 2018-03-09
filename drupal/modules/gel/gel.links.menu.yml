@@ -96,3 +96,17 @@ gel_admin_area.admin.structure.settings:
   description: 'Configure Gel admin area entities'
   route_name: gel_admin_area.settings
   parent: system.admin_structure
+
+# Gel_school menu items definition
+entity.gel_school.collection:
+  title: 'Gel_school list'
+  route_name: entity.gel_school.collection
+  description: 'List Gel_school entities'
+  parent: system.admin_structure
+  weight: 100
+
+gel_school.admin.structure.settings:
+  title: 'Gel_school settings'
+  description: 'Configure Gel_school entities'
+  route_name: gel_school.settings
+  parent: system.admin_structure
