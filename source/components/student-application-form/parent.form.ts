@@ -24,8 +24,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     public isModalShown: BehaviorSubject<boolean>;
     public hasRight: BehaviorSubject<boolean>;
     private representativeRole: BehaviorSubject<boolean>;
-    //private existentRole: boolean;
-    //private existentMail: string;
+    private gsisIdentSub: Subscription;
 
     constructor(private fb: FormBuilder,
         private router: Router,
@@ -69,6 +68,17 @@ import { HelperDataService } from "../../services/helper-data-service";
     ngOnInit() {
         (<any>$("#emailSentNotice")).appendTo("body");
         this.showLoader.next(true);
+
+        this.gsisIdentSub = this.hds.isGSIS_ident_enabled().subscribe(z => {
+            if (z.res === "1")  {
+              this.formGroup.get("userName").disable();
+              this.formGroup.get("userSurname").disable();
+              this.formGroup.get("userFathername").disable();
+
+              //this.formGroup.get("userMothername").disable();
+            }
+        });
+
         this.applicantUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             this.showLoader.next(false);
             this.applicantUserData$.next(x);
@@ -104,6 +114,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     ngOnDestroy() {
         (<any>$("#emailSentNotice")).remove();
         if (this.applicantUserDataSub) this.applicantUserDataSub.unsubscribe();
+        if (this.gsisIdentSub) this.gsisIdentSub.unsubscribe();
     }
 
     saveProfileAndContinue(): void {
@@ -128,9 +139,11 @@ import { HelperDataService } from "../../services/helper-data-service";
         */
         else {
             this.showLoader.next(true);
-            this.hds.saveProfile(this.formGroup.value)
+            //this.hds.saveProfile(this.formGroup.value)
+            this.hds.saveProfile(this.formGroup.getRawValue())
                 .then(res => {
-                    this._prfa.saveProfile(this.formGroup.value);
+                    //this._prfa.saveProfile(this.formGroup.value);
+                    this._prfa.saveProfile(this.formGroup.getRawValue());
                     this.showLoader.next(false);
                     this.router.navigate(["/intro-statement"]);
                 })

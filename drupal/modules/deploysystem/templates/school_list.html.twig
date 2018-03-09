@@ -1,0 +1,22 @@
+{#
+/**
+ * @file school_list.html.twig
+ * Default theme implementation to present School list data.
+ *
+ * This template is used when viewing School list pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_school_list()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('school_list') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+</div>

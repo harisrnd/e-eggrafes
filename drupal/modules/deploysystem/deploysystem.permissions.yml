@@ -17,3 +17,22 @@ view published eggrafes config entities:
 
 view unpublished eggrafes config entities:
   title: 'View unpublished Eggrafes config entities'
+add school list entities:
+  title: 'Create new School list entities'
+
+administer school list entities:
+  title: 'Administer School list entities'
+  description: 'Allow to access the administration form to configure School list entities.'
+  restrict access: true
+
+delete school list entities:
+  title: 'Delete School list entities'
+
+edit school list entities:
+  title: 'Edit School list entities'
+
+view published school list entities:
+  title: 'View published School list entities'
+
+view unpublished school list entities:
+  title: 'View unpublished School list entities'

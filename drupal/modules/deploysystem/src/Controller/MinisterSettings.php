@@ -105,6 +105,7 @@ class MinisterSettings extends ControllerBase {
 					$dateStart = $eggrafesConfig->date_start_b_period->getString();
 					$smallClassApproved = $eggrafesConfig->lock_small_classes->getString();
 					$wsIdentEnabled = $eggrafesConfig->ws_ident->getString();
+					$gsisIdentEnabled = $eggrafesConfig->gsis_ident->getString();
 	 		 }
 	 		 $config_storage->resetCache();
 
@@ -119,7 +120,8 @@ class MinisterSettings extends ControllerBase {
 					'secondPeriodEnabled' => $secondPeriodEnabled,
 					'dateStart' => $dateStart,
 					'smallClassApproved' => $smallClassApproved,
-					'$wsIdentEnabled' => $wsIdentEnabled
+					'$wsIdentEnabled' => $wsIdentEnabled,
+					'$gsisIdentEnabled' => $gsisIdentEnabled
 			], Response::HTTP_OK);
 
 		}	//end try
@@ -138,7 +140,7 @@ class MinisterSettings extends ControllerBase {
 
 public function storeSettings(Request $request, $capacityDisabled, $directorViewDisabled, $applicantsLoginDisabled, $applicantsAppModifyDisabled,
 		$applicantsAppDeleteDisabled, $applicantsResultsDisabled, $secondPeriodEnabled,
-		$dateStart, $smallClassApproved, $wsIdentEnabled ) {
+		$dateStart, $smallClassApproved, $ws, $gsis ) {
 
 	try {
 		if (!$request->isMethod('GET')) {
@@ -190,7 +192,8 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
 					$eggrafesConfig->set('activate_second_period', $secondPeriodEnabled);
 					$eggrafesConfig->set('date_start_b_period', $dateStart);
 					$eggrafesConfig->set('lock_small_classes', $smallClassApproved);
-					$eggrafesConfig->set('ws_ident', $wsIdentEnabled );
+					$eggrafesConfig->set('ws_ident', $ws );
+					$eggrafesConfig->set('gsis_ident', $gsis );
 					$eggrafesConfig->save();
  		 }
  		 $config_storage->resetCache();
@@ -207,7 +210,8 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
 				'secondPeriodEnabled' => $secondPeriodEnabled,
 				'dateStart' => $dateStart,
 				'smallClassApproved' =>$smallClassApproved,
-				'$wsIdentEnabled' =>$wsIdentEnabled
+				'$wsIdentEnabled' =>$ws,
+				'$gsisIdentEnabled' =>$gsis
 		], Response::HTTP_OK);
 
 	}	//end try
@@ -243,6 +247,29 @@ public function isWSIdentEnabled(Request $request)
 						], Response::HTTP_FORBIDDEN);
 			 else
 						return $this->respondWithStatus(array('res' => $eggrafesConfig->ws_ident->value), Response::HTTP_OK);
+
+}
+
+public function isGsisIdentEnabled(Request $request)
+{
+			 $authToken = $request->headers->get('PHP_AUTH_USER');
+			 $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+			 $user = reset($users);
+			 if (!$user) {
+					 return $this->respondWithStatus([
+							 'message' => t("User not found"),
+					 ], Response::HTTP_FORBIDDEN);
+			 }
+
+			 $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+			 $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+			 $eggrafesConfig = reset($eggrafesConfigs);
+			 if (!$eggrafesConfig)
+						return $this->respondWithStatus([
+							 'message' => t("eggrafesConfig Enity not found"),
+						], Response::HTTP_FORBIDDEN);
+			 else
+						return $this->respondWithStatus(array('res' => $eggrafesConfig->gsis_ident->value), Response::HTTP_OK);
 
 }
 

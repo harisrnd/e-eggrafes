@@ -174,8 +174,8 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Eggrafes config entity.'))
+      ->setLabel(t('Ονομασία'))
+      ->setDescription(t('Ονομασία του Eggrafes config entity.'))
       ->setSettings([
         'max_length' => 50,
         'text_processing' => 0,
@@ -194,8 +194,8 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['lock_school_capacity'] = BaseFieldDefinition::create('boolean')
-          ->setLabel(t('Lock School Capacity'))
-          ->setDescription(t('Lock School Capacity.'))
+          ->setLabel(t('Απενεργοποίηση δυνατότητας τροποποίησης χωρητικότητας από τους Διευθυντές σχολείων'))
+          ->setDescription(t('Απενεργοποίηση δυνατότητας τροποποίησης χωρητικότητας από τους Διευθυντές σχολείων.'))
           ->setSettings(array(
             'text_processing' => 0,
           ))
@@ -214,8 +214,8 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
           ->setDisplayConfigurable('view', TRUE);
 
     $fields['lock_school_students_view'] = BaseFieldDefinition::create('boolean')
-          ->setLabel(t('Lock School Students View'))
-          ->setDescription(t('Lock School Students View.'))
+          ->setLabel(t('Απενεργοποίηση δυνατότητας προβολής κατανομής μαθητών από τους Διευθυντές σχολείων'))
+          ->setDescription(t('Απενεργοποίηση δυνατότητας προβολής κατανομής μαθητών από τους Διευθυντές σχολείων.'))
           ->setSettings(array(
             'text_processing' => 0,
           ))
@@ -234,8 +234,8 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
           ->setDisplayConfigurable('view', TRUE);
 
     $fields['lock_application'] = BaseFieldDefinition::create('boolean')
-          ->setLabel(t('Lock Application'))
-          ->setDescription(t('Lock Application.'))
+          ->setLabel(t('Απενεργοποίηση δυνατότητας υποβολής δήλωσης προτίμησης'))
+          ->setDescription(t('Απενεργοποίηση δυνατότητας υποβολής δήλωσης προτίμησης.'))
           ->setSettings(array(
             'text_processing' => 0,
           ))
@@ -254,8 +254,8 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
           ->setDisplayConfigurable('view', TRUE);
 
     $fields['lock_modify'] = BaseFieldDefinition::create('boolean')
-          ->setLabel(t('Lock Modifications'))
-          ->setDescription(t('Lock Modifications.'))
+          ->setLabel(t('Απενεργοποίηση δυνατότητας τροποποίησης αίτησης'))
+          ->setDescription(t('Απενεργοποίηση δυνατότητας τροποποίησης αίτησης.'))
           ->setSettings(array(
             'text_processing' => 0,
           ))
@@ -274,8 +274,8 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
           ->setDisplayConfigurable('view', TRUE);
 
     $fields['lock_delete'] = BaseFieldDefinition::create('boolean')
-          ->setLabel(t('Lock Deletions'))
-          ->setDescription(t('Lock Deletions.'))
+          ->setLabel(t('Απενεργοποίηση δυνατότητας διαγραφής αίτησης'))
+          ->setDescription(t('Απενεργοποίηση δυνατότητας διαγραφής αίτησης.'))
           ->setSettings(array(
             'text_processing' => 0,
           ))
@@ -294,8 +294,8 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
           ->setDisplayConfigurable('view', TRUE);
 
     $fields['lock_results'] = BaseFieldDefinition::create('boolean')
-          ->setLabel(t('Lock Results'))
-          ->setDescription(t('Lock Results.'))
+          ->setLabel(t('Απενεργοποίηση δυνατότητας προβολής αποτελεσμάτων κατανομής από τους μαθητές'))
+          ->setDescription(t('Απενεργοποίηση δυνατότητας προβολής αποτελεσμάτων κατανομής από τους μαθητές.'))
           ->setSettings(array(
             'text_processing' => 0,
           ))
@@ -314,8 +314,8 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
           ->setDisplayConfigurable('view', TRUE);
 
     $fields['activate_second_period'] = BaseFieldDefinition::create('boolean')
-              ->setLabel(t('Activate second periods of applications'))
-              ->setDescription(t('Activate second periods of applications.'))
+              ->setLabel(t('Ενεργοποίηση δεύτερης περιόδου αιτήσεων'))
+              ->setDescription(t('Ενεργοποίηση δεύτερης περιόδου αιτήσεων.'))
               ->setSettings(array(
                 'text_processing' => 0,
               ))
@@ -372,6 +372,26 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
       $fields['ws_ident'] = BaseFieldDefinition::create('boolean')
               ->setLabel(t('Ενεργοποίηση web service για ταυτοποίηση μαθητή'))
               ->setDescription(t('Ενεργοποίηση web service για ταυτοποίηση μαθητή'))
+              ->setSettings(array(
+                'text_processing' => 0,
+              ))
+              ->setRequired(FALSE)
+              ->setDefaultValue(FALSE)
+              ->setDisplayOptions('view', array(
+                'label' => 'above',
+                'type' => 'boolean',
+                'weight' => -4,
+              ))
+              ->setDisplayOptions('form', array(
+                'type' => 'boolean',
+                'weight' => -4,
+              ))
+              ->setDisplayConfigurable('form', TRUE)
+              ->setDisplayConfigurable('view', TRUE);
+
+      $fields['gsis_ident'] = BaseFieldDefinition::create('boolean')
+              ->setLabel(t('Ενεργοποίηση χρήστης στοιχείων από ΓΓΠΣ'))
+              ->setDescription(t('Ενεργοποίηση χρήστης στοιχείων από ΓΓΠΣ'))
               ->setSettings(array(
                 'text_processing' => 0,
               ))
