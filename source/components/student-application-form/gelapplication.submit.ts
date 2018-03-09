@@ -38,7 +38,7 @@ import { StudentGelCourseChosen } from "../students/student";
     template: `
 
     <div class = "loading" *ngIf="( loginInfo$ | async).size === 0 || (gelclasses$ | async).size === 0 ||
-      (gelstudentDataFields$ | async).size === 0 || (showLoader | async) === true ">
+      (gelstudentDataFields$ | async).size === 0 || (showLoader | async) === true || (wsEnabled | async) ===-1 ">
     </div>
 
     <div id="studentFormSentNotice" (onHidden)="onHidden()" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -66,7 +66,7 @@ import { StudentGelCourseChosen } from "../students/student";
 
     <div *ngFor="let loginInfoRow$ of loginInfo$ | async; let i=index;" >
         <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-            <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία αιτούμενου</div>
+            <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Στοιχεία αιτούμενου</div>
         </div>
         <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
             <div class="col-md-3" style="font-size: 0.8em;">Όνομα</div>
@@ -81,34 +81,59 @@ import { StudentGelCourseChosen } from "../students/student";
             <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{ loginInfoRow$.cu_mothername }}</div>
         </div>
     </div>
+
     <div *ngFor="let gelstudentDataField$ of gelstudentDataFields$ | async;">
-        <div class="row oddin" style="margin: 0px 2px 20px 2px; line-height: 2em;">
-            <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
-            <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{gelstudentDataField$.get("regionaddress")}}</div>
-            <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>
-            <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{gelstudentDataField$.get("regiontk")}} - {{gelstudentDataField$.get("regionarea")}}</div>
-        </div>
-
-        <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
-            <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Στοιχεία μαθητή</div>
-        </div>
-        <div><label for="name">Όνομα μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;">   {{gelstudentDataField$.get("name")}} </p> </div>
-        <div><label for="studentsurname">Επώνυμο μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("studentsurname")}} </p></div>
-        <div><label for="fatherfirstname">Όνομα Πατέρα</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("fatherfirstname")}} </p></div>
-        <div><label for="motherfirstname">Όνομα Μητέρας</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("motherfirstname")}} </p></div>
-        <div><label for="birthdate">Ημερομηνία Γέννησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("studentbirthdate")}} </p></div>
-
-        <div><label for="lastschool_schoolname">Σχολείο τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("lastschool_schoolname").name}} </p></div>
-        <div><label for="lastschool_schoolyear">Σχολικό έτος τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("lastschool_schoolyear")}} </p></div>
-
-        <div *ngIf="gelstudentDataField$.get('lastschool_class') === 1"><label for="lastschool_class">Τάξη τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;">Α'</p></div>
-        <div *ngIf="gelstudentDataField$.get('lastschool_class') === 2"><label for="lastschool_class">Τάξη τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;">Β'</p></div>
-        <div *ngIf="gelstudentDataField$.get('lastschool_class') === 3"><label for="lastschool_class">Τάξη τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;">Γ'</p></div>
-        <div *ngIf="gelstudentDataField$.get('lastschool_class') === 4"><label for="lastschool_class">Τάξη τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;">Δ'</p></div>
-
-        <div><label for="relationtostudent">Η δήλωση προτίμησης γίνεται από</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("relationtostudent")}} </p></div>
-        <div><label for="telnum">Τηλέφωνο επικοινωνίας</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("telnum")}} </p></div>
+    <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
+        <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Στοιχεία φοίτησης μαθητή</div>
     </div>
+    <div><label for="lastschool_schoolyear">Σχολικό έτος τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("lastschool_schoolyear")}} </p></div>
+    <div><label for="lastschool_schoolname">Σχολείο τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("lastschool_schoolname").name}} </p></div>
+
+
+    <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
+        <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία μαθητή</div>
+    </div>
+    <div>
+        <label *ngIf="gelstudentDataField$.get('lastschool_schoolyear') >= '2013-2014' && (wsEnabled | async) ===1" for="am">Αριθμός Μητρώου Μαθητη</label> 
+        <p *ngIf="gelstudentDataField$.get('lastschool_schoolyear') >= '2013-2014' && (wsEnabled | async) ===1" class="form-control" style="border:1px solid #eceeef;">   {{gelstudentDataField$.get("am")}} </p>
+    </div>
+    <div><label for="name">Όνομα μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;">   {{gelstudentDataField$.get("name")}} </p> </div>
+    <div><label for="studentsurname">Επώνυμο μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("studentsurname")}} </p></div>
+    <div><label for="fatherfirstname">Όνομα Πατέρα</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("fatherfirstname")}} </p></div>
+    <div><label for="motherfirstname">Όνομα Μητέρας</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("motherfirstname")}} </p></div>
+    <div><label for="birthdate">Ημερομηνία Γέννησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("studentbirthdate")}} </p></div>
+
+
+    <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
+        <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Στοιχεία Επικοινωνίας μαθητή</div>
+    </div>
+    <table class="col-md-12" align="left" *ngIf="gelstudentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async)===0">
+        <tr>
+            <td>   
+                <div><label for="regionaddress">Διεύθυνση Κατοικίας μαθητή</label></div> 
+            </td>
+            <td>  
+                <div><label for="regiontk">Τ.Κ.</label></div> 
+            </td>
+            <td>   
+                <div><label for="regionarea">Πόλη/Περιοχή</label></div> 
+            </td>
+        </tr>
+        <tr>
+            <td>   
+                <div class="form-control" style="border:1px solid #eceeef;">{{gelstudentDataField$.get("regionaddress")}}</div> 
+            </td>
+            <td>  
+                <div class="form-control" style="border:1px solid #eceeef;">{{gelstudentDataField$.get("regiontk")}}</div> 
+            </td>
+            <td>   
+                <div class="form-control" style="border:1px solid #eceeef;">{{gelstudentDataField$.get("regionarea")}}</div> 
+            </td>
+        </tr>
+    </table>  
+    <div><label for="relationtostudent">Η δήλωση προτίμησης γίνεται από</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("relationtostudent")}} </p></div>
+    <div><label for="telnum">Τηλέφωνο επικοινωνίας</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("telnum")}} </p></div>
+    
     <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
         <div class="col-md-6">
             <button type="button" class="btn-primary btn-lg pull-left" (click)="navigateBack()">
@@ -175,7 +200,7 @@ import { StudentGelCourseChosen } from "../students/student";
     private app_update: BehaviorSubject<boolean>;
     private appId: BehaviorSubject<string>;
     private wsIdentSub: Subscription;
-    private wsEnabled: number;
+    private wsEnabled: BehaviorSubject<number>;
 
     constructor(
         private _hds: HelperDataService,
@@ -204,8 +229,14 @@ import { StudentGelCourseChosen } from "../students/student";
         this.appId = new BehaviorSubject("");
         this.orientationSelected = new BehaviorSubject(-1);
         this.classSelected = new BehaviorSubject(-1);
+        this.wsEnabled = new BehaviorSubject(-1);
 
         this.hasright = 1;
+
+        this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
+            this.wsEnabled.next(Number(z.res)) ;
+            console.log(this.wsEnabled.getValue());
+       });
 
     };
 
@@ -213,10 +244,6 @@ import { StudentGelCourseChosen } from "../students/student";
 
         (<any>$("#studentFormSentNotice")).appendTo("body");
         window.scrollTo(0, 0);
-
-        this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
-            this.wsEnabled = Number(z.res) ;
-        });
 
         this.gelUserDataSub = this._hds.getApplicantUserData().subscribe(x => {
             if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren))
