@@ -174,3 +174,25 @@ entity.gel_school.delete_form:
   title: Delete
   weight: 10
 
+# Gelstudenthighschool routing definition
+gelstudenthighschool.settings_tab:
+  route_name: gelstudenthighschool.settings
+  title: 'Settings'
+  base_route: gelstudenthighschool.settings
+
+entity.gelstudenthighschool.canonical:
+  route_name: entity.gelstudenthighschool.canonical
+  base_route: entity.gelstudenthighschool.canonical
+  title: 'View'
+
+entity.gelstudenthighschool.edit_form:
+  route_name: entity.gelstudenthighschool.edit_form
+  base_route: entity.gelstudenthighschool.canonical
+  title: 'Edit'
+
+entity.gelstudenthighschool.delete_form:
+  route_name:  entity.gelstudenthighschool.delete_form
+  base_route:  entity.gelstudenthighschool.canonical
+  title: Delete
+  weight: 10
+

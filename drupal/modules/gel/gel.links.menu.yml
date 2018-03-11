@@ -110,3 +110,17 @@ gel_school.admin.structure.settings:
   description: 'Configure Gel_school entities'
   route_name: gel_school.settings
   parent: system.admin_structure
+
+# Gelstudenthighschool menu items definition
+entity.gelstudenthighschool.collection:
+  title: 'Gelstudenthighschool list'
+  route_name: entity.gelstudenthighschool.collection
+  description: 'List Gelstudenthighschool entities'
+  parent: system.admin_structure
+  weight: 100
+
+gelstudenthighschool.admin.structure.settings:
+  title: 'Gelstudenthighschool settings'
+  description: 'Configure Gelstudenthighschool entities'
+  route_name: gelstudenthighschool.settings
+  parent: system.admin_structure

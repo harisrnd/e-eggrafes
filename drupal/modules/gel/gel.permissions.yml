@@ -150,3 +150,22 @@ view published gel_school entities:
 
 view unpublished gel_school entities:
   title: 'View unpublished Gel_school entities'
+add gelstudenthighschool entities:
+  title: 'Create new Gelstudenthighschool entities'
+
+administer gelstudenthighschool entities:
+  title: 'Administer Gelstudenthighschool entities'
+  description: 'Allow to access the administration form to configure Gelstudenthighschool entities.'
+  restrict access: true
+
+delete gelstudenthighschool entities:
+  title: 'Delete Gelstudenthighschool entities'
+
+edit gelstudenthighschool entities:
+  title: 'Edit Gelstudenthighschool entities'
+
+view published gelstudenthighschool entities:
+  title: 'View published Gelstudenthighschool entities'
+
+view unpublished gelstudenthighschool entities:
+  title: 'View unpublished Gelstudenthighschool entities'

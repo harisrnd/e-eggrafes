@@ -8,6 +8,7 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
 import { SchoolTypeActions } from "../../actions/schooltype.actions";
 
 
+
 @Component({ 
     selector: "school-type-selection",
     template: `
@@ -26,7 +27,7 @@ import { SchoolTypeActions } from "../../actions/schooltype.actions";
   `
 })
 
-@Injectable() export default class SchoolTypeSelectionPde implements OnInit {
+@Injectable() export default class SchoolTypeSelectionDde implements OnInit {
 
     constructor(
         private router: Router,
@@ -42,13 +43,14 @@ import { SchoolTypeActions } from "../../actions/schooltype.actions";
 
     navigatepdeepal() {
         this._sta.saveSchoolTypeSelected(2,"ΕΠΑΛ");
-        this.router.navigate(["/school/perfecture-view"]);
+        this.router.navigate(["/school/eduadmin-view"]);
 
     }
 
     navigatepdegel() {
         this._sta.saveSchoolTypeSelected(1,"ΓΕΛ");
-        this.router.navigate(["/school/gelperfecture-view"]);
+        console.log("lalalal");
+        this.router.navigate(["/school/gel-distribution"]);
     }
 
 }
