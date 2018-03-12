@@ -1458,6 +1458,4 @@ OffLinecalculationofSmallClasses(username, userpassword) {
     }
 
 
-
-
 }

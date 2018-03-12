@@ -2,7 +2,7 @@ import { NgRedux } from "@angular-redux/store";
 import { Injectable } from "@angular/core";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { Http } from "@angular/http";
+import { Http, Headers, RequestOptions } from "@angular/http";
 import { Router } from "@angular/router";
 import { IMyDpOptions } from "mydatepicker";
 import { BehaviorSubject, Observable, Subscription } from "rxjs/Rx";
@@ -15,6 +15,7 @@ import { IAppState } from "../../store/store";
 import { STUDENT_DATA_FIELDS_INITIAL_STATE } from "../../store/studentdatafields/studentdatafields.initial-state";
 import { IStudentDataFieldRecords } from "../../store/studentdatafields/studentdatafields.types";
 import { HelperDataService } from "../../services/helper-data-service";
+import { AppSettings } from "../../app.settings";
 import {
     FIRST_SCHOOL_YEAR,
     VALID_ADDRESS_PATTERN,
@@ -73,30 +74,32 @@ import {
     };
 
     private observableSource = (keyword: any): Observable<any[]> => {
-        let url: string = "https://mm.sch.gr/api/units?name=" + keyword;
-        //let url: string = "https://mm.sch.gr/api/units";
-        //let url: string = "http://eduslim2.minedu.gov.gr/e-eggrafes/drupal/schools_list?name=" + keyword;
+        //let url: string = "https://mm.sch.gr/api/units?name=" + keyword;
+
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            headers.append("Authorization", "Basic " + btoa( loginInfoToken.auth_token + ":" +  loginInfoToken.auth_token));
+       });
+       let options = new RequestOptions({ headers: headers });
+
+       let url: string = `${AppSettings.API_ENDPOINT}/deploysystem/getschoollist/` + keyword ;
 
         if (keyword) {
-            //console.log("mpika1");
-            return this.http.get(url)
+            return this.http.get(url, options)
                 .map(res => {
                     let json = res.json();
                     let retArr = <any>Array();
-                    //console.log("mpika2");
-                    //console.log(json.length);
-                    for (let i = 0; i < json.data.length; i++) {
-                    //for (let i = 0; i < json.length; i++) {
+                    //for (let i = 0; i < json.data.length; i++) {
+                    for (let i = 0; i < json.length; i++) {
                         retArr[i] = {};
-                        retArr[i].registry_no = json.data[i].registry_no;
-                        retArr[i].name = json.data[i].name;
-                        retArr[i].unit_type_id = json.data[i].unit_type_id;
-
-                        //retArr[i].registry_no = json[i].registry_no;
-                        //retArr[i].name = json[i].name;
-                        //retArr[i].unit_type_id = json[i].unit_type_id;
-
-                        //console.log(json[i].epal_name);
+                        //retArr[i].registry_no = json.data[i].registry_no;
+                        //retArr[i].name = json.data[i].name;
+                        //retArr[i].unit_type_id = json.data[i].unit_type_id;
+                        retArr[i].registry_no = json[i].registry_no;
+                        retArr[i].name = json[i].name;
+                        retArr[i].unit_type_id = json[i].unit_type_id;
                     }
                     return retArr;
                 });
@@ -168,7 +171,7 @@ import {
 
         //this.wsEnabled=1;
 
-        
+
         this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             //this.epalUserData$.next(x);
             this.numAppSelf.next(Number(x.numAppSelf));
@@ -184,7 +187,7 @@ import {
                             this.lastSchName.next((studentDataField.get("lastschool_schoolname")).name);
                             if (typeof this.lastSchName.getValue() === "undefined" )
                               this.lastSchName.next("");
-                             
+
                             if (this.wsEnabled.getValue()===0){
                                 this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
                                 this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
@@ -215,7 +218,7 @@ import {
                                     this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
                                     this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
                                     this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
-    
+
                                     this.studentDataGroup.controls["regionaddress"].setValidators(null);
                                     this.studentDataGroup.controls["regiontk"].setValidators(null);
                                     this.studentDataGroup.controls["regionarea"].setValidators(null);
@@ -241,7 +244,7 @@ import {
                                     this.studentDataGroup.controls["am"].updateValueAndValidity();
                                 }
 
-                            }                              
+                            }
 
                             //λύση προβλήματος πεδίου "Αίτηση από" στο edit app
                             if (this.appUpdate.getValue() === true) {
