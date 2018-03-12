@@ -1457,5 +1457,95 @@ OffLinecalculationofSmallClasses(username, userpassword) {
 
     }
 
+getJuniorHighSchoolperDide()
+{
+     this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/getjunorhighschoolperdide/`, options)
+            .map(response => response.json());
+   
+
+}
+
+
+getHighSchoolperDide()
+{
+     this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/gethighschoolperdide/`, options)
+            .map(response => response.json());
+ 
+}
+
+getStudentsPerSchool(schoolid)
+{
+        console.log(schoolid);
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/getstudentsperschool/`+ schoolid , options)
+            .map(response => response.json());
+   
+
+
+}
+
+saveHighScoolSelection(studentid,oldschool, schoolid)
+{
+    this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        if (oldschool == false)
+        {
+            oldschool = 999999;
+        }
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/saveselection/`+ studentid + '/'+schoolid +'/'+ oldschool , options)
+            .map(response => response.json());
+
+}
+
+getHighSchoolSelection(id)
+{
+        console.log(id);
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/gethighschoolperstudent/`+ id , options)
+            .map(response => response.json());
+   
+
+}
 
 }
