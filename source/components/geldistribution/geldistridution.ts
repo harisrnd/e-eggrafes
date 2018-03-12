@@ -150,6 +150,9 @@ import { HelperDataService } from "../../services/helper-data-service";
    {
 
        let schoolid = selection.value;
+       if (selection === 0)
+           schoolid = 0;
+        console.log(schoolid, "tralalala")
         this.SaveSelectionSub = this._hds.saveHighScoolSelection(studentid,oldschool, schoolid).subscribe(data => {
             this.SaveSelection$.next(data);
             this.showLoader.next(false);
