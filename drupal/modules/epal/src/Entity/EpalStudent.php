@@ -396,75 +396,111 @@ class EpalStudent extends ContentEntityBase implements EpalStudentInterface
       $fields = parent::baseFieldDefinitions($entity_type);
 
       $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Δημιουργός'))
-      ->setDescription(t('Δημιουργός.'))
-      ->setRevisionable(true)
-      ->setSetting('target_type', 'user')
-      ->setSetting('handler', 'default')
-      ->setTranslatable(true)
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'author',
-        'weight' => 0,
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'entity_reference_autocomplete',
-        'weight' => 5,
-        'settings' => array(
-          'match_operator' => 'CONTAINS',
-          'size' => '60',
-          'autocomplete_type' => 'tags',
-          'placeholder' => '',
-        ),
-      ))
-      ->setDisplayConfigurable('form', true)
-      ->setDisplayConfigurable('view', true);
+          ->setLabel(t('Δημιουργός'))
+          ->setDescription(t('Δημιουργός.'))
+          ->setRevisionable(true)
+          ->setSetting('target_type', 'user')
+          ->setSetting('handler', 'default')
+          ->setTranslatable(true)
+          ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'author',
+            'weight' => 0,
+          ))
+          ->setDisplayOptions('form', array(
+            'type' => 'entity_reference_autocomplete',
+            'weight' => 5,
+            'settings' => array(
+              'match_operator' => 'CONTAINS',
+              'size' => '60',
+              'autocomplete_type' => 'tags',
+              'placeholder' => '',
+            ),
+          ))
+          ->setDisplayConfigurable('form', true)
+          ->setDisplayConfigurable('view', true);
 
       $fields['epaluser_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Id χρήστη ΕΠΑΛ'))
-      ->setDescription(t('Δώσε το id του αντίστοιχου Epal User.'))
-      ->setSetting('target_type', 'applicant_users')
-      ->setSetting('handler', 'default')
-        ->setRequired(true)
- //     ->setTranslatable(TRUE)
-      ->setDisplayOptions('view', array(
-              'label' => 'above',
-              'type' => 'author',
-              'weight' => 0,
-            ))
-      ->setDisplayOptions('form', array(
-              'type' => 'entity_reference_autocomplete',
-              'weight' => 5,
-              'settings' => array(
-                'match_operator' => 'CONTAINS',
-                'size' => '60',
-                'autocomplete_type' => 'tags',
-                'placeholder' => '',
-              ),
-            ))
-      ->setDisplayConfigurable('form', true)
-      ->setDisplayConfigurable('view', true);
+          ->setLabel(t('Id χρήστη ΕΠΑΛ'))
+          ->setDescription(t('Δώσε το id του αντίστοιχου Epal User.'))
+          ->setSetting('target_type', 'applicant_users')
+          ->setSetting('handler', 'default')
+            ->setRequired(true)
+     //     ->setTranslatable(TRUE)
+          ->setDisplayOptions('view', array(
+                  'label' => 'above',
+                  'type' => 'author',
+                  'weight' => 0,
+                ))
+          ->setDisplayOptions('form', array(
+                  'type' => 'entity_reference_autocomplete',
+                  'weight' => 5,
+                  'settings' => array(
+                    'match_operator' => 'CONTAINS',
+                    'size' => '60',
+                    'autocomplete_type' => 'tags',
+                    'placeholder' => '',
+                  ),
+                ))
+          ->setDisplayConfigurable('form', true)
+          ->setDisplayConfigurable('view', true);
+
+      $fields['am'] = BaseFieldDefinition::create('integer')
+          ->setLabel(t('Αριθμός Μητρώου στο σχολείο'))
+          ->setDescription(t('Αριθμός Μητρώου στο σχολείο.'))
+          ->setSettings(array(
+            'text_processing' => 0,
+          ))
+          ->setRequired(FALSE)
+          ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'string',
+            'weight' => -4,
+          ))->setDisplayOptions('form', array(
+            'type' => 'string_textfield',
+            'weight' => -4,
+          ))
+          ->setDisplayConfigurable('form', true)
+          ->setDisplayConfigurable('view', true);
+
+      $fields['myschool_id'] = BaseFieldDefinition::create('integer')
+          ->setLabel(t('Μοναδικός επιστρεφόμενος αριθμός id από το ΠΣ myschool'))
+          ->setDescription(t('Μοναδικός επιστρεφόμενος αριθμός id από το ΠΣ myschool.'))
+          ->setSettings(array(
+            'text_processing' => 0,
+          ))
+          ->setRequired(FALSE)
+          ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'string',
+            'weight' => -4,
+          ))->setDisplayOptions('form', array(
+            'type' => 'string_textfield',
+            'weight' => -4,
+          ))
+          ->setDisplayConfigurable('form', true)
+          ->setDisplayConfigurable('view', true);
 
       $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Όνομα μαθητή'))
-      ->setDescription(t('Δώσε το μικρό μαθητή.'))
-      ->setSettings(array(
-        'max_length' => 1000,
-        'text_processing' => 0,
-      ))
-      ->setRequired(true)
-      ->setDefaultValue('')
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => -4,
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'string_textfield',
-        'weight' => -4,
-      ))
-      ->setDisplayConfigurable('form', true)
-      ->setDisplayConfigurable('view', true);
+          ->setLabel(t('Όνομα μαθητή'))
+          ->setDescription(t('Δώσε το μικρό μαθητή.'))
+          ->setSettings(array(
+            'max_length' => 1000,
+            'text_processing' => 0,
+          ))
+          ->setRequired(true)
+          ->setDefaultValue('')
+          ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'string',
+            'weight' => -4,
+          ))
+          ->setDisplayOptions('form', array(
+            'type' => 'string_textfield',
+            'weight' => -4,
+          ))
+          ->setDisplayConfigurable('form', true)
+          ->setDisplayConfigurable('view', true);
 
       $fields['studentsurname'] = BaseFieldDefinition::create('string')
           ->setLabel(t('Επώνυμο μαθητή'))
@@ -914,6 +950,25 @@ class EpalStudent extends ContentEntityBase implements EpalStudentInterface
                             ))
                             ->setDisplayConfigurable('form', true)
                             ->setDisplayConfigurable('view', true);
+
+        $fields['myschool_currentsection'] = BaseFieldDefinition::create('string')
+              ->setLabel(t('Τομέας / Ειδικότητα / Ομάδα Προσανατολισμού στην τρέχουσα περίοδο'))
+              ->setDescription(t('Τομέας / Ειδικότητα / Ομάδα Προσανατολισμού στην τρέχουσα περίοδο'))
+              ->setSettings(array(
+                'max_length' => 200,
+                'text_processing' => 0,
+              ))
+              ->setDisplayOptions('view', array(
+                'label' => 'above',
+                'type' => 'string',
+                'weight' => -4,
+              ))
+              ->setDisplayOptions('form', array(
+                'type' => 'string_textfield',
+                'weight' => -4,
+              ))
+             ->setDisplayConfigurable('form', true)
+              ->setDisplayConfigurable('view', true);
 
       $fields['delapp'] = BaseFieldDefinition::create('boolean')
                             ->setLabel(t('Διαγραφή'))
