@@ -76,6 +76,17 @@ class Distribution extends ControllerBase
     public function createDistribution(Request $request)
     {
         set_time_limit(600); // dev
+
+        //test for small classes
+        /*
+        $this->findSmallClasses();
+        return $this->respondWithStatus([
+    			'message' => "Test completed successfully",
+    		], Response::HTTP_OK);
+        */
+        //end test
+
+
         $numDistributions = 3;
         $sizeOfBlock = 1000000;
 
@@ -701,6 +712,70 @@ class Distribution extends ControllerBase
             $this->logger->error($e->getMessage());
             return self::ERROR_DB;
         }
+        return self::SUCCESS;
+    }
+
+    private function markStudentsInSmallClass_test($schoolId, $classId, $sectorOrcourseId)
+    {
+        if ($classId === "1")  {
+            try {
+                $query = $this->connection->update('eepal_school_field_data');
+                $query->fields(['approved_a' => 0]);
+                $query->condition('id', $schoolId);
+                //if ($sectorOrcourseId !== "-1") {
+                //    $query->condition('specialization_id', $sectorOrcourseId);
+                //}
+                $query->execute();
+            } catch (\Exception $e) {
+                $this->logger->error($e->getMessage());
+                return self::ERROR_DB;
+            }
+        }
+
+        else if ($classId === "2")  {
+            try {
+                $query = $this->connection->update('eepal_sectors_in_epal_field_data');
+                $query->fields(['approved_sector' => 0]);
+                $query->condition('epal_id', $schoolId);
+                $query->condition('sector_id', $sectorOrcourseId);
+
+                $query->execute();
+            } catch (\Exception $e) {
+                $this->logger->error($e->getMessage());
+                return self::ERROR_DB;
+            }
+        }
+
+        else if ($classId === "3")  {
+            try {
+                $query = $this->connection->update('eepal_specialties_in_epal_field_data');
+                $query->fields(['approved_speciality' => 0]);
+                $query->condition('epal_id', $schoolId);
+                $query->condition('specialty_id', $sectorOrcourseId);
+
+                $query->execute();
+            } catch (\Exception $e) {
+                $this->logger->error($e->getMessage());
+                return self::ERROR_DB;
+            }
+        }
+
+        else if ($classId === "4")  {
+            try {
+                $query = $this->connection->update('eepal_specialties_in_epal_field_data');
+                $query->fields(['approved_speciality_d' => 0]);
+                $query->condition('epal_id', $schoolId);
+                $query->condition('specialty_id', $sectorOrcourseId);
+
+                $query->execute();
+            } catch (\Exception $e) {
+                $this->logger->error($e->getMessage());
+                return self::ERROR_DB;
+            }
+        }
+
+
+
         return self::SUCCESS;
     }
 
