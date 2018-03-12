@@ -420,3 +420,11 @@ epal.offlinecalculation:
     _controller: '\Drupal\epal\Controller\SmallClassDistribution::OffLineCalculationSmallClasses'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.svc.testgetstudentinfo:
+  path: '/epal/test-get-student-info/{didactic_year_id}/{lastname}/{firstname}/{father_firstname}/{mother_firstname}/{birthdate}/{registry_no}/{registration_no}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\WSConsumer::testgetStudentEpalInfo'
+  requirements:
+    _user_is_logged_in: 'TRUE'
