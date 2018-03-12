@@ -46,3 +46,11 @@ deploysystem.is_gsis_enabled:
     _controller: '\Drupal\deploysystem\Controller\MinisterSettings::isGsisIdentEnabled'
   requirements:
     _user_is_logged_in: 'TRUE'
+deploysystem.get_school_list:
+  path: '/deploysystem/getschoollist/{schsearch}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\deploysystem\Controller\CustomViews::getSchoolList'
+  requirements:
+    _user_is_logged_in: 'TRUE'

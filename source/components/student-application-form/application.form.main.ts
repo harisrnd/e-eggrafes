@@ -2,7 +2,7 @@ import { NgRedux } from "@angular-redux/store";
 import { Injectable } from "@angular/core";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { Http } from "@angular/http";
+import { Http, Headers, RequestOptions } from "@angular/http";
 import { Router } from "@angular/router";
 import { IMyDpOptions } from "mydatepicker";
 import { BehaviorSubject, Observable, Subscription } from "rxjs/Rx";
@@ -15,6 +15,7 @@ import { IAppState } from "../../store/store";
 import { STUDENT_DATA_FIELDS_INITIAL_STATE } from "../../store/studentdatafields/studentdatafields.initial-state";
 import { IStudentDataFieldRecords } from "../../store/studentdatafields/studentdatafields.types";
 import { HelperDataService } from "../../services/helper-data-service";
+import { AppSettings } from "../../app.settings";
 import {
     FIRST_SCHOOL_YEAR,
     VALID_ADDRESS_PATTERN,
@@ -61,6 +62,9 @@ import {
     private numAppChildren: BehaviorSubject<number>;
     private numChildren: BehaviorSubject<number>;
     //private epalUserData$: BehaviorSubject<any>;
+    private wsIdentSub: Subscription;
+    private wsEnabled:  BehaviorSubject<number>;
+    ;
 
     private myDatePickerOptions: IMyDpOptions = {
         // other options...
@@ -70,30 +74,32 @@ import {
     };
 
     private observableSource = (keyword: any): Observable<any[]> => {
-        let url: string = "https://mm.sch.gr/api/units?name=" + keyword;
-        //let url: string = "https://mm.sch.gr/api/units";
-        //let url: string = "http://eduslim2.minedu.gov.gr/e-eggrafes/drupal/schools_list?name=" + keyword;
+        //let url: string = "https://mm.sch.gr/api/units?name=" + keyword;
+
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            headers.append("Authorization", "Basic " + btoa( loginInfoToken.auth_token + ":" +  loginInfoToken.auth_token));
+       });
+       let options = new RequestOptions({ headers: headers });
+
+       let url: string = `${AppSettings.API_ENDPOINT}/deploysystem/getschoollist/` + keyword ;
 
         if (keyword) {
-            //console.log("mpika1");
-            return this.http.get(url)
+            return this.http.get(url, options)
                 .map(res => {
                     let json = res.json();
                     let retArr = <any>Array();
-                    //console.log("mpika2");
-                    //console.log(json.length);
-                    for (let i = 0; i < json.data.length; i++) {
-                    //for (let i = 0; i < json.length; i++) {
+                    //for (let i = 0; i < json.data.length; i++) {
+                    for (let i = 0; i < json.length; i++) {
                         retArr[i] = {};
-                        retArr[i].registry_no = json.data[i].registry_no;
-                        retArr[i].name = json.data[i].name;
-                        retArr[i].unit_type_id = json.data[i].unit_type_id;
-
-                        //retArr[i].registry_no = json[i].registry_no;
-                        //retArr[i].name = json[i].name;
-                        //retArr[i].unit_type_id = json[i].unit_type_id;
-
-                        //console.log(json[i].epal_name);
+                        //retArr[i].registry_no = json.data[i].registry_no;
+                        //retArr[i].name = json.data[i].name;
+                        //retArr[i].unit_type_id = json.data[i].unit_type_id;
+                        retArr[i].registry_no = json[i].registry_no;
+                        retArr[i].name = json[i].name;
+                        retArr[i].unit_type_id = json[i].unit_type_id;
                     }
                     return retArr;
                 });
@@ -109,6 +115,7 @@ import {
         private _ngRedux: NgRedux<IAppState>,
         private router: Router,
         private http: Http) {
+
         this.populateSchoolyears();
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
@@ -126,6 +133,9 @@ import {
         this.numAppSelf = new BehaviorSubject(0);
         this.numAppChildren = new BehaviorSubject(0);
         this.numChildren = new BehaviorSubject(0);
+        this.wsEnabled = new BehaviorSubject(-1);
+
+
         //this.epalUserData$ = new BehaviorSubject(<any>{ userEmail: "", userName: "", userSurname: "", userFathername: "", userMothername: "" ,
         //                                              representRole: "", numAppSelf: 0, numAppChildren: 0, numChildren: 0 });
 
@@ -143,13 +153,24 @@ import {
             telnum: ["", [Validators.pattern(VALID_TELEPHONE_PATTERN), Validators.required]],
             lastschool_schoolname: ["", [Validators.required]],
             lastschool_schoolyear: ["", this.checkChoice],
-            lastschool_class: ["", this.checkChoice],
+            //lastschool_class: ["", this.checkChoice],
+            am: ["", [Validators.required]],
+
         });
+
+        this.wsIdentSub = this.hds.isWS_ident_enabled().subscribe(z => {
+            this.wsEnabled.next(Number(z.res)) ;
+            console.log(this.wsEnabled.getValue());
+       });
     };
 
     ngOnInit() {
         (<any>$("#applicationFormNotice")).appendTo("body");
         window.scrollTo(0, 0);
+
+
+        //this.wsEnabled=1;
+
 
         this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             //this.epalUserData$.next(x);
@@ -167,19 +188,63 @@ import {
                             if (typeof this.lastSchName.getValue() === "undefined" )
                               this.lastSchName.next("");
 
-                            this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
-                            this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
-                            this.studentDataGroup.controls["fatherfirstname"].setValue(studentDataField.get("fatherfirstname"));
-                            this.studentDataGroup.controls["motherfirstname"].setValue(studentDataField.get("motherfirstname"));
-                            this.studentDataGroup.controls["regionaddress"].setValue(studentDataField.get("regionaddress"));
-                            this.studentDataGroup.controls["regiontk"].setValue(studentDataField.get("regiontk"));
-                            this.studentDataGroup.controls["regionarea"].setValue(studentDataField.get("regionarea"));
-                            this.studentDataGroup.controls["lastschool_schoolname"].setValue(studentDataField.get("lastschool_schoolname"));
-                            this.studentDataGroup.controls["lastschool_schoolyear"].setValue(studentDataField.get("lastschool_schoolyear"));
-                            this.studentDataGroup.controls["lastschool_class"].setValue(studentDataField.get("lastschool_class"));
-                            this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
-                            this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
-                            this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
+                            if (this.wsEnabled.getValue()===0){
+                                this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
+                                this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
+                                this.studentDataGroup.controls["fatherfirstname"].setValue(studentDataField.get("fatherfirstname"));
+                                this.studentDataGroup.controls["motherfirstname"].setValue(studentDataField.get("motherfirstname"));
+                                this.studentDataGroup.controls["regionaddress"].setValue(studentDataField.get("regionaddress"));
+                                this.studentDataGroup.controls["regiontk"].setValue(studentDataField.get("regiontk"));
+                                this.studentDataGroup.controls["regionarea"].setValue(studentDataField.get("regionarea"));
+                                this.studentDataGroup.controls["lastschool_schoolname"].setValue(studentDataField.get("lastschool_schoolname"));
+                                this.studentDataGroup.controls["lastschool_schoolyear"].setValue(studentDataField.get("lastschool_schoolyear"));
+                                //this.studentDataGroup.controls["lastschool_class"].setValue(studentDataField.get("lastschool_class"));
+                                this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
+                                this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
+                                this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
+
+                                this.studentDataGroup.controls["am"].setValidators(null);
+                                this.studentDataGroup.controls["am"].updateValueAndValidity();
+                            }
+                            else{
+                                if (studentDataField.get("lastschool_schoolyear")>="2013-2014"){
+                                    this.studentDataGroup.controls["am"].setValue(studentDataField.get("am"));
+                                    this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
+                                    this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
+                                    this.studentDataGroup.controls["fatherfirstname"].setValue(studentDataField.get("fatherfirstname"));
+                                    this.studentDataGroup.controls["motherfirstname"].setValue(studentDataField.get("motherfirstname"));;
+                                    this.studentDataGroup.controls["lastschool_schoolname"].setValue(studentDataField.get("lastschool_schoolname"));
+                                    this.studentDataGroup.controls["lastschool_schoolyear"].setValue(studentDataField.get("lastschool_schoolyear"));
+                                    this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
+                                    this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
+                                    this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
+
+                                    this.studentDataGroup.controls["regionaddress"].setValidators(null);
+                                    this.studentDataGroup.controls["regiontk"].setValidators(null);
+                                    this.studentDataGroup.controls["regionarea"].setValidators(null);
+                                    this.studentDataGroup.controls["regionaddress"].updateValueAndValidity();
+                                    this.studentDataGroup.controls["regiontk"].updateValueAndValidity();
+                                    this.studentDataGroup.controls["regionarea"].updateValueAndValidity();
+                                }
+                                else if (studentDataField.get("lastschool_schoolyear")<"2013-2014" && studentDataField.get("lastschool_schoolyear")!=""){
+                                    this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
+                                    this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
+                                    this.studentDataGroup.controls["fatherfirstname"].setValue(studentDataField.get("fatherfirstname"));
+                                    this.studentDataGroup.controls["motherfirstname"].setValue(studentDataField.get("motherfirstname"));
+                                    this.studentDataGroup.controls["regionaddress"].setValue(studentDataField.get("regionaddress"));
+                                    this.studentDataGroup.controls["regiontk"].setValue(studentDataField.get("regiontk"));
+                                    this.studentDataGroup.controls["regionarea"].setValue(studentDataField.get("regionarea"));
+                                    this.studentDataGroup.controls["lastschool_schoolname"].setValue(studentDataField.get("lastschool_schoolname"));
+                                    this.studentDataGroup.controls["lastschool_schoolyear"].setValue(studentDataField.get("lastschool_schoolyear"));
+                                    this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
+                                    this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
+                                    this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
+
+                                    this.studentDataGroup.controls["am"].setValidators(null);
+                                    this.studentDataGroup.controls["am"].updateValueAndValidity();
+                                }
+
+                            }
 
                             //λύση προβλήματος πεδίου "Αίτηση από" στο edit app
                             if (this.appUpdate.getValue() === true) {
@@ -228,6 +293,15 @@ import {
     }
 
     submitSelected() {
+        console.log(this.studentDataGroup.get("lastschool_schoolyear"));
+        console.log(this.studentDataGroup.invalid);
+
+        console.log(this.studentDataGroup.get("am"));
+
+        console.log(this.studentDataGroup);
+
+
+
         let invalidFlag = 0;
         if (this.studentDataGroup.invalid || (invalidFlag = this.invalidFormData()) > 0) {
             this.modalHeader.next("modal-header-danger");
@@ -262,9 +336,8 @@ import {
             return 3;
         else if (this.studentDataGroup.controls["lastschool_schoolname"].value.unit_type_id === 38)
             this.studentDataGroup.controls["lastschool_schoolname"].value.registry_no = "0000000";
-        if (this.studentDataGroup.controls["telnum"].value.length !== 10)
+        else if (this.studentDataGroup.controls["telnum"].value.length !== 10)
             return 4;
-
         return 0;
     }
 
@@ -280,6 +353,18 @@ import {
 
     checkChoice(c: FormControl) {
         return (c.value === "") ? { status: true } : null;
+    }
+
+    checkAm(am: FormControl) {
+
+        if (am.value === ""){
+            return {
+                status : true
+            }
+        }
+        else{
+            return null;
+        }
     }
 
     populateDate(d) {
@@ -339,5 +424,34 @@ import {
 
     lastSchoolValueChanged(e: any): void {
     };
+
+    public schoolyearselected(){
+
+        if (this.wsEnabled.getValue()===1){
+
+            if (this.studentDataGroup.controls["lastschool_schoolyear"].value >="2013-2014"){
+                this.studentDataGroup.controls["regionaddress"].setValidators(null);
+                this.studentDataGroup.controls["regiontk"].setValidators(null);
+                this.studentDataGroup.controls["regionarea"].setValidators(null);
+                this.studentDataGroup.controls["am"].setValidators( [Validators.required]);
+
+                this.studentDataGroup.controls["am"].updateValueAndValidity();
+                this.studentDataGroup.controls["regionaddress"].updateValueAndValidity();
+                this.studentDataGroup.controls["regiontk"].updateValueAndValidity();
+                this.studentDataGroup.controls["regionarea"].updateValueAndValidity();
+            }
+            else{
+                this.studentDataGroup.controls["regionaddress"].setValidators([Validators.pattern(VALID_ADDRESS_PATTERN), Validators.required]);
+                this.studentDataGroup.controls["regiontk"].setValidators([Validators.pattern(VALID_ADDRESSTK_PATTERN), Validators.required]);
+                this.studentDataGroup.controls["regionarea"].setValidators([Validators.pattern(VALID_NAMES_PATTERN), Validators.required]);
+                this.studentDataGroup.controls["am"].setValidators(null);
+
+                this.studentDataGroup.controls["am"].updateValueAndValidity();
+                this.studentDataGroup.controls["regionaddress"].updateValueAndValidity();
+                this.studentDataGroup.controls["regiontk"].updateValueAndValidity();
+                this.studentDataGroup.controls["regionarea"].updateValueAndValidity();
+            }
+        }
+    }
 
 }
