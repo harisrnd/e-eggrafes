@@ -322,7 +322,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
       }
-      elseif (intval($schoolid === 0))
+      elseif (intval($schoolid) === 0)
       {
             $this->logger->warning($schoolid."delete");
             $this->connection->delete('gelstudenthighschool')
@@ -339,7 +339,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
       else
       {
             $this->logger->warning($oldschool."2");
-            $this->logger->warning($schoolid."5");
+            $this->logger->warning($schoolid."511111");
           $schools = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $studentid));
             $school = reset($schools);
                     
