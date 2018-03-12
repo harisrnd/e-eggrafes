@@ -59,9 +59,8 @@ import ClassSelection from "../components/student-application-form/class.selecti
 import GelStudentApplicationMain from "../components/student-application-form/gelapplication.form.main";
 import SchoolTypeSelection from "../components/student-application-form/schooltype.selection";
 import GelApplicationSubmit from "../components/student-application-form/gelapplication.submit";
-import SchoolTypeSelectionPde from "../components/infoviews/school-type-selection";
-
-
+import SchoolTypeSelectionDde from "../components/infoviews/school-type-selection";
+import GelDistribution from "../components/geldistribution/geldistridution";
 
 
 export const MainRoutes: Routes = [
@@ -89,7 +88,7 @@ export const MainRoutes: Routes = [
     { path: "school/director-buttons", component: DirectorButtons, canActivate: [SchoolAuthGuard] },
     { path: "school/director-classcapacity", component: DirectorClassCapacity, canActivate: [SchoolAuthGuard, SchoolCapacityLockedGuard] },
     { path: "ministry/minister-view", component: MinisterView, canActivate: [MinistryAuthGuard] },
-    { path: "school/school-type-selection", component: SchoolTypeSelectionPde, canActivate: [RegionEduAuthGuard] },
+    { path: "school/school-type-selection", component: SchoolTypeSelectionDde, canActivate: [EduAdminAuthGuard] },
     { path: "ministry/minister-reports", component: MinisterReports, canActivate: [ReportsAuthGuard] },
     { path: "ministry/report-all-stat/:reportId", component: ReportAllStat, canActivate: [ReportsAuthGuard] },
     { path: "ministry/report-general", component: ReportGeneral, canActivate: [MinistryAuthGuard] },
@@ -115,6 +114,7 @@ export const MainRoutes: Routes = [
     { path: "gelstudent-application-form-main", component: GelStudentApplicationMain, canActivate: [StudentAuthGuard, StudentLockGuard] },
     { path: "school-type-select", component: SchoolTypeSelection, canActivate: [StudentAuthGuard, StudentLockGuard]},
     { path: "gel-application-submit", component: GelApplicationSubmit, canActivate: [StudentAuthGuard, StudentLockGuard] },
+    { path: "school/gel-distribution", component: GelDistribution, canActivate: [EduAdminAuthGuard] },
 
 ];
 
@@ -168,5 +168,6 @@ export const MainDeclarations = [
     GelStudentApplicationMain,
     SchoolTypeSelection,
     GelApplicationSubmit,
-    SchoolTypeSelectionPde
+    SchoolTypeSelectionDde,
+    GelDistribution
 ];

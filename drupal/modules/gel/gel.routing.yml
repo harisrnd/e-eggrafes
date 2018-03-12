@@ -54,3 +54,43 @@ gel.applicant.creationpdf:
     _controller: '\Drupal\gel\Controller\PdfCreator::createApplicantPDF'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.getjuniorhighschool:
+  path: '/gel/getjunorhighschoolperdide'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::getJuniorHighSchoolperDide'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.gethighschool:
+  path: '/gel/gethighschoolperdide'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::getHighSchoolperDide'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.getstudentsperschool:
+  path: '/gel/getstudentsperschool/{schoolid}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::getStudentsPerSchool'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.savehighscoolselection:
+  path: '/gel/saveselection/{studentid}/{schoolid}/{oldschool}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::SaveHighSchoolSelection'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.gethighschoolperstudent:
+  path: '/gel/gethighschoolperstudent/{id}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::gethighschoolperstudent'
+  requirements:
+    _user_is_logged_in: 'TRUE'

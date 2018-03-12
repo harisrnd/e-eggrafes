@@ -38,3 +38,8 @@ entity.gel_school.add_form:
   title: 'Add Gel_school'
   appears_on:
     - entity.gel_school.collection
+entity.gelstudenthighschool.add_form:
+  route_name: entity.gelstudenthighschool.add_form
+  title: 'Add Gelstudenthighschool'
+  appears_on:
+    - entity.gelstudenthighschool.collection

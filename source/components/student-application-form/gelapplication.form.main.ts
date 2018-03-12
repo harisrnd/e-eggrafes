@@ -2,7 +2,7 @@ import { NgRedux } from "@angular-redux/store";
 import { Injectable } from "@angular/core";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { Http } from "@angular/http";
+import { Http, Headers, RequestOptions } from "@angular/http";
 import { Router } from "@angular/router";
 import { IMyDpOptions } from "mydatepicker";
 import { BehaviorSubject, Observable, Subscription } from "rxjs/Rx";
@@ -17,6 +17,7 @@ import { IGelStudentDataFieldRecords } from "../../store/gelstudentdatafields/ge
 import { GelClassesActions } from "../../actions/gelclasses.actions";
 import { IGelClass, IGelClassRecord, IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 import { HelperDataService } from "../../services/helper-data-service";
+import { AppSettings } from "../../app.settings";
 import {
     FIRST_SCHOOL_YEAR,
     VALID_ADDRESS_PATTERN,
@@ -75,6 +76,7 @@ import {
         dateFormat: "dd/mm/yyyy",
     };
 
+    /*
     private observableSource = (keyword: any): Observable<any[]> => {
         let url: string = "https://mm.sch.gr/api/units?name=" + keyword;
         if (keyword) {
@@ -87,6 +89,35 @@ import {
                         retArr[i].registry_no = json.data[i].registry_no;
                         retArr[i].name = json.data[i].name;
                         retArr[i].unit_type_id = json.data[i].unit_type_id;
+                    }
+                    return retArr;
+                });
+        } else {
+            return Observable.of([]);
+        }
+    };
+    */
+
+    private observableSource = (keyword: any): Observable<any[]> => {
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            headers.append("Authorization", "Basic " + btoa( loginInfoToken.auth_token + ":" +  loginInfoToken.auth_token));
+       });
+       let options = new RequestOptions({ headers: headers });
+
+       let url: string = `${AppSettings.API_ENDPOINT}/deploysystem/getschoollist/` + keyword ;
+        if (keyword) {
+            return this.http.get(url, options)
+                .map(res => {
+                    let json = res.json();
+                    let retArr = <any>Array();
+                    for (let i = 0; i < json.length; i++) {
+                        retArr[i] = {};
+                        retArr[i].registry_no = json[i].registry_no;
+                        retArr[i].name = json[i].name;
+                        retArr[i].unit_type_id = json[i].unit_type_id;
                     }
                     return retArr;
                 });
@@ -214,7 +245,7 @@ import {
                                     this.studentDataGroup.controls["relationtostudent"].setValue(studentDataField.get("relationtostudent"));
                                     this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
                                     this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
-    
+
                                     this.studentDataGroup.controls["regionaddress"].setValidators(null);
                                     this.studentDataGroup.controls["regiontk"].setValidators(null);
                                     this.studentDataGroup.controls["regionarea"].setValidators(null);
@@ -240,7 +271,7 @@ import {
                                     this.studentDataGroup.controls["am"].updateValueAndValidity();
                                 }
 
-                            }                          
+                            }
 
                             //λύση προβλήματος πεδίου "Αίτηση από" στο edit app
                             if (this.appUpdate.getValue() === true) {

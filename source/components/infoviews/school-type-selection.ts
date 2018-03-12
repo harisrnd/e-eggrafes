@@ -1,5 +1,13 @@
 import { Component, Injectable, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { NgRedux } from "@angular-redux/store";
+import { SCHOOLTYPE_INITIAL_STATE } from "../../store/schooltype/schooltype.initial-state";
+import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/schooltype/schooltype.types";
+import { IAppState } from "../../store/store";
+import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
+import { SchoolTypeActions } from "../../actions/schooltype.actions";
+
+
 
 @Component({ 
     selector: "school-type-selection",
@@ -19,24 +27,30 @@ import { Router } from "@angular/router";
   `
 })
 
-@Injectable() export default class SchoolTypeSelectionPde implements OnInit {
+@Injectable() export default class SchoolTypeSelectionDde implements OnInit {
 
     constructor(
         private router: Router,
+        private _ngRedux: NgRedux<IAppState>,
+        private _sta: SchoolTypeActions,
     ) {
+
     };
 
     ngOnInit() {
-
+        this._sta.initSchoolType();
     }
 
     navigatepdeepal() {
-        this.router.navigate(["/school/perfecture-view"]);
+        this._sta.saveSchoolTypeSelected(2,"ΕΠΑΛ");
+        this.router.navigate(["/school/eduadmin-view"]);
 
     }
 
     navigatepdegel() {
-        this.router.navigate(["/school/gelperfecture-view"]);
+        this._sta.saveSchoolTypeSelected(1,"ΓΕΛ");
+        console.log("lalalal");
+        this.router.navigate(["/school/gel-distribution"]);
     }
 
 }
