@@ -85,8 +85,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία μαθητή</div>
     </div>
     <div>
-        <label *ngIf="studentDataField$.get('lastschool_schoolyear') >= '2013-2014' && (wsEnabled | async) ===1" for="am">Αριθμός Μητρώου Μαθητη</label> 
-        <p *ngIf="studentDataField$.get('lastschool_schoolyear') >= '2013-2014' && (wsEnabled | async) ===1" class="form-control" style="border:1px solid #eceeef;">   {{studentDataField$.get("am")}} </p>
+        <label *ngIf="studentDataField$.get('lastschool_schoolyear') >= '2013-2014' && (wsEnabled | async) === 1" for="am">Αριθμός Μητρώου Μαθητη</label>
+        <p *ngIf="studentDataField$.get('lastschool_schoolyear') >= '2013-2014' && (wsEnabled | async) === 1" class="form-control" style="border:1px solid #eceeef;">   {{studentDataField$.get("am")}} </p>
     </div>
     <div><label for="name">Όνομα μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;">   {{studentDataField$.get("name")}} </p> </div>
     <div><label for="studentsurname">Επώνυμο μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;"> {{studentDataField$.get("studentsurname")}} </p></div>
@@ -98,33 +98,33 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
         <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Στοιχεία Επικοινωνίας μαθητή</div>
     </div>
-    <table class="col-md-12" align="left" *ngIf="studentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async)===0">
+    <table class="col-md-12" align="left" *ngIf="studentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async) === 0">
         <tr>
-            <td>   
-                <div><label for="regionaddress">Διεύθυνση Κατοικίας μαθητή</label></div> 
+            <td>
+                <div><label for="regionaddress">Διεύθυνση Κατοικίας μαθητή</label></div>
             </td>
-            <td>  
-                <div><label for="regiontk">Τ.Κ.</label></div> 
+            <td>
+                <div><label for="regiontk">Τ.Κ.</label></div>
             </td>
-            <td>   
-                <div><label for="regionarea">Πόλη/Περιοχή</label></div> 
+            <td>
+                <div><label for="regionarea">Πόλη/Περιοχή</label></div>
             </td>
         </tr>
         <tr>
-            <td>   
-                <div class="form-control" style="border:1px solid #eceeef;">{{studentDataField$.get("regionaddress")}}</div> 
+            <td>
+                <div class="form-control" style="border:1px solid #eceeef;">{{studentDataField$.get("regionaddress")}}</div>
             </td>
-            <td>  
-                <div class="form-control" style="border:1px solid #eceeef;">{{studentDataField$.get("regiontk")}}</div> 
+            <td>
+                <div class="form-control" style="border:1px solid #eceeef;">{{studentDataField$.get("regiontk")}}</div>
             </td>
-            <td>   
-                <div class="form-control" style="border:1px solid #eceeef;">{{studentDataField$.get("regionarea")}}</div> 
+            <td>
+                <div class="form-control" style="border:1px solid #eceeef;">{{studentDataField$.get("regionarea")}}</div>
             </td>
         </tr>
-    </table>  
+    </table>
     <div><label for="relationtostudent">Η δήλωση προτίμησης γίνεται από</label> <p class="form-control" style="border:1px solid #eceeef;"> {{studentDataField$.get("relationtostudent")}} </p></div>
     <div><label for="telnum">Τηλέφωνο επικοινωνίας</label> <p class="form-control" style="border:1px solid #eceeef;"> {{studentDataField$.get("telnum")}} </p></div>
-    
+
     </div>
 
     <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
@@ -175,7 +175,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
     private showLoader: BehaviorSubject<boolean>;
-    private ServiceStudentCertif$: BehaviorSubject<any>;
+    //private ServiceStudentCertif$: BehaviorSubject<any>;
     private currentUrl: string;
     private cu_name: string;
     private cu_surname: string;
@@ -191,6 +191,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private previousSchools: BehaviorSubject<string>;
     private wsIdentSub: Subscription;
     private wsEnabled: BehaviorSubject<number>;
+    private limitSchoolYear: string;
 
     constructor(
         private _hds: HelperDataService,
@@ -229,11 +230,11 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         this.courseSelected = null;
         this.hasright = 1;
         this.previousSchools.next("");
-        this.ServiceStudentCertif$ = new BehaviorSubject([{}]);
+        //this.ServiceStudentCertif$ = new BehaviorSubject([{}]);
+        this.limitSchoolYear = "2013-2014";
 
         this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
             this.wsEnabled.next(Number(z.res)) ;
-            console.log(this.wsEnabled.getValue());
        });
     };
 
@@ -242,13 +243,6 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         (<any>$("#studentFormSentNotice")).appendTo("body");
         window.scrollTo(0, 0);
 
-        // this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
-        //     //this.wsEnabled = Number(z.res) ;
-        // });
-
-
-
-        console.log(this.wsEnabled);
         this.epalUserDataSub = this._hds.getApplicantUserData().subscribe(x => {
             if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren))
               this.hasright = 0;
@@ -387,6 +381,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             this.epalUserDataSub.unsubscribe();
         if (this.wsIdentSub)
             this.wsIdentSub.unsubscribe();
+        if (this.ServiceStudentCertifSub)
+            this.ServiceStudentCertifSub.unsubscribe();
     }
 
     submitNow(newapp) {
@@ -403,36 +399,27 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
           }
         }
 
-
         if (this.studentDataFields$.getValue().size === 0 || this.epalSelected$.getValue().length === 0 || this.epalclasses$.getValue().size === 0 || this.loginInfo$.getValue().size === 0)
             return;
 
         let aitisiObj: Array<any> = [];
         let epalObj: Array<StudentEpalChosen> = [];
-
         let std = this.studentDataFields$.getValue().get(0);
 
         aitisiObj[0] = <any>{};
         aitisiObj[0].name = std.get("name");
         aitisiObj[0].studentsurname = std.get("studentsurname");
-        aitisiObj[0].studentbirthdate = std.get("studentbirthdate");
         aitisiObj[0].fatherfirstname = std.get("fatherfirstname");
         aitisiObj[0].motherfirstname = std.get("motherfirstname");
-        aitisiObj[0].regionaddress = std.get("regionaddress");
-        aitisiObj[0].regionarea = std.get("regionarea");
-        aitisiObj[0].regiontk = std.get("regiontk");
-        aitisiObj[0].certificatetype = "";
-
-        aitisiObj[0].graduation_year = 0;
+        aitisiObj[0].studentbirthdate = std.get("studentbirthdate");
+        aitisiObj[0].lastschool_schoolyear = std.get("lastschool_schoolyear");
         aitisiObj[0].lastschool_registrynumber = std.get("lastschool_schoolname").registry_no;
         aitisiObj[0].lastschool_schoolname = std.get("lastschool_schoolname").name;
-        aitisiObj[0].lastschool_schoolyear = std.get("lastschool_schoolyear");
         aitisiObj[0].lastschool_unittypeid = std.get("lastschool_schoolname").unit_type_id;
-        aitisiObj[0].lastschool_class = std.get("lastschool_class");
-
+        //aitisiObj[0].lastschool_class = std.get("lastschool_class");
+        aitisiObj[0].lastschool_class = null;
         aitisiObj[0].relationtostudent = std.get("relationtostudent");
         aitisiObj[0].telnum = std.get("telnum");
-
         aitisiObj[0].cu_name = this.cu_name;
         aitisiObj[0].cu_surname = this.cu_surname;
         aitisiObj[0].cu_fathername = this.cu_fathername;
@@ -441,6 +428,16 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         aitisiObj[0].hasright = this.hasright;
         aitisiObj[0].currentclass = this.classSelected;
 
+        aitisiObj[0].am = null;
+        if (aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)
+          aitisiObj[0].am =  std.get("am");
+        else {
+          aitisiObj[0].regionaddress = std.get("regionaddress");
+          aitisiObj[0].regionarea = std.get("regionarea");
+          aitisiObj[0].regiontk = std.get("regiontk");
+        }
+        aitisiObj[0].section_name = null;
+
         let epalSelected = this.epalSelected$.getValue();
         for (let i = 0; i < epalSelected.length; i++) {
             epalObj[i] = new StudentEpalChosen(null, epalSelected[i], this.epalSelectedOrder[i]);
@@ -448,27 +445,72 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         aitisiObj["1"] = epalObj;
 
         if (aitisiObj[0]["currentclass"] === "2") {
-            aitisiObj["3"] = new StudentSectorChosen(null, this.sectorSelected);
+            aitisiObj["2"] = new StudentSectorChosen(null, this.sectorSelected);
         } else if (aitisiObj[0]["currentclass"] === "3" || aitisiObj[0]["currentclass"] === "4") {
-            aitisiObj["3"] = new StudentCourseChosen(null, this.courseSelected);
+            aitisiObj["2"] = new StudentCourseChosen(null, this.courseSelected);
         }
 
-
-
-
-                       
-     //       this.ServiceStudentCertifSub = this._hds.getServiceStudentCertification(8)
-              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
+        //κλήση myschool web service
+        if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)  {
+              //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
+              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
+                      aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 .subscribe(data => {
-                    this.ServiceStudentCertif$.next(data);
+                    if (typeof data.data["id"] !== "undefined")  {
+                      aitisiObj[0].studentId = data.data["id"];
+                      //aitisiObj[0].websrv_cu_name = data.data["custodianFirstName"];
+                      aitisiObj[0].websrv_cu_surname = data.data["custodianLastName"];
+                      //aitisiObj[0].websrv_studentbirthdate = data.birthDate;
+                      aitisiObj[0].regionaddress = data.data["addressStreet"];
+                      aitisiObj[0].regiontk = data.data["addressPostCode"];
+                      aitisiObj[0].regionarea = data.data["addressArea"];
+                      aitisiObj[0].lastschool_class = data.data["levelName"];
+                      aitisiObj[0].section_name = data.data["sectionName"];
+                    }
+                    else {
+                      let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
+                      let mText = "Δεν βρέθηκε μαθητής στο ΠΣ myschool με τα στοιχεία που δώσατε. " +
+                        "Παρακαλώ προσπαθήστε ξανά αφού πρώτα ελέγξετε την ορθότητα των ακόλουθων στοιχείων: Αριθμός Μητρώου, Σχολείο τελευτάιας φοίτησης, Ημερομηνία Γέννησης. " +
+                        "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
 
+                      return;
+
+                    }
+
+                    if (aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
+                      let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
+                      let mText = "Ο Κηδεμόνας που έχει δηλωθεί στο ΠΣ myschool έχει ΔΙΑΦΟΡΕΤΙΚΑ στοιχεία από το χρήστη που έχει κάνει είσοδο σε αυτό το σύστημα μέσω των κωδικών του taxisnet. " +
+                        "Παρακαλώ επικοινωνήστε με το σχολείο σας για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καθοριστεί σωστά στο ΠΣ myschοol. " +
+                        "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
+
+                      return;
+                    }
+
+                    //console.log(aitisiObj[0]);
+                    this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
                 },
                 error => {
                     console.log("Error Getting Courses");
                 });
+        }
+
+        else  {
+          this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
+        }
 
 
-        this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
     }
 
 
@@ -491,7 +533,9 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             1020: "Κωδικός μονάδας σχολείου τελευταίας φοίτησης",
             1021: "Τύπος μονάδας σχολείου τελευταίας φοίτησης",
             1022: "Σχολείο τελευταίας φοίτησης",
-            1023: "Τάξη τελευταίας φοίτησης"
+            1023: "Τάξη τελευταίας φοίτησης",
+            1024: "Μοναδικός αριθμός μαθητή για έτος μικρότερο του σχολικού έτους αναφοράς",
+            1025: "Μη Μοναδικός αριθμός μαθητή για έτος μεγαλύτεο ίσο του σχολικού έτους αναφοράς"
         };
         let authTokenPost = this.authToken + ":" + this.authToken;
 
@@ -586,6 +630,16 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                         mText = "Παρακαλούμε ελέγξτε τα στοιχεία που υποβάλλετε. Υπάρχουν λάθη - ελλείψεις στο πεδίο \"" + errors[errorCode] + "\"που δεν επιτρέπουν την υποβολή.";
                         mHeader = "modal-header-danger";
                         break;
+                    case 1024:
+                        mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
+                        mText = "Παρακαλούμε ελέγξτε τα στοιχεία που υποβάλλετε. Ύπαρξη επιστρεφόμενου μοναδικού αριθμόυ μαθητή για σχολικό έτος < " + this.limitSchoolYear + ".";
+                        mHeader = "modal-header-danger";
+                        break;
+                    case 1025:
+                        mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
+                        mText = "Παρακαλούμε ελέγξτε τα στοιχεία που υποβάλλετε. Μη ύπαρξη επιστρεφόμενου μοναδικού αριθμόυ μαθητή για σχολικό έτος >= " + this.limitSchoolYear + ".";
+                        mHeader = "modal-header-danger";
+                        break;
                     case 3002:
                         mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
                         mText = "Το σύστημα δεν δέχεται υποβολή δηλώσεων αυτή την περίοδο.";
@@ -609,7 +663,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                         break;
                     case 8004:
                         mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
-                        mText = "Τα στοιχεία φοίτησης που υποβάλλατε δεν είναι έγκυρα. Παρακαλώ ελέγξτε τη φόρμα σας και προσπαθήστε ξανά. Ελέγξτε επίσης αν έχετε ήδη κάνει δήλωση για τον ίδιο μαθητή.";
+                        mText = "Παρακαλώ ελέγξτε τη φόρμα σας και προσπαθήστε ξανά. Φαίνεται να έχετε ήδη κάνει δήλωση για τον ίδιο μαθητή. ";
                         mHeader = "modal-header-danger";
                         break;
                     case 9001:

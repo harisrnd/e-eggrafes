@@ -173,51 +173,89 @@ class GelStudent extends ContentEntityBase implements GelStudentInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-     $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Όνομα μαθητή'))
-      ->setDescription(t('Δώσε το μικρό μαθητή.'))
-      ->setSettings(array(
-        'max_length' => 1000,
-        'text_processing' => 0,
-      ))
-      ->setRequired(true)
-      ->setDefaultValue('')
-      ->setDisplayOptions('view', array(
-        'label' => 'above',
-        'type' => 'string',
-        'weight' => -4,
-      ))
-      ->setDisplayOptions('form', array(
-        'type' => 'string_textfield',
-        'weight' => -4,
-      ))
-      ->setDisplayConfigurable('form', true)
-      ->setDisplayConfigurable('view', true);
-
       $fields['gel_userid'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Id χρήστη '))
-      ->setDescription(t('Δώσε το id του αντίστοιχου Applicant_User.'))
-      ->setSetting('target_type', 'applicant_users')
-      ->setSetting('handler', 'default')
-        ->setRequired(true)
-       ->setDisplayOptions('view', array(
-              'label' => 'above',
-              'type' => 'author',
-              'weight' => 0,
-            ))
-      ->setDisplayOptions('form', array(
-              'type' => 'entity_reference_autocomplete',
-              'weight' => 5,
-              'settings' => array(
-                'match_operator' => 'CONTAINS',
-                'size' => '60',
-                'autocomplete_type' => 'tags',
-                'placeholder' => '',
-              ),
-            ))
-      ->setDisplayConfigurable('form', true)
-      ->setDisplayConfigurable('view', true);
+        ->setLabel(t('Id χρήστη '))
+        ->setDescription(t('Δώσε το id του αντίστοιχου Applicant_User.'))
+        ->setSetting('target_type', 'applicant_users')
+        ->setSetting('handler', 'default')
+          ->setRequired(true)
+         ->setDisplayOptions('view', array(
+                'label' => 'above',
+                'type' => 'author',
+                'weight' => 0,
+              ))
+        ->setDisplayOptions('form', array(
+                'type' => 'entity_reference_autocomplete',
+                'weight' => 5,
+                'settings' => array(
+                  'match_operator' => 'CONTAINS',
+                  'size' => '60',
+                  'autocomplete_type' => 'tags',
+                  'placeholder' => '',
+                ),
+              ))
+        ->setDisplayConfigurable('form', true)
+        ->setDisplayConfigurable('view', true);
 
+     $fields['name'] = BaseFieldDefinition::create('string')
+        ->setLabel(t('Όνομα μαθητή'))
+        ->setDescription(t('Δώσε το μικρό μαθητή.'))
+        ->setSettings(array(
+          'max_length' => 1000,
+          'text_processing' => 0,
+        ))
+        ->setRequired(true)
+        ->setDefaultValue('')
+        ->setDisplayOptions('view', array(
+          'label' => 'above',
+          'type' => 'string',
+          'weight' => -4,
+        ))
+        ->setDisplayOptions('form', array(
+          'type' => 'string_textfield',
+          'weight' => -4,
+        ))
+        ->setDisplayConfigurable('form', true)
+        ->setDisplayConfigurable('view', true);
+
+      $fields['am'] = BaseFieldDefinition::create('string')
+          ->setLabel(t('Αριθμός Μητρώου στο σχολείο'))
+          ->setDescription(t('Αριθμός Μητρώου στο σχολείο.'))
+          ->setSettings(array(
+            'max_length' => 600,
+            'text_processing' => 0,
+          ))
+          ->setRequired(true)
+          ->setDefaultValue('')
+          ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'string',
+            'weight' => -4,
+          ))
+          ->setDisplayOptions('form', array(
+            'type' => 'string_textfield',
+            'weight' => -4,
+          ))
+          ->setDisplayConfigurable('form', true)
+          ->setDisplayConfigurable('view', true);
+
+      $fields['myschool_id'] = BaseFieldDefinition::create('integer')
+          ->setLabel(t('Μοναδικός επιστρεφόμενος αριθμός id από το ΠΣ myschool'))
+          ->setDescription(t('Μοναδικός επιστρεφόμενος αριθμός id από το ΠΣ myschool.'))
+          ->setSettings(array(
+            'text_processing' => 0,
+           ))
+          ->setRequired(FALSE)
+          ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'string',
+            'weight' => -4,
+           ))->setDisplayOptions('form', array(
+            'type' => 'string_textfield',
+            'weight' => -4,
+            ))
+            ->setDisplayConfigurable('form', true)
+            ->setDisplayConfigurable('view', true);
 
       $fields['studentsurname'] = BaseFieldDefinition::create('string')
           ->setLabel(t('Επώνυμο μαθητή'))
@@ -256,7 +294,7 @@ class GelStudent extends ContentEntityBase implements GelStudentInterface {
         ->setDisplayConfigurable('form', true)
         ->setDisplayConfigurable('view', true);
 
-      
+
       $fields['fatherfirstname'] = BaseFieldDefinition::create('string')
           ->setLabel(t('Όνομα του πατέρα'))
           ->setDescription(t('Δώσε το όνομα του πατέρα.'))
@@ -278,7 +316,7 @@ class GelStudent extends ContentEntityBase implements GelStudentInterface {
           ->setDisplayConfigurable('form', true)
           ->setDisplayConfigurable('view', true);
 
-     
+
       $fields['motherfirstname'] = BaseFieldDefinition::create('string')
           ->setLabel(t('Όνομα μητέρας'))
           ->setDescription(t('Δώσε το όνομα της μητέρας.'))
@@ -637,7 +675,27 @@ class GelStudent extends ContentEntityBase implements GelStudentInterface {
                             ->setDisplayConfigurable('form', true)
                             ->setDisplayConfigurable('view', true);
 
-      $fields['delapp'] = BaseFieldDefinition::create('boolean')
+
+        $fields['myschool_currentsection'] = BaseFieldDefinition::create('string')
+                            ->setLabel(t('Τομέας / Ειδικότητα / Ομάδα Προσανατολισμού στην τρέχουσα περίοδο'))
+                            ->setDescription(t('Τομέας / Ειδικότητα / Ομάδα Προσανατολισμού στην τρέχουσα περίοδο'))
+                            ->setSettings(array(
+                              'max_length' => 200,
+                              'text_processing' => 0,
+                            ))
+                            ->setDisplayOptions('view', array(
+                              'label' => 'above',
+                              'type' => 'string',
+                              'weight' => -4,
+                            ))
+                            ->setDisplayOptions('form', array(
+                              'type' => 'string_textfield',
+                              'weight' => -4,
+                            ))
+                            ->setDisplayConfigurable('form', true)
+                            ->setDisplayConfigurable('view', true);
+
+       $fields['delapp'] = BaseFieldDefinition::create('boolean')
                             ->setLabel(t('Διαγραφή'))
                             ->setDescription(t('Διαγραφή.'))
                             ->setSettings(array(

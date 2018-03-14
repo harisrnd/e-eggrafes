@@ -445,18 +445,21 @@ class EpalStudent extends ContentEntityBase implements EpalStudentInterface
           ->setDisplayConfigurable('form', true)
           ->setDisplayConfigurable('view', true);
 
-      $fields['am'] = BaseFieldDefinition::create('integer')
+      $fields['am'] = BaseFieldDefinition::create('string')
           ->setLabel(t('Αριθμός Μητρώου στο σχολείο'))
           ->setDescription(t('Αριθμός Μητρώου στο σχολείο.'))
           ->setSettings(array(
+            'max_length' => 600,
             'text_processing' => 0,
           ))
-          ->setRequired(FALSE)
+          ->setRequired(true)
+          ->setDefaultValue('')
           ->setDisplayOptions('view', array(
             'label' => 'above',
             'type' => 'string',
             'weight' => -4,
-          ))->setDisplayOptions('form', array(
+          ))
+          ->setDisplayOptions('form', array(
             'type' => 'string_textfield',
             'weight' => -4,
           ))

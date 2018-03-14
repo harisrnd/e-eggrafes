@@ -94,7 +94,7 @@ import { StudentGelCourseChosen } from "../students/student";
         <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία μαθητή</div>
     </div>
     <div>
-        <label *ngIf="gelstudentDataField$.get('lastschool_schoolyear') >= '2013-2014' && (wsEnabled | async) ===1" for="am">Αριθμός Μητρώου Μαθητη</label> 
+        <label *ngIf="gelstudentDataField$.get('lastschool_schoolyear') >= '2013-2014' && (wsEnabled | async) ===1" for="am">Αριθμός Μητρώου Μαθητη</label>
         <p *ngIf="gelstudentDataField$.get('lastschool_schoolyear') >= '2013-2014' && (wsEnabled | async) ===1" class="form-control" style="border:1px solid #eceeef;">   {{gelstudentDataField$.get("am")}} </p>
     </div>
     <div><label for="name">Όνομα μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;">   {{gelstudentDataField$.get("name")}} </p> </div>
@@ -109,31 +109,31 @@ import { StudentGelCourseChosen } from "../students/student";
     </div>
     <table class="col-md-12" align="left" *ngIf="gelstudentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async)===0">
         <tr>
-            <td>   
-                <div><label for="regionaddress">Διεύθυνση Κατοικίας μαθητή</label></div> 
+            <td>
+                <div><label for="regionaddress">Διεύθυνση Κατοικίας μαθητή</label></div>
             </td>
-            <td>  
-                <div><label for="regiontk">Τ.Κ.</label></div> 
+            <td>
+                <div><label for="regiontk">Τ.Κ.</label></div>
             </td>
-            <td>   
-                <div><label for="regionarea">Πόλη/Περιοχή</label></div> 
+            <td>
+                <div><label for="regionarea">Πόλη/Περιοχή</label></div>
             </td>
         </tr>
         <tr>
-            <td>   
-                <div class="form-control" style="border:1px solid #eceeef;">{{gelstudentDataField$.get("regionaddress")}}</div> 
+            <td>
+                <div class="form-control" style="border:1px solid #eceeef;">{{gelstudentDataField$.get("regionaddress")}}</div>
             </td>
-            <td>  
-                <div class="form-control" style="border:1px solid #eceeef;">{{gelstudentDataField$.get("regiontk")}}</div> 
+            <td>
+                <div class="form-control" style="border:1px solid #eceeef;">{{gelstudentDataField$.get("regiontk")}}</div>
             </td>
-            <td>   
-                <div class="form-control" style="border:1px solid #eceeef;">{{gelstudentDataField$.get("regionarea")}}</div> 
+            <td>
+                <div class="form-control" style="border:1px solid #eceeef;">{{gelstudentDataField$.get("regionarea")}}</div>
             </td>
         </tr>
-    </table>  
+    </table>
     <div><label for="relationtostudent">Η δήλωση προτίμησης γίνεται από</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("relationtostudent")}} </p></div>
     <div><label for="telnum">Τηλέφωνο επικοινωνίας</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("telnum")}} </p></div>
-    
+
     <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
         <div class="col-md-6">
             <button type="button" class="btn-primary btn-lg pull-left" (click)="navigateBack()">
@@ -179,6 +179,7 @@ import { StudentGelCourseChosen } from "../students/student";
 
     private loginInfoSub: Subscription;
     private datamodeSub: Subscription;
+    private ServiceStudentCertifSub: Subscription;
     private gelclassesSub: Subscription;
     private orientationGroupSub: Subscription;
     private electivecourseFieldsSub: Subscription;
@@ -201,6 +202,7 @@ import { StudentGelCourseChosen } from "../students/student";
     private appId: BehaviorSubject<string>;
     private wsIdentSub: Subscription;
     private wsEnabled: BehaviorSubject<number>;
+    private limitSchoolYear: string;
 
     constructor(
         private _hds: HelperDataService,
@@ -230,12 +232,11 @@ import { StudentGelCourseChosen } from "../students/student";
         this.orientationSelected = new BehaviorSubject(-1);
         this.classSelected = new BehaviorSubject(-1);
         this.wsEnabled = new BehaviorSubject(-1);
-
         this.hasright = 1;
+        this.limitSchoolYear = "2013-2014";
 
         this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
             this.wsEnabled.next(Number(z.res)) ;
-            console.log(this.wsEnabled.getValue());
        });
 
     };
@@ -349,6 +350,8 @@ import { StudentGelCourseChosen } from "../students/student";
             this.gelUserDataSub.unsubscribe();
         if (this.wsIdentSub)
             this.wsIdentSub.unsubscribe();
+        if (this.ServiceStudentCertifSub)
+            this.ServiceStudentCertifSub.unsubscribe();
     }
 
 
@@ -359,7 +362,6 @@ import { StudentGelCourseChosen } from "../students/student";
 
         let aitisiObj: Array<any> = [];
         let std = this.gelstudentDataFields$.getValue().get(0);
-
         //aitisiObj[0]: στοιχεία μαθητών
         aitisiObj[0] = <any>{};
 
@@ -371,16 +373,14 @@ import { StudentGelCourseChosen } from "../students/student";
         aitisiObj[0].regionaddress = std.get("regionaddress");
         aitisiObj[0].regionarea = std.get("regionarea");
         aitisiObj[0].regiontk = std.get("regiontk");
-
-        aitisiObj[0].graduation_year = 0;
         aitisiObj[0].lastschool_registrynumber = std.get("lastschool_schoolname").registry_no;
         aitisiObj[0].lastschool_schoolname = std.get("lastschool_schoolname").name;
         aitisiObj[0].lastschool_schoolyear = std.get("lastschool_schoolyear");
         aitisiObj[0].lastschool_unittypeid = std.get("lastschool_schoolname").unit_type_id;
-        aitisiObj[0].lastschool_class = std.get("lastschool_class");
+        //aitisiObj[0].lastschool_class = std.get("lastschool_class");
+        aitisiObj[0].lastschool_class = null;
         aitisiObj[0].relationtostudent = std.get("relationtostudent");
         aitisiObj[0].telnum = std.get("telnum");
-
         aitisiObj[0].cu_name = this.cu_name;
         aitisiObj[0].cu_surname = this.cu_surname;
         aitisiObj[0].cu_fathername = this.cu_fathername;
@@ -388,6 +388,16 @@ import { StudentGelCourseChosen } from "../students/student";
         aitisiObj[0].disclaimer_checked = this.disclaimer_checked;
         aitisiObj[0].hasright = this.hasright;
         aitisiObj[0].nextclass = this.classSelected.getValue();
+
+        aitisiObj[0].am = null;
+        if (aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)
+          aitisiObj[0].am =  std.get("am");
+        else {
+          aitisiObj[0].regionaddress = std.get("regionaddress");
+          aitisiObj[0].regionarea = std.get("regionarea");
+          aitisiObj[0].regiontk = std.get("regiontk");
+        }
+        aitisiObj[0].section_name = null;
 
         //aitisiObj[1]: ομάδα προσανατολισμού
         let classIds = ["2", "3", "6", "7"];
@@ -407,9 +417,65 @@ import { StudentGelCourseChosen } from "../students/student";
           aitisiObj["2"] = courseObj;
         }
 
-        this.submitRecord(newapp, aitisiObj);
+        //κλήση myschool web service
+        if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)  {
+              //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
+              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
+                      aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
+                .subscribe(data => {
+                    if (typeof data.data["id"] !== "undefined")  {
+                      aitisiObj[0].studentId = data.data["id"];
+                      //aitisiObj[0].websrv_cu_name = data.data["custodianFirstName"];
+                      aitisiObj[0].websrv_cu_surname = data.data["custodianLastName"];
+                      //aitisiObj[0].websrv_studentbirthdate = data.birthDate;
+                      aitisiObj[0].regionaddress = data.data["addressStreet"];
+                      aitisiObj[0].regiontk = data.data["addressPostCode"];
+                      aitisiObj[0].regionarea = data.data["addressArea"];
+                      aitisiObj[0].lastschool_class = data.data["levelName"];
+                      aitisiObj[0].section_name = data.data["sectionName"];
+                    }
+                    else {
+                      let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
+                      let mText = "Δεν βρέθηκε μαθητής στο ΠΣ myschool με τα στοιχεία που δώσατε. " +
+                        "Παρακαλώ προσπαθήστε ξανά αφού πρώτα ελέγξετε την ορθότητα των ακόλουθων στοιχείων: Αριθμός Μητρώου, Σχολείο τελευτάιας φοίτησης, Ημερομηνία Γέννησης. " +
+                        "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
 
+                      return;
+                    }
 
+                    //if (aitisiObj[0].websrv_cu_surname.replace(/^[ ]+|[ ]+$/g, "") !== aitisiObj[0].cu_surname.replace(/^[ ]+|[ ]+$/g, "")) {
+                    if (aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
+                      let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
+                      let mText = "Ο Κηδεμόνας που έχει δηλωθεί στο ΠΣ myschool έχει ΔΙΑΦΟΡΕΤΙΚΑ στοιχεία από το χρήστη που έχει κάνει είσοδο σε αυτό το σύστημα μέσω των κωδικών του taxisnet. " +
+                        "Παρακαλώ επικοινωνήστε με το σχολείο σας για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καθοριστεί σωστά στο ΠΣ myschοol. " +
+                        "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
+
+                      return;
+                    }
+
+                    //console.log(aitisiObj[0]);
+                    this.submitRecord(newapp, aitisiObj);
+                },
+                error => {
+                    console.log("Error Getting Courses");
+                });
+        }
+
+        else  {
+          this.submitRecord(newapp, aitisiObj);
+        }
     }
 
 
@@ -433,7 +499,9 @@ import { StudentGelCourseChosen } from "../students/student";
             1020: "Κωδικός μονάδας σχολείου τελευταίας φοίτησης",
             1021: "Τύπος μονάδας σχολείου τελευταίας φοίτησης",
             1022: "Σχολείο τελευταίας φοίτησης",
-            1023: "Τάξη τελευταίας φοίτησης"
+            1023: "Τάξη τελευταίας φοίτησης",
+            1024: "Μοναδικός αριθμός μαθητή για έτος μικρότερο του σχολικού έτους αναφοράς",
+            1025: "Μη Μοναδικός αριθμός μαθητή για έτος μεγαλύτεο ίσο του σχολικού έτους αναφοράς"
         };
         let authTokenPost = this.authToken + ":" + this.authToken;
 
@@ -486,13 +554,6 @@ import { StudentGelCourseChosen } from "../students/student";
                         mText = "Δεν έχετε επιλέξει Μάθημα Επιλογής";
                         mHeader = "modal-header-danger";
                         break;
-                    /*
-                    case 1000:
-                        mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
-                        mText = "Δεν έχετε επιλέξει σχολεία";
-                        mHeader = "modal-header-danger";
-                        break;
-                    */
                     case 1001:
                         mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
                         mText = "Δεν έχετε αποδεχθεί τους όρους χρήσης";
@@ -528,6 +589,16 @@ import { StudentGelCourseChosen } from "../students/student";
                     case 1023:
                         mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
                         mText = "Παρακαλούμε ελέγξτε τα στοιχεία που υποβάλλετε. Υπάρχουν λάθη - ελλείψεις στο πεδίο \"" + errors[errorCode] + "\"που δεν επιτρέπουν την υποβολή.";
+                        mHeader = "modal-header-danger";
+                        break;
+                    case 1024:
+                        mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
+                        mText = "Παρακαλούμε ελέγξτε τα στοιχεία που υποβάλλετε. Ύπαρξη επιστρεφόμενου μοναδικού αριθμόυ μαθητή για σχολικό έτος < " + this.limitSchoolYear + ".";
+                        mHeader = "modal-header-danger";
+                        break;
+                    case 1025:
+                        mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
+                        mText = "Παρακαλούμε ελέγξτε τα στοιχεία που υποβάλλετε. Μη ύπαρξη επιστρεφόμενου μοναδικού αριθμόυ μαθητή για σχολικό έτος >= " + this.limitSchoolYear + ".";
                         mHeader = "modal-header-danger";
                         break;
                     case 3002:

@@ -88,30 +88,31 @@ class WSConsumer extends ControllerBase
 
     public function testgetStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
+          $obj = array(
+          'message' => 'Επιτυχία',
 
-        $obj = (object) [
-            '$id' => '1',
-            'studentId' => 1666010,
-            'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
-            'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
-            'custodianLastName' => 'ΩΩΩΩΩΩ',
-            'custodianFirstName' => '',
-            'birthDate' => '1997-01-04T00:00:00',
-            'addressStreet' => 'ΕΛΛΗΣ 6',
-            'addressPostCode' => '30100',
-            'addressArea' => 'ΑΓΡΙΝΙΟ',
-            'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
-            'levelName' => 'Γ',
-            'sectionName' => 'Τεχνικός Μηχανοσυνθέτης Αεροσκαφών'
-        ];
-        
-        $result=json_encode($obj);
+          'data' => array(
+              'id' => '137',
+              'studentId' => 1666010,
+              'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
+              'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
+              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
+              //'custodianLastName' =>  preg_replace('/\s+/', '', ' ΚΑΤΣ ΑΟΥΝΟΣ '),
+              //'custodianLastName' =>  preg_replace('/[-\s]/', '', ' ΚΑΤΣ - ΑΟΥΝΟΣ '),
+              'custodianFirstName' => '',
+              'birthDate' => '1997-01-04T00:00:00',
+              'addressStreet' => 'ΕΛΛΗΣ 6',
+              'addressPostCode' => '30100',
+              'addressArea' => 'ΑΓΡΙΝΙΟ',
+              'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
+              'levelName' => 'Γ',
+              'sectionName' => 'Τεχνικός Μηχανοσυνθέτης Αεροσκαφών'
+        )
+          //'data' => "null"
+    );
 
-        return (new JsonResponse([
-            'message' => 'Επιτυχία',
-            'data' => $result
-            ]))
-            ->setStatusCode(Response::HTTP_OK);
+    return (new JsonResponse($obj))
+        ->setStatusCode(Response::HTTP_OK);
     }
 
     public function getStudentEpalCertification($id)
