@@ -2,6 +2,7 @@ import { List } from "immutable";
 import { TypedRecord } from "typed-immutable-record";
 
 export interface IStudentDataField {
+    am: string;
     name: string;
     studentsurname: string;
     fatherfirstname: string;

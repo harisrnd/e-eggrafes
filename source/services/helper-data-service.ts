@@ -953,7 +953,7 @@ export class HelperDataService implements OnInit, OnDestroy {
     }
 
     getServiceStudentPromotion(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
-        
+
         let mode="test";
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
@@ -965,7 +965,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         let rpath = [didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no].join("/");
-        
+
         if ( mode ==="test"){
             return this.http.get(`${AppSettings.API_ENDPOINT}/epal/test-get-student-info/` + rpath, options).map(response => response.json());
         }
@@ -980,9 +980,6 @@ export class HelperDataService implements OnInit, OnDestroy {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
         });
-        console.log("a");
-
-
         let headers = new Headers({
             "Content-Type": "application/json",
         });
@@ -1478,7 +1475,7 @@ getJuniorHighSchoolperDide()
         let options = new RequestOptions({ headers: headers });
         return this.http.get(`${AppSettings.API_ENDPOINT}/gel/getjunorhighschoolperdide/`, options)
             .map(response => response.json());
-   
+
 
 }
 
@@ -1496,7 +1493,7 @@ getHighSchoolperDide()
         let options = new RequestOptions({ headers: headers });
         return this.http.get(`${AppSettings.API_ENDPOINT}/gel/gethighschoolperdide/`, options)
             .map(response => response.json());
- 
+
 }
 
 getStudentsPerSchool(schoolid)
@@ -1513,7 +1510,7 @@ getStudentsPerSchool(schoolid)
         let options = new RequestOptions({ headers: headers });
         return this.http.get(`${AppSettings.API_ENDPOINT}/gel/getstudentsperschool/`+ schoolid , options)
             .map(response => response.json());
-   
+
 
 
 }
@@ -1552,7 +1549,7 @@ getHighSchoolSelection(id)
         let options = new RequestOptions({ headers: headers });
         return this.http.get(`${AppSettings.API_ENDPOINT}/gel/gethighschoolperstudent/`+ id , options)
             .map(response => response.json());
-   
+
 
 }
 

@@ -772,7 +772,9 @@ import { IAppState } from "../../store/store";
 
         let birthdate = this.EpalSubmittedDetails$.getValue()[0].birthdate;
         let birthparts = birthdate.split("/",3);
-        this._sdfa.saveStudentDataFields([{name: this.EpalSubmittedDetails$.getValue()[0].name,
+        this._sdfa.saveStudentDataFields([{
+              am: this.EpalSubmittedDetails$.getValue()[0].am,
+              name: this.EpalSubmittedDetails$.getValue()[0].name,
               studentsurname: this.EpalSubmittedDetails$.getValue()[0].studentsurname,
               fatherfirstname: this.EpalSubmittedDetails$.getValue()[0].fatherfirstname,
               motherfirstname: this.EpalSubmittedDetails$.getValue()[0].motherfirstname,
@@ -962,7 +964,9 @@ import { IAppState } from "../../store/store";
 
       let birthdate = this.GelSubmittedDetails$.getValue()[0].birthdate;
       let birthparts = birthdate.split("/",3);
-      this._gsdf.saveGelStudentDataFields([{name: this.GelSubmittedDetails$.getValue()[0].name,
+      this._gsdf.saveGelStudentDataFields([{
+            am: this.GelSubmittedDetails$.getValue()[0].am,
+            name: this.GelSubmittedDetails$.getValue()[0].name,
             studentsurname: this.GelSubmittedDetails$.getValue()[0].studentsurname,
             fatherfirstname: this.GelSubmittedDetails$.getValue()[0].fatherfirstname,
             motherfirstname: this.GelSubmittedDetails$.getValue()[0].motherfirstname,

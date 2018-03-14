@@ -367,7 +367,9 @@ class GelSubmittedApplications extends ControllerBase
 
             $esQuery = $this->connection->select('gel_student', 'gs')
                                     ->fields('gs',
-                                    array('name',
+                                    array(  'myschool_id',
+                                            'am',
+                                            'name',
                                             'studentsurname',
                                             'fatherfirstname',
                                             'motherfirstname',
@@ -425,6 +427,8 @@ class GelSubmittedApplications extends ControllerBase
 
                     $crypt = new Crypt();
                     try {
+                        if (isset($gelStudent->myschool_id ))
+                            $am_decoded = $crypt->decrypt($gelStudent->am);
                         $name_decoded = $crypt->decrypt($gelStudent->name);
                         $studentsurname_decoded = $crypt->decrypt($gelStudent->studentsurname);
                         $fatherfirstname_decoded = $crypt->decrypt($gelStudent->fatherfirstname);
@@ -452,6 +456,7 @@ class GelSubmittedApplications extends ControllerBase
 
                     $list[] = array(
                             'applicationId' => $gelStudent->id,
+                            'am' => $am_decoded,
                             'name' => $name_decoded,
                             'studentsurname' => $studentsurname_decoded,
                             'fatherfirstname' => $fatherfirstname_decoded,
