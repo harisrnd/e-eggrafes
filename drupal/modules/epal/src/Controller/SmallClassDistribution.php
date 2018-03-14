@@ -15,7 +15,16 @@ use Drupal\epal\Crypt;
 
 class SmallClassDistribution extends ControllerBase
 {
-   protected $entityTypeManager;
+    const SUCCESS = 0;
+    const ERROR_DB = -1;
+    const NO_CLASS_LIMIT_DOWN = -2;
+    const SMALL_CLASS = 1;
+    const NON_SMALL_CLASS = 2;
+    const IS_FIRST_PERIOD = false;
+    const IS_SECOND_PERIOD = true;
+
+
+    protected $entityTypeManager;
     protected $logger;
     protected $connection;
 
@@ -1137,116 +1146,34 @@ public function OffLineCalculationSmallClasses(Request $request)
             }
             elseif ($userRole === 'ministry')
             {
-                $schools = $this->entityTypeManager
-                    ->getStorage('eepal_school')
-                    ->loadByProperties(array());
-            }
-            else
-            {
-                $schools = [];
-            }
 
-            if ($schools)
-            {
-                $list = array();
-                foreach ($schools as $object)
-                {
-                            $epal_id = $object->id();
-                            $categ = $object->metathesis_region->value;
+                $transaction = $this->connection->startTransaction();
 
-                            $operation_shift = $object -> operation_shift -> value;
-                            $limit = $this->getLimit(1, $categ);
-                            $status = $this-> findStatusNew($object->id(),1,0,0);
-                            $stat = intval($status);
-                            $lim = intval($limit);
-                            if ($stat <= $limit )
-                            {
-                                    $query = $this->connection->update('eepal_school_field_data');
-                                    $query->fields(['approved_a' => 0]);
-                                    $query->condition('id', $epal_id);
-                                    $query->execute();
+                 try 
+                 {
+                    $this->logger->error("lallala");
+                    if ($this->findSmallClasses() === self::ERROR_DB) {
+                        $transaction->rollback();
+                        return $this->respondWithStatus([
+                            "message" => t("Unexpected Error3")
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
 
+                 }
+                 catch (\Exception $e) {
+                    $this->logger->error($e->getMessage());
+                    $transaction->rollback();
+                    return $this->respondWithStatus([
+                        "message" => t("Unexpected Error!!")
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
 
-                           $limit = $this->getLimit(2, $categ);
-                           $courses =  $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(array('epal_id' => $object->id()));
-                           
-                          if ($courses){
-                          foreach ($courses as $key)
-                            {
-                                $sector = $key -> sector_id -> value;
-                                $status = $this-> findStatusNew($epal_id,$classId, $sector, 0);
-                                $stat = intval($status);
-                                $lim = intval($limit);
-                                if ($stat < $limit )
-                                {
-
-                                    $query = $this->connection->update('eepal_sectors_in_epal_field_data');
-                                    $query->fields(['approved_sector' => 0]);
-                                    $query->condition('epal_id', $epal_id);
-                                    $query->condition('sector_id', $sector);
-                                    $query->execute();
-                                  
-                                }
-                            }
-
-                      }
+                    return $this->respondWithStatus([
+                        'message' => "SmallClasses approvement successfully",
+                    ], Response::HTTP_OK);
 
 
-                      $limit = $this->getLimit(3, $categ);
-                      $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $epal_id));
-                      if ($courses){
-                      foreach ($courses as $key)
-                        {
-                            $specialit = $key -> specialty_id -> entity -> id();
 
-                            $status = $this-> findStatus($object->id(),3, 0, $specialit);
-                            $stat = intval($status);
-                            $lim = intval($limit);
-                            if ($stat < $limit )
-                            {
-
-                                    $query = $this->connection->update('eepal_specialties_in_epal_field_data');
-                                    $query->fields(['approved_speciality' => 0]);
-                                    $query->condition('epal_id', $epal_id);
-                                    $query->condition('specialty_id', $specialit);
-                                    $query->execute();
-                                   
-                            }
-                        }
-                        }
-                      if ($operation_shift == 'ΕΣΠΕΡΙΝΟ')
-                       {
-
-                        $limit = $this->getLimit(4, $categ);
-                        $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $object->id()));
-                      if ($courses){
-                      foreach ($courses as $key)
-                        {
-
-                            $specialit = $key -> specialty_id -> entity -> id(); 
-                            $status = $this-> findStatusNew($object->id(),4, 0, $specialit);
-                            $stat = intval($status);
-                            $lim = intval($limit);
-                            if ($stat < $limit )
-                            {
-                                   
-                                    $query = $this->connection->update('eepal_specialties_in_epal_field_data');
-                                    $query->fields(['approved_speciality_d' => 0]);
-                                    $query->condition('epal_id', $epal_id);
-                                    $query->condition('specialty_id', $specialit);
-                                    $query->execute();
-                                   
-                            }
-                        }
-                        }
-                        }
-                    
-                    
-
-                }
-
-                return $this->respondWithStatus($list, Response::HTTP_OK);
             }
             else
             {
@@ -1372,8 +1299,199 @@ public function findStatusNew($id, $classId, $sector, $specialit)
 
     }
 
-  
-                      
 
+
+
+  private function findSmallClasses()
+    {
+         $this->logger->error("ypologizw");
+        //Για κάθε σχολείο βρες τα ολιγομελή τμήματα
+        $sCon = $this->connection->select('eepal_school_field_data', 'eSchool')
+            ->fields('eSchool', array('id', 'metathesis_region','operation_shift'));
+        $eepalSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+        foreach ($eepalSchools as $eepalSchool) {
+
+            // Α' τάξη
+            if ($this->isSmallClass($eepalSchool->id, "1", "-1", $eepalSchool->metathesis_region) === self::SMALL_CLASS) {
+                $this->logger->error("ypologizwnnnnn");
+                if ($this->setSmallClassforA($eepalSchool->id) === self::ERROR_DB) {
+                    return self::ERROR_DB;
+                }
+            }
+
+            // Β' τάξη
+            $sCon = $this->connection->select('eepal_sectors_in_epal_field_data', 'eSchool')
+                ->fields('eSchool', array('epal_id', 'sector_id'))
+                ->condition('eSchool.epal_id', $eepalSchool->id, '=');
+            $eepalSectorsInEpal = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+            foreach ($eepalSectorsInEpal as $eepalSecInEp) {
+                if ($this->isSmallClass($eepalSchool->id, "2", $eepalSecInEp->sector_id, $eepalSchool->metathesis_region) === self::SMALL_CLASS) {
+                    if ($this->setSmallClassforSector($eepalSchool->id, $eepalSecInEp->sector_id) === self::ERROR_DB) {
+                        return self::ERROR_DB;
+                    }
+                }
+            }
+
+            // Γ' τάξη
+            $sCon = $this->connection->select('eepal_specialties_in_epal_field_data', 'eSchool')
+                ->fields('eSchool', array('epal_id', 'specialty_id'))
+                ->condition('eSchool.epal_id', $eepalSchool->id, '=');
+            $eepalSpecialtiesInEpal = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+            foreach ($eepalSpecialtiesInEpal as $eepalSpecialInEp) {
+                if ($this->isSmallClass($eepalSchool->id, "3", $eepalSpecialInEp->specialty_id, $eepalSchool->metathesis_region) === self::SMALL_CLASS) {
+                    if ($this->setSmallClassforSpecility($eepalSchool->id, $eepalSpecialInEp->specialty_id) === self::ERROR_DB) {
+                        return self::ERROR_DB;
+                    }
+                }
+            }
+
+            // Δ' τάξη
+            if ($eepalSchool->operation_shift === "ΕΣΠΕΡΙΝΟ") {
+                $sCon = $this->connection->select('eepal_specialties_in_epal_field_data', 'eSchool')
+                    ->fields('eSchool', array('epal_id', 'specialty_id'))
+                    ->condition('eSchool.epal_id', $eepalSchool->id, '=');
+                $eepalSpecialtiesInEpal = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                foreach ($eepalSpecialtiesInEpal as $eepalSpecialInEp) {
+                    if ($this->isSmallClass($eepalSchool->id, "4", $eepalSpecialInEp->specialty_id, $eepalSchool->metathesis_region) === self::SMALL_CLASS) {
+                        if ($this->setSmallClassforSpecilityD($eepalSchool->id, $eepalSpecialInEp->specialty_id) === self::ERROR_DB) {
+                            return self::ERROR_DB;
+                        }
+                    }
+                }
+            } //end if ΕΣΠΕΡΙΝΟ
+        } //end for each school/department
+
+        return self::SUCCESS;
+    }   //end function
+
+
+    private function isSmallClass($schoolId, $classId, $sectorOrcourseId, $regionId)
+    {
+        
+        $limitDown = $this->retrieveLimitDown($classId, $regionId);
+
+        if ($limitDown === self::NO_CLASS_LIMIT_DOWN) {
+            return self::NO_CLASS_LIMIT_DOWN;
+        } elseif ($limitDown === self::ERROR_DB) {
+            return self::ERROR_DB;
+        }
+
+        $numStudents = $this->countStudents($schoolId, $classId, $sectorOrcourseId);
+
+        if ($numStudents === self::ERROR_DB) {
+            return self::ERROR_DB;
+        }
+
+        //Αν $numStudents == 0, γύρισε false, ώστε να μη γίνει περιττή κλήση στην markStudentsInSmallClass
+        if (($numStudents < $limitDown) && ($numStudents > 0)) {
+            return self::SMALL_CLASS;
+        } else {
+            return self::NON_SMALL_CLASS;
+        }
+    }
+
+    private function retrieveLimitDown($classId, $regionId)
+    {
+
+        try {
+            $sCon = $this->connection->select('epal_class_limits', 'eClassLimit')
+                ->fields('eClassLimit', array('limit_down'))
+                ->condition('eClassLimit.name', $classId, '=')
+                ->condition('eClassLimit.category', $regionId, '=');
+            $classLimits = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+            if (sizeof($classLimits) === 1) {
+                $classLimit = reset($classLimits);
+                return $classLimit->limit_down;
+            } else {
+                return self::NO_CLASS_LIMIT_DOWN;
+            }
+        } //end try
+        catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return self::ERROR_DB;
+        }
+    } //end function
+
+    private function countStudents($schoolId, $classId, $sectorOrcourseId)
+    {
+        try {
+            $sCon = $this->connection->select('epal_student_class', 'eStudent')
+                ->fields('eStudent', array('id'))
+                ->condition('eStudent.epal_id', $schoolId, '=')
+                ->condition('eStudent.currentclass', $classId, '=')
+                ->condition('eStudent.specialization_id', $sectorOrcourseId, '=');
+            return $sCon->countQuery()->execute()->fetchField();
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return self::ERROR_DB;
+        }
+    }
+
+    private function setSmallClassforA($schoolId)
+    {
+        $this->logger->error($schoolId. "A");
+        try {
+            $query = $this->connection->update('eepal_school_field_data');
+            $query->fields(['approved_a' => 0]);
+            $query->condition('id', $schoolId);
+            $query->execute();
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return self::ERROR_DB;
+        }
+        return self::SUCCESS;
+    }
+
+  
+    private function setSmallClassforSector($schoolId, $sectorid)   
+    {
+          $this->logger->error($schoolId.$sectorid. "B");
+          try {
+            $query = $this->connection->update('eepal_sectors_in_epal_field_data');
+            $query->fields(['approved_sector' => 0]);
+            $query->condition('epal_id', $schoolId);
+            $query->condition('sector_id', $sectorid);
+            $query->execute();
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return self::ERROR_DB;
+        }
+        return self::SUCCESS;
+    }           
+
+
+ private function setSmallClassforSpecility($schoolId, $specialityid)   
+    {
+        $this->logger->error($schoolId.$specialityid. "C");
+        try {
+            $query = $this->connection->update('eepal_specialties_in_epal_field_data');
+            $query->fields(['approved_speciality' => 0]);
+            $query->condition('epal_id', $schoolId);
+            $query->condition('specialty_id', $specialityid);
+            $query->execute();
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return self::ERROR_DB;
+        }
+        return self::SUCCESS;
+    }   
+
+
+    private function setSmallClassforSpecilityD($schoolId, $specialityid)   
+    {
+        $this->logger->error($schoolId.$specialityid. "D");
+        try {
+            $query = $this->connection->update('eepal_specialties_in_epal_field_data');
+            $query->fields(['approved_speciality_d' => 0]);
+            $query->condition('epal_id', $schoolId);
+            $query->condition('specialty_id', $specialityid);
+            $query->execute();
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return self::ERROR_DB;
+        }
+        return self::SUCCESS;
+    }   
 
 }
