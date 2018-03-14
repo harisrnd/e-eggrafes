@@ -42,9 +42,9 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
     <p style="margin-top: 5px; line-height: 2em;"> Παρακαλώ καθορίστε την κατηγορία ΓΕΛ που θα φοιτήσει ο μαθητής
             κατά το σχολικό έτος 2018-19, επιλέγοντας ΗΜΕΡΗΣΙΟ ή ΕΣΠΕΡΙΝΟ.</p>
         <div style= "margin-top: 50px; margin-bottom: 100px;">
-            <label for="category">Τύπος ΓΕ.Λ.:</label><br/>
+            <label for="category">Κατηγορία ΓΕ.Λ.:</label><br/>
             <select class="form-group" #type_sel class="form-control" formControlName="category" (change)="categoryselected(type_sel)">
-                <option value="0">Επιλέξτε Τύπο ΓΕ.Λ.</option>
+                <option value="0">Επιλέξτε Κατηγορία ΓΕ.Λ.</option>
                 <option value="ΗΜΕΡΗΣΙΟ">ΗΜΕΡΗΣΙΟ</option>
                 <option value="ΕΣΠΕΡΙΝΟ">ΕΣΠΕΡΙΝΟ</option>
             </select>
