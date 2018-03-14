@@ -7,7 +7,7 @@
   </button>
                 <img src="../theme/assets/images/epalschool_logo.png" />
                 <div class="collapse navbar-collapse flex-row-reverse" id="navbarNav">
-                    <div *ngIf="(loginInfo$ | async).size > 0">
+                    <div *ngIf="(loginInfo$ | async).size > 0 " >
                         <ul class="navbar-nav">
                             <div class="row">
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
@@ -51,18 +51,32 @@
                                         <a class="nav-link" [routerLink]="['/school/perfecture-view']" [routerLinkActive]="['active']"><b>Πληρότητα Σχολείων</b></a>
                                     </li>
                                 </div>
-                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+                                 <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 2)" class="nav-item">
                                     <li *ngIf="authRole=='dide'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/eduadmin-view']" [routerLinkActive]="['active']"><b>Πληρότητα Σχολείων</b></a>
                                     </li>
                                 </div>
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
-                                    <li *ngIf=" authRole=='pde' || authRole=='dide' " class="nav-item">
+                                    <li *ngIf=" authRole=='dide' && (schtype == 2)" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/mergeschools']" [routerLinkActive]="['active']"><b>Συνενώσεις Τμημάτων</b></a>
                                     </li>
                                 </div>
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
-                                    <li *ngIf=" authRole =='pde' || authRole =='dide' " class="nav-item">
+                                    <li *ngIf=" authRole =='dide' && (schtype == 2) " class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/school/undomerge']" [routerLinkActive]="['active']"><b>Αναιρέσεις συνενώσεων</b></a>
+                                    </li>
+                                </div>
+
+
+                                <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+                                    <li *ngIf=" authRole=='pde' && (schtype == 2)"
+                                     class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/school/mergeschools']" [routerLinkActive]="['active']"><b>Συνενώσεις Τμημάτων</b></a>
+                                    </li>
+                                </div>
+                                <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+                                    <li *ngIf=" authRole =='pde' && (schtype == 2) " 
+                                    class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/undomerge']" [routerLinkActive]="['active']"><b>Αναιρέσεις συνενώσεων</b></a>
                                     </li>
                                 </div>
@@ -78,7 +92,7 @@
                                     </li>
                                 </div>
 
-                                <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 2)" class="nav-item">
                                     <li *ngIf="authRole=='dide'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/ministry/minister-reports']" [routerLinkActive]="['active']"><b>Αναφορές</b></a>
                                     </li>

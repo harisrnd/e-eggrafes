@@ -123,7 +123,7 @@ import { IAppState } from "../../store/store";
                     </div>
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία αιτούμενου</div>
+                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία Αιτούμενου</div>
                     </div>
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -140,15 +140,27 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{ GelStudentDetails$.guardian_mothername }}</div>
                     </div>
 
-                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.regionaddress}}</div>
-                        <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.regiontk}} - {{GelStudentDetails$.regionarea}}</div>
+                    <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία Φοίτησης Μαθητή</div>
                     </div>
 
+                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-3" style="font-size: 0.8em;">Σχολείο τελευταίας φοίτησης</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.lastschool_schoolname}}</div>
+                        <div class="col-md-3" style="font-size: 0.8em;">Σχολικό έτος τελευταίας φοίτησης</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.lastschool_schoolyear}}</div>
+                    </div>
+
+<!--                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
+                        <div *ngIf="GelStudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
+                        <div *ngIf="GelStudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
+                        <div *ngIf="GelStudentDetails$.lastschool_class === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ</div>
+                        <div *ngIf="GelStudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div>
+                    </div> -->
+
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία μαθητή</div>
+                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία Μαθητή</div>
                     </div>
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -168,28 +180,26 @@ import { IAppState } from "../../store/store";
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Ημερομηνία Γέννησης</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.birthdate}}</div>
-                        <div class="col-md-3" style="font-size: 0.8em;">Τηλέφωνο Επικοινωνίας</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.telnum}}</div>
+                        <div *ngIf="GelStudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
+                        <div *ngIf="GelStudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.am}}</div>
                     </div>
-
-                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Σχολείο τελευταίας φοίτησης</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.lastschool_schoolname}}</div>
-                        <div class="col-md-3" style="font-size: 0.8em;">Σχολικό έτος τελευταίας φοίτησης</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.lastschool_schoolyear}}</div>
+                    
+                    <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center">Στοιχεία Επικοινωνίας</div>
                     </div>
-
-                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
-                        <div *ngIf="GelStudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
-                        <div *ngIf="GelStudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
-                        <div *ngIf="GelStudentDetails$.lastschool_class === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ</div>
-                        <div *ngIf="GelStudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div>
-                    </div>
+                    
+<!--                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.regionaddress}}</div>
+                        <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.regiontk}} - {{GelStudentDetails$.regionarea}}</div>
+                    </div>  -->
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Δήλωση από:</div>
-                        <div class="col-md-9" style="font-size: 0.8em; font-weight: bold">{{ GelStudentDetails$.relationtostudent }}</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{ GelStudentDetails$.relationtostudent }}</div>
+                        <div class="col-md-3" style="font-size: 0.8em;">Τηλέφωνο Επικοινωνίας</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.telnum}}</div>
                     </div>
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -290,7 +300,7 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.changed}}</div>
                     </div>
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία αιτούμενου</div>
+                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία Αιτούμενου</div>
                     </div>
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -305,15 +315,28 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-3" style="font-size: 0.8em;">Όνομα μητέρας</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{ StudentDetails$.guardian_mothername }}</div>
                     </div>
-                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.regionaddress}}</div>
-                        <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.regiontk}} - {{StudentDetails$.regionarea}}</div>
-                    </div>
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία μαθητή</div>
+                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία Φοίτησης Μαθητή</div>
+                    </div>
+
+                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                    <div class="col-md-3" style="font-size: 0.8em;">Σχολείο τελευταίας φοίτησης</div>
+                    <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.lastschool_schoolname}}</div>
+                    <div class="col-md-3" style="font-size: 0.8em;">Σχολικό έτος τελευταίας φοίτησης</div>
+                    <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.lastschool_schoolyear}}</div>
+                    </div>
+
+ <!--                   <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
+                        <div *ngIf="StudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
+                        <div *ngIf="StudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
+                        <div *ngIf="StudentDetails$.lastschool_class === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ</div>
+                        <div *ngIf="StudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div>
+                    </div>  -->
+
+                    <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία Μαθητή</div>
                     </div>
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Όνομα μαθητή</div>
@@ -330,27 +353,26 @@ import { IAppState } from "../../store/store";
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Ημερομηνία Γέννησης</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.birthdate}}</div>
-                        <div class="col-md-3" style="font-size: 0.8em;">Τηλέφωνο Επικοινωνίας</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.telnum}}</div>
+                        <div *ngIf="StudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
+                        <div *ngIf="StudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.am}}</div>
+                    </div>
+
+                    <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία Επικοινωνίας</div>
                     </div>
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Σχολείο τελευταίας φοίτησης</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.lastschool_schoolname}}</div>
-                        <div class="col-md-3" style="font-size: 0.8em;">Σχολικό έτος τελευταίας φοίτησης</div>
-                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.lastschool_schoolyear}}</div>
+                        <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.regionaddress}}</div>
+                        <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.regiontk}} - {{StudentDetails$.regionarea}}</div>
                     </div>
 
-                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
-                        <div *ngIf="StudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
-                        <div *ngIf="StudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
-                        <div *ngIf="StudentDetails$.lastschool_class === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ</div>
-                        <div *ngIf="StudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div>
-                    </div>
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Δήλωση από:</div>
-                        <div class="col-md-9" style="font-size: 0.8em; font-weight: bold">{{ StudentDetails$.relationtostudent }}</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{ StudentDetails$.relationtostudent }}</div>
+                        <div class="col-md-3" style="font-size: 0.8em;">Τηλέφωνο Επικοινωνίας</div>
+                        <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.telnum}}</div>
                     </div>
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center">Επιλεχθέντα Σχολεία</div>
@@ -520,7 +542,6 @@ import { IAppState } from "../../store/store";
         this.SubmitedUsersSub = this._hds.getSubmittedPreview().subscribe(
             data => {
                 this.SubmitedApplic$.next(data);
-                this.showLoader$.next(false);
             },
             error => {
                 this.SubmitedApplic$.next([{}]);
@@ -531,41 +552,54 @@ import { IAppState } from "../../store/store";
         this.SubmittedGelUsersSub = this._hds.getGelSubmittedPreview().subscribe(
             data => {
                 this.GelSubmittedApplic$.next(data);
-                this.showLoader$.next(false);
             },
             error => {
                 this.GelSubmittedApplic$.next([{}]);
                 this.showLoader$.next(false);
                 console.log("Error Getting Schools");
             });
+            this.showLoader$.next(false);
+
     }
 
 
     setActiveEpalUser(ind: number): void {
 
+
         this.resetStore();
+        console.log("test0");
 
         if (ind === this.applicationEpalIdActive) {
+            console.log("test00");
+
             this.applicationEpalIdActive = 0;
             this.applicationGelIdActive = 0;
+            console.log("test000");
+
             return;
         }
 
         this.applicationEpalIdActive = ind;
         this.applicationGelIdActive = 0;
+        console.log("test1");
         this.showLoader$.next(true);
+        console.log("test2");
 
 
         this.SubmitedDetailsSub = this._hds.getStudentDetails(this.applicationEpalIdActive).subscribe(data => {
             this.EpalSubmittedDetails$.next(data);
-            this.showLoader$.next(false);
             this.createStoreWithEpalAppData();
+            this.showLoader$.next(false);
         },
             error => {
                 this.EpalSubmittedDetails$.next([{}]);
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
+            
+        console.log("test3");
+
+
 
     }
 
@@ -579,20 +613,23 @@ import { IAppState } from "../../store/store";
             return;
         }
 
+        console.log("test3333");
+
         this.applicationGelIdActive = ind;
         this.applicationEpalIdActive = 0;
         this.showLoader$.next(true);
 
         this.GelSubmittedDetailsSub = this._hds.getGelStudentDetails(this.applicationGelIdActive).subscribe(data => {
             this.GelSubmittedDetails$.next(data);
-            this.showLoader$.next(false);
             this.createStoreWithGelAppData();
+            this.showLoader$.next(false);
         },
             error => {
                 this.GelSubmittedDetails$.next([{}]);
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
+
 
     }
 
@@ -709,6 +746,7 @@ import { IAppState } from "../../store/store";
 
     createStoreWithEpalAppData()  {
 
+
         this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
 
         let class_id = this.EpalSubmittedDetails$.getValue()[0].currentclass;
@@ -756,9 +794,11 @@ import { IAppState } from "../../store/store";
             }]);
 
 
+
         this.sectorFieldsSub = this._ngRedux.select("sectorFields")
               .map(sectorFields => <ISectorFieldRecords>sectorFields)
               .subscribe(sfds => {
+                this.showLoader$.next(true);  
                   let seccnt = 0;
                   sfds.reduce(({}, sectorField) => {
                       ++seccnt;
@@ -769,11 +809,13 @@ import { IAppState } from "../../store/store";
                       }
                       return sectorField;
                   }, {});
+                  this.showLoader$.next(false);  
               }, error => { console.log("error selecting sectorFields"); });
 
 
           this.regionsSub = this._ngRedux.select("regions")
                   .subscribe(regions => {
+                    this.showLoader$.next(true);  
                       let rgns = <IRegionRecords>regions;
                       let numsel = 0;
                       let numreg = 0;
@@ -785,19 +827,22 @@ import { IAppState } from "../../store/store";
                               //if (epal.get("epal_id") === this.school_id ) {
                               for (let k=0; k < (this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen).length; k++)  {
                                   if (epal.get("epal_id") === this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].id) {
-                                      this._rsa.saveRegionSchoolsSelected(true, numreg-1, numsel-1, this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].choice_no );
+                                      this._rsa.saveRegionSchoolsSelected(true, numreg-1, numsel-1, this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].choice_no) ;
                                   }
                               }
                               return epal;
                           }, {});
                           return region;
                       }, {});
+                      this.showLoader$.next(false);  
+
                 }, error => { console.log("error selecting regions"); });
 
 
               this.sectorsSub = this._ngRedux.select("sectors")
                     //.map(sectors => <ISectorRecords>sectors)
                     .subscribe(sectors => {
+                        this.showLoader$.next(true);  
                         let secs = <ISectorRecords>sectors;
                         let numcour = 0;
                         let numsec = 0;
@@ -813,7 +858,9 @@ import { IAppState } from "../../store/store";
                             }, {});
                             return sector;
                         }, {});
+                        this.showLoader$.next(false);  
                     }, error => { console.log("error selecting sectors"); });
+
 
     }
 
@@ -875,6 +922,8 @@ import { IAppState } from "../../store/store";
 
     createStoreWithGelAppData()  {
 
+        this.showLoader$.next(true);
+
         this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
         this._sta.saveSchoolTypeSelected(1, "ΓΕΛ");
 
@@ -897,6 +946,7 @@ import { IAppState } from "../../store/store";
                         this._ecf.saveElectiveCourseFieldsSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
                     }
                 }
+                this.showLoader$.next(false);
             });
         }
 
@@ -909,6 +959,7 @@ import { IAppState } from "../../store/store";
                     }
                 }
              });
+             this.showLoader$.next(false);
          }
 
       let birthdate = this.GelSubmittedDetails$.getValue()[0].birthdate;
@@ -933,6 +984,7 @@ import { IAppState } from "../../store/store";
                 month: Number(birthparts[1]),
                 day: Number(birthparts[0])}}
           }]);
+
 
 
         /*

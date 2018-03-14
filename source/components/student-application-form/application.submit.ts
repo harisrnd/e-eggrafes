@@ -497,7 +497,6 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
                       return;
                     }
-
                     //console.log(aitisiObj[0]);
                     this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
                 },
@@ -509,7 +508,6 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         else  {
           this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
         }
-
 
     }
 

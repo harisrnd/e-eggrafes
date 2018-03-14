@@ -6,6 +6,11 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { IAppState } from "../../store/store";
+import { GelClassesActions } from "../../actions/gelclasses.actions";
+import { OrientationGroupActions } from "../../actions/orientationgroup.action";
+import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
+import { SCHOOLTYPE_INITIAL_STATE } from "../../store/schooltype/schooltype.initial-state";
+import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/schooltype/schooltype.types";
 
 @Component({
     selector: "reg-navbar",
@@ -15,6 +20,7 @@ import { IAppState } from "../../store/store";
 @Injectable() export default class NavbarComponent implements OnInit, OnDestroy {
     private authToken: string;
     private authRole: string;
+    private schtype: number;
     private lockCapacity: BehaviorSubject<boolean>;
     private lockStudents: BehaviorSubject<boolean>;
     private cuName: string;
@@ -22,15 +28,21 @@ import { IAppState } from "../../store/store";
     private cuser: any;
     private loginInfoSub: Subscription;
 
+    private schooltype$: BehaviorSubject<ISchoolTypeRecords>;
+    private schooltypeSub: Subscription;
+
+
     constructor(private _ngRedux: NgRedux<IAppState>
     ) {
 
         this.authToken = "";
         this.authRole = "";
+        this.schtype = -1;
         this.lockCapacity = new BehaviorSubject(true);
         this.lockStudents = new BehaviorSubject(true);
         this.cuName = "";
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
+        this.schooltype$ = new BehaviorSubject(SCHOOLTYPE_INITIAL_STATE);
 
     };
 
@@ -57,6 +69,19 @@ import { IAppState } from "../../store/store";
 
                 this.loginInfo$.next(loginInfo);
             });
+
+            this.schooltypeSub = this._ngRedux.select("schooltype")
+            .map(schooltype => <ISchoolTypeRecords>schooltype)
+            .subscribe(ecs => {
+                if (ecs.size > 0) {
+                      ecs.reduce(({}, type) => {
+                          this.schtype = type.id ;
+                        return type;
+                    }, {});
+                } else {
+                }
+                this.schooltype$.next(ecs);
+            }, error => { console.log("error selecting schooltype"); });
     }
 
     ngOnDestroy() {

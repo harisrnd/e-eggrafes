@@ -113,6 +113,7 @@ class WSConsumer extends ControllerBase
 
     return (new JsonResponse($obj))
         ->setStatusCode(Response::HTTP_OK);
+
     }
 
     public function getStudentEpalCertification($id)
