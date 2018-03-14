@@ -98,8 +98,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 
     ngOnInit() {
      
-       
-
+         
         this.JuniorHighSchoolSub = this._hds.getJuniorHighSchoolperDide().subscribe(x => {
             this.JuniorHighSchool$.next(x);
 
