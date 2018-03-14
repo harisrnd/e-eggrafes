@@ -954,7 +954,7 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     getServiceStudentPromotion(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
         
-        let mode="";
+        let mode="test";
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;

@@ -542,7 +542,6 @@ import { IAppState } from "../../store/store";
         this.SubmitedUsersSub = this._hds.getSubmittedPreview().subscribe(
             data => {
                 this.SubmitedApplic$.next(data);
-                this.showLoader$.next(false);
             },
             error => {
                 this.SubmitedApplic$.next([{}]);
@@ -553,41 +552,54 @@ import { IAppState } from "../../store/store";
         this.SubmittedGelUsersSub = this._hds.getGelSubmittedPreview().subscribe(
             data => {
                 this.GelSubmittedApplic$.next(data);
-                this.showLoader$.next(false);
             },
             error => {
                 this.GelSubmittedApplic$.next([{}]);
                 this.showLoader$.next(false);
                 console.log("Error Getting Schools");
             });
+            this.showLoader$.next(false);
+
     }
 
 
     setActiveEpalUser(ind: number): void {
 
+
         this.resetStore();
+        console.log("test0");
 
         if (ind === this.applicationEpalIdActive) {
+            console.log("test00");
+
             this.applicationEpalIdActive = 0;
             this.applicationGelIdActive = 0;
+            console.log("test000");
+
             return;
         }
 
         this.applicationEpalIdActive = ind;
         this.applicationGelIdActive = 0;
+        console.log("test1");
         this.showLoader$.next(true);
+        console.log("test2");
 
 
         this.SubmitedDetailsSub = this._hds.getStudentDetails(this.applicationEpalIdActive).subscribe(data => {
             this.EpalSubmittedDetails$.next(data);
-            this.showLoader$.next(false);
             this.createStoreWithEpalAppData();
+            this.showLoader$.next(false);
         },
             error => {
                 this.EpalSubmittedDetails$.next([{}]);
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
+            
+        console.log("test3");
+
+
 
     }
 
@@ -601,20 +613,23 @@ import { IAppState } from "../../store/store";
             return;
         }
 
+        console.log("test3333");
+
         this.applicationGelIdActive = ind;
         this.applicationEpalIdActive = 0;
         this.showLoader$.next(true);
 
         this.GelSubmittedDetailsSub = this._hds.getGelStudentDetails(this.applicationGelIdActive).subscribe(data => {
             this.GelSubmittedDetails$.next(data);
-            this.showLoader$.next(false);
             this.createStoreWithGelAppData();
+            this.showLoader$.next(false);
         },
             error => {
                 this.GelSubmittedDetails$.next([{}]);
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
+
 
     }
 
@@ -731,6 +746,7 @@ import { IAppState } from "../../store/store";
 
     createStoreWithEpalAppData()  {
 
+
         this._eca.saveEpalClassesSelected({name: this.EpalSubmittedDetails$.getValue()[0].currentclass});
 
         let class_id = this.EpalSubmittedDetails$.getValue()[0].currentclass;
@@ -776,9 +792,11 @@ import { IAppState } from "../../store/store";
             }]);
 
 
+
         this.sectorFieldsSub = this._ngRedux.select("sectorFields")
               .map(sectorFields => <ISectorFieldRecords>sectorFields)
               .subscribe(sfds => {
+                this.showLoader$.next(true);  
                   let seccnt = 0;
                   sfds.reduce(({}, sectorField) => {
                       ++seccnt;
@@ -789,11 +807,13 @@ import { IAppState } from "../../store/store";
                       }
                       return sectorField;
                   }, {});
+                  this.showLoader$.next(false);  
               }, error => { console.log("error selecting sectorFields"); });
 
 
           this.regionsSub = this._ngRedux.select("regions")
                   .subscribe(regions => {
+                    this.showLoader$.next(true);  
                       let rgns = <IRegionRecords>regions;
                       let numsel = 0;
                       let numreg = 0;
@@ -805,19 +825,22 @@ import { IAppState } from "../../store/store";
                               //if (epal.get("epal_id") === this.school_id ) {
                               for (let k=0; k < (this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen).length; k++)  {
                                   if (epal.get("epal_id") === this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].id) {
-                                      this._rsa.saveRegionSchoolsSelected(true, numreg-1, numsel-1, this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].choice_no );
+                                      this._rsa.saveRegionSchoolsSelected(true, numreg-1, numsel-1, this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].choice_no) ;
                                   }
                               }
                               return epal;
                           }, {});
                           return region;
                       }, {});
+                      this.showLoader$.next(false);  
+
                 }, error => { console.log("error selecting regions"); });
 
 
               this.sectorsSub = this._ngRedux.select("sectors")
                     //.map(sectors => <ISectorRecords>sectors)
                     .subscribe(sectors => {
+                        this.showLoader$.next(true);  
                         let secs = <ISectorRecords>sectors;
                         let numcour = 0;
                         let numsec = 0;
@@ -833,7 +856,9 @@ import { IAppState } from "../../store/store";
                             }, {});
                             return sector;
                         }, {});
+                        this.showLoader$.next(false);  
                     }, error => { console.log("error selecting sectors"); });
+
 
     }
 
@@ -895,6 +920,8 @@ import { IAppState } from "../../store/store";
 
     createStoreWithGelAppData()  {
 
+        this.showLoader$.next(true);
+
         this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
         this._sta.saveSchoolTypeSelected(1, "ΓΕΛ");
 
@@ -917,6 +944,7 @@ import { IAppState } from "../../store/store";
                         this._ecf.saveElectiveCourseFieldsSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
                     }
                 }
+                this.showLoader$.next(false);
             });
         }
 
@@ -929,6 +957,7 @@ import { IAppState } from "../../store/store";
                     }
                 }
              });
+             this.showLoader$.next(false);
          }
 
       let birthdate = this.GelSubmittedDetails$.getValue()[0].birthdate;
@@ -951,6 +980,7 @@ import { IAppState } from "../../store/store";
                 month: Number(birthparts[1]),
                 day: Number(birthparts[0])}}
           }]);
+
 
 
         /*

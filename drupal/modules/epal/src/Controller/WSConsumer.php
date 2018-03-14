@@ -89,28 +89,26 @@ class WSConsumer extends ControllerBase
     public function testgetStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
 
-        $obj = (object) [
-            '$id' => '1',
-            'studentId' => 1666010,
-            'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
-            'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
-            'custodianLastName' => 'ΩΩΩΩΩΩ',
-            'custodianFirstName' => '',
-            'birthDate' => '1997-01-04T00:00:00',
-            'addressStreet' => 'ΕΛΛΗΣ 6',
-            'addressPostCode' => '30100',
-            'addressArea' => 'ΑΓΡΙΝΙΟ',
-            'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
-            'levelName' => 'Γ',
-            'sectionName' => 'Τεχνικός Μηχανοσυνθέτης Αεροσκαφών'
-        ];
-        
-        $result=json_encode($obj);
-
-        return (new JsonResponse([
+        $obj = array(
             'message' => 'Επιτυχία',
-            'data' => $result
-            ]))
+            'data' => array(
+                '$id' => '1',
+                'studentId' => 1666010,
+                'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
+                'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
+                'custodianLastName' => 'ΩΩΩΩΩΩ',
+                'custodianFirstName' => '',
+                'birthDate' => '1997-01-04T00:00:00',
+                'addressStreet' => 'ΕΛΛΗΣ 6',
+                'addressPostCode' => '30100',
+                'addressArea' => 'ΑΓΡΙΝΙΟ',
+                'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
+                'levelName' => 'Γ',
+                'sectionName' => 'Τεχνικός Μηχανοσυνθέτης Αεροσκαφών'
+            )
+        );
+        
+        return (new JsonResponse($obj))
             ->setStatusCode(Response::HTTP_OK);
     }
 
