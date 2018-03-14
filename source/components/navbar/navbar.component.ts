@@ -20,6 +20,7 @@ import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/
 @Injectable() export default class NavbarComponent implements OnInit, OnDestroy {
     private authToken: string;
     private authRole: string;
+    private schtype: number;
     private lockCapacity: BehaviorSubject<boolean>;
     private lockStudents: BehaviorSubject<boolean>;
     private cuName: string;
@@ -36,6 +37,7 @@ import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/
 
         this.authToken = "";
         this.authRole = "";
+        this.schtype = -1;
         this.lockCapacity = new BehaviorSubject(true);
         this.lockStudents = new BehaviorSubject(true);
         this.cuName = "";
@@ -73,10 +75,10 @@ import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/
             .subscribe(ecs => {
                 if (ecs.size > 0) {
                       ecs.reduce(({}, type) => {
+                          this.schtype = type.id ;
                         return type;
                     }, {});
                 } else {
-                    //this.formGroup.controls["typeId"].setValue("0");
                 }
                 this.schooltype$.next(ecs);
             }, error => { console.log("error selecting schooltype"); });
