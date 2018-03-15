@@ -15,7 +15,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 use Drupal\gel\Crypt;
 
-//use Drupal\epal\ClientConsumer;
+use Drupal\epal\ClientConsumer;
 
 class GelApplicationSubmit extends ControllerBase
 {
@@ -40,6 +40,7 @@ class GelApplicationSubmit extends ControllerBase
     const VALID_TELEPHONE_PATTERN = '/^2[0-9]{9}$/';
     const VALID_YEAR_PATTERN = '/^(19[6789][0-9]|20[0-1][0-9])$/';
     const VALID_CAPACITY_PATTERN = '/[0-9]*$/';
+    const LIMIT_SCHOOL_YEAR = '2013-2014';
 
     protected $entityTypeManager;
     protected $logger;
@@ -53,16 +54,15 @@ class GelApplicationSubmit extends ControllerBase
     ) {
         $this->entityTypeManager = $entityTypeManager;
         $this->connection = $connection;
-        $this->logger = $loggerChannel->get('epal');
+        $this->logger = $loggerChannel->get('gel');
 
-        /*
         $config = $this->config('epal.settings');
         $settings = [];
         foreach (['ws_endpoint', 'ws_username', 'ws_password', 'verbose', 'NO_SAFE_CURL'] as $setting) {
             $settings[$setting] = $config->get($setting);
         }
         $this->client = new ClientConsumer($settings, $entityTypeManager, $loggerChannel);
-        */
+
     }
 
     public static function create(ContainerInterface $container)
@@ -138,12 +138,17 @@ class GelApplicationSubmit extends ControllerBase
             $regionaddress_encoded = $crypt->encrypt($applicationForm[0]['regionaddress']);
             $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
             $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
-            $relationtostudent = $applicationForm[0]['relationtostudent'];
+            //$relationtostudent = $applicationForm[0]['relationtostudent'];
             $telnum_encoded = $crypt->encrypt($applicationForm[0]['telnum']);
             $guardian_name_encoded = $crypt->encrypt($applicationForm[0]['cu_name']);
             $guardian_surname_encoded = $crypt->encrypt($applicationForm[0]['cu_surname']);
             $guardian_fathername_encoded = $crypt->encrypt($applicationForm[0]['cu_fathername']);
             $guardian_mothername_encoded = $crypt->encrypt($applicationForm[0]['cu_mothername']);
+
+            $am_encoded = "";
+            if ( $applicationForm[0]['lastschool_schoolyear'] >= self::LIMIT_SCHOOL_YEAR)
+                $am_encoded = $crypt->encrypt($applicationForm[0]['am']);
+
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             return $this->respondWithStatus([
@@ -170,6 +175,8 @@ class GelApplicationSubmit extends ControllerBase
                 'langcode' => 'el',
                 'user_id' => $applicantUser->user_id->target_id,
                 'gel_userid' => $applicantUser->id(),
+                'am' => $am_encoded,
+                'myschool_id' => $applicationForm[0]['studentId'],
                 'name' => $name_encoded,
                 'studentsurname' => $studentsurname_encoded,
                 'birthdate' => $applicationForm[0]['studentbirthdate'],
@@ -190,9 +197,10 @@ class GelApplicationSubmit extends ControllerBase
                 'guardian_mothername' => $guardian_mothername_encoded,
                 'agreement' => $applicationForm[0]['disclaimer_checked'],
                 'hasright' => $applicationForm[0]['hasright'],
-                'relationtostudent' => $relationtostudent,
+                'relationtostudent' => $applicationForm[0]['relationtostudent'],
                 'telnum' => $telnum_encoded,
                 'second_period' => $second_period,
+                'myschool_currentsection' => $applicationForm[0]['section_name'],
             );
 
             if (($errorCode = $this->validateStudent(array_merge(
@@ -351,12 +359,17 @@ class GelApplicationSubmit extends ControllerBase
           $regionaddress_encoded = $crypt->encrypt($applicationForm[0]['regionaddress']);
           $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
           $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
-          $relationtostudent = $applicationForm[0]['relationtostudent'];
+          //$relationtostudent = $applicationForm[0]['relationtostudent'];
           $telnum_encoded = $crypt->encrypt($applicationForm[0]['telnum']);
           $guardian_name_encoded = $crypt->encrypt($applicationForm[0]['cu_name']);
           $guardian_surname_encoded = $crypt->encrypt($applicationForm[0]['cu_surname']);
           $guardian_fathername_encoded = $crypt->encrypt($applicationForm[0]['cu_fathername']);
           $guardian_mothername_encoded = $crypt->encrypt($applicationForm[0]['cu_mothername']);
+
+          $am_encoded = "";
+          if ( $applicationForm[0]['lastschool_schoolyear'] >= self::LIMIT_SCHOOL_YEAR)
+              $am_encoded = $crypt->encrypt($applicationForm[0]['am']);
+
       } catch (\Exception $e) {
           $this->logger->error($e->getMessage());
           return $this->respondWithStatus([
@@ -383,6 +396,8 @@ class GelApplicationSubmit extends ControllerBase
               'langcode' => 'el',
               'user_id' => $applicantUser->user_id->target_id,
               'gel_userid' => $applicantUser->id(),
+              'am' => $am_encoded,
+              'myschool_id' => $applicationForm[0]['studentId'],
               'name' => $name_encoded,
               'studentsurname' => $studentsurname_encoded,
               'birthdate' => $applicationForm[0]['studentbirthdate'],
@@ -403,9 +418,10 @@ class GelApplicationSubmit extends ControllerBase
               'guardian_mothername' => $guardian_mothername_encoded,
               'agreement' => $applicationForm[0]['disclaimer_checked'],
               'hasright' => $applicationForm[0]['hasright'],
-              'relationtostudent' => $relationtostudent,
+              'relationtostudent' => $applicationForm[0]['relationtostudent'],
               'telnum' => $telnum_encoded,
               'second_period' => $second_period,
+              'myschool_currentsection' => $applicationForm[0]['section_name'],
           );
 
           if (($errorCode = $this->validateStudent(array_merge(
@@ -433,8 +449,6 @@ class GelApplicationSubmit extends ControllerBase
               ], Response::HTTP_OK);
           }
 
-
-          //NEW
           //ενημέρωση (update) του gel_student
           $entity_storage_student = $this->entityTypeManager->getStorage('gel_student');
           $gelStudents = $entity_storage_student->loadByProperties(array('id' => $studentId));
@@ -464,8 +478,12 @@ class GelApplicationSubmit extends ControllerBase
             $gelStudent->set('guardian_surname', $guardian_surname_encoded);
             $gelStudent->set('guardian_fathername', $guardian_fathername_encoded);
             $gelStudent->set('guardian_mothername', $guardian_mothername_encoded);
-            $gelStudent->set('relationtostudent', $relationtostudent);
+            $gelStudent->set('relationtostudent', $applicationForm[0]['relationtostudent']);
             $gelStudent->set('telnum', $telnum_encoded);
+
+            $gelStudent->set('am', $am_encoded);
+            $gelStudent->set('myschool_id', $applicationForm[0]['studentId']);
+            $gelStudent->set('myschool_currentsection', $applicationForm[0]['section_name']);
 
             $gelStudent->save();
           }
@@ -507,7 +525,6 @@ class GelApplicationSubmit extends ControllerBase
               }
           }
 
-          ///end new...
 
           return $this->respondWithStatus([
               "error_code" => 0
@@ -632,8 +649,14 @@ class GelApplicationSubmit extends ControllerBase
         if (!$student["lastschool_schoolname"]) {
             return 1022;
         }
-        if (!$student["lastschool_class"]) {
+        if ($student["am"] && !$student["lastschool_class"]) {
             return 1023;
+        }
+        if ($student["myschool_id"] && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) {
+            return 1024;
+        }
+        if (!$student["myschool_id"] && $student["lastschool_schoolyear"] >= self::LIMIT_SCHOOL_YEAR) {
+            return 1025;
         }
 
         // check if application exists in eithe gel_student or epal_student entity
@@ -651,29 +674,41 @@ class GelApplicationSubmit extends ControllerBase
 
 
     private function existApp($entityName, $userIdField, $applicantUser, $student) {
-      $esQuery = $this->connection->select($entityName, 'es')
-                              ->fields('es',
-                              array('name',
-                                      'studentsurname',
-                                      'birthdate',
-                                  ));
-      $esQuery->condition('es.' . $userIdField, $applicantUser->id(), '=');
-      $esQuery->condition('es.delapp' , 0, '=');
-      $existing = $esQuery->execute()->fetchAll(\PDO::FETCH_OBJ);
-      if ($existing && sizeof($existing) > 0) {
-          $crypt = new Crypt();
-          foreach ($existing as $candidate) {
-              if (($crypt->decrypt($candidate->name) == $student['name'])
-                  && ($crypt->decrypt($candidate->studentsurname) == $student['studentsurname'])
-                  && ($candidate->birthdate == $student['birthdate'])
-                  ) {
-                  return 8004;
-              }
-          }
+        if (!$student["myschool_id"]) {
+            $esQuery = $this->connection->select($entityName, 'es')
+                                    ->fields('es',
+                                    array('name',
+                                            'studentsurname',
+                                            'birthdate',
+                                        ));
+            $esQuery->condition('es.' . $userIdField, $applicantUser->id(), '=');
+            $esQuery->condition('es.delapp' , 0, '=');
+            $existing = $esQuery->execute()->fetchAll(\PDO::FETCH_OBJ);
+            if ($existing && sizeof($existing) > 0) {
+                $crypt = new Crypt();
+                foreach ($existing as $candidate) {
+                    if (($crypt->decrypt($candidate->name) == $student['name'])
+                        && ($crypt->decrypt($candidate->studentsurname) == $student['studentsurname'])
+                        && ($candidate->birthdate == $student['birthdate'])
+                        ) {
+                        return 8004;
+                    }
+                }
+            }
+            return -1;
       }
-      return -1;
+
+      else {
+          $esQuery = $this->connection->select($entityName, 'es')
+                                      ->fields('es',array('myschool_id'));
+          $esQuery->condition('es.myschool_id', $student["myschool_id"], '=');
+          $esQuery->condition('es.delapp' , 0, '=');
+          $existing = $esQuery->execute()->fetchAll(\PDO::FETCH_OBJ);
+          if ($existing && sizeof($existing) > 0)
+            return 8004;
+          return -1;
+      }
+
     }
-
-
 
 }

@@ -35,8 +35,12 @@ import { IAppState } from "../../store/store";
              <breadcrumbs></breadcrumbs>
     </div>
     <h4> Επιλογή Τομέα </h4>
-     <div class = "loading" *ngIf="(sectorFields$ | async).size === 0">
+
+    <!--<div class = "loading" *ngIf="(showLoader | async) === false">-->
+    <div class = "loading" *ngIf="(sectorFields$ | async).size === 0">
+
     </div>
+
        <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε τον τομέα στον οποίο θα φοιτήσει ο μαθητής το νέο σχολικό έτος στην επαγγελματική εκπαίδευση. Έπειτα επιλέξτε <i>Συνέχεια</i>.</p>
             <ul class="list-group main-view">
             <div *ngFor="let sectorField$ of sectorFields$ | async; let i=index; let isOdd=odd; let isEven=even">
@@ -46,6 +50,7 @@ import { IAppState } from "../../store/store";
             </div>
             </ul>
 
+        <!--<div class="row" style="margin-top: 20px; margin-bottom: 20px;" *ngIf =  "(showLoader | async) === true">-->
         <div class="row" style="margin-top: 20px; margin-bottom: 20px;" *ngIf="(sectorFields$ | async).size > 0">
         <div class="col-md-6">
             <button type="button" class="btn-primary btn-lg pull-left" (click)="router.navigate(['/epal-class-select']);" >
@@ -69,6 +74,7 @@ import { IAppState } from "../../store/store";
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
+    private showLoader: BehaviorSubject<boolean>;
 
     constructor(private _cfa: SectorFieldsActions,
         private _rsa: RegionSchoolsActions,
@@ -80,13 +86,42 @@ import { IAppState } from "../../store/store";
         this.modalText = new BehaviorSubject("");
         this.modalHeader = new BehaviorSubject("");
         this.isModalShown = new BehaviorSubject(false);
+        this.showLoader = new BehaviorSubject(false);
     };
 
     ngOnInit() {
         (<any>$("#sectorFieldsNotice")).appendTo("body");
         window.scrollTo(0, 0);
-        
+
+        //test code in order to solve empty list problem and loader
+        /*
+        this._cfa.getSectorFields(false)
+            .then(msg => {
+                  this.sectorFieldsSub = this._ngRedux.select("sectorFields")
+                      .map(sectorFields => <ISectorFieldRecords>sectorFields)
+                      .subscribe(sfds => {
+                          sfds.reduce(({}, sectorField) => {
+                              if (sectorField.get("selected") === true) {
+                                  this.sectorActive = sectorField.get("id") - 1;
+                              }
+                              return sectorField;
+                          }, {});
+                          this.sectorFields$.next(sfds);
+                          //console.log(sfds.size);
+                          this.showLoader.next(true);
+                      }, error => { console.log("error selecting sectorFields"); });
+            })
+            .catch(err => {
+                console.log("error in getSectorFields function");
+            });
+        */
+
+
+        //end test
+
+
         this._cfa.getSectorFields(false);
+
         this.sectorFieldsSub = this._ngRedux.select("sectorFields")
             .map(sectorFields => <ISectorFieldRecords>sectorFields)
             .subscribe(sfds => {
@@ -94,11 +129,11 @@ import { IAppState } from "../../store/store";
                     if (sectorField.get("selected") === true) {
                         this.sectorActive = sectorField.get("id") - 1;
                     }
-
                     return sectorField;
                 }, {});
                 this.sectorFields$.next(sfds);
             }, error => { console.log("error selecting sectorFields"); });
+
     }
 
     ngOnDestroy() {

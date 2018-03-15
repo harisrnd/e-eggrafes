@@ -449,7 +449,9 @@ class SubmitedApplications extends ControllerBase
 
             $esQuery = $this->connection->select('epal_student', 'es')
                                     ->fields('es',
-                                    array('name',
+                                    array(  'myschool_id',
+                                            'am',
+                                            'name',
                                             'studentsurname',
                                             'fatherfirstname',
                                             'motherfirstname',
@@ -528,6 +530,8 @@ class SubmitedApplications extends ControllerBase
 
                     $crypt = new Crypt();
                     try {
+                        if (isset($epalStudent->myschool_id ))
+                          $am_decoded = $crypt->decrypt($epalStudent->am);
                         $name_decoded = $crypt->decrypt($epalStudent->name);
                         $studentsurname_decoded = $crypt->decrypt($epalStudent->studentsurname);
                         $fatherfirstname_decoded = $crypt->decrypt($epalStudent->fatherfirstname);
@@ -535,7 +539,6 @@ class SubmitedApplications extends ControllerBase
                         $regionaddress_decoded = $crypt->decrypt($epalStudent->regionaddress);
                         $regiontk_decoded = $crypt->decrypt($epalStudent->regiontk);
                         $regionarea_decoded = $crypt->decrypt($epalStudent->regionarea);
-                        //$relationtostudent_decoded = $crypt->decrypt($epalStudent->relationtostudent);
                         $telnum_decoded = $crypt->decrypt($epalStudent->telnum);
                         $guardian_name_decoded = $crypt->decrypt($epalStudent->guardian_name);
                         $guardian_surname_decoded = $crypt->decrypt($epalStudent->guardian_surname);
@@ -573,6 +576,7 @@ class SubmitedApplications extends ControllerBase
 
                     $list[] = array(
                             'applicationId' => $epalStudent->id,
+                            'am' => $am_decoded,
                             'name' => $name_decoded,
                             'studentsurname' => $studentsurname_decoded,
                             'fatherfirstname' => $fatherfirstname_decoded,
