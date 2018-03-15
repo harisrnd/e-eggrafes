@@ -1,7 +1,7 @@
 import { NgRedux } from "@angular-redux/store";
 import { Injectable } from "@angular/core";
 
-import { ORIENTATIONGROUP_SAVE,ORIENTATIONGROUP_RECEIVED } from "../constants";
+import { ORIENTATIONGROUP_SAVE,ORIENTATIONGROUP_RECEIVED, ORIENTATIONGROUP_SAVE_WITHIDS } from "../constants";
 import { ORIENTATIONGROUP_INIT } from "../constants";
 import { HelperDataService } from "../services/helper-data-service";
 import { IAppState } from "../store";
@@ -49,7 +49,16 @@ export class OrientationGroupActions {
         });
     };
     
-
+    saveOrientationGroupSelectedwithIds = (newChoice: number, isSelected: number) => {
+        return this._ngRedux.dispatch({
+            type: ORIENTATIONGROUP_SAVE_WITHIDS,
+            payload: {
+                newChoice: newChoice,
+                isSelected: isSelected,
+            }
+        });
+    };
+    
 
 
 

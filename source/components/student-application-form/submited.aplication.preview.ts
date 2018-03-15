@@ -567,23 +567,15 @@ import { IAppState } from "../../store/store";
 
 
         this.resetStore();
-        console.log("test0");
-
         if (ind === this.applicationEpalIdActive) {
-            console.log("test00");
-
             this.applicationEpalIdActive = 0;
             this.applicationGelIdActive = 0;
-            console.log("test000");
-
             return;
         }
 
         this.applicationEpalIdActive = ind;
         this.applicationGelIdActive = 0;
-        console.log("test1");
         this.showLoader$.next(true);
-        console.log("test2");
 
 
         this.SubmitedDetailsSub = this._hds.getStudentDetails(this.applicationEpalIdActive).subscribe(data => {
@@ -597,8 +589,6 @@ import { IAppState } from "../../store/store";
                 this.showLoader$.next(false);
             });
             
-        console.log("test3");
-
 
 
     }
@@ -612,8 +602,6 @@ import { IAppState } from "../../store/store";
             this.applicationEpalIdActive = 0;
             return;
         }
-
-        console.log("test3333");
 
         this.applicationGelIdActive = ind;
         this.applicationEpalIdActive = 0;
@@ -752,11 +740,19 @@ import { IAppState } from "../../store/store";
         let class_id = this.EpalSubmittedDetails$.getValue()[0].currentclass;
         if (class_id === "2" )
           this._sfa.getSectorFields(false);
+/*           this._sfa.getSectorFields(false).then(()=>{
+            this._sfa.saveSectorFieldsSelectedwithIds(-1, this.EpalSubmittedDetails$.getValue()[0].currentsector_id );
+          }); */
         else if (class_id === "3" || class_id === "4" )
           this._csa.getSectorCourses(false);
 
         if (class_id === "1" )
-          this._rsa.getRegionSchools(parseInt(class_id), "-1", true, false);
+          //this._rsa.getRegionSchools(parseInt(class_id), "-1", true, false);
+          this._rsa.getRegionSchools(parseInt(class_id), "-1", true, false).then(()=>{
+            for (let k=0; k < (this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen).length; k++)  {
+                this._rsa.saveRegionSchoolsSelectedwithIds(true, this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].id, this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].choice_no) ;
+            }
+          });
         else if (class_id === "2" ) {
           this._rsa.getRegionSchools(parseInt(class_id), parseInt(this.EpalSubmittedDetails$.getValue()[0].currentsector_id), true, false);
         }
@@ -770,36 +766,18 @@ import { IAppState } from "../../store/store";
         });
         this._sta.saveSchoolTypeSelected(2, "ΕΠΑΛ");
 
-        let birthdate = this.EpalSubmittedDetails$.getValue()[0].birthdate;
-        let birthparts = birthdate.split("/",3);
-        this._sdfa.saveStudentDataFields([{name: this.EpalSubmittedDetails$.getValue()[0].name,
-              studentsurname: this.EpalSubmittedDetails$.getValue()[0].studentsurname,
-              fatherfirstname: this.EpalSubmittedDetails$.getValue()[0].fatherfirstname,
-              motherfirstname: this.EpalSubmittedDetails$.getValue()[0].motherfirstname,
-              regionaddress: this.EpalSubmittedDetails$.getValue()[0].regionaddress,
-              regiontk: this.EpalSubmittedDetails$.getValue()[0].regiontk,
-              regionarea: this.EpalSubmittedDetails$.getValue()[0].regionarea,
-              lastschool_schoolname: {registry_no: this.EpalSubmittedDetails$.getValue()[0].lastschool_registrynumber,
-                  name: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolname,
-                  unit_type_id: this.EpalSubmittedDetails$.getValue()[0].lastschool_unittypeid},
-              lastschool_schoolyear: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolyear,
-              lastschool_class: this.EpalSubmittedDetails$.getValue()[0].lastschool_class,
-              relationtostudent: this.EpalSubmittedDetails$.getValue()[0].relationtostudent,
-              telnum: this.EpalSubmittedDetails$.getValue()[0].telnum,
-              studentbirthdate: {date: {year: Number(birthparts[2]),
-                  month: Number(birthparts[1]),
-                  day: Number(birthparts[0])}}
-            }]);
+
 
 
 
         this.sectorFieldsSub = this._ngRedux.select("sectorFields")
               .map(sectorFields => <ISectorFieldRecords>sectorFields)
               .subscribe(sfds => {
-                this.showLoader$.next(true);  
                   let seccnt = 0;
                   sfds.reduce(({}, sectorField) => {
+                    this.showLoader$.next(true);  
                       ++seccnt;
+                      console.log(sectorField.get("id"))
                       //if (sectorField.get("id") === this.sector_id ) {
                       if (sectorField.get("id") === this.EpalSubmittedDetails$.getValue()[0].currentsector_id ) {
                         //this.sector_index = seccnt -1;
@@ -859,6 +837,26 @@ import { IAppState } from "../../store/store";
                         this.showLoader$.next(false);  
                     }, error => { console.log("error selecting sectors"); });
 
+                    let birthdate = this.EpalSubmittedDetails$.getValue()[0].birthdate;
+                    let birthparts = birthdate.split("/",3);
+                    this._sdfa.saveStudentDataFields([{name: this.EpalSubmittedDetails$.getValue()[0].name,
+                          studentsurname: this.EpalSubmittedDetails$.getValue()[0].studentsurname,
+                          fatherfirstname: this.EpalSubmittedDetails$.getValue()[0].fatherfirstname,
+                          motherfirstname: this.EpalSubmittedDetails$.getValue()[0].motherfirstname,
+                          regionaddress: this.EpalSubmittedDetails$.getValue()[0].regionaddress,
+                          regiontk: this.EpalSubmittedDetails$.getValue()[0].regiontk,
+                          regionarea: this.EpalSubmittedDetails$.getValue()[0].regionarea,
+                          lastschool_schoolname: {registry_no: this.EpalSubmittedDetails$.getValue()[0].lastschool_registrynumber,
+                              name: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolname,
+                              unit_type_id: this.EpalSubmittedDetails$.getValue()[0].lastschool_unittypeid},
+                          lastschool_schoolyear: this.EpalSubmittedDetails$.getValue()[0].lastschool_schoolyear,
+                          lastschool_class: this.EpalSubmittedDetails$.getValue()[0].lastschool_class,
+                          relationtostudent: this.EpalSubmittedDetails$.getValue()[0].relationtostudent,
+                          telnum: this.EpalSubmittedDetails$.getValue()[0].telnum,
+                          studentbirthdate: {date: {year: Number(birthparts[2]),
+                              month: Number(birthparts[1]),
+                              day: Number(birthparts[0])}}
+                        }]);
 
     }
 
@@ -932,16 +930,18 @@ import { IAppState } from "../../store/store";
         let class_id = parseInt(this.GelSubmittedDetails$.getValue()[0].nextclass);
         let index;
          if (class_id === 1 || class_id === 3 || class_id === 4){
-            if (class_id===1){
+/*             if (class_id===1){
                 index=4;
             }
             else{
                 index=8;
-            }
+            } */
             this._ecf.getElectiveCourseFields(false,class_id).then(()=>{
                 for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
                     if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΕΠΙΛΟΓΗ") {
-                        this._ecf.saveElectiveCourseFieldsSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
+                        //this._ecf.saveElectiveCourseFieldsSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
+                        this._ecf.saveElectiveCourseFieldsSelectedwithIds(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
+
                     }
                 }
                 this.showLoader$.next(false);
@@ -949,11 +949,12 @@ import { IAppState } from "../../store/store";
         }
 
          if (class_id === 2 || class_id === 3 || class_id === 6 || class_id === 7){
-             let index=15;
+             //let index=15;
              this._ogs.getOrientationGroups(false,class_id,"ΟΠ").then(()=>{
                 for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
                     if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΟΠ") {
-                        this._ogs.saveOrientationGroupSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0);
+                        //this._ogs.saveOrientationGroupSelected(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id-index, 0);
+                        this._ogs.saveOrientationGroupSelectedwithIds(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id, 0);
                     }
                 }
              });

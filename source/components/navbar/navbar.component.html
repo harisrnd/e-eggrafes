@@ -7,7 +7,7 @@
   </button>
                 <img src="../theme/assets/images/epalschool_logo.png" />
                 <div class="collapse navbar-collapse flex-row-reverse" id="navbarNav">
-                    <div *ngIf="(loginInfo$ | async).size > 0 && (schooltype$ | async).size > 0" >
+                    <div *ngIf="(loginInfo$ | async).size > 0" >
                         <ul class="navbar-nav">
                             <div class="row">
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
