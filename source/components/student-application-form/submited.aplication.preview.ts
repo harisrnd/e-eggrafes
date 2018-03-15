@@ -183,11 +183,11 @@ import { IAppState } from "../../store/store";
                         <div *ngIf="GelStudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
                         <div *ngIf="GelStudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.am}}</div>
                     </div>
-                    
+
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center">Στοιχεία Επικοινωνίας</div>
                     </div>
-                    
+
 <!--                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.regionaddress}}</div>
@@ -596,7 +596,7 @@ import { IAppState } from "../../store/store";
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
-            
+
         console.log("test3");
 
 
@@ -740,6 +740,71 @@ import { IAppState } from "../../store/store";
 
     editEpalApplication() {
 
+      this.sectorFieldsSub = this._ngRedux.select("sectorFields")
+            .map(sectorFields => <ISectorFieldRecords>sectorFields)
+            .subscribe(sfds => {
+              this.showLoader$.next(true);
+                let seccnt = 0;
+                sfds.reduce(({}, sectorField) => {
+                    ++seccnt;
+                    //if (sectorField.get("id") === this.sector_id ) {
+                    if (sectorField.get("id") === this.EpalSubmittedDetails$.getValue()[0].currentsector_id ) {
+                      //this.sector_index = seccnt -1;
+                      this._sfa.saveSectorFieldsSelected(-1, seccnt-1);
+                    }
+                    return sectorField;
+                }, {});
+                this.showLoader$.next(false);
+            }, error => { console.log("error selecting sectorFields"); });
+
+
+        this.regionsSub = this._ngRedux.select("regions")
+                .subscribe(regions => {
+                  this.showLoader$.next(true);
+                    let rgns = <IRegionRecords>regions;
+                    let numsel = 0;
+                    let numreg = 0;
+                    rgns.reduce((prevRegion, region) => {
+                        numreg++;
+                        numsel = 0;
+                        region.get("epals").reduce((prevEpal, epal) => {
+                            ++numsel;
+                            //if (epal.get("epal_id") === this.school_id ) {
+                            for (let k=0; k < (this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen).length; k++)  {
+                                if (epal.get("epal_id") === this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].id) {
+                                    this._rsa.saveRegionSchoolsSelected(true, numreg-1, numsel-1, this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].choice_no) ;
+                                }
+                            }
+                            return epal;
+                        }, {});
+                        return region;
+                    }, {});
+                    this.showLoader$.next(false);
+              }, error => { console.log("error selecting regions"); });
+
+
+            this.sectorsSub = this._ngRedux.select("sectors")
+                  //.map(sectors => <ISectorRecords>sectors)
+                  .subscribe(sectors => {
+                      this.showLoader$.next(true);
+                      let secs = <ISectorRecords>sectors;
+                      let numcour = 0;
+                      let numsec = 0;
+                      secs.reduce((prevSector, sector) => {
+                          ++numsec;
+                          numcour = 0;
+                          sector.get("courses").reduce((prevCourse, course) => {
+                              ++numcour;
+                              if (course.get("course_id") === this.EpalSubmittedDetails$.getValue()[0].currentcourse_id ) {
+                                this._csa.saveSectorCoursesSelected(-1, -1, true, numsec-1, numcour-1);
+                              }
+                              return course;
+                          }, {});
+                          return sector;
+                      }, {});
+                      this.showLoader$.next(false);
+                  }, error => { console.log("error selecting sectors"); });
+
       this.router.navigate(["/epal-class-select"]);
 
     }
@@ -794,11 +859,11 @@ import { IAppState } from "../../store/store";
             }]);
 
 
-
+        /*
         this.sectorFieldsSub = this._ngRedux.select("sectorFields")
               .map(sectorFields => <ISectorFieldRecords>sectorFields)
               .subscribe(sfds => {
-                this.showLoader$.next(true);  
+                this.showLoader$.next(true);
                   let seccnt = 0;
                   sfds.reduce(({}, sectorField) => {
                       ++seccnt;
@@ -809,13 +874,13 @@ import { IAppState } from "../../store/store";
                       }
                       return sectorField;
                   }, {});
-                  this.showLoader$.next(false);  
+                  this.showLoader$.next(false);
               }, error => { console.log("error selecting sectorFields"); });
 
 
           this.regionsSub = this._ngRedux.select("regions")
                   .subscribe(regions => {
-                    this.showLoader$.next(true);  
+                    this.showLoader$.next(true);
                       let rgns = <IRegionRecords>regions;
                       let numsel = 0;
                       let numreg = 0;
@@ -834,7 +899,7 @@ import { IAppState } from "../../store/store";
                           }, {});
                           return region;
                       }, {});
-                      this.showLoader$.next(false);  
+                      this.showLoader$.next(false);
 
                 }, error => { console.log("error selecting regions"); });
 
@@ -842,7 +907,7 @@ import { IAppState } from "../../store/store";
               this.sectorsSub = this._ngRedux.select("sectors")
                     //.map(sectors => <ISectorRecords>sectors)
                     .subscribe(sectors => {
-                        this.showLoader$.next(true);  
+                        this.showLoader$.next(true);
                         let secs = <ISectorRecords>sectors;
                         let numcour = 0;
                         let numsec = 0;
@@ -858,9 +923,9 @@ import { IAppState } from "../../store/store";
                             }, {});
                             return sector;
                         }, {});
-                        this.showLoader$.next(false);  
+                        this.showLoader$.next(false);
                     }, error => { console.log("error selecting sectors"); });
-
+                */
 
     }
 

@@ -114,7 +114,7 @@ class ApplicationSubmit extends ControllerBase
                ], Response::HTTP_FORBIDDEN);
         }
 
-        //epal configuration validation
+        //eggrafes configuration validation
         $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
         $eggrafesConfig = reset($eggrafesConfigs);
         if (!$eggrafesConfig) {
@@ -808,7 +808,7 @@ class ApplicationSubmit extends ControllerBase
         if ($student["myschool_id"] && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) {
             return 1024;
         }
-        if (!$student["myschool_id"] && $student["lastschool_schoolyear"] >= self::LIMIT_SCHOOL_YEAR) {
+        if ($eggrafesConfig->ws_ident->value &&  !$student["myschool_id"] && $student["lastschool_schoolyear"] >= self::LIMIT_SCHOOL_YEAR) {
             return 1025;
         }
 

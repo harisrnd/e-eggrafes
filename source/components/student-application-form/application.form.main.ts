@@ -160,7 +160,7 @@ import {
 
         this.wsIdentSub = this.hds.isWS_ident_enabled().subscribe(z => {
             this.wsEnabled.next(Number(z.res)) ;
-            console.log(this.wsEnabled.getValue());
+            //console.log(this.wsEnabled.getValue());
        });
     };
 
@@ -293,14 +293,10 @@ import {
     }
 
     submitSelected() {
-        console.log(this.studentDataGroup.get("lastschool_schoolyear"));
-        console.log(this.studentDataGroup.invalid);
-
-        console.log(this.studentDataGroup.get("am"));
-
-        console.log(this.studentDataGroup);
-
-
+        //console.log(this.studentDataGroup.get("lastschool_schoolyear"));
+        //console.log(this.studentDataGroup.invalid);
+        //console.log(this.studentDataGroup.get("am"));
+        //console.log(this.studentDataGroup);
 
         let invalidFlag = 0;
         if (this.studentDataGroup.invalid || (invalidFlag = this.invalidFormData()) > 0) {

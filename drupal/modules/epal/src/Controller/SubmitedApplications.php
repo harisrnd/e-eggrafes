@@ -609,8 +609,7 @@ class SubmitedApplications extends ControllerBase
                             'schoolName' => $epalStudent->eeschfin_name,
                             'schoolAddress' => $epalStudent->street_address,
                             'schoolTel' => $epalStudent->phone_number,
-                            'secondPeriod' => $epalStudent->second_period,
-                            'am' => '1111'
+                            'secondPeriod' => $epalStudent->second_period
                         );
 
                 return $this->respondWithStatus(

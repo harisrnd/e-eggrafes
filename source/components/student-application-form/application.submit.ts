@@ -417,7 +417,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         aitisiObj[0].lastschool_schoolname = std.get("lastschool_schoolname").name;
         aitisiObj[0].lastschool_unittypeid = std.get("lastschool_schoolname").unit_type_id;
         //aitisiObj[0].lastschool_class = std.get("lastschool_class");
-        aitisiObj[0].lastschool_class = null;
+        //aitisiObj[0].lastschool_class = null;
         aitisiObj[0].relationtostudent = std.get("relationtostudent");
         aitisiObj[0].telnum = std.get("telnum");
         aitisiObj[0].cu_name = this.cu_name;
@@ -435,6 +435,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
           aitisiObj[0].regionaddress = std.get("regionaddress");
           aitisiObj[0].regionarea = std.get("regionarea");
           aitisiObj[0].regiontk = std.get("regiontk");
+          aitisiObj[0].lastschool_class = std.get("lastschool_class");
         }
         aitisiObj[0].section_name = null;
 
@@ -456,16 +457,18 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
               this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
                       aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 .subscribe(data => {
-                    if (typeof data.data["id"] !== "undefined")  {
-                      aitisiObj[0].studentId = data.data["id"];
+                    if (typeof data.data["studentId"] !== "undefined")  {
+                      aitisiObj[0].studentId = data.data["studentId"];
+                      //console.log("Test");
+                      //console.log(aitisiObj[0].studentId);
                       //aitisiObj[0].websrv_cu_name = data.data["custodianFirstName"];
-                      aitisiObj[0].websrv_cu_surname = data.data["custodianLastName"];
                       //aitisiObj[0].websrv_studentbirthdate = data.birthDate;
+                      aitisiObj[0].websrv_cu_surname = data.data["custodianLastName"];
                       aitisiObj[0].regionaddress = data.data["addressStreet"];
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];
-                      aitisiObj[0].lastschool_class = data.data["levelName"];
                       aitisiObj[0].section_name = data.data["sectionName"];
+                      aitisiObj[0].lastschool_class = data.data["levelName"];
                     }
                     else {
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
