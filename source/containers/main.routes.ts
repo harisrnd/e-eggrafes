@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 
 import DirectorClassCapacity from "../components/director/director-classcapacity";
 import DirectorView from "../components/director/director-view";
+import DirectorViewGel from "../components/director/directorgel-view";
 import DirectorButtons from "../components/director/director.buttons";
 import Home from "../components/home";
 import EduadminView from "../components/infoviews/eduadmin-view";
@@ -41,6 +42,7 @@ import DidepdeAuthGuard from "../guards/dideandpde.auth.guard";
 import RegionEduAuthGuard from "../guards/regionedu.auth.guard";
 import ReportsAuthGuard from "../guards/reports.auth.guard";
 import SchoolAuthGuard from "../guards/school.auth.guard";
+import SchoolGelAuthGuard from "../guards/schoolgel.auth.guard";
 import SchoolCapacityLockedGuard from "../guards/school.capacity.locked.guard";
 import SchoolStudentsLockedGuard from "../guards/school.students.locked.guard";
 import StudentAuthGuard from "../guards/student.auth.guard";
@@ -85,6 +87,7 @@ export const MainRoutes: Routes = [
     { path: "submited-preview", component: SubmitedPreview, canActivate: [StudentAuthGuard] },
     { path: "post-submit", component: AfterSubmit, canActivate: [StudentAuthGuard, StudentLockGuard] },
     { path: "school/director-view", component: DirectorView, canActivate: [SchoolAuthGuard, SchoolStudentsLockedGuard] },
+    { path: "school/directorgel-view", component: DirectorViewGel, canActivate: [SchoolGelAuthGuard, SchoolStudentsLockedGuard] },
     { path: "school/director-buttons", component: DirectorButtons, canActivate: [SchoolAuthGuard] },
     { path: "school/director-classcapacity", component: DirectorClassCapacity, canActivate: [SchoolAuthGuard, SchoolCapacityLockedGuard] },
     { path: "ministry/minister-view", component: MinisterView, canActivate: [MinistryAuthGuard] },
@@ -169,5 +172,6 @@ export const MainDeclarations = [
     SchoolTypeSelection,
     GelApplicationSubmit,
     SchoolTypeSelectionDde,
-    GelDistribution
+    GelDistribution,
+    DirectorViewGel
 ];

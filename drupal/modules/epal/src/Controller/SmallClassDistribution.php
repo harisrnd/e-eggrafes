@@ -969,9 +969,10 @@ public function GetSectorsperschool(Request $request, $courseActive )
                                                                      );
                           }
 
-                return $this->respondWithStatus($list, Response::HTTP_OK);
+                
                  }
              }
+             return $this->respondWithStatus($list, Response::HTTP_OK);
         }
         else
         {
@@ -1014,7 +1015,7 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
                       else
                     {
 
-                      $SmallClassesAppr =  $object -> approved_sector -> value ;
+                      $SmallClassesAppr =  $object -> approved_speciality -> value ;
                       if ($SmallClassesAppr == 1)
                             {
                             $prefid = intval($sdata->getperfecture());
@@ -1031,9 +1032,10 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
                                                                      );
                           }
 
-                return $this->respondWithStatus($list, Response::HTTP_OK);
+               
                  }
              }
+              return $this->respondWithStatus($list, Response::HTTP_OK);
         }
         else
         {
