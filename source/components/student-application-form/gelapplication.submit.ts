@@ -399,6 +399,7 @@ import { StudentGelCourseChosen } from "../students/student";
           aitisiObj[0].regionaddress = std.get("regionaddress");
           aitisiObj[0].regionarea = std.get("regionarea");
           aitisiObj[0].regiontk = std.get("regiontk");
+          aitisiObj[0].lastschool_class = std.get("lastschool_class");
         }
         aitisiObj[0].section_name = null;
 
@@ -426,11 +427,11 @@ import { StudentGelCourseChosen } from "../students/student";
               this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
                       aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 .subscribe(data => {
-                    if (typeof data.data["id"] !== "undefined")  {
-                      aitisiObj[0].studentId = data.data["id"];
+                    if (typeof data.data["studentId"] !== "undefined")  {
+                      aitisiObj[0].studentId = data.data["studentId"];
                       //aitisiObj[0].websrv_cu_name = data.data["custodianFirstName"];
-                      aitisiObj[0].websrv_cu_surname = data.data["custodianLastName"];
                       //aitisiObj[0].websrv_studentbirthdate = data.birthDate;
+                      aitisiObj[0].websrv_cu_surname = data.data["custodianLastName"];
                       aitisiObj[0].regionaddress = data.data["addressStreet"];
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];

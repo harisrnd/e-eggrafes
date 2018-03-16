@@ -177,7 +177,7 @@ import {
 
         this.wsIdentSub = this.hds.isWS_ident_enabled().subscribe(z => {
             this.wsEnabled.next(Number(z.res)) ;
-            console.log(this.wsEnabled.getValue());
+            //console.log(this.wsEnabled.getValue());
        });
 
     };

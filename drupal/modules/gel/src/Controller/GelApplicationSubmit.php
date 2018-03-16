@@ -655,7 +655,7 @@ class GelApplicationSubmit extends ControllerBase
         if ($student["myschool_id"] && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) {
             return 1024;
         }
-        if (!$student["myschool_id"] && $student["lastschool_schoolyear"] >= self::LIMIT_SCHOOL_YEAR) {
+        if ($eggrafesConfig->ws_ident->value &&  !$student["myschool_id"] && $student["lastschool_schoolyear"] >= self::LIMIT_SCHOOL_YEAR) {
             return 1025;
         }
 

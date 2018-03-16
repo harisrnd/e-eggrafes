@@ -109,7 +109,7 @@ class GelDistribution extends ControllerBase
                 'message' => t('User not found!'),
             ], Response::HTTP_FORBIDDEN);
         }
-    
+
     }
 
 
@@ -172,17 +172,17 @@ public function getHighSchoolperDide(Request $request)
                 'message' => t('User not found!'),
             ], Response::HTTP_FORBIDDEN);
         }
-    
+
     }
 
 
- 
+
 public function getStudentsPerSchool(Request $request, $schoolid)
     {
-          
+
         try {
 
-            
+
             $authToken = $request->headers->get('PHP_AUTH_USER');
             $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
             $user = reset($users);
@@ -208,22 +208,22 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                              'error_code' => 4003,
                          ], Response::HTTP_FORBIDDEN);
                 } elseif ($userRole === 'eduadmin') {
-                    
-                    $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_registrynumber' => $regno, 'lastschool_unittypeid' => 3, 'lastschool_class' => 3));
+
+                    $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_registrynumber' => $regno, 'lastschool_unittypeid' => 3, 'lastschool_class' => 'Γ'));
                 }
                 if ($studentPerSchool) {
                     $list = array();
                     foreach ($studentPerSchool as $object) {
-                        
+
 
                             $crypt = new Crypt();
                             try {
                                 $name_decoded = $object->name->value;
-                                
+
                                 $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
                                 $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
                                 $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
-                                
+
                             } catch (\Exception $e) {
                                 $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
                                 return $this->respondWithStatus([
@@ -234,15 +234,15 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                             $list[] = array(
                                 'id' => $object->id(),
                                 'name' => $name_decoded,
-                                
+
                               'regionaddress' => $regionaddress_decoded,
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id()),
-                                
+
 
                             );
-                        
+
                     }
                     return $this->respondWithStatus($list, Response::HTTP_OK);
                 } else {
@@ -262,7 +262,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
             ], Response::HTTP_FORBIDDEN);
         }
     }
-    
+
  public function SaveHighSchoolSelection(Request $request, $studentid, $schoolid, $oldschool)
  {
      if (!$request->isMethod('GET')) {
@@ -298,18 +298,18 @@ public function getStudentsPerSchool(Request $request, $schoolid)
         $transaction = $this->connection->startTransaction();
         try {
 
-   
+
             $student = array(
                 'langcode' => 'el',
                 'student_id' => $studentid,
                 'school_id' => $schoolid
-                
+
             );
 
             $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-     
+
             return $this->respondWithStatus([
                 "error_code" => 0
             ], Response::HTTP_OK);
@@ -331,9 +331,9 @@ public function getStudentsPerSchool(Request $request, $schoolid)
             return $this->respondWithStatus([
                 "error_code" => 0
             ], Response::HTTP_OK);
-                  
-               
-          
+
+
+
 
       }
       else
@@ -342,7 +342,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
             $this->logger->warning($schoolid."511111");
           $schools = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $studentid));
             $school = reset($schools);
-                    
+
           if ($school) {
               $school->set('school_id', intval($schoolid));
               $school->save();
@@ -352,7 +352,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                 "error_code" => 0
             ], Response::HTTP_OK);
       }
-      
+
     }
 
 
@@ -361,34 +361,34 @@ public function gethighschoolperstudent($id)
 
 /*                $schools = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $id));
                 //$school = reset($schools);
-                
+
                 if ($schools) {
                     $list = array();
-                    foreach ($schools as $sch) 
+                    foreach ($schools as $sch)
                     {
-                     $tagid = $sch-> school_id -> value; 
+                     $tagid = $sch-> school_id -> value;
                      $schname = $this->entityTypeManager->getStorage('gel_school')->load($tagid)->name->value;
-                          
-                     return $schname;     
+
+                     return $schname;
                     }
                 }
-                  else                           
+                  else
                  {
                   return null;
                  } */
-          
+
          $sCon = $this->connection->select('gelstudenthighschool', 'eStudent')
                 ->fields('eStudent', array('school_id'))
                 ->condition('eStudent.student_id', $id, '=');
-            $res1 =  intval($sCon->execute()->fetchField()); 
+            $res1 =  intval($sCon->execute()->fetchField());
 
 
              $sCon1 = $this->connection->select('gel_school', 'gels')
                 ->fields('gels', array('name'))
                 ->condition('gels.id', $res1, '=');
-             return $sCon1->execute()->fetchField(); 
-               
-            
+             return $sCon1->execute()->fetchField();
+
+
 
 
 
