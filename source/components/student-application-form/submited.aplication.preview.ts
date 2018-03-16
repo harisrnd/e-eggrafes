@@ -180,8 +180,8 @@ import { IAppState } from "../../store/store";
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Ημερομηνία Γέννησης</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.birthdate}}</div>
-                        <div *ngIf="GelStudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
-                        <div *ngIf="GelStudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.am}}</div>
+                        <div *ngIf="GelStudentDetails$.am!='' && GelStudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
+                        <div *ngIf="GelStudentDetails$.am!='' && GelStudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.am}}</div>
                     </div>
                     
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -228,7 +228,7 @@ import { IAppState } from "../../store/store";
 
                     <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-2" style="font-size: 0.8em;"></div>
-                        <div class="col-md-4" style="font-size: 0.8em;">Σειρά Προτίμησης</div>
+                        <div class="col-md-4" style="font-size: 0.8em; text-align: center;">Σειρά Προτίμησης</div>
                         <div class="col-md-6" style="font-size: 0.8em;">Τίτλος Μαθήματος</div>
                     </div>
 
@@ -353,8 +353,8 @@ import { IAppState } from "../../store/store";
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Ημερομηνία Γέννησης</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.birthdate}}</div>
-                        <div *ngIf="StudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
-                        <div *ngIf="StudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.am}}</div>
+                        <div *ngIf="StudentDetails$.am!='' && StudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
+                        <div *ngIf="StudentDetails$.am!='' && StudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.am}}</div>
                     </div>
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -609,6 +609,7 @@ import { IAppState } from "../../store/store";
 
         this.GelSubmittedDetailsSub = this._hds.getGelStudentDetails(this.applicationGelIdActive).subscribe(data => {
             this.GelSubmittedDetails$.next(data);
+            console.log(this.applicationGelIdActive);
             this.createStoreWithGelAppData();
             this.showLoader$.next(false);
         },

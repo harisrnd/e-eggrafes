@@ -294,7 +294,12 @@ class PDFCreator extends ControllerBase {
 			$regionaddress_decoded = $this->crypt->decrypt($student->regionaddress->value);
 			$regiontk_decoded = $this->crypt->decrypt($student->regiontk->value);
 			$regionarea_decoded = $this->crypt->decrypt($student->regionarea->value);
-			$am_decoded='111';
+			if ( sizeof($student->am)>0 ){
+				$am_decoded=$this->crypt->decrypt($student->am->value);
+			}
+			else{
+				$am_decoded='';
+			}
 		}
 		catch (\Exception $e) {
 				$this->logger->warning($e->getMessage());
@@ -381,7 +386,12 @@ class PDFCreator extends ControllerBase {
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->SetXY($x+$width,$y);
-		$this->pdf->Cell($width, $height, $this->prepareString('Αριθμός Μητρώου:'), 0, 'L');
+		if ($am_decoded!=''){
+			$this->pdf->Cell($width, $height, $this->prepareString('Αριθμός Μητρώου:'), 0, 'L');
+		}
+		else{
+			$this->pdf->Cell($width, $height, "", 0, 'L');
+		}
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 		$this->pdf->multiCell($width, $height, $this->prepareString($am_decoded), 0, 'L');
 		$x_col2=$this->pdf->GetX();;$y_col2=$this->pdf->GetY();

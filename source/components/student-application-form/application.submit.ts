@@ -450,11 +450,20 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             aitisiObj["2"] = new StudentCourseChosen(null, this.courseSelected);
         }
 
+        console.log(this.wsEnabled.getValue());
+        console.log(aitisiObj[0].lastschool_schoolyear);
+        console.log(this.limitSchoolYear);
+
+
         //κλήση myschool web service
         if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)  {
               //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
-              this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
-                      aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
+            //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
+                      //aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
+            //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
+            //          aitisiObj[0].studentbirthdate, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
+            console.log(aitisiObj[0].studentbirthdate);
+            this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {
                     if (typeof data.data["id"] !== "undefined")  {
                       aitisiObj[0].studentId = data.data["id"];
