@@ -79,11 +79,13 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     </div>
     <div><label for="lastschool_schoolyear">Σχολικό έτος τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{studentDataField$.get("lastschool_schoolyear")}} </p></div>
     <div><label for="lastschool_schoolname">Σχολείο τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{studentDataField$.get("lastschool_schoolname").name}} </p></div>
-    <div *ngIf="studentDataField$.get('lastschool_class') === 1"><label for="lastschool_class">Τάξη τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;">Α'</p></div>
-    <div *ngIf="studentDataField$.get('lastschool_class') === 2"><label for="lastschool_class">Τάξη τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;">Β'</p></div>
-    <div *ngIf="studentDataField$.get('lastschool_class') === 3"><label for="lastschool_class">Τάξη τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;">Γ'</p></div>
-    <div *ngIf="studentDataField$.get('lastschool_class') === 4"><label for="lastschool_class">Τάξη τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;">Δ'</p></div>
-
+    <div *ngIf="studentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async)===0">
+        <label for="lastschool_class">Τάξη τελευταίας φοίτησης</label>
+        <div *ngIf="studentDataField$.get('lastschool_class') === '1'"> <p class="form-control" style="border:1px solid #eceeef;">Α'</p></div>
+        <div *ngIf="studentDataField$.get('lastschool_class') === '2'"><p class="form-control" style="border:1px solid #eceeef;">Β'</p></div>
+        <div *ngIf="studentDataField$.get('lastschool_class') === '3'"><p class="form-control" style="border:1px solid #eceeef;">Γ'</p></div>
+        <div *ngIf="studentDataField$.get('lastschool_class') === '4'"><p class="form-control" style="border:1px solid #eceeef;">Δ'</p></div>
+    </div>
     <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
         <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία μαθητή</div>
     </div>
@@ -471,7 +473,15 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];
                       aitisiObj[0].section_name = data.data["sectionName"];
-                      aitisiObj[0].lastschool_class = data.data["levelName"];
+                        if (data.data["levelName"]==='Α'){
+                            aitisiObj[0].lastschool_class = 1;
+                        }
+                        else if (data.data["levelName"]==='Β'){
+                            aitisiObj[0].lastschool_class = 2;
+                        }
+                        else if (data.data["levelName"]==='Γ'){
+                            aitisiObj[0].lastschool_class = 3;
+                        }
                     }
                     else {
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";

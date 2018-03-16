@@ -255,7 +255,12 @@ class PDFCreator extends ControllerBase {
 			$regionaddress_decoded = $this->crypt->decrypt($student->regionaddress->value);
 			$regiontk_decoded = $this->crypt->decrypt($student->regiontk->value);
 			$regionarea_decoded = $this->crypt->decrypt($student->regionarea->value);
-			$am='11111';
+			if (!empty($student->am->value)){
+				$am_decoded=$this->crypt->decrypt($student->am->value);
+			}
+			else{
+				$am_decoded="";
+			}
 		}
 		catch (\Exception $e) {
 				$this->logger->warning($e->getMessage());
@@ -271,6 +276,13 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->Cell($width+15, $height, $this->prepareString('Σχολείο τελευταίας φοίτησης:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 		$this->pdf->multiCell(0, $height, $this->prepareString($student->lastschool_schoolname->value), 0, 'L');
+		
+		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
+		$this->pdf->Cell($width+15, $height, $this->prepareString('Τάξη τελευταίας φοίτησης:'), 0, 'L');
+		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
+		$this->pdf->Cell($width, $height, $this->prepareString($this->retrieveClassName($student->lastschool_class->value)), 0, 'L');
+		$this->pdf->Ln();
+
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->Cell($width+15, $height, $this->prepareString('Σχ.έτος τελευταίας φοίτησης:'), 0, 'L');
@@ -328,7 +340,12 @@ class PDFCreator extends ControllerBase {
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->SetXY($x+$width,$y);
-		$this->pdf->Cell($width, $height, $this->prepareString('Αριθμός Μητρώου:'), 0, 'L');
+		if ($am_decoded ===""){
+			$this->pdf->Cell($width, $height, $this->prepareString(''), 0, 'L');
+		}
+		else{
+			$this->pdf->Cell($width, $height, $this->prepareString('Αριθμός Μητρώου:'), 0, 'L');
+		}
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 		$this->pdf->multiCell($width, $height, $this->prepareString($am_decoded), 0, 'L');
 		$x_col2=$this->pdf->GetX();;$y_col2=$this->pdf->GetY();

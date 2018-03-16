@@ -105,7 +105,7 @@ class WSConsumer extends ControllerBase
               'addressPostCode' => '30100',
               'addressArea' => 'ΑΓΡΙΝΙΟ',
               'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
-              'levelName' => 'Γ',
+              'levelName' => 'Β',
               'sectionName' => 'Τεχνικός Μηχανοσυνθέτης Αεροσκαφών'
         )
           //'data' => "null"
