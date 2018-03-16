@@ -553,7 +553,8 @@ class DirectorView extends ControllerBase
                         'limitdown' => $limit,
                         'capc' => $capacity_class_c,
                         'approved' => $object-> approved_speciality -> value,
-                        'approved_id' => $object -> id()
+                        'approved_id' => $object -> id(),
+                        'test' => 'aaaaa'
 
                     );
                 }
