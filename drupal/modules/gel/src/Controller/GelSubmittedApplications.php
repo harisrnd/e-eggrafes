@@ -478,8 +478,7 @@ class GelSubmittedApplications extends ControllerBase
                             'relationtostudent' => $gelStudent->relationtostudent,
                             'birthdate' => substr($gelStudent->birthdate, 8, 2).'/'.substr($gelStudent->birthdate, 5, 2).'/'.substr($gelStudent->birthdate, 0, 4),
                             'changed' => date('d/m/Y H:i', $gelStudent->changed),
-                            'gelStudentChoices' => $gelStudentChoices,
-                            'am' => '1111'
+                            'gelStudentChoices' => $gelStudentChoices
                         );
 
                 return $this->respondWithStatus(
