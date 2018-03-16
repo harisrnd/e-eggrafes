@@ -92,11 +92,11 @@ class WSConsumer extends ControllerBase
           'message' => 'Επιτυχία',
 
           'data' => array(
-              'id' => '137',
+              'id' => '158',
               'studentId' => 1666010,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
               'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
-              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
+              'custodianLastName' =>  'ΓΕΩΡΓΟΥΛΑΣ',
               //'custodianLastName' =>  preg_replace('/\s+/', '', ' ΚΑΤΣ ΑΟΥΝΟΣ '),
               //'custodianLastName' =>  preg_replace('/[-\s]/', '', ' ΚΑΤΣ - ΑΟΥΝΟΣ '),
               'custodianFirstName' => '',
