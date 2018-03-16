@@ -73,6 +73,20 @@
             Η επιλογή από αυτή τη λίστα είναι απαραίτητη!
     </div>
 
+    <div *ngIf=" (studentDataGroup.get('lastschool_schoolyear').value  !='' && studentDataGroup.get('lastschool_schoolyear').value < '2013-2014') || (wsEnabled | async)===0" class="form-group">
+        <label for="lastschool_class">Τάξη τελευταίας φοίτησης(<span style="color: #ff0000;">*</span>)</label><br/>
+        <select class="form-control" formControlName="lastschool_class">
+        <option value="">Παρακαλώ επιλέξτε...</option>
+        <option value="1">Α’</option>
+        <option value="2">Β’</option>
+        <option value="3">Γ'</option>
+        <option value="4">Δ'</option>
+    </select>
+    </div>
+    <div class="alert alert-danger" *ngIf="studentDataGroup.get('lastschool_class').dirty && studentDataGroup.get('lastschool_class').hasError('status')">
+        Η επιλογή από αυτή τη λίστα είναι απαραίτητη!
+    </div>
+
 
 
     <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">

@@ -151,13 +151,13 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.lastschool_schoolyear}}</div>
                     </div>
 
-<!--                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
+                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div *ngIf="GelStudentDetails$.lastschool_class !== ''"class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
                         <div *ngIf="GelStudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
                         <div *ngIf="GelStudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
                         <div *ngIf="GelStudentDetails$.lastschool_class === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ</div>
-                        <div *ngIf="GelStudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div>
-                    </div> -->
+                        <div *ngIf="GelStudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div> 
+                    </div>
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία Μαθητή</div>
@@ -180,8 +180,8 @@ import { IAppState } from "../../store/store";
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Ημερομηνία Γέννησης</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.birthdate}}</div>
-                        <div *ngIf="GelStudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
-                        <div *ngIf="GelStudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.am}}</div>
+                        <div *ngIf="GelStudentDetails$.am!='' && GelStudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
+                        <div *ngIf="GelStudentDetails$.am!='' && GelStudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.am}}</div>
                     </div>
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -207,7 +207,7 @@ import { IAppState } from "../../store/store";
                     </div>
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Τάξη φοίτησης για το νέο σχολικό έτος</div>
+                        <div *ngIf="GelStudentDetails$.nextclass !== ''" class="col-md-3" style="font-size: 0.8em;">Τάξη φοίτησης για το νέο σχολικό έτος</div>
                         <div *ngIf="GelStudentDetails$.nextclass === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α τάξη - ΗΜΕΡΗΣΙΟ ΓΕ.Λ.</div>
                         <div *ngIf="GelStudentDetails$.nextclass === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β τάξη - ΗΜΕΡΗΣΙΟ ΓΕ.Λ.</div>
                         <div *ngIf="GelStudentDetails$.nextclass === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ τάξη - ΗΜΕΡΗΣΙΟ ΓΕ.Λ.</div>
@@ -228,7 +228,7 @@ import { IAppState } from "../../store/store";
 
                     <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-2" style="font-size: 0.8em;"></div>
-                        <div class="col-md-4" style="font-size: 0.8em;">Σειρά Προτίμησης</div>
+                        <div class="col-md-4" style="font-size: 0.8em; text-align: center;">Σειρά Προτίμησης</div>
                         <div class="col-md-6" style="font-size: 0.8em;">Τίτλος Μαθήματος</div>
                     </div>
 
@@ -327,13 +327,13 @@ import { IAppState } from "../../store/store";
                     <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.lastschool_schoolyear}}</div>
                     </div>
 
- <!--                   <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
+                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div *ngIf="StudentDetails$.lastschool_class !== ''" class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
                         <div *ngIf="StudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
                         <div *ngIf="StudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
                         <div *ngIf="StudentDetails$.lastschool_class === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ</div>
-                        <div *ngIf="StudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div>
-                    </div>  -->
+                        <div *ngIf="StudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div> 
+                    </div>  
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία Μαθητή</div>
@@ -353,8 +353,8 @@ import { IAppState } from "../../store/store";
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Ημερομηνία Γέννησης</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.birthdate}}</div>
-                        <div *ngIf="StudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
-                        <div *ngIf="StudentDetails$.am!=''" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.am}}</div>
+                        <div *ngIf="StudentDetails$.am!='' && StudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
+                        <div *ngIf="StudentDetails$.am!='' && StudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.am}}</div>
                     </div>
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">

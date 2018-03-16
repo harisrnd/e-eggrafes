@@ -92,11 +92,11 @@ class WSConsumer extends ControllerBase
           'message' => 'Επιτυχία',
 
           'data' => array(
-              'id' => '137',
-              'studentId' => 1666011,
+              'id' => '158',
+              'studentId' => 1666010,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
               'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
-              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
+              'custodianLastName' =>  'ΓΕΩΡΓΟΥΛΑΣ',
               //'custodianLastName' =>  preg_replace('/\s+/', '', ' ΚΑΤΣ ΑΟΥΝΟΣ '),
               //'custodianLastName' =>  preg_replace('/[-\s]/', '', ' ΚΑΤΣ - ΑΟΥΝΟΣ '),
               'custodianFirstName' => '',
@@ -105,7 +105,7 @@ class WSConsumer extends ControllerBase
               'addressPostCode' => '30100',
               'addressArea' => 'ΑΓΡΙΝΙΟ',
               'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
-              'levelName' => 'Γ',
+              'levelName' => 'Β',
               'sectionName' => 'Τεχνικός Μηχανοσυνθέτης Αεροσκαφών'
         )
           //'data' => "null"
