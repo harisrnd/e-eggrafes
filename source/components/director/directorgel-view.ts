@@ -9,8 +9,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     selector: "directorgel-view",
     template: `
 
-
-      <div id="applicationDeleteConfirm" (onHidden)="onHidden()" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+ <div id="applicationDeleteConfirm" (onHidden)="onHidden()" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header modal-header-danger">
@@ -20,7 +19,7 @@ import { HelperDataService } from "../../services/helper-data-service";
             </button>
           </div>
           <div class="modal-body">
-              <p>Επιλέξατε να διαγράψετε τη δήλωση προτίμησης ΕΠΑΛ. Παρακαλούμε επιλέξτε Επιβεβαίωση</p>
+              <p>Επιλέξατε να διαγράψετε τη δήλωση προτίμησης ΓΕΛ. Παρακαλούμε επιλέξτε Επιβεβαίωση</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal" (click)="hideConfirmModal()">Ακύρωση</button>
@@ -34,7 +33,7 @@ import { HelperDataService } from "../../services/helper-data-service";
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header modal-header-danger">
-              <h3 class="modal-title pull-left"><i class="fa fa-ban"></i>&nbsp;&nbsp;Αποτυχία Διαγραφής Δήλωσης Προτίμησης ΕΠΑΛ</h3>
+              <h3 class="modal-title pull-left"><i class="fa fa-ban"></i>&nbsp;&nbsp;Αποτυχία Διαγραφής Δήλωσης Προτίμησης </h3>
             <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
               <span aria-hidden="true"><i class="fa fa-times"></i></span>
             </button>
@@ -59,6 +58,131 @@ import { HelperDataService } from "../../services/helper-data-service";
          <div class="col-md-10" style="font-weight: bold;"> Τα τμήματα του σχολείου σας.</div>
          <div class="col-md-2" style="font-weight: bold;"> <span class="pull-right" style="text-align: right; padding-right: 2px;">Αριθμός Μαθητών</span></div>
       </div>
+      <div *ngFor="let CoursesPerSchools$  of CoursesPerSchool$ | async; let i=index; let isOdd=odd; let isEven=even" >
+                <li class="list-group-item isclickable" (click)="setActive(i)"
+                (click)="findstudent(CoursesPerSchools$.class)"
+                [class.changelistcolor]= "CoursesPerSchools$.size < CoursesPerSchools$.limitdown"
+                [class.oddout]="isOdd" [class.evenout]="isEven"  [class.selectedout]="courseActive === i" >
+                <div class="row"  style="line-height: 2em;">
+                  <div class="col-md-10" style="font-weight: bold;" >{{CoursesPerSchools$.taxi}}</div>
+                  <div class="col-md-2" style="font-weight: bold;" ><span class="pull-right" style="text-align: right; padding-right: 2px;">{{CoursesPerSchools$.size}}</span></div>
+                </div>
+                </li>
+
+               <div [hidden]="courseActive !== i" *ngIf="(retrievedStudent | async)">
+                 <div *ngFor="let StudentDetails$  of StudentInfo$ | async; let j=index; let isOdd=odd; let isEven=even" class="row list-group-item isclickable"
+                 [class.selectedappout]="StudentActive === j"
+                 [class.confirmed]="StudentDetails$.checkstatus === '1'"
+                 [class.notconfirmed]="StudentDetails$.checkstatus === '0'"
+                 [class.notchecked]="(StudentDetails$.checkstatus !== '1') && (StudentDetails$.checkstatus !== '0')"
+                 [class.oddout]="isOdd" [class.evenout]="isEven" style="margin: 0px 2px 0px 2px;">
+                    <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click) ="setActiveStudent(j)" >{{StudentDetails$.studentsurname}}</div>
+                    <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click) ="setActiveStudent(j)">{{StudentDetails$.name}}</div>
+                    
+
+                    <div [hidden]="StudentActive !== j" class="col-md-2 pull-right" style="color: black;" > <span aria-hidden="true"><button type="button" class="btn-primary btn-sm pull-right" (click) ="setActiveStudentnew(j)">Κλείσιμο</button></span>  </div>
+
+                    <div style="width: 100%; color: #000000;">
+                    <div [hidden]="StudentActive !== j"  style="margin: 20px 10px 10px 10px;">
+
+                     <p style="margin-top: 10px; margin-bottom: 5px; line-height: 2em;"> Παρακαλούμε, αφού γίνει ο έλεγχος των στοιχείων του μαθητή επιβεβαιώστε τη δυνατότητα εγγραφής του.</p>
+
+                     <div class="row" style="margin-bottom: 20px;">
+                     <div class="col-md-8">&nbsp;</div>
+                     <div class="col-md-4">
+                      <strong><label>Επιβεβαίωση Εγγραφής:</label> </strong>
+                      <select class="form-control pull-right" #cb name="{{StudentDetails$.id}}" (change)="confirmStudent(StudentDetails$.id, cb, j)">
+                          <option value="1" [selected]="StudentDetails$.checkstatus === '1' ">Ναι</option>
+                          <option value="2" [selected]="StudentDetails$.checkstatus === '0' ">Όχι</option>
+                          <option value="3" [selected]="StudentDetails$.checkstatus != '0' && StudentDetails$.checkstatus != '1'">Δεν ελέγχθηκε</option>
+                      </select>
+                      </div>
+                     </div>
+
+                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                         <div class="col-md-3" style="font-size: 0.8em;">Αριθμός Δήλωσης Προτίμησης ΓΕΛ</div>
+                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.id}}</div>
+                         <div class="col-md-3" style="font-size: 0.8em;">Υποβλήθηκε</div>
+                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.created}}</div>
+                     </div>
+
+                       <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία αιτούμενου</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Όνομα</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.guardian_name}}</div>
+                           <div class="col-md-3" style="font-size: 0.8em;">Επώνυμο</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.guardian_surname}}</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Όνομα πατέρα</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{ StudentDetails$.guardian_fathername }}</div>
+                           <div class="col-md-3" style="font-size: 0.8em;">Όνομα μητέρας</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{ StudentDetails$.guardian_mothername }}</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.regionaddress}}</div>
+                           <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.regiontk}} - {{StudentDetails$.regionarea}}</div>
+                       </div>
+
+                       <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία μαθητή</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Όνομα μαθητή</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.name}}</div>
+                           <div class="col-md-3" style="font-size: 0.8em;">Επώνυμο μαθητή</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.studentsurname}}</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Όνομα Πατέρα</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.fatherfirstname}}</div>
+                           <div class="col-md-3" style="font-size: 0.8em;">Όνομα Μητέρας</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.motherfirstname}}</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Ημερομηνία Γέννησης</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.birthdate}}</div>
+                           <div class="col-md-3" style="font-size: 0.8em;">Τηλέφωνο Επικοινωνίας</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.telnum}}</div>
+                       </div>
+
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Σχολείο τελευταίας φοίτησης</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.lastschool_schoolname}}</div>
+                           <div class="col-md-3" style="font-size: 0.8em;">Σχολικό έτος τελευταίας φοίτησης</div>
+                           <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.lastschool_schoolyear}}</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
+                           <div *ngIf="StudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
+                           <div *ngIf="StudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
+                           <div *ngIf="StudentDetails$.lastschool_class === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ</div>
+                           <div *ngIf="StudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Δήλωση από:</div>
+                           <div class="col-md-9" style="font-size: 0.8em; font-weight: bold">{{ StudentDetails$.relationtostudent }}</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Τάξη φοίτησης για το νέο σχολικό έτος</div>
+                           <div class="col-md-9" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.currentclass}}</div>
+                       </div>
+                       <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                           <div class="col-md-3" style="font-size: 0.8em;">Μαθήματα επιλογης για το νέο σχολικό έτος</div>
+                           <div class="col-md-9" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.choices}}</div>
+                       </div>
+ 
+                 </div>
+                 </div>
+
+
+                 </div>
+               </div>
+       </div>
       </form>
       </div>
 
@@ -217,7 +341,7 @@ import { HelperDataService } from "../../services/helper-data-service";
         (<any>$("#applicationDeleteConfirm")).appendTo("body");
         (<any>$("#applicationDeleteError")).appendTo("body");
         this.showLoader.next(true);
-        this.CoursesPerSchoolSub = this._hds.FindCoursesPerSchool().subscribe(x => {
+        this.CoursesPerSchoolSub = this._hds.FindCoursesPerSchoolGel().subscribe(x => {
             this.CoursesPerSchool$.next(x);
             this.showLoader.next(false);
         },
@@ -228,10 +352,10 @@ import { HelperDataService } from "../../services/helper-data-service";
             });
     }
 
-    findstudent(taxi, sector, special) {
+    findstudent(taxi) {
         this.showLoader.next(true);
         this.retrievedStudent.next(false);
-        this.StudentInfoSub = this._hds.getStudentPerSchool(taxi, sector, special)
+        this.StudentInfoSub = this._hds.getStudentPerSchoolGel(taxi)
             .subscribe(data => {
                 this.StudentInfo$.next(data);
                 this.retrievedStudent.next(true);
@@ -321,7 +445,7 @@ import { HelperDataService } from "../../services/helper-data-service";
             this.showLoader.next(false);
             this.StudentActive = -1;
 
-            this.CoursesPerSchoolSub = this._hds.FindCoursesPerSchool().subscribe(x => {
+            this.CoursesPerSchoolSub = this._hds.FindCoursesPerSchoolGel().subscribe(x => {
                 this.CoursesPerSchool$.next(x);
                 this.showLoader.next(false);
 
@@ -331,7 +455,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                     console.log("Error Getting courses perSchool");
                     this.showLoader.next(false);
                 });
-            this.StudentInfoSub = this._hds.getStudentPerSchool(this.taxi, this.sector, this.special)
+            this.StudentInfoSub = this._hds.getStudentPerSchoolGel(this.taxi)
                 .subscribe(data => {
                     this.StudentInfo$.next(data);
                     this.retrievedStudent.next(true);
