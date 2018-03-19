@@ -1553,4 +1553,41 @@ getHighSchoolSelection(id)
 
 }
 
+
+    FindCoursesPerSchoolGel() {
+
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/findcoursesperschoolgel/`, options)
+
+            .map(response => response.json());
+
+    }
+
+
+getStudentPerSchoolGel(classId) {
+
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/studentperschoolgel/` + classId , options)
+            .map(response => response.json());
+    }
+
+
+
 }
