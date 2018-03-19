@@ -1,47 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
---
--- Φιλοξενητής: localhost
--- Χρόνος δημιουργίας: 09 Ιαν 2018 στις 13:03:10
--- Έκδοση διακομιστή: 5.7.20-0ubuntu0.16.04.1
--- Έκδοση PHP: 7.0.22-0ubuntu0.16.04.1
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Βάση δεδομένων: `mydrupal`
---
-
--- --------------------------------------------------------
-
---
--- Δομή πίνακα για τον πίνακα `gel_class_choices`
---
-
-CREATE TABLE `gel_class_choices` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `uuid` varchar(128) CHARACTER SET ascii NOT NULL,
-  `langcode` varchar(12) CHARACTER SET ascii NOT NULL,
-  `user_id` int(10) UNSIGNED NOT NULL COMMENT 'The ID of the target entity.',
-  `name` varchar(50) DEFAULT NULL,
-  `class_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'The ID of the target entity.',
-  `choice_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'The ID of the target entity.',
-  `status` tinyint(4) NOT NULL,
-  `created` int(11) DEFAULT NULL,
-  `changed` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='The base table for gel_class_choices entities.';
-
---
--- Άδειασμα δεδομένων του πίνακα `gel_class_choices`
---
 
 INSERT INTO `gel_class_choices` (`id`, `uuid`, `langcode`, `user_id`, `name`, `class_id`, `choice_id`, `status`, `created`, `changed`) VALUES
 (1, 'e6571599-9f05-4f55-bcfc-ecc3ad9f0602', 'el', 1, 'record1', 1, 1, 1, 1515490432, 1515490432),
@@ -75,30 +32,3 @@ INSERT INTO `gel_class_choices` (`id`, `uuid`, `langcode`, `user_id`, `name`, `c
 (29, '8af1d0d1-c863-4045-8841-554ed310e7ad', 'el', 1, 'record29', 3, 12, 1, 1515494811, 1515494811),
 (30, 'fc604bd2-c237-45ad-88b2-8c85d255c566', 'el', 1, 'record30', 3, 13, 1, 1515494836, 1515494836),
 (31, 'a58d7b17-277f-4b1e-8f21-c725fc326357', 'el', 1, 'record31', 3, 14, 1, 1515494856, 1515494856);
-
---
--- Ευρετήρια για άχρηστους πίνακες
---
-
---
--- Ευρετήρια για πίνακα `gel_class_choices`
---
-ALTER TABLE `gel_class_choices`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `gel_class_choices_field__uuid__value` (`uuid`),
-  ADD KEY `gel_class_choices_field__user_id__target_id` (`user_id`),
-  ADD KEY `gel_class_choices_field__class_id__target_id` (`class_id`),
-  ADD KEY `gel_class_choices_field__choice_id__target_id` (`choice_id`);
-
---
--- AUTO_INCREMENT για άχρηστους πίνακες
---
-
---
--- AUTO_INCREMENT για πίνακα `gel_class_choices`
---
-ALTER TABLE `gel_class_choices`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
