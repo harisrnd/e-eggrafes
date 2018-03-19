@@ -108,7 +108,7 @@ import { IAppState } from "../../store/store";
 
                 <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.studentsurname}}</div>
                 <div class="col-md-4" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.name}}</div>
-                <div class="col-md-2" *ngIf = "(GelSubmittedDetails$ | async).size" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">ΓΕΛ</div>
+                <div class="col-md-2" *ngIf = "(GelSubmittedDetails$ | async).length > 0" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">ΓΕΛ</div>
                 <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteGelApplication(UserData$.id)"></i></div>
                 <div *ngIf="UserData$.candelete === 0" class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
 
@@ -269,11 +269,9 @@ import { IAppState } from "../../store/store";
 
                 <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.studentsurname}}</div>
                 <div class="col-md-4" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.name}}</div>
-                <div class="col-md-2" *ngIf = "(EpalSubmittedDetails$ | async).size" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">ΕΠΑΛ</div>
+                <div class="col-md-2" *ngIf = "(EpalSubmittedDetails$ | async).length > 0" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">ΕΠΑΛ</div>
                 <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteApplication(UserData$.id)"></i></div>
                 <div *ngIf="UserData$.candelete === 0" class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
-
-
 
                 <div style="width: 100%">
                 <div *ngFor="let StudentDetails$  of EpalSubmittedDetails$ | async" [hidden]="UserData$.id !== applicationEpalIdActive" style="margin: 10px 10px 10px 10px;">
