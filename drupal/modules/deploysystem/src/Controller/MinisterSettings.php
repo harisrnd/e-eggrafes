@@ -120,8 +120,8 @@ class MinisterSettings extends ControllerBase {
 					'secondPeriodEnabled' => $secondPeriodEnabled,
 					'dateStart' => $dateStart,
 					'smallClassApproved' => $smallClassApproved,
-					'$wsIdentEnabled' => $wsIdentEnabled,
-					'$gsisIdentEnabled' => $gsisIdentEnabled
+					'wsIdentEnabled' => $wsIdentEnabled,
+					'gsisIdentEnabled' => $gsisIdentEnabled
 			], Response::HTTP_OK);
 
 		}	//end try

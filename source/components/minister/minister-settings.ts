@@ -293,6 +293,7 @@ import { IAppState } from "../../store/store";
 
         this.settingsSub = this._hds.retrieveAdminSettings(this.minedu_userName, this.minedu_userPassword).subscribe(data => {
             this.settings$.next(data);
+
             this.capacityDisabled = Boolean(Number(this.settings$.value["capacityDisabled"]));
             this.directorViewDisabled = Boolean(Number(this.settings$.value["directorViewDisabled"]));
             this.applicantsLoginDisabled = Boolean(Number(this.settings$.value["applicantsLoginDisabled"]));
@@ -389,9 +390,9 @@ import { IAppState } from "../../store/store";
 
        if (this.smallClassApproved == false)
        {
-    
+
          this.showLoader.next(true);
-         this.OffLineCalculationSub = this._hds.OffLinecalculationofSmallClasses(this.minedu_userName, this.minedu_userPassword)    
+         this.OffLineCalculationSub = this._hds.OffLinecalculationofSmallClasses(this.minedu_userName, this.minedu_userPassword)
                   .subscribe(data => {
                       this.showLoader.next(false);
                       this.OffLineCalculation$.next(data);
