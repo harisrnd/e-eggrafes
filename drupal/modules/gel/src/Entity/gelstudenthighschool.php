@@ -250,6 +250,27 @@ class gelstudenthighschool extends ContentEntityBase implements gelstudenthighsc
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['taxi'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Class_id'))
+      ->setDescription(t('The Class_id of the Gelstudenthighschool.'))
+      ->setSettings([
+        'max_length' => 50,
+        'text_processing' => 0,
+      ])
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -4,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -4,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setRequired(TRUE);
+
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))

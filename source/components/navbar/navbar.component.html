@@ -69,13 +69,13 @@
 
 
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
-                                    <li *ngIf=" authRole=='pde' && (schtype == 2)"
+                                    <li *ngIf=" authRole=='pde' "
                                      class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/mergeschools']" [routerLinkActive]="['active']"><b>Συνενώσεις Τμημάτων</b></a>
                                     </li>
                                 </div>
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
-                                    <li *ngIf=" authRole =='pde' && (schtype == 2) " 
+                                    <li *ngIf=" authRole =='pde'  " 
                                     class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/undomerge']" [routerLinkActive]="['active']"><b>Αναιρέσεις συνενώσεων</b></a>
                                     </li>
@@ -85,6 +85,12 @@
                                         <a class="nav-link" [routerLink]="['/school/smallclassapprovement']" [routerLinkActive]="['active']"><b>Εγκρίσεις Ολιγομελών </b></a>
                                     </li>
                                 </div>
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 2)" class="nav-item">
+                                    <li *ngIf=" authRole=='dide'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/school/smallclassapprovement']" [routerLinkActive]="['active']"><b>Εγκρίσεις Ολιγομελών </b></a>
+                                    </li>
+                                </div>
+
 
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
                                     <li *ngIf="authRole=='pde'" class="nav-item">
