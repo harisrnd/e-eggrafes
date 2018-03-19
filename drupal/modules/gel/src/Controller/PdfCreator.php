@@ -277,12 +277,13 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 		$this->pdf->multiCell(0, $height, $this->prepareString($student->lastschool_schoolname->value), 0, 'L');
 		
-		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
-		$this->pdf->Cell($width+15, $height, $this->prepareString('Τάξη τελευταίας φοίτησης:'), 0, 'L');
-		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		$this->pdf->Cell($width, $height, $this->prepareString($this->retrieveClassName($student->lastschool_class->value)), 0, 'L');
-		$this->pdf->Ln();
-
+		if (empty($student->am->value)){
+			$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
+			$this->pdf->Cell($width+15, $height, $this->prepareString('Τάξη τελευταίας φοίτησης:'), 0, 'L');
+			$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
+			$this->pdf->Cell($width, $height, $this->prepareString($this->retrieveClassName($student->lastschool_class->value)), 0, 'L');
+			$this->pdf->Ln();
+		}
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->Cell($width+15, $height, $this->prepareString('Σχ.έτος τελευταίας φοίτησης:'), 0, 'L');
