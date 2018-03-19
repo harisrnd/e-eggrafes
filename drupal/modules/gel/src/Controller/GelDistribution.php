@@ -209,7 +209,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                          ], Response::HTTP_FORBIDDEN);
                 } elseif ($userRole === 'eduadmin') {
 
-                    $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_registrynumber' => $regno, 'lastschool_unittypeid' => 3, 'lastschool_class' => 'Γ'));
+                    $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_registrynumber' => $regno, 'lastschool_unittypeid' => 3, 'lastschool_class' => 3));
                 }
                 if ($studentPerSchool) {
                     $list = array();
