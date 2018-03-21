@@ -1,0 +1,48 @@
+uuid: 5deb473e-1840-483f-9deb-78ea92d1009e
+langcode: el
+status: true
+dependencies: {  }
+id: gel
+label: gel
+weight: 7
+is_admin: null
+permissions:
+  - 'add gel choices entities'
+  - 'add gel class choices entities'
+  - 'add gel classes entities'
+  - 'add gel student choices entities'
+  - 'add gel student entities'
+  - 'add gel_school entities'
+  - 'add gelstudenthighschool entities'
+  - 'delete gel choices entities'
+  - 'delete gel class choices entities'
+  - 'delete gel classes entities'
+  - 'delete gel student choices entities'
+  - 'delete gel student entities'
+  - 'delete gel_school entities'
+  - 'delete gelstudenthighschool entities'
+  - 'edit gel choices entities'
+  - 'edit gel class choices entities'
+  - 'edit gel classes entities'
+  - 'edit gel student choices entities'
+  - 'edit gel student entities'
+  - 'edit gel_school entities'
+  - 'edit gelstudenthighschool entities'
+  - 'view published eepal admin area entities'
+  - 'view published eepal region entities'
+  - 'view published gel choices entities'
+  - 'view published gel class choices entities'
+  - 'view published gel classes entities'
+  - 'view published gel student choices entities'
+  - 'view published gel student entities'
+  - 'view published gel_school entities'
+  - 'view published gelstudenthighschool entities'
+  - 'view unpublished eepal admin area entities'
+  - 'view unpublished eepal region entities'
+  - 'view unpublished gel choices entities'
+  - 'view unpublished gel class choices entities'
+  - 'view unpublished gel classes entities'
+  - 'view unpublished gel student choices entities'
+  - 'view unpublished gel student entities'
+  - 'view unpublished gel_school entities'
+  - 'view unpublished gelstudenthighschool entities'
