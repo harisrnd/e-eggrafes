@@ -291,7 +291,9 @@ class SubmitedApplications extends ControllerBase
                             'name' => $name_decoded,
                             //'studentsurname' => $object -> studentsurname ->value);
                             'studentsurname' => $studentsurname_decoded,
-                            'candelete' => $canDelete, );
+                            'candelete' => $canDelete,
+                            'logo' => 'ΕΠΑΛ',
+                            );
                     ++$i;
                 }
 

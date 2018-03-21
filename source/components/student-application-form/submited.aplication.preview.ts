@@ -108,12 +108,28 @@ import { IAppState } from "../../store/store";
 
                 <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.studentsurname}}</div>
                 <div class="col-md-4" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.name}}</div>
-                <div class="col-md-2" *ngIf = "(GelSubmittedDetails$ | async).length > 0" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">ΓΕΛ</div>
+                <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.logo}}</div>
                 <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteGelApplication(UserData$.id)"></i></div>
                 <div *ngIf="UserData$.candelete === 0" class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
 
                 <div style="width: 100%">
                 <div *ngFor="let GelStudentDetails$  of GelSubmittedDetails$ | async" [hidden]="UserData$.id !== applicationGelIdActive" style="margin: 10px 10px 10px 10px;">
+
+                      <div *ngIf = "GelStudentDetails$.applicantsResultsDisabled == '0'  && !(showLoader$ | async)" >
+                          <div *ngIf = "GelStudentDetails$.status == '1'" >
+                              <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
+                                  Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{GelStudentDetails$.schoolName}}.
+                                  Παρακαλώ να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
+                              </div>
+                          </div>
+                          <div *ngIf = "GelStudentDetails$.status == '4' " >
+                              <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
+                                  Η αίτησή σας είναι σε κατάσταση διεκπεραίωσης από την οικεία Διεύθυνση Δευτεροβάθμιας Εκπαίδευσης.<br><br>
+                              </div>
+                          </div>
+                      </div>
+
+
 
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -269,7 +285,7 @@ import { IAppState } from "../../store/store";
 
                 <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.studentsurname}}</div>
                 <div class="col-md-4" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.name}}</div>
-                <div class="col-md-2" *ngIf = "(EpalSubmittedDetails$ | async).length > 0" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">ΕΠΑΛ</div>
+                <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.logo}}</div>
                 <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteApplication(UserData$.id)"></i></div>
                 <div *ngIf="UserData$.candelete === 0" class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
 
@@ -278,9 +294,9 @@ import { IAppState } from "../../store/store";
 
                     <div *ngIf = "StudentDetails$.applicantsResultsDisabled == '0'  && !(showLoader$ | async)" >
                         <div *ngIf = "StudentDetails$.status == '1'" >
-                            <div class="col-md-12" style="font-size: 1.0em; color: #143147; font-weight: bold;">
+                            <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
                                 Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{StudentDetails$.schoolName}}.
-                                Παρακαλώ να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{StudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{StudentDetails$.schoolTel}}<br><br>
+                                Παρακαλώ να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{StudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{StudentDetails$.schoolTel}}.<br><br>
                             </div>
                         </div>
                         <div *ngIf = "StudentDetails$.status == '2' " >
@@ -625,8 +641,6 @@ import { IAppState } from "../../store/store";
             this.applicationEpalIdActive = 0;
             return;
         }
-
-        console.log("test3333");
 
         this.applicationGelIdActive = ind;
         this.applicationEpalIdActive = 0;

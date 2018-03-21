@@ -209,7 +209,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                          ], Response::HTTP_FORBIDDEN);
                 } elseif ($userRole === 'eduadmin') {
 
-                    $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_registrynumber' => $regno, 'lastschool_unittypeid' => 3, 'lastschool_class' => 3));
+                    $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_registrynumber' => $regno, 'lastschool_unittypeid' => 3, 'lastschool_class' => "3"));
                 }
                 if ($studentPerSchool) {
                     $list = array();
@@ -460,7 +460,7 @@ public function FindCoursesPerSchoolGel(Request $request)
                        );
                     if ($operation_shift != 'ΗΜΕΡΗΣΙΟ'){
                      $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Δ' ));
-                    
+
 
                     $list[] = array(
                         'class' => 4,
@@ -472,7 +472,7 @@ public function FindCoursesPerSchoolGel(Request $request)
                 }
                 ++$i;
 
-                
+
 
                 return $this->respondWithStatus($list, Response::HTTP_OK);
             }
@@ -518,7 +518,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
             else
               $lock_delete = $eggrafesConfig->lock_delete->value;
-          
+
 
 
             $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
@@ -547,7 +547,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                              'error_code' => 4003,
                          ], Response::HTTP_FORBIDDEN);
                 } elseif ($userRole === 'gel') {
-                    
+
                     $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $gelId, 'taxi' => $classId));
                 }
                 if ($studentPerSchool) {
@@ -560,9 +560,9 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                             $studentIdNew = $gelStudent->id();
                             $choices = "";
                             $studentchoices = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id' => $studentId));
-                            
+
                             foreach ($studentchoices as $object) {
-                                    
+
                                     $choices = $choices."  ".($object -> choice_id ->entity->get('name')->value)."/" ;
                                 }
 

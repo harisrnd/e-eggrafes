@@ -23,10 +23,9 @@ import { IAppState } from "../../store/store";
              <breadcrumbs></breadcrumbs>
     </div>
 
-    
-    <div class = "loading" *ngIf="!(regions$ | async) || (regions$ | async).size===0 ">
-    </div>
 
+    <!--<div class = "loading" *ngIf="!(regions$ | async) || (regions$ | async).size === 0 "></div>-->
+    <div class = "loading" *ngIf="(showLoader | async) === true"></div>
 
     <!-- <div class="row equal">
       <div class="col-md-12"> -->
@@ -54,9 +53,12 @@ import { IAppState } from "../../store/store";
       <h4> Επιλογή Σχολείου</h4>
        <form [formGroup]="formGroup">
         <div formArrayName="formArray">
-        <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε εως τρία ΕΠΑΛ στα οποία επιθυμεί να φοιτήσει ο μαθητής.
-         Επιλέξτε πρώτα την Περιφερειακή Διεύθυνση στην οποία ανήκει το σχολείο της επιλογής σας,στη συνέχεια τα σχολεία και τέλος πατήστε <i>Συνέχεια</i>.
-        Μπορείτε να επιλέξετε απο ένα εως τρία σχολεία που δύναται να ανήκουν σε περισσότερες απο μια Περιφερειακές Διευθύνσεις.</p>
+          <p *ngIf="(showLoader | async) || (countEpals | async) !== 0" style="margin-top: 20px; line-height: 2em;">Παρακαλώ επιλέξτε εως τρία ΕΠΑΛ στα οποία επιθυμεί να φοιτήσει ο μαθητής.
+            Επιλέξτε πρώτα την Περιφερειακή Διεύθυνση στην οποία ανήκει το σχολείο της επιλογής σας,στη συνέχεια τα σχολεία και τέλος πατήστε <i>Συνέχεια</i>.
+            Μπορείτε να επιλέξετε απο ένα εως τρία σχολεία που δύναται να ανήκουν σε περισσότερες απο μια Περιφερειακές Διευθύνσεις.</p>
+          <p *ngIf="!(showLoader | async) && (countEpals | async) === 0" style="margin-top: 20px; line-height: 2em;">Δεν βρέθηκαν σχολεία στην Περιφερειακή Διεύθυνση της επιλογής σας.
+            Παρακαλώ πηγαίνετε στην προηγούμενη οθόνη και τροποποιήστε τις επιλογές σας.</p>
+
             <ul class="list-group main-view">
             <div *ngFor="let region$ of regions$ | async; let i=index; let isOdd=odd; let isEven=even"  >
                 <li class="list-group-item isclickable" (click)="setActiveRegion(i)" [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedout]="regionActive === i">
@@ -64,7 +66,6 @@ import { IAppState } from "../../store/store";
                 </li>
 
                 <div *ngFor="let epal$ of region$.get('epals'); let j=index; let isOdd2=odd; let isEven2=even" [class.oddin]="isOdd2" [class.evenin]="isEven2" [hidden]="i !== regionActive">
-
                         <div class="row">
                             <div class="col-md-2 col-md-offset-1">
                                 <input #cb *ngIf = "(numSelected | async) !== 3 || epal$.get('selected')" type="checkbox" formControlName="{{ epal$.get('globalIndex') }}"
@@ -80,31 +81,34 @@ import { IAppState } from "../../store/store";
             </div>
             </ul>
         </div>
-        <div class="row" style="margin-top: 20px; margin-bottom: 20px;" *ngIf="(regions$ | async)">
-        <div class="col-md-6">
-            <button type="button" class="btn-primary btn-lg pull-left isclickable" (click)="navigateBack()" >
-          <i class="fa fa-backward"></i>
-            </button>
+
+        <div class="row" style="margin-top: 20px; margin-bottom: 20px;"  *ngIf="(regions$ | async)">
+            <div class="col-md-6">
+                <button type="button" class="btn-primary btn-lg pull-left isclickable" (click)="navigateBack()" >
+              <i class="fa fa-backward"></i>
+                </button>
+            </div>
+
+            <div class="col-md-6">
+              <button type="button" class="btn-primary btn-lg pull-right isclickable" *ngIf="(countEpals | async) !== 0"  style="width: 9em;" (click)="navigateToApplication()" >
+                  <span style="font-size: 0.9em; font-weight: bold;">Συνέχεια&nbsp;&nbsp;&nbsp;</span><i class="fa fa-forward"></i>
+              </button>
+          </div>
         </div>
-        <div class="col-md-6">
-            <button type="button" class="btn-primary btn-lg pull-right isclickable" style="width: 9em;" (click)="navigateToApplication()" >
-                <span style="font-size: 0.9em; font-weight: bold;">Συνέχεια&nbsp;&nbsp;&nbsp;</span><i class="fa fa-forward"></i>
-            </button>
-        </div>
-        </div>
+
     </form>
-<!--     <pre>{{formGroup.value | json}}</pre> -->
+
+    <!--     <pre>{{formGroup.value | json}}</pre> -->
+
     </div>
   `
 })
 @Injectable() export default class RegionSchoolsSelect implements OnInit, OnDestroy {
     private regions$: BehaviorSubject<IRegionRecords>;
-    //private datamode$: BehaviorSubject<IDataModeRecords>;
     private epalclassesSub: Subscription;
     private regionsSub: Subscription;
     private sectorsSub: Subscription;
     private sectorFieldsSub: Subscription;
-    //private datamodeSub: Subscription;
 
     private formGroup: FormGroup;
     private rss = new FormArray([]);
@@ -113,11 +117,12 @@ import { IAppState } from "../../store/store";
     private regionActiveId = <number>-1;
     private courseActive = <number>-1;
     private numSelected: BehaviorSubject<number>;
+    private countEpals: BehaviorSubject<number>;
     private selectionLimit: BehaviorSubject<number>;
     private selectionLimitOptional: BehaviorSubject<boolean>;
     private regionSizeLimit = <number>3;
     private classNight: BehaviorSubject<boolean>;
-
+    private showLoader: BehaviorSubject<boolean>;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
@@ -126,7 +131,6 @@ import { IAppState } from "../../store/store";
 
     constructor(private fb: FormBuilder,
         private _rsa: RegionSchoolsActions,
-        //private _dma: DataModeActions,
         private _ngRedux: NgRedux<IAppState>,
         private router: Router
 
@@ -138,6 +142,7 @@ import { IAppState } from "../../store/store";
         });
 
         this.numSelected = new BehaviorSubject(0);
+        this.countEpals = new BehaviorSubject(0);
         this.selectionLimit = new BehaviorSubject(3);
         this.selectionLimitOptional = new BehaviorSubject(false);
         this.classNight = new BehaviorSubject(false);
@@ -145,6 +150,7 @@ import { IAppState } from "../../store/store";
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
         this.modalHeader = new BehaviorSubject("");
+        this.showLoader = new BehaviorSubject(true);
 
     };
 
@@ -185,9 +191,6 @@ import { IAppState } from "../../store/store";
             this.sectorsSub.unsubscribe();
         if (this.sectorFieldsSub)
             this.sectorFieldsSub.unsubscribe();
-        //if (this.datamodeSub)
-        //    this.datamodeSub.unsubscribe();
-
     }
 
     public showModal(): void {
@@ -221,12 +224,14 @@ import { IAppState } from "../../store/store";
 
     selectRegionSchools() {
 
+
         this.regionsSub = this._ngRedux.select("regions")
             .subscribe(regions => {
             //.subscribe(regions =>  setTimeout(() =>  {
                 let rgns = <IRegionRecords>regions;
                 let numsel = 0;
                 let numreg = 0;   // count reduced regions in order to set activeRegion when user comes back to his choices
+                let totalnum = 0;
                 this.selectionLimitOptional.next(false);
                 let pushControls = false;
                 if (this.rss.length === 0)
@@ -234,11 +239,12 @@ import { IAppState } from "../../store/store";
                 rgns.reduce((prevRegion, region) => {
                     numreg++;
                     region.get("epals").reduce((prevEpal, epal) => {
-                        if (pushControls)
+                        totalnum++;
+                        if (pushControls) {
                             this.rss.push(new FormControl(epal.get("selected"), []));
+                        }
                         if (epal.get("selected") === true) {
                             numsel++;
-                            //this.numSelected.next(numsel);
                             if (epal.get("epal_special_case") === "1") {
                                 this.selectionLimitOptional.next(true);
                             }
@@ -251,12 +257,16 @@ import { IAppState } from "../../store/store";
                         }
                         return epal;
                     }, {});
-
+                    this.showLoader.next(false);
                     return region;
                 }, {});
 
                 this.numSelected.next(numsel);
+                this.countEpals.next(totalnum);
                 this.regions$.next(rgns);
+
+                //this.showLoader.next(false);
+
           }, error => { console.log("error selecting regions"); });
 
     }
@@ -268,7 +278,23 @@ import { IAppState } from "../../store/store";
     getAppropriateSchools(epalClass) {
 
         if (epalClass === "1") {
-            this._rsa.getRegionSchools(1, "-1", false,/*this.appUpdate.getValue()*/ false);
+            //ΠΡΩΤΟΤΥΠΟ
+            //this._rsa.getRegionSchools(1, "-1", false,/*this.appUpdate.getValue()*/ false);
+
+            //new code
+            const { regions } = this._ngRedux.getState();
+            if (regions.size === 0) {
+              this._rsa.getRegionSchools(1, "-1", false, false)
+              .then (msg => {
+                  this.selectRegionSchools();
+                  this.showLoader.next(false);
+                })
+                .catch(err => {
+                    console.log("error in function");
+                });
+            }
+            //end new code
+
         }
         else if (epalClass === "2") {
             this.sectorFieldsSub = this._ngRedux.select("sectorFields")
@@ -277,7 +303,23 @@ import { IAppState } from "../../store/store";
                     sfds.reduce(({}, sectorField) => {
                         if (sectorField.selected === true) {
                             this.courseActive = sectorField.id;
-                            this._rsa.getRegionSchools(2, this.courseActive, false, /*this.appUpdate.getValue()*/ false);
+                            //ΠΡΩΤΟΤΥΠΟ
+                            //this._rsa.getRegionSchools(2, this.courseActive, false, /*this.appUpdate.getValue()*/ false);
+
+                            //new code
+                            const { regions } = this._ngRedux.getState();
+                            if (regions.size === 0) {
+                              this._rsa.getRegionSchools(2, this.courseActive, false, false)
+                              .then (msg => {
+                                  this.selectRegionSchools();
+                                  this.showLoader.next(false);
+                                })
+                                .catch(err => {
+                                    console.log("error in function");
+                                });
+                            }
+                            //end new code
+
                         }
                         return sectorField;
                     }, {});
@@ -296,8 +338,23 @@ import { IAppState } from "../../store/store";
                             sector.get("courses").reduce((prevCourse, course) => {
                                 if (course.get("selected") === true) {
                                     this.courseActive = parseInt(course.get("course_id"));
-                                    // this._rsa.getRegionSchools(3,this.courseActive, false);
-                                    this._rsa.getRegionSchools(parseInt(epalClass), this.courseActive, false, /*this.appUpdate.getValue()*/false);
+                                    //ΠΡΩΤΟΤΥΠΟ
+                                    //this._rsa.getRegionSchools(parseInt(epalClass), this.courseActive, false, /*this.appUpdate.getValue()*/false);
+
+                                    //new code
+                                    const { regions } = this._ngRedux.getState();
+                                    if (regions.size === 0) {
+                                       this._rsa.getRegionSchools(parseInt(epalClass), this.courseActive, false, false)
+                                      .then (msg => {
+                                          this.selectRegionSchools();
+                                          this.showLoader.next(false);
+                                        })
+                                        .catch(err => {
+                                            console.log("error in function");
+                                        });
+                                    }
+                                    //end new code
+
                                 }
                                 return course;
                             }, {});
