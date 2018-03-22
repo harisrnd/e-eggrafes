@@ -371,6 +371,7 @@ import { StudentGelCourseChosen } from "../students/student";
         //aitisiObj[0]: στοιχεία μαθητών
         aitisiObj[0] = <any>{};
 
+        aitisiObj[0].am = std.get("am");
         aitisiObj[0].name = std.get("name");
         aitisiObj[0].studentsurname = std.get("studentsurname");
         aitisiObj[0].studentbirthdate = std.get("studentbirthdate");
@@ -395,15 +396,17 @@ import { StudentGelCourseChosen } from "../students/student";
         aitisiObj[0].hasright = this.hasright;
         aitisiObj[0].nextclass = this.classSelected.getValue();
 
-        aitisiObj[0].am = null;
-        if (aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)
-          aitisiObj[0].am =  std.get("am");
-        else {
-          aitisiObj[0].regionaddress = std.get("regionaddress");
-          aitisiObj[0].regionarea = std.get("regionarea");
-          aitisiObj[0].regiontk = std.get("regiontk");
-          aitisiObj[0].lastschool_class = std.get("lastschool_class");
-        }
+
+        //aitisiObj[0].am = std.get("am");;
+        //if (aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)
+        //  aitisiObj[0].am =  std.get("am"); 
+        // else {
+        //   aitisiObj[0].regionaddress = std.get("regionaddress");
+        //   aitisiObj[0].regionarea = std.get("regionarea");
+        //   aitisiObj[0].regiontk = std.get("regiontk");
+        //   aitisiObj[0].lastschool_class = std.get("lastschool_class");
+        // }
+
         aitisiObj[0].section_name = null;
 
         //aitisiObj[1]: ομάδα προσανατολισμού

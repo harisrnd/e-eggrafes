@@ -38,6 +38,8 @@ class PDFCreator extends ControllerBase {
 	protected $fontSizeRegular;
 	protected $crypt;
 	//protected $applicantsResultsDisabled;
+	protected $webServiceEnabled;
+
 
 	public function __construct(
 		EntityTypeManagerInterface $entityTypeManager,
@@ -130,7 +132,7 @@ class PDFCreator extends ControllerBase {
 			  if (sizeof($epalStudents) === 1) {
 						$epalStudent = reset($epalStudents);
 
-						/*
+						
 						//ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
 						$config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
 						$eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
@@ -141,9 +143,11 @@ class PDFCreator extends ControllerBase {
 									 ], Response::HTTP_FORBIDDEN);
 						}
 						else {
-							 $this->applicantsResultsDisabled = $eggrafesConfig->lock_results->getString();
+							 //$this->applicantsResultsDisabled = $eggrafesConfig->lock_results->getString();
+							 $this->webServiceEnabled = $eggrafesConfig->ws_ident->getString();
+
 						}
-						*/
+						
 
 				}
 				else {
@@ -317,7 +321,7 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->multiCell(0, $height, $this->prepareString($student->lastschool_schoolname->value), 0, 'L');
 		//$this->pdf->Ln();
 
-		if (empty($student->am->value)){
+		if ( empty($student->am->value) || $this->webServiceEnabled==="0" ){
 			$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 			$this->pdf->Cell($width+15, $height, $this->prepareString('Τάξη τελευταίας φοίτησης:'), 0, 'L');
 			$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
@@ -402,36 +406,32 @@ class PDFCreator extends ControllerBase {
 		$y = ($y_col1 > $y_col2) ? $y_col1 : $y_col2;
 		$this->pdf->SetXY($x,$y);
 
-
-		// $this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
-		// $this->pdf->Cell($width+15, $height, $this->prepareString('Τάξη τελευταίας φοίτησης:'), 0, 'L');
-		// $this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		// $this->pdf->Cell($width, $height, $this->prepareString($this->retrieveClassName($student->lastschool_class->value)), 0, 'L');
-		// $this->pdf->Ln();
-
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeHeader);
 		$this->pdf->SetFillColor(255,178,102);
 		$this->pdf->MultiCell(0, $height, $this->prepareString('Στοιχεία Επικοινωνίας'), 0, 'C',true);
 		$this->pdf->Ln(4);
 
-		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
-		$regAddressTxt = 'ΤΚ: ' . $regiontk_decoded . ', ' . $regionarea_decoded;
-		$this->pdf->Cell($width, $height, $this->prepareString('Διεύθυνση κατοικίας: '), 0, 'L');
-		$x=$this->pdf->GetX(); $y=$this->pdf->GetY();
-		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		$this->pdf->multiCell($width, $height, $this->prepareString($regionaddress_decoded), 0, 'L');
-		$x_col1=$this->pdf->GetX();$y_col1=$this->pdf->GetY();
+		if ( empty($student->am->value) || $this->webServiceEnabled==="0" ){
+
+			$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
+			$regAddressTxt = 'ΤΚ: ' . $regiontk_decoded . ', ' . $regionarea_decoded;
+			$this->pdf->Cell($width, $height, $this->prepareString('Διεύθυνση κατοικίας: '), 0, 'L');
+			$x=$this->pdf->GetX(); $y=$this->pdf->GetY();
+			$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
+			$this->pdf->multiCell($width, $height, $this->prepareString($regionaddress_decoded), 0, 'L');
+			$x_col1=$this->pdf->GetX();$y_col1=$this->pdf->GetY();
 		
-		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
-		$this->pdf->SetXY($x+$width,$y);
-		$this->pdf->Cell($width, $height, $this->prepareString('ΤΚ - Πόλη: '), 0, 'L');
-		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-		$this->pdf->multiCell($width, $height, $this->prepareString($regAddressTxt), 0, 'L');
-		$x_col2=$this->pdf->GetX();;$y_col2=$this->pdf->GetY();
+			$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
+			$this->pdf->SetXY($x+$width,$y);
+			$this->pdf->Cell($width, $height, $this->prepareString('ΤΚ - Πόλη: '), 0, 'L');
+			$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
+			$this->pdf->multiCell($width, $height, $this->prepareString($regAddressTxt), 0, 'L');
+			$x_col2=$this->pdf->GetX();;$y_col2=$this->pdf->GetY();
 		
-		$x = ($y_col1 > $y_col2) ? $x_col1 : $x_col2;
-		$y = ($y_col1 > $y_col2) ? $y_col1 : $y_col2;
-		$this->pdf->SetXY($x,$y);
+			$x = ($y_col1 > $y_col2) ? $x_col1 : $x_col2;
+			$y = ($y_col1 > $y_col2) ? $y_col1 : $y_col2;
+			$this->pdf->SetXY($x,$y);
+		}
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->Cell($width, $height, $this->prepareString('Δήλωση από:'), 0, 'L');
