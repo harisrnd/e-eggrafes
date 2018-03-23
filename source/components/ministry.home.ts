@@ -92,8 +92,12 @@ export default class MinistryHome implements OnInit, OnDestroy {
                 if (linfo.size > 0) {
                     linfo.reduce(({}, loginInfoObj) => {
                         this.mineduUsername = loginInfoObj.minedu_username;
-                        if (this.mineduUsername && this.mineduUsername.length > 0)
-                            this.router.navigate(["/ministry/minister-settings"]);
+                        if (this.mineduUsername && this.mineduUsername.length > 0)  {
+                            if (this.mineduUsername.slice(-1) === "1")
+                              this.router.navigate(["/ministry/gel-minister-settings"]);
+                            else if (this.mineduUsername.slice(-1) === "2")
+                                this.router.navigate(["/ministry/minister-settings"]);
+                          }
                         return loginInfoObj;
                     }, {});
                 }

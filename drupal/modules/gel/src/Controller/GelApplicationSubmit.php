@@ -116,7 +116,7 @@ class GelApplicationSubmit extends ControllerBase
  			  }
 
         // configuration validation
-        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_gel'));
         $eggrafesConfig = reset($eggrafesConfigs);
         if (!$eggrafesConfig) {
             return $this->respondWithStatus([
@@ -337,7 +337,7 @@ class GelApplicationSubmit extends ControllerBase
       }
 
       //configuration validation
-      $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+      $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_gel'));
       $eggrafesConfig = reset($eggrafesConfigs);
       if (!$eggrafesConfig) {
           return $this->respondWithStatus([

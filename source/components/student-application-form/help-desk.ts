@@ -15,7 +15,7 @@ import { IAppState } from "../../store/store";
     selector: "helpdesk",
     template: `
         <div class = "loading" *ngIf="(showLoader | async) === true"></div>
-        <p align="left"><strong>Ηλεκτρονικές δηλώσεις προτίμησης ΕΠΑΛ για το νέο σχολικό έτος</strong></p>
+        <p align="left"><strong>Ηλεκτρονικές δηλώσεις προτίμησης ΕΠΑΛ / ΓΕΛ για το νέο σχολικό έτος</strong></p>
         <p align="left">
         Σε περίπτωση που αντιμετωπίζετε οποιοδήποτε πρόβλημα με την καταχώριση της αίτησής σας, παρακαλούμε να
          συμπληρώσετε την παρακάτω φόρμα.

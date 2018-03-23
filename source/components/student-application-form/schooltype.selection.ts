@@ -9,14 +9,15 @@ import { SchoolTypeActions } from "../../actions/schooltype.actions";
 import { GelClassesActions } from "../../actions/gelclasses.actions";
 import { OrientationGroupActions } from "../../actions/orientationgroup.action";
 import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
-
 import { EpalClassesActions } from "../../actions/epalclass.actions";
 import { RegionSchoolsActions } from "../../actions/regionschools.actions";
 import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
 import { SectorFieldsActions } from "../../actions/sectorfields.actions";
+import { LoginInfoActions } from "../../actions/logininfo.actions";
 
 import { SCHOOLTYPE_INITIAL_STATE } from "../../store/schooltype/schooltype.initial-state";
 import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/schooltype/schooltype.types";
+import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { IAppState } from "../../store/store";
 import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
 
@@ -59,10 +60,10 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         <div class="col-md-6">
             <button class="buttonGelHov pull-center" (click)="GelSelected()"><span>Γενικό Λυκειο</span></button>
         </div>
-        
         <div class="col-md-6">
             <button class="buttonGelHov pull-center" (click)="EpalSelected()"><span>Επαγγελματικό Λύκειο</span></button>
         </div>
+
         </div>
 
         <!--
@@ -86,14 +87,18 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
 @Injectable() export default class SchoolTypeSelection implements OnInit, OnDestroy {
     private schooltype$: BehaviorSubject<ISchoolTypeRecords>;
     private schooltypeSub: Subscription;
+    private loginInfoSub: Subscription;
     private formGroup: FormGroup;
     private modalTitle: BehaviorSubject<string>;
     private modalText: BehaviorSubject<string>;
     private modalHeader: BehaviorSubject<string>;
     public isModalShown: BehaviorSubject<boolean>;
+    private lock_application_epal: BehaviorSubject<number>;
+    private lock_application_gel: BehaviorSubject<number>;
 
     constructor(private fb: FormBuilder,
         private _ngRedux: NgRedux<IAppState>,
+        private _lia: LoginInfoActions,
         private _sta: SchoolTypeActions,
         private _gca: GelClassesActions,
         private _ogs: OrientationGroupActions,
@@ -110,6 +115,8 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         this.modalText = new BehaviorSubject("");
         this.modalHeader = new BehaviorSubject("");
         this.isModalShown = new BehaviorSubject(false);
+        this.lock_application_epal = new BehaviorSubject(1);
+        this.lock_application_gel = new BehaviorSubject(1);
         this.schooltype$ = new BehaviorSubject(SCHOOLTYPE_INITIAL_STATE);
     };
 
@@ -125,6 +132,18 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         this._cfe.initElectiveCourseFields();
 
         (<any>$("#SchoolTypeNotice")).appendTo("body");
+
+        this.loginInfoSub = this._ngRedux.select("loginInfo")
+            .map(loginInfo => <ILoginInfoRecords>loginInfo)
+            .subscribe(linfo => {
+                if (linfo.size > 0) {
+                    linfo.reduce(({}, loginInfoObj) => {
+                        this.lock_application_epal.next(loginInfoObj.lock_application_epal);
+                        this.lock_application_gel.next(loginInfoObj.lock_application_gel);
+                        return loginInfoObj;
+                    }, {});
+                }
+            }, error => { console.log("error selecting loginInfo"); });
 
 /*         this.schooltypeSub = this._ngRedux.select("schooltype")
             .map(schooltype => <ISchoolTypeRecords>schooltype)
@@ -145,6 +164,8 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
     ngOnDestroy() {
         if (this.schooltypeSub)
             this.schooltypeSub.unsubscribe();
+        if (this.loginInfoSub)
+            this.loginInfoSub.unsubscribe();
         (<any>$("#SchoolTypeNotice")).remove();
     }
 
@@ -205,13 +226,21 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
     } */
 
     GelSelected() {
-        this._sta.saveSchoolTypeSelected(1,"ΓΕΛ");
-        this.router.navigate(["/gel-class-select"]);
+        if (this.lock_application_gel.getValue() === 1)
+            this.router.navigate(["/info"]);
+        else {
+          this._sta.saveSchoolTypeSelected(1,"ΓΕΛ");
+          this.router.navigate(["/gel-class-select"]);
+        }
     }
 
     EpalSelected() {
+      if (this.lock_application_epal.getValue() === 1)
+          this.router.navigate(["/info"]);
+      else {
         this._sta.saveSchoolTypeSelected(2,"ΕΠΑΛ");
         this.router.navigate(["/epal-class-select"]);
+      }
     }
 
 }

@@ -78,7 +78,7 @@ import { IAppState } from "../../store/store";
                         return loginInfoObj;
                     }, {});
                 }
-            }, error => { console.log("error selecting epalclasses"); });
+            }, error => { console.log("error selecting loginInfo"); });
     };
 
     ngOnDestroy() {
@@ -102,7 +102,7 @@ import { IAppState } from "../../store/store";
             this._oga.initOrientationGroup();
             this._lcfa.initLangCourseFields();
             this._gsdfa.initGelStudentDataFields();
-            
+
             this.router.navigate([""]);
             this.authToken = "";
             this.authRole = "";

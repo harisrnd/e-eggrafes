@@ -53,11 +53,19 @@ class CurrentUser extends ControllerBase
                 ], Response::HTTP_FORBIDDEN);
         }
 
-        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
-        $eggrafesConfig = reset($eggrafesConfigs);
-        if (!$eggrafesConfig) {
+        //Ποιο eggrafes_config να χρησιμοποιήσουμε;
+        $eggrafesConfigsEpal = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_epal'));
+        $eggrafesConfigEpal = reset($eggrafesConfigsEpal);
+        if (!$eggrafesConfigEpal) {
             return $this->respondWithStatus([
-                    'message' => t("Configuration not found"),
+                    'message' => t("Epal Configuration not found"),
+                ], Response::HTTP_FORBIDDEN);
+        }
+        $eggrafesConfigsGel = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_gel'));
+        $eggrafesConfigGel = reset($eggrafesConfigsGel);
+        if (!$eggrafesConfigGel) {
+            return $this->respondWithStatus([
+                    'message' => t("Gel Configuration not found"),
                 ], Response::HTTP_FORBIDDEN);
         }
 
@@ -72,9 +80,11 @@ class CurrentUser extends ControllerBase
                         'cu_email' => '',
                         'minedu_username' => '',
                         'minedu_userpassword' => '',
-                        'lock_capacity' => $eggrafesConfig->lock_school_capacity->value,
-                        'lock_students' => $eggrafesConfig->lock_school_students_view->value,
-                        'lock_application' => $eggrafesConfig->lock_application->value,
+                        'lock_capacity' => $eggrafesConfigEpal->lock_school_capacity->value,
+                        'lock_students_epal' => $eggrafesConfigEpal->lock_school_students_view->value,
+                        'lock_students_gel' => $eggrafesConfigGel->lock_school_students_view->value,
+                        'lock_application_epal' => $eggrafesConfigEpal->lock_application->value,
+                        'lock_application_gel' => $eggrafesConfigGel->lock_application->value,
                         'disclaimer_checked' => "0",
                         'title' => $user->init->value
                     ], Response::HTTP_OK);
@@ -125,9 +135,10 @@ class CurrentUser extends ControllerBase
                     'cu_email' => mb_substr($user->mail->value,0,4,'UTF-8') !== "####" ? $user->mail->value : '',
                     'minedu_username' => '',
                     'minedu_userpassword' => '',
-                    'lock_capacity' => $eggrafesConfig->lock_school_capacity->value,
-                    'lock_students' => $eggrafesConfig->lock_school_students_view->value,
-                    'lock_application' => $eggrafesConfig->lock_application->value,
+                    'lock_capacity' => $eggrafesConfigEpal->lock_school_capacity->value,
+                    'lock_students_epal' => $eggrafesConfigEpal->lock_school_students_view->value,
+                    'lock_application_epal' => $eggrafesConfigEpal->lock_application->value,
+                    'lock_application_gel' => $eggrafesConfigGel->lock_application->value,
                     'disclaimer_checked' => "0",
                     'verificationCodeVerified' => $applicantUser->verificationcodeverified->value,
                     'numapp_self' => $numAppSelf,

@@ -133,7 +133,7 @@ class PDFCreator extends ControllerBase {
 						/*
 						//ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
 						$config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-						$eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+						$eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
 						$eggrafesConfig = reset($eggrafesConfigs);
 						if (!$eggrafesConfig) {
 							 return $this->respondWithStatus([
@@ -421,14 +421,14 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 		$this->pdf->multiCell($width, $height, $this->prepareString($regionaddress_decoded), 0, 'L');
 		$x_col1=$this->pdf->GetX();$y_col1=$this->pdf->GetY();
-		
+
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->SetXY($x+$width,$y);
 		$this->pdf->Cell($width, $height, $this->prepareString('ΤΚ - Πόλη: '), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 		$this->pdf->multiCell($width, $height, $this->prepareString($regAddressTxt), 0, 'L');
 		$x_col2=$this->pdf->GetX();;$y_col2=$this->pdf->GetY();
-		
+
 		$x = ($y_col1 > $y_col2) ? $x_col1 : $x_col2;
 		$y = ($y_col1 > $y_col2) ? $y_col1 : $y_col2;
 		$this->pdf->SetXY($x,$y);

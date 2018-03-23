@@ -34,8 +34,11 @@ import SchoolAuthGuard from "./guards/school.auth.guard";
 import SchoolGelAuthGuard from "./guards/schoolgel.auth.guard";
 import SchoolCapacityLockedGuard from "./guards/school.capacity.locked.guard";
 import SchoolStudentsLockedGuard from "./guards/school.students.locked.guard";
+import SchoolGelStudentsLockedGuard from "./guards/school.gel.students.locked.guard";
 import StudentAuthGuard from "./guards/student.auth.guard";
 import StudentLockGuard from "./guards/student.lock.guard";
+import StudentGelLockGuard from "./guards/student.gel.lock.guard";
+import StudentAllLockGuard from "./guards/student.all.lock.guard";
 import { AuthService } from "./services/auth.service";
 import { HelperDataService } from "./services/helper-data-service";
 import { LoaderService } from "./services/Spinner.service";
@@ -82,9 +85,12 @@ class MyLocalization extends NgLocalization {
         SchoolAuthGuard,
         SchoolGelAuthGuard,
         SchoolStudentsLockedGuard,
+        SchoolGelStudentsLockedGuard,
         SchoolCapacityLockedGuard,
         StudentAuthGuard,
         StudentLockGuard,
+        StudentGelLockGuard,
+        StudentAllLockGuard,
         RegionEduAuthGuard,
         EduAdminAuthGuard,
         DidepdeAuthGuard,

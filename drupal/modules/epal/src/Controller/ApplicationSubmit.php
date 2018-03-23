@@ -115,7 +115,7 @@ class ApplicationSubmit extends ControllerBase
         }
 
         //eggrafes configuration validation
-        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_epal'));
         $eggrafesConfig = reset($eggrafesConfigs);
         if (!$eggrafesConfig) {
             return $this->respondWithStatus([
@@ -345,7 +345,7 @@ class ApplicationSubmit extends ControllerBase
           ], Response::HTTP_BAD_REQUEST);
       }
 
-      $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+      $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_epal'));
       $eggrafesConfig = reset($eggrafesConfigs);
       if (!$eggrafesConfig) {
           return $this->respondWithStatus([
