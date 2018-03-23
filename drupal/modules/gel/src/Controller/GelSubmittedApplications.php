@@ -443,7 +443,8 @@ class GelSubmittedApplications extends ControllerBase
 
                     $crypt = new Crypt();
                     try {
-                        if (isset($gelStudent->myschool_id ))
+                        //if (isset($gelStudent->myschool_id ))
+                        if (isset($gelStudent->am))
                             $am_decoded = $crypt->decrypt($gelStudent->am);
                         $name_decoded = $crypt->decrypt($gelStudent->name);
                         $studentsurname_decoded = $crypt->decrypt($gelStudent->studentsurname);
