@@ -49,8 +49,7 @@ import { SchoolTypeActions } from "../../actions/schooltype.actions";
 
     navigatepdegel() {
         this._sta.saveSchoolTypeSelected(1,"ΓΕΛ");
-        console.log("lalalal");
-        this.router.navigate(["/school/gel-distribution"]);
+        this.router.navigate(["/school/eduadmingel-view"]);
     }
 
 }

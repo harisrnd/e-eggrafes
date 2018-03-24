@@ -28,6 +28,9 @@ import { HelperDataService } from "../../services/helper-data-service";
                  <div [hidden]="regionActive !== JuniorHighSchools$.id" >
                  <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
                   class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven" style="margin: 0px 2px 0px 2px;">
+                    <div class="col-md-11 col-md-offset-1">
+                     <input #cb type="checkbox" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                   </div>
                     <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
                     <div class="col-md-10" style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
                     <div class="col-md-6 offset-md-2" style="   font-weight: bold;" >{{AllStudents$.regionarea}}</div>
@@ -73,6 +76,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     private SchoolSelectionSub: Subscription;
     private HighSchoolSelection$: BehaviorSubject<any>;
     private HighSchoolSelectionSub: Subscription;
+    private idx = <number>-1;
 
    
     private showLoader: BehaviorSubject<boolean>;
@@ -202,5 +206,10 @@ import { HelperDataService } from "../../services/helper-data-service";
                       console.log("No HighSchool");
                   });
   }
+
+updateCheckedOptions(k,l)
+{
+  console.log(k,l);
+}
 
 }
