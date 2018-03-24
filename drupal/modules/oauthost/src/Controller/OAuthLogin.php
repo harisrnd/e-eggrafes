@@ -57,6 +57,11 @@ class OAuthLogin extends ControllerBase
 
     public function loginGo(Request $request)
     {
+        //τεστ
+        //$schoolToken = "fe76062d85fc06f12b93d53873da4314";
+        //return new RedirectResponseWithCookieExt("http://eduslim2.minedu.gov.gr/e-eggrafes/dist/#/?auth_token=" . $schoolToken.'&auth_role=student', 302, []);
+        //τέλος
+
         $configRowName = 'oauthost_taxisnet_config';
         $configRowId = $request->query->get('config');
         if ($configRowId)

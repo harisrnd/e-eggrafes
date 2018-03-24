@@ -28,6 +28,8 @@ export class RegionSchoolsActions {
                 });
             });
         }
+        //else
+        //  return;
     };
 
     initRegionSchools = () => {

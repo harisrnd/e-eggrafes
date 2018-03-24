@@ -187,7 +187,7 @@ class ApplicationSubmit extends ControllerBase
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             return $this->respondWithStatus([
-                "error_code" => 5001,
+                "error_code" => 500147654956,
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         unset($crypt);

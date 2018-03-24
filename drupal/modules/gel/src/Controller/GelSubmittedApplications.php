@@ -318,7 +318,9 @@ class GelSubmittedApplications extends ControllerBase
                             'name' => $name_decoded,
                             //'studentsurname' => $object -> studentsurname ->value);
                             'studentsurname' => $studentsurname_decoded,
-                            'candelete' => $canDelete, );
+                            'candelete' => $canDelete,
+                            'logo' => 'ΓΕΛ',
+                            );
                     ++$i;
                 }
 
@@ -400,9 +402,23 @@ class GelSubmittedApplications extends ControllerBase
                                         ->fields('gel_ch',
                                         array('name',
                                               'choicetype'
+                                        ))
+                                        ->fields('esc',
+                                        array('school_id'
+                                        ))
+                                        ->fields('eeschfin',
+                                        array('id',
+                                                'name',
+                                                'street_address',
+                                                'phone_number'
                                         ));
+
             $esQuery->addJoin('left outer', 'gel_student_choices', 'gs_ch', 'gs.id=gs_ch.student_id');
             $esQuery->addJoin('left outer', 'gel_choices', 'gel_ch', 'gs_ch.choice_id=gel_ch.id');
+            //new lines
+            $esQuery->addJoin('left outer', 'gelstudenthighschool', 'esc', 'gs.id=esc.student_id');
+            $esQuery->addJoin('left outer', 'gel_school', 'eeschfin', 'esc.school_id=eeschfin.id');
+            //end new lines
             $esQuery->condition('gs.id', intval($studentId), '=');
             $esQuery->condition('gs.gel_userid', $gelUser->id(), '=');
             $esQuery->orderBy('gs_ch.order_id');
@@ -427,7 +443,8 @@ class GelSubmittedApplications extends ControllerBase
 
                     $crypt = new Crypt();
                     try {
-                        if (isset($gelStudent->myschool_id ))
+                        //if (isset($gelStudent->myschool_id ))
+                        if (isset($gelStudent->am))
                             $am_decoded = $crypt->decrypt($gelStudent->am);
                         $name_decoded = $crypt->decrypt($gelStudent->name);
                         $studentsurname_decoded = $crypt->decrypt($gelStudent->studentsurname);
@@ -451,8 +468,15 @@ class GelSubmittedApplications extends ControllerBase
                     }
                     unset($crypt);
 
+                    if ($applicantsResultsDisabled === "0") {
+                      if ($gelStudent->school_id)
+                          $status = "1";
+                      else
+                          $status = "4";
+                    }
+                    else
+                        $status = "0";
 
-                    $status = "0";
 
                     $list[] = array(
                             'applicationId' => $gelStudent->id,
@@ -478,7 +502,13 @@ class GelSubmittedApplications extends ControllerBase
                             'relationtostudent' => $gelStudent->relationtostudent,
                             'birthdate' => substr($gelStudent->birthdate, 8, 2).'/'.substr($gelStudent->birthdate, 5, 2).'/'.substr($gelStudent->birthdate, 0, 4),
                             'changed' => date('d/m/Y H:i', $gelStudent->changed),
-                            'gelStudentChoices' => $gelStudentChoices
+                            'gelStudentChoices' => $gelStudentChoices,
+
+                            'schoolName' => $gelStudent->eeschfin_name,
+                            'schoolAddress' => $gelStudent->street_address,
+                            'schoolTel' => $gelStudent->phone_number,
+                            'applicantsResultsDisabled' => $applicantsResultsDisabled,
+                            'status' => $status
                         );
 
                 return $this->respondWithStatus(
