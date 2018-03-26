@@ -63,7 +63,7 @@ class SubmitedApplications extends ControllerBase
         try {
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
             $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
             $eggrafesConfig = reset($eggrafesConfigs);
             if (!$eggrafesConfig) {
                return $this->respondWithStatus([
@@ -161,7 +161,7 @@ class SubmitedApplications extends ControllerBase
         try {
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
             $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
             $eggrafesConfig = reset($eggrafesConfigs);
             if (!$eggrafesConfig) {
                return $this->respondWithStatus([
@@ -254,7 +254,7 @@ class SubmitedApplications extends ControllerBase
 
                     //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_delete
                     $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-                    $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+                    $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
                     $eggrafesConfig = reset($eggrafesConfigs);
                     if (!$eggrafesConfig) {
                        return $this->respondWithStatus([
@@ -420,7 +420,7 @@ class SubmitedApplications extends ControllerBase
         if ($epalUser) {
 
             $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
             $eggrafesConfig = reset($eggrafesConfigs);
             if (!$eggrafesConfig) {
                return $this->respondWithStatus([
@@ -741,7 +741,7 @@ class SubmitedApplications extends ControllerBase
 
               //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
               $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-              $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+              $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
               $eggrafesConfig = reset($eggrafesConfigs);
               if (!$eggrafesConfig) {
                  return $this->respondWithStatus([
@@ -883,7 +883,7 @@ class SubmitedApplications extends ControllerBase
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_school_students_view, lock_application
 
             $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
             $eggrafesConfig = reset($eggrafesConfigs);
             if (!$eggrafesConfig) {
                return $this->respondWithStatus([
@@ -1019,7 +1019,7 @@ public function deleteApplicationFromDirector(Request $request)
         try {
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_delete
             $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
             $eggrafesConfig = reset($eggrafesConfigs);
             if (!$eggrafesConfig) {
                return $this->respondWithStatus([

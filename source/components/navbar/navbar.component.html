@@ -15,42 +15,79 @@
                                         <a class="nav-link" [routerLink]="['/submited-preview']" [routerLinkActive]="['active']"><b>Υποβληθείσες δηλώσεις</b></a>
                                     </li>
                                 </div>
-                                <div *ngIf="(loginInfo$ | async).size > 0 && !(lockStudents | async)" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
+                                <div *ngIf="(loginInfo$ | async).size > 0 && !(lockStudentsEpal | async)" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
                                     <li *ngIf="authRole=='director'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/director-view']" [routerLinkActive]="['active']"><b>Δηλώσεις Μαθητών στο ΕΠΑΛ</b></a>
                                     </li>
                                 </div>
+                                <!--
+                                //ΓΙΑ ΔΗΛΩΣΕΙΣ ΜΑΘΗΤΩΝ ΣΕ ΓΕΛ
+                                <div *ngIf="(loginInfo$ | async).size > 0 && !(lockStudentsGel | async)" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
+                                    <li *ngIf="authRole=='director'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/school/director-gel-view']" [routerLinkActive]="['active']"><b>Δηλώσεις Μαθητών στο ΓΕΛ</b></a>
+                                    </li>
+                                </div>
+                                -->
                                 <div *ngIf="(loginInfo$ | async).size > 0 && !(lockCapacity | async)" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
                                     <li *ngIf="authRole=='director'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/director-classcapacity']" [routerLinkActive]="['active']"><b>Δυναμική Σχολείου</b></a>
                                     </li>
                                 </div>
 
-                                <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (userType | async) === 'epal'" class="nav-item">
                                     <li *ngIf="authRole=='supervisor'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/ministry/minister-settings']" [routerLinkActive]="['active']"><b>Ρυθμίσεις</b></a>
                                     </li>
                                 </div>
-                                <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (userType | async) === 'epal'" class="nav-item">
                                     <li *ngIf="authRole=='supervisor'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/ministry/minister-view']" [routerLinkActive]="['active']"><b>Κατανομή</b></a>
                                     </li>
                                 </div>
-                                <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (userType | async) === 'epal'" class="nav-item">
                                     <li *ngIf="authRole=='supervisor'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/ministry/minister-reports']" [routerLinkActive]="['active']"><b>Αναφορές</b></a>
                                     </li>
                                 </div>
-                                <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (userType | async) === 'epal'" class="nav-item">
                                     <li *ngIf="authRole=='supervisor'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/ministry/minister-informstudents']" [routerLinkActive]="['active']"><b>Αποστολή Ειδοποιήσεων</b></a>
                                     </li>
                                 </div>
+
                                  <div *ngIf="(loginInfo$ | async).size > 0 && ((schtype == 2) || (schtype == 1)) " class="nav-item">
                                     <li *ngIf=" authRole=='dide'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['school/school-type-selection']" [routerLinkActive]="['active']"><b>Αρχική </b></a>
                                     </li>
                                 </div>
+
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (userType | async) === 'epal'" class="nav-item">
+                                    <li *ngIf="authRole=='supervisor'" class="nav-item">
+                                        <a class="nav-link"><b>ΔΙΑΧΕΙΡΙΣΗ ΕΠΑΛ</b></a>
+                                    </li>
+                                </div>
+
+
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (userType | async) === 'gel'" class="nav-item">
+                                    <li *ngIf="authRole=='supervisor'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/ministry/gel-minister-settings']" [routerLinkActive]="['active']"><b>Ρυθμίσεις</b></a>
+                                    </li>
+                                </div>
+                                <!--
+                                <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+                                    <li *ngIf="authRole=='supervisor'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/ministry/minister-reports']" [routerLinkActive]="['active']"><b>Αναφορές</b></a>
+                                    </li>
+                                </div>
+                                -->
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (userType | async) === 'gel'" class="nav-item">
+                                    <li *ngIf="authRole=='supervisor'" class="nav-item">
+                                        <a class="nav-link"><b>ΔΙΑΧΕΙΡΙΣΗ ΓΕΛ</b></a>
+                                    </li>
+                                </div>
+
+
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
                                     <li *ngIf="authRole=='pde'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/perfecture-view']" [routerLinkActive]="['active']"><b>Πληρότητα Σχολείων</b></a>
@@ -80,7 +117,7 @@
                                     </li>
                                 </div>
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
-                                    <li *ngIf=" authRole =='pde'  " 
+                                    <li *ngIf=" authRole =='pde'  "
                                     class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/undomerge']" [routerLinkActive]="['active']"><b>Αναιρέσεις συνενώσεων</b></a>
                                     </li>

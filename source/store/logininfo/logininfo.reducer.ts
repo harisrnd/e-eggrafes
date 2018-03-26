@@ -23,8 +23,10 @@ export function loginInfoReducer(state: ILoginInfoRecords = LOGININFO_INITIAL_ST
                     minedu_username: loginInfo.minedu_username,
                     minedu_userpassword: loginInfo.minedu_userpassword,
                     lock_capacity: loginInfo.lock_capacity,
-                    lock_students: loginInfo.lock_students,
-                    lock_application: loginInfo.lock_application,
+                    lock_students_epal: loginInfo.lock_students_epal,
+                    lock_students_gel: loginInfo.lock_students_gel,
+                    lock_application_epal: loginInfo.lock_application_epal,
+                    lock_application_gel: loginInfo.lock_application_gel,
                     disclaimer_checked: loginInfo.disclaimer_checked
                     //numapp_self: loginInfo.numapp_self,
                     //numapp_children: loginInfo.numapp_children,

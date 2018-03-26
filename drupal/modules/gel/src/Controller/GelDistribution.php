@@ -483,7 +483,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
         try {
             $authToken = $request->headers->get('PHP_AUTH_USER');
 
-            $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_gel'));
             $eggrafesConfig = reset($eggrafesConfigs);
             if (!$eggrafesConfig) {
                 return $this->respondWithStatus([

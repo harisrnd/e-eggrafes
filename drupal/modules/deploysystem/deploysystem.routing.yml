@@ -14,6 +14,22 @@ deploysystem.ministry.storesettings:
     _controller: '\Drupal\deploysystem\Controller\MinisterSettings::storeSettings'
   requirements:
     _user_is_logged_in: 'TRUE'
+deploysystem.ministry.retrievesettings.gel:
+  path: '/ministry/retrieve-settings-gel'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\deploysystem\Controller\MinisterSettings::retrieveSettingsGel'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+deploysystem.ministry.storesettings.gel:
+  path: '/ministry/store-settings-gel/{capacityDisabled}/{directorViewDisabled}/{applicantsLoginDisabled}/{applicantsAppModifyDisabled}/{applicantsAppDeleteDisabled}/{applicantsResultsDisabled}/{secondPeriodEnabled}/{dateStart}/{smallClassApproved}/{ws}/{gsis}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\deploysystem\Controller\MinisterSettings::storeSettingsGel'
+  requirements:
+    _user_is_logged_in: 'TRUE'
 deploysystem.ministry.log_in_go:
   path: '/ministry/login'
   options:

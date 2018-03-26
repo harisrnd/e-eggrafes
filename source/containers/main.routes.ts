@@ -14,6 +14,7 @@ import Breadcrumbs from "../components/main/breadcrumbs";
 import InformStudents from "../components/minister/minister-informstudents";
 import MinisterReports from "../components/minister/minister-reports";
 import MinisterSettings from "../components/minister/minister-settings";
+import GelMinisterSettings from "../components/minister/gel-minister-settings";
 import MinisterView from "../components/minister/minister-view";
 import ReportAllStat from "../components/minister/report-all-stat";
 import ReportGeneral from "../components/minister/report-general";
@@ -45,8 +46,11 @@ import SchoolAuthGuard from "../guards/school.auth.guard";
 import SchoolGelAuthGuard from "../guards/schoolgel.auth.guard";
 import SchoolCapacityLockedGuard from "../guards/school.capacity.locked.guard";
 import SchoolStudentsLockedGuard from "../guards/school.students.locked.guard";
+import SchoolGelStudentsLockedGuard from "../guards/school.gel.students.locked.guard";
 import StudentAuthGuard from "../guards/student.auth.guard";
 import StudentLockGuard from "../guards/student.lock.guard";
+import StudentGelLockGuard from "../guards/student.gel.lock.guard";
+import StudentAllLockGuard from "../guards/student.all.lock.guard";
 import { CamelCasePipe } from "../pipes/camelcase";
 import { RemoveSpaces } from "../pipes/removespaces";
 import ReportMergedClasses from "../components/minister/report-merged-classes";
@@ -74,9 +78,9 @@ export const MainRoutes: Routes = [
     { path: "school/logout", component: SchoolHome },
     { path: "ministry", component: MinistryHome },
     { path: "ministry/logout", component: MinistryHome },
-    { path: "parent-form", component: ParentForm, canActivate: [StudentAuthGuard, StudentLockGuard] },
+    { path: "parent-form", component: ParentForm, canActivate: [StudentAuthGuard, StudentAllLockGuard ] },
     { path: "student-application-form-main", component: StudentApplicationMain, canActivate: [StudentAuthGuard, StudentLockGuard] },
-    { path: "intro-statement", component: Disclaimer, canActivate: [StudentAuthGuard, StudentLockGuard] },
+    { path: "intro-statement", component: Disclaimer, canActivate: [StudentAuthGuard, StudentAllLockGuard] },
     { path: "legal-info", component: LegalInfo },
     { path: "epal-class-select", component: EpalClassesSelect, canActivate: [StudentAuthGuard, StudentLockGuard] },
     { path: "sector-fields-select", component: SectorFieldsSelect, canActivate: [StudentAuthGuard, StudentLockGuard] },
@@ -88,7 +92,7 @@ export const MainRoutes: Routes = [
     { path: "submited-preview", component: SubmitedPreview, canActivate: [StudentAuthGuard] },
     { path: "post-submit", component: AfterSubmit, canActivate: [StudentAuthGuard, StudentLockGuard] },
     { path: "school/director-view", component: DirectorView, canActivate: [SchoolAuthGuard, SchoolStudentsLockedGuard] },
-    { path: "school/directorgel-view", component: DirectorViewGel, canActivate: [SchoolGelAuthGuard, SchoolStudentsLockedGuard] },
+    { path: "school/directorgel-view", component: DirectorViewGel, canActivate: [SchoolGelAuthGuard, SchoolGelStudentsLockedGuard] },
     { path: "school/director-buttons", component: DirectorButtons, canActivate: [SchoolAuthGuard] },
     { path: "school/director-classcapacity", component: DirectorClassCapacity, canActivate: [SchoolAuthGuard, SchoolCapacityLockedGuard] },
     { path: "ministry/minister-view", component: MinisterView, canActivate: [MinistryAuthGuard] },
@@ -100,6 +104,7 @@ export const MainRoutes: Routes = [
     { path: "ministry/report-no-capacity/:reportId", component: ReportNoCapacity, canActivate: [MinistryAuthGuard] },
     { path: "ministry/minister-informstudents", component: InformStudents, canActivate: [MinistryAuthGuard] },
     { path: "ministry/minister-settings", component: MinisterSettings, canActivate: [MinistryAuthGuard] },
+    { path: "ministry/gel-minister-settings", component: GelMinisterSettings, canActivate: [MinistryAuthGuard] },
     { path: "school/perfecture-view", component: PerfectureView, canActivate: [RegionEduAuthGuard] },
     { path: "school/eduadmin-view", component: EduadminView, canActivate: [EduAdminAuthGuard] },
     { path: "school/mergeschools", component: MergeSchools, canActivate: [DidepdeAuthGuard] },
@@ -110,14 +115,14 @@ export const MainRoutes: Routes = [
     { path: "ministry/report-applications", component: ReportApplications, canActivate: [ReportsAuthGuard] },
     { path: "ministry/report-user-applications", component: ReportUserApplications, canActivate: [ReportsAuthGuard] },
     { path: "ministry/report-gel-students", component: ReportGelStudents, canActivate: [ReportsAuthGuard] },
-    { path: "orientation-group-select", component: OrientationGroup, canActivate: [StudentAuthGuard, StudentLockGuard]},
-    { path: "electivecourse-fields-select", component: ElectiveCourseFieldsSelect, canActivate: [StudentAuthGuard, StudentLockGuard]},
-    { path: "langcourse-fields-select", component: LangCourseFieldsSelect, canActivate: [StudentAuthGuard, StudentLockGuard]},
-    { path: "course-order-select", component: CoursesOrderSelect, canActivate: [StudentAuthGuard, StudentLockGuard]},
-    { path: "gel-class-select", component: ClassSelection, canActivate: [StudentAuthGuard, StudentLockGuard]},
-    { path: "gelstudent-application-form-main", component: GelStudentApplicationMain, canActivate: [StudentAuthGuard, StudentLockGuard] },
-    { path: "school-type-select", component: SchoolTypeSelection, canActivate: [StudentAuthGuard, StudentLockGuard]},
-    { path: "gel-application-submit", component: GelApplicationSubmit, canActivate: [StudentAuthGuard, StudentLockGuard] },
+    { path: "orientation-group-select", component: OrientationGroup, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
+    { path: "electivecourse-fields-select", component: ElectiveCourseFieldsSelect, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
+    { path: "langcourse-fields-select", component: LangCourseFieldsSelect, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
+    { path: "course-order-select", component: CoursesOrderSelect, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
+    { path: "gel-class-select", component: ClassSelection, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
+    { path: "gelstudent-application-form-main", component: GelStudentApplicationMain, canActivate: [StudentAuthGuard, StudentGelLockGuard] },
+    { path: "school-type-select", component: SchoolTypeSelection, canActivate: [StudentAuthGuard]},
+    { path: "gel-application-submit", component: GelApplicationSubmit, canActivate: [StudentAuthGuard, StudentGelLockGuard] },
     { path: "school/gel-distribution", component: GelDistribution, canActivate: [EduAdminAuthGuard] },
     { path: "school/eduadmingel-view", component: EduadminGelView, canActivate: [EduAdminAuthGuard] },
 
@@ -152,6 +157,7 @@ export const MainDeclarations = [
     ReportNoCapacity,
     InformStudents,
     MinisterSettings,
+    GelMinisterSettings,
     PerfectureView,
     Breadcrumbs,
     DirectorButtons,

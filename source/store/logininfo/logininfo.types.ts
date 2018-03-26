@@ -12,12 +12,11 @@ export interface ILoginInfoObj {
     minedu_username: string;
     minedu_userpassword: string;
     lock_capacity: number;
-    lock_students: number;
-    lock_application: number;
+    lock_students_epal: number;
+    lock_students_gel: number;
+    lock_application_epal: number;
+    lock_application_gel: number;
     disclaimer_checked: number;
-    //numapp_self: number;
-    //numapp_children: number;
-    //numchildren: number;
 }
 
 export interface ILoginInfoRecord extends TypedRecord<ILoginInfoRecord>, ILoginInfoObj { };

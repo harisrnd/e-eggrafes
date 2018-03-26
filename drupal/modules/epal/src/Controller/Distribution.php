@@ -116,7 +116,7 @@ class Distribution extends ControllerBase
 
         // check where distribution can be done now ($capacityDisabled / $directorViewDisabled settings)
         $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-        $eggrafesConfigs = $config_storage->loadByProperties(array('id' => 1));
+        $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
         $eggrafesConfig = reset($eggrafesConfigs);
         if (!$eggrafesConfig) {
              return $this->respondWithStatus([
@@ -811,7 +811,7 @@ class Distribution extends ControllerBase
         $secondPeriodEnabled = "0";
 
         $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-        $eggrafesConfigs = $config_storage->loadByProperties(array('id' => 1));
+        $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
         $eggrafesConfig = reset($eggrafesConfigs);
         if (!$eggrafesConfig) {
              return $this->respondWithStatus([

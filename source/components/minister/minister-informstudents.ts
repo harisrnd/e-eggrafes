@@ -217,7 +217,7 @@ import { IAppState } from "../../store/store";
     }
 
     retrieveSettings() {
-        this.settingsSub = this._hds.retrieveAdminSettings(this.minedu_userName, this.minedu_userPassword)
+        this.settingsSub = this._hds.retrieveAdminSettings("epal", this.minedu_userName, this.minedu_userPassword)
             .subscribe(data => {
                 this.settings$.next(data);
                 this.applicantsResultsDisabled = Boolean(Number(this.settings$.value["applicantsResultsDisabled"]));
