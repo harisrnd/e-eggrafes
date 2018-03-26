@@ -94,3 +94,19 @@ gel.gethighschoolperstudent:
     _controller: '\Drupal\gel\Controller\GelDistribution::gethighschoolperstudent'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.classesandstudents:
+  path: '/gel/findcoursesperschoolgel'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::FindCoursesPerSchoolGel'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.getstudents:
+  path: '/gel/studentperschoolgel/{classId}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::getStudentPerSchoolGel'
+  requirements:
+    _user_is_logged_in: 'TRUE'

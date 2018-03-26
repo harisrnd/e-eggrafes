@@ -969,9 +969,10 @@ public function GetSectorsperschool(Request $request, $courseActive )
                                                                      );
                           }
 
-                return $this->respondWithStatus($list, Response::HTTP_OK);
+                
                  }
              }
+             return $this->respondWithStatus($list, Response::HTTP_OK);
         }
         else
         {
@@ -1014,7 +1015,7 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
                       else
                     {
 
-                      $SmallClassesAppr =  $object -> approved_sector -> value ;
+                      $SmallClassesAppr =  $object -> approved_speciality -> value ;
                       if ($SmallClassesAppr == 1)
                             {
                             $prefid = intval($sdata->getperfecture());
@@ -1031,9 +1032,10 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
                                                                      );
                           }
 
-                return $this->respondWithStatus($list, Response::HTTP_OK);
+               
                  }
              }
+              return $this->respondWithStatus($list, Response::HTTP_OK);
         }
         else
         {
@@ -1151,7 +1153,7 @@ public function OffLineCalculationSmallClasses(Request $request)
 
                  try 
                  {
-                    $this->logger->error("lallala");
+                   
                     if ($this->findSmallClasses() === self::ERROR_DB) {
                         $transaction->rollback();
                         return $this->respondWithStatus([
@@ -1167,7 +1169,7 @@ public function OffLineCalculationSmallClasses(Request $request)
                         "message" => t("Unexpected Error!!")
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
-
+                    drupal_flush_all_caches();
                     return $this->respondWithStatus([
                         'message' => "SmallClasses approvement successfully",
                     ], Response::HTTP_OK);
@@ -1304,7 +1306,7 @@ public function findStatusNew($id, $classId, $sector, $specialit)
 
   private function findSmallClasses()
     {
-         $this->logger->error("ypologizw");
+         
         //Για κάθε σχολείο βρες τα ολιγομελή τμήματα
         $sCon = $this->connection->select('eepal_school_field_data', 'eSchool')
             ->fields('eSchool', array('id', 'metathesis_region','operation_shift'));
@@ -1384,7 +1386,7 @@ public function findStatusNew($id, $classId, $sector, $specialit)
         }
 
         //Αν $numStudents == 0, γύρισε false, ώστε να μη γίνει περιττή κλήση στην markStudentsInSmallClass
-        if (($numStudents < $limitDown) && ($numStudents > 0)) {
+        if ($numStudents < $limitDown) {
             return self::SMALL_CLASS;
         } else {
             return self::NON_SMALL_CLASS;

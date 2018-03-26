@@ -92,8 +92,8 @@ class WSConsumer extends ControllerBase
           'message' => 'Επιτυχία',
 
           'data' => array(
-              'id' => '160',
-              'studentId' => 1666013,
+              'id' => '158',
+              'studentId' => 2666027,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
               'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
               'custodianLastName' =>  'ΓΕΩΡΓΟΥΛΑΣ',

@@ -180,6 +180,12 @@ class CASLogin extends ControllerBase
         if ($school) {
             return array("id" => $school->id(), "exposedRole" => "director", "internalRole" => "epal");
         }
+
+        $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('registry_no' => $registry_no));
+        $school = reset($schools);
+        if ($school) {
+            return array("id" => $school->id(), "exposedRole" => "director_gel", "internalRole" => "gel");
+        }
         $eduAdmins = $this->entityTypeManager->getStorage('eepal_admin_area')->loadByProperties(array('registry_no' => $registry_no));
         $eduAdmin = reset($eduAdmins);
         if ($eduAdmin) {

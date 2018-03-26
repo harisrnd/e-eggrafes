@@ -7,7 +7,7 @@ import { CookieService } from "ngx-cookie";
 import { BehaviorSubject, Subscription } from "rxjs/Rx";
 
 import { AppSettings } from "../app.settings";
-import { DIDE_ROLE, MINISTRY_ROLE, PDE_ROLE, SCHOOL_ROLE } from "../constants";
+import { DIDE_ROLE, MINISTRY_ROLE, PDE_ROLE, SCHOOL_ROLE, SCHOOLGEL_ROLE } from "../constants";
 import { LOGININFO_INITIAL_STATE } from "../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../store/logininfo/logininfo.types";
 import { IRRegionSchool } from "../store/regionschools/regionschools.types";
@@ -425,7 +425,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         } else {
             this.createAuthorizationHeader(headers);
         }
-        if (this.authRole === SCHOOL_ROLE || this.authRole === PDE_ROLE || this.authRole === DIDE_ROLE) {
+        if (this.authRole === SCHOOL_ROLE || this.authRole === SCHOOLGEL_ROLE || this.authRole === PDE_ROLE || this.authRole === DIDE_ROLE) {
             logoutRoute = "/cas/logout";
         } else if (this.authRole === MINISTRY_ROLE) {
             logoutRoute = "/ministry/logout";
@@ -1554,5 +1554,42 @@ getHighSchoolSelection(id)
 
 
 }
+
+
+    FindCoursesPerSchoolGel() {
+
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/findcoursesperschoolgel/`, options)
+
+            .map(response => response.json());
+
+    }
+
+
+getStudentPerSchoolGel(classId) {
+
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/studentperschoolgel/` + classId , options)
+            .map(response => response.json());
+    }
+
+
 
 }

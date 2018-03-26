@@ -105,14 +105,31 @@ import { IAppState } from "../../store/store";
         <div *ngIf="(GelSubmittedApplic$ | async).length > 0">
             <div class="row list-group-item isclickable"  style="margin: 0px 2px 0px 2px;" [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedappout]="applicationGelIdActive === UserData$.id"
             *ngFor="let UserData$  of GelSubmittedApplic$ | async; let i=index; let isOdd=odd; let isEven=even" >
+
                 <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.studentsurname}}</div>
                 <div class="col-md-4" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.name}}</div>
-                <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">ΓΕΛ</div>
+                <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveGelUser(UserData$.id)">{{UserData$.logo}}</div>
                 <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteGelApplication(UserData$.id)"></i></div>
                 <div *ngIf="UserData$.candelete === 0" class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
 
                 <div style="width: 100%">
                 <div *ngFor="let GelStudentDetails$  of GelSubmittedDetails$ | async" [hidden]="UserData$.id !== applicationGelIdActive" style="margin: 10px 10px 10px 10px;">
+
+                      <div *ngIf = "GelStudentDetails$.applicantsResultsDisabled == '0'  && !(showLoader$ | async)" >
+                          <div *ngIf = "GelStudentDetails$.status == '1'" >
+                              <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
+                                  Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{GelStudentDetails$.schoolName}}.
+                                  Παρακαλώ να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
+                              </div>
+                          </div>
+                          <div *ngIf = "GelStudentDetails$.status == '4' " >
+                              <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
+                                  Η αίτησή σας είναι σε κατάσταση διεκπεραίωσης από την οικεία Διεύθυνση Δευτεροβάθμιας Εκπαίδευσης.<br><br>
+                              </div>
+                          </div>
+                      </div>
+
+
 
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -151,13 +168,13 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.lastschool_schoolyear}}</div>
                     </div>
 
-<!--                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                    <div *ngIf="(GelStudentDetails$.lastschool_class !== '' && GelStudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
                         <div *ngIf="GelStudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
                         <div *ngIf="GelStudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
                         <div *ngIf="GelStudentDetails$.lastschool_class === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ</div>
                         <div *ngIf="GelStudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div>
-                    </div> -->
+                    </div>
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία Μαθητή</div>
@@ -183,17 +200,17 @@ import { IAppState } from "../../store/store";
                         <div *ngIf="GelStudentDetails$.am!='' && GelStudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em;">Αριθμός Μητρώου</div>
                         <div *ngIf="GelStudentDetails$.am!='' && GelStudentDetails$.am!=null" class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.am}}</div>
                     </div>
-                    
+
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center">Στοιχεία Επικοινωνίας</div>
                     </div>
-                    
-<!--                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+
+                    <div *ngIf="(GelStudentDetails$.lastschool_class !== '' && GelStudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.regionaddress}}</div>
                         <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.regiontk}} - {{GelStudentDetails$.regionarea}}</div>
-                    </div>  -->
+                    </div>
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Δήλωση από:</div>
@@ -207,7 +224,7 @@ import { IAppState } from "../../store/store";
                     </div>
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Τάξη φοίτησης για το νέο σχολικό έτος</div>
+                        <div *ngIf="GelStudentDetails$.nextclass !== ''" class="col-md-3" style="font-size: 0.8em;">Τάξη φοίτησης για το νέο σχολικό έτος</div>
                         <div *ngIf="GelStudentDetails$.nextclass === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α τάξη - ΗΜΕΡΗΣΙΟ ΓΕ.Λ.</div>
                         <div *ngIf="GelStudentDetails$.nextclass === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β τάξη - ΗΜΕΡΗΣΙΟ ΓΕ.Λ.</div>
                         <div *ngIf="GelStudentDetails$.nextclass === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ τάξη - ΗΜΕΡΗΣΙΟ ΓΕ.Λ.</div>
@@ -263,9 +280,12 @@ import { IAppState } from "../../store/store";
         <div *ngIf="(SubmitedApplic$ | async).length > 0">
             <div class="row list-group-item isclickable"  style="margin: 0px 2px 0px 2px;" [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedappout]="applicationEpalIdActive === UserData$.id"
             *ngFor="let UserData$  of SubmitedApplic$ | async; let i=index; let isOdd=odd; let isEven=even" >
+
+                <!--<div *ngIf = "(EpalSubmittedDetails$ | async).size">-->
+
                 <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.studentsurname}}</div>
                 <div class="col-md-4" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.name}}</div>
-                <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">ΕΠΑΛ</div>
+                <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" (click)="setActiveEpalUser(UserData$.id)">{{UserData$.logo}}</div>
                 <div *ngIf="UserData$.candelete === 1" class="col-md-1 text-right" style="font-size: 1em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteApplication(UserData$.id)"></i></div>
                 <div *ngIf="UserData$.candelete === 0" class="col-md-1" style="font-size: 1em; font-weight: bold;">&nbsp;</div>
 
@@ -274,9 +294,9 @@ import { IAppState } from "../../store/store";
 
                     <div *ngIf = "StudentDetails$.applicantsResultsDisabled == '0'  && !(showLoader$ | async)" >
                         <div *ngIf = "StudentDetails$.status == '1'" >
-                            <div class="col-md-12" style="font-size: 1.0em; color: #143147; font-weight: bold;">
+                            <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
                                 Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{StudentDetails$.schoolName}}.
-                                Παρακαλώ να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{StudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{StudentDetails$.schoolTel}}<br><br>
+                                Παρακαλώ να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{StudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{StudentDetails$.schoolTel}}.<br><br>
                             </div>
                         </div>
                         <div *ngIf = "StudentDetails$.status == '2' " >
@@ -327,13 +347,13 @@ import { IAppState } from "../../store/store";
                     <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.lastschool_schoolyear}}</div>
                     </div>
 
- <!--                   <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
-                        <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
+                    <div *ngIf="(StudentDetails$.lastschool_class !== '' && StudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div *ngIf="StudentDetails$.lastschool_class !== ''" class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
                         <div *ngIf="StudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
                         <div *ngIf="StudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
                         <div *ngIf="StudentDetails$.lastschool_class === '3'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Γ</div>
                         <div *ngIf="StudentDetails$.lastschool_class === '4'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Δ</div>
-                    </div>  -->
+                    </div>
 
                     <div class="row evenin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία Μαθητή</div>
@@ -361,7 +381,7 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία Επικοινωνίας</div>
                     </div>
 
-                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                    <div *ngIf="(StudentDetails$.lastschool_class !== '' && StudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.regionaddress}}</div>
                         <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>
@@ -474,6 +494,9 @@ import { IAppState } from "../../store/store";
     //private applicationGelId = <number>0;
     private schooltype: string;
 
+    private wsIdentSub: Subscription;
+    private wsEnabled:  BehaviorSubject<number>;
+
     @ViewChild("target") element: ElementRef;
 
     constructor(private _ngRedux: NgRedux<IAppState>,
@@ -503,6 +526,7 @@ import { IAppState } from "../../store/store";
 
         this.GelSubmittedApplic$ = new BehaviorSubject([{}]);
         this.GelSubmittedDetails$=new BehaviorSubject([{}]);
+        this.wsEnabled = new BehaviorSubject(-1);
 
     }
 
@@ -536,6 +560,11 @@ import { IAppState } from "../../store/store";
         (<any>jQuery("#applicationDeleteConfirm")).appendTo("body");
         (<any>jQuery("#applicationDeleteError")).appendTo("body");
         this.showLoader$.next(true);
+
+        this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
+            this.wsEnabled.next(Number(z.res)) ;
+            //console.log(this.wsEnabled.getValue());
+       });
 
         this.resetStore();
 
@@ -588,7 +617,13 @@ import { IAppState } from "../../store/store";
                 console.log("Error Getting Schools");
                 this.showLoader$.next(false);
             });
+<<<<<<< HEAD
             
+=======
+
+        console.log("test3");
+
+>>>>>>> 9f75eb656845b6aca9e012730adcbc1b5fb055bb
 
 
     }
@@ -729,6 +764,71 @@ import { IAppState } from "../../store/store";
 
     editEpalApplication() {
 
+      this.sectorFieldsSub = this._ngRedux.select("sectorFields")
+            .map(sectorFields => <ISectorFieldRecords>sectorFields)
+            .subscribe(sfds => {
+              this.showLoader$.next(true);
+                let seccnt = 0;
+                sfds.reduce(({}, sectorField) => {
+                    ++seccnt;
+                    //if (sectorField.get("id") === this.sector_id ) {
+                    if (sectorField.get("id") === this.EpalSubmittedDetails$.getValue()[0].currentsector_id ) {
+                      //this.sector_index = seccnt -1;
+                      this._sfa.saveSectorFieldsSelected(-1, seccnt-1);
+                    }
+                    return sectorField;
+                }, {});
+                this.showLoader$.next(false);
+            }, error => { console.log("error selecting sectorFields"); });
+
+
+        this.regionsSub = this._ngRedux.select("regions")
+                .subscribe(regions => {
+                  this.showLoader$.next(true);
+                    let rgns = <IRegionRecords>regions;
+                    let numsel = 0;
+                    let numreg = 0;
+                    rgns.reduce((prevRegion, region) => {
+                        numreg++;
+                        numsel = 0;
+                        region.get("epals").reduce((prevEpal, epal) => {
+                            ++numsel;
+                            //if (epal.get("epal_id") === this.school_id ) {
+                            for (let k=0; k < (this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen).length; k++)  {
+                                if (epal.get("epal_id") === this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].id) {
+                                    this._rsa.saveRegionSchoolsSelected(true, numreg-1, numsel-1, this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen[k].choice_no) ;
+                                }
+                            }
+                            return epal;
+                        }, {});
+                        return region;
+                    }, {});
+                    this.showLoader$.next(false);
+              }, error => { console.log("error selecting regions"); });
+
+
+            this.sectorsSub = this._ngRedux.select("sectors")
+                  //.map(sectors => <ISectorRecords>sectors)
+                  .subscribe(sectors => {
+                      this.showLoader$.next(true);
+                      let secs = <ISectorRecords>sectors;
+                      let numcour = 0;
+                      let numsec = 0;
+                      secs.reduce((prevSector, sector) => {
+                          ++numsec;
+                          numcour = 0;
+                          sector.get("courses").reduce((prevCourse, course) => {
+                              ++numcour;
+                              if (course.get("course_id") === this.EpalSubmittedDetails$.getValue()[0].currentcourse_id ) {
+                                this._csa.saveSectorCoursesSelected(-1, -1, true, numsec-1, numcour-1);
+                              }
+                              return course;
+                          }, {});
+                          return sector;
+                      }, {});
+                      this.showLoader$.next(false);
+                  }, error => { console.log("error selecting sectors"); });
+
       this.router.navigate(["/epal-class-select"]);
 
     }
@@ -791,10 +891,14 @@ import { IAppState } from "../../store/store";
             }]);
 
 
-
+        /*
         this.sectorFieldsSub = this._ngRedux.select("sectorFields")
               .map(sectorFields => <ISectorFieldRecords>sectorFields)
               .subscribe(sfds => {
+<<<<<<< HEAD
+=======
+                this.showLoader$.next(true);
+>>>>>>> 9f75eb656845b6aca9e012730adcbc1b5fb055bb
                   let seccnt = 0;
                   sfds.reduce(({}, sectorField) => {
                     this.showLoader$.next(true);  
@@ -807,13 +911,13 @@ import { IAppState } from "../../store/store";
                       }
                       return sectorField;
                   }, {});
-                  this.showLoader$.next(false);  
+                  this.showLoader$.next(false);
               }, error => { console.log("error selecting sectorFields"); });
 
 
           this.regionsSub = this._ngRedux.select("regions")
                   .subscribe(regions => {
-                    this.showLoader$.next(true);  
+                    this.showLoader$.next(true);
                       let rgns = <IRegionRecords>regions;
                       let numsel = 0;
                       let numreg = 0;
@@ -832,7 +936,7 @@ import { IAppState } from "../../store/store";
                           }, {});
                           return region;
                       }, {});
-                      this.showLoader$.next(false);  
+                      this.showLoader$.next(false);
 
                 }, error => { console.log("error selecting regions"); });
 
@@ -840,7 +944,7 @@ import { IAppState } from "../../store/store";
               this.sectorsSub = this._ngRedux.select("sectors")
                     //.map(sectors => <ISectorRecords>sectors)
                     .subscribe(sectors => {
-                        this.showLoader$.next(true);  
+                        this.showLoader$.next(true);
                         let secs = <ISectorRecords>sectors;
                         let numcour = 0;
                         let numsec = 0;
@@ -856,9 +960,9 @@ import { IAppState } from "../../store/store";
                             }, {});
                             return sector;
                         }, {});
-                        this.showLoader$.next(false);  
+                        this.showLoader$.next(false);
                     }, error => { console.log("error selecting sectors"); });
-
+                */
 
 
     }
