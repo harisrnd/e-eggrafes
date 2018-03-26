@@ -43,7 +43,7 @@ class DirectorView extends ControllerBase
         try {
             $authToken = $request->headers->get('PHP_AUTH_USER');
 
-            $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_epal'));
             $eggrafesConfig = reset($eggrafesConfigs);
             if (!$eggrafesConfig) {
                 return $this->respondWithStatus([
@@ -265,7 +265,7 @@ class DirectorView extends ControllerBase
         }
         $authToken = $request->headers->get('PHP_AUTH_USER');
 
-        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_epal'));
         $eggrafesConfig = reset($eggrafesConfigs);
         if (!$eggrafesConfig) {
             return $this->respondWithStatus([

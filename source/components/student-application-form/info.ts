@@ -17,8 +17,10 @@ import { IAppState } from "../../store/store";
     <div class="loading" *ngIf="(showLoader$ | async) === true"></div>
     <div *ngIf="(loginInfo$ | async).size !== 0" style="margin-top: 30px; min-height: 500px;">
         <br/><br/>
-        <p align="left"><strong>Ηλεκτρονικές δηλώσεις προτίμησης ΕΠΑΛ για το νέο σχολικό έτος</strong></p>
-        <p align="left">Η υπηρεσία υποβολής δήλωσης προτίμησης δεν είναι διαθέσιμη αυτή την περίοδο. Αν έχετε υποβάλλει ήδη δήλωση μπορείτε να την δείτε και να την εκτυπώσετε σε μορφή PDF από την επιλογή "Υποβληθείσες Δηλώσεις" επάνω δεξιά</p>
+        <p align="left"><strong>Ηλεκτρονικές δηλώσεις προτίμησης ΕΠΑΛ / ΓΕΛ για το νέο σχολικό έτος</strong></p>
+        <p align="left">
+          Η υπηρεσία υποβολής δήλωσης προτίμησης για {{lock_application_name | async}} δεν είναι διαθέσιμη αυτή την περίοδο.
+          Αν έχετε υποβάλλει ήδη δήλωση μπορείτε να την δείτε και να την εκτυπώσετε σε μορφή PDF από την επιλογή "Υποβληθείσες Δηλώσεις" επάνω δεξιά</p>
         <div class="row" style="margin-top: 40px;">
         <div class="col-md-9 offset-md-3">
             <button class="btn-primary btn-lg isclickable" style="width: 12em;" (click)="signOut()">
@@ -36,6 +38,9 @@ import { IAppState } from "../../store/store";
     loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     loginInfoSub: Subscription;
     private showLoader$: BehaviorSubject<boolean>;
+    //private lock_application_epal: BehaviorSubject<number>;
+    //private lock_application_gel: BehaviorSubject<number>;
+    private lock_application_name: BehaviorSubject<string>;
 
     constructor(private _ata: LoginInfoActions,
         private _ngRedux: NgRedux<IAppState>,
@@ -45,6 +50,9 @@ import { IAppState } from "../../store/store";
 
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
         this.showLoader$ = new BehaviorSubject(false);
+        //this.lock_application_epal = new BehaviorSubject(1);
+        //this.lock_application_gel = new BehaviorSubject(1);
+        this.lock_application_name = new BehaviorSubject("test1");
     }
 
     ngOnDestroy() {
@@ -57,6 +65,20 @@ import { IAppState } from "../../store/store";
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(loginInfo => {
                 this.loginInfo$.next(loginInfo);
+                if (loginInfo.size > 0) {
+                    loginInfo.reduce(({}, loginInfoObj) => {
+                        if (loginInfoObj.lock_application_epal === 1 && loginInfoObj.lock_application_gel === 1)
+                          this.lock_application_name.next("ΕΠΑΛ και ΓΕΛ");
+                        else if (loginInfoObj.lock_application_epal === 1)
+                          this.lock_application_name.next("ΕΠΑΛ");
+                        else if (loginInfoObj.lock_application_gel === 1)
+                          this.lock_application_name.next("ΓΕΛ");
+                        return loginInfoObj;
+                    }, {});
+                }
+
+
+
             }, error => { console.log("error selecting loginInfo"); });
     }
 

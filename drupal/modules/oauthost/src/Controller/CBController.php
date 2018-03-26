@@ -150,8 +150,9 @@ class CBController extends ControllerBase
     public function authenticatePhase2($request, $authToken, $authVerifier)
     {
         $useGSIS = "0";
+        //Ποιο eggrafes_config να χρησιμοποιήσουμε;
         $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-        $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
         $eggrafesConfig = reset($eggrafesConfigs);
         if (!$eggrafesConfig)
              return false;

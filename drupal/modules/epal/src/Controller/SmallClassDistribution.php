@@ -854,7 +854,7 @@ public function findMergingSchoolsforUndo(Request $request, $classId, $sector, $
  //       }
 
         $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-        $eggrafesConfigs = $config_storage->loadByProperties(array('id' => 1));
+        $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
         $eggrafesConfig = reset($eggrafesConfigs);
         if (!$eggrafesConfig)
          {
@@ -969,7 +969,7 @@ public function GetSectorsperschool(Request $request, $courseActive )
                                                                      );
                           }
 
-                
+
                  }
              }
              return $this->respondWithStatus($list, Response::HTTP_OK);
@@ -1032,7 +1032,7 @@ public function getCoursesPerSchoolSmallClasses(Request $request, $courseActive 
                                                                      );
                           }
 
-               
+
                  }
              }
               return $this->respondWithStatus($list, Response::HTTP_OK);
@@ -1151,9 +1151,9 @@ public function OffLineCalculationSmallClasses(Request $request)
 
                 $transaction = $this->connection->startTransaction();
 
-                 try 
+                 try
                  {
-                   
+
                     if ($this->findSmallClasses() === self::ERROR_DB) {
                         $transaction->rollback();
                         return $this->respondWithStatus([
@@ -1198,11 +1198,11 @@ public function OffLineCalculationSmallClasses(Request $request)
 
 }
 
-    
+
 
 public function findStatusNew($id, $classId, $sector, $specialit)
     {
-       
+
 
         $this->logger->warning('id.'.$specialit.'id'.$id);
 
@@ -1242,7 +1242,7 @@ public function findStatusNew($id, $classId, $sector, $specialit)
         $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
 
         $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                       
+
 
             foreach ($results as $result) {
                 $size = $result->eStudent_count;
@@ -1270,7 +1270,7 @@ public function findStatusNew($id, $classId, $sector, $specialit)
                 $size = $result->eStudent_count ;
                 return $size;
                 }
-        
+
         }
         else
         {
@@ -1306,7 +1306,7 @@ public function findStatusNew($id, $classId, $sector, $specialit)
 
   private function findSmallClasses()
     {
-         
+
         //Για κάθε σχολείο βρες τα ολιγομελή τμήματα
         $sCon = $this->connection->select('eepal_school_field_data', 'eSchool')
             ->fields('eSchool', array('id', 'metathesis_region','operation_shift'));
@@ -1370,7 +1370,7 @@ public function findStatusNew($id, $classId, $sector, $specialit)
 
     private function isSmallClass($schoolId, $classId, $sectorOrcourseId, $regionId)
     {
-        
+
         $limitDown = $this->retrieveLimitDown($classId, $regionId);
 
         if ($limitDown === self::NO_CLASS_LIMIT_DOWN) {
@@ -1445,8 +1445,8 @@ public function findStatusNew($id, $classId, $sector, $specialit)
         return self::SUCCESS;
     }
 
-  
-    private function setSmallClassforSector($schoolId, $sectorid)   
+
+    private function setSmallClassforSector($schoolId, $sectorid)
     {
           $this->logger->error($schoolId.$sectorid. "B");
           try {
@@ -1460,10 +1460,10 @@ public function findStatusNew($id, $classId, $sector, $specialit)
             return self::ERROR_DB;
         }
         return self::SUCCESS;
-    }           
+    }
 
 
- private function setSmallClassforSpecility($schoolId, $specialityid)   
+ private function setSmallClassforSpecility($schoolId, $specialityid)
     {
         $this->logger->error($schoolId.$specialityid. "C");
         try {
@@ -1477,10 +1477,10 @@ public function findStatusNew($id, $classId, $sector, $specialit)
             return self::ERROR_DB;
         }
         return self::SUCCESS;
-    }   
+    }
 
 
-    private function setSmallClassforSpecilityD($schoolId, $specialityid)   
+    private function setSmallClassforSpecilityD($schoolId, $specialityid)
     {
         $this->logger->error($schoolId.$specialityid. "D");
         try {
@@ -1494,6 +1494,6 @@ public function findStatusNew($id, $classId, $sector, $specialit)
             return self::ERROR_DB;
         }
         return self::SUCCESS;
-    }   
+    }
 
 }

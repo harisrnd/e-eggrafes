@@ -396,12 +396,11 @@ export class HelperDataService implements OnInit, OnDestroy {
             "minedu_username": userlogin.minedu_username,
             "minedu_userpassword": userlogin.minedu_userpassword,
             "lock_capacity": parseInt(userlogin.lock_capacity),
-            "lock_students": parseInt(userlogin.lock_students),
-            "lock_application": parseInt(userlogin.lock_application),
+            "lock_students_epal": parseInt(userlogin.lock_students_epal),
+            "lock_students_gel": parseInt(userlogin.lock_students_gel),
+            "lock_application_epal": parseInt(userlogin.lock_application_epal),
+            "lock_application_gel": parseInt(userlogin.lock_application_gel),
             "disclaimer_checked": parseInt(userlogin.disclaimer_checked),
-            //"numapp_self": parseInt(userlogin.numapp_self),
-            //"numapp_children": parseInt(userlogin.numapp_children),
-            //"numchildren": parseInt(userlogin.numchildren)
         });
         return rsa;
 
@@ -816,7 +815,10 @@ export class HelperDataService implements OnInit, OnDestroy {
             .map(response => response.json());
     }
 
-    retrieveAdminSettings(username, userpassword) {
+    retrieveAdminSettings(schooltype, username, userpassword) {
+
+        console.log("What's this???");
+        console.log(schooltype);
 
         let headers = new Headers({
             "Content-Type": "application/json",
@@ -825,11 +827,15 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createMinistryAuthorizationHeader(headers, username, userpassword);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/retrieve-settings`, options)
-            .map(response => response.json());
+        if (schooltype === "gel")
+            return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/retrieve-settings-gel`, options)
+              .map(response => response.json());
+        else if (schooltype === "epal")
+            return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/retrieve-settings`, options)
+              .map(response => response.json());
     }
 
-    storeAdminSettings(username, userpassword, capac, dirview, applogin, appmodify, appdelete,
+    storeAdminSettings(schooltype, username, userpassword, capac, dirview, applogin, appmodify, appdelete,
                     appresults, secondperiod, datestart, smallClassApproved, wsIdentEnabled, gsisIdentEnabled) {
 
         let headers = new Headers({
@@ -839,11 +845,18 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createMinistryAuthorizationHeader(headers, username, userpassword);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings/` +
-            Number(capac) + "/" + Number(dirview) + "/" + Number(applogin) + "/" + Number(appmodify) + "/" +
-            Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" +
-            Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) +  "/"  + Number(gsisIdentEnabled) , options)
-            .map(response => response.json());
+        if (schooltype === "gel")
+            return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings-gel/` +
+                Number(capac) + "/" + Number(dirview) + "/" + Number(applogin) + "/" + Number(appmodify) + "/" +
+                Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" +
+                Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) +  "/"  + Number(gsisIdentEnabled) , options)
+                .map(response => response.json());
+        else if (schooltype === "epal")
+            return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings/` +
+                Number(capac) + "/" + Number(dirview) + "/" + Number(applogin) + "/" + Number(appmodify) + "/" +
+                Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" +
+                Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) +  "/"  + Number(gsisIdentEnabled) , options)
+                .map(response => response.json());
     }
 
 
@@ -954,7 +967,7 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     getServiceStudentPromotion(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
 
-        let mode="test";
+        //let mode="test";
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -966,13 +979,13 @@ export class HelperDataService implements OnInit, OnDestroy {
         let options = new RequestOptions({ headers: headers });
         let rpath = [didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no].join("/");
 
-        if ( mode ==="test"){
-            return this.http.get(`${AppSettings.API_ENDPOINT}/epal/test-get-student-info/` + rpath, options).map(response => response.json());
-        }
-        else{
+        //if ( mode ==="test"){
+        //    return this.http.get(`${AppSettings.API_ENDPOINT}/epal/test-get-student-info/` + rpath, options).map(response => response.json());
+        //}
+        //else{
             return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-info/` + rpath, options)
             .map(response => response.json());
-        }
+        //}
     }
 
     getServiceStudentCertification(id) {

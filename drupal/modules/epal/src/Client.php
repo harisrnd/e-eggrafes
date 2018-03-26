@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace Drupal\epal;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -137,7 +137,7 @@ class Client
      */
     public function getStudentEpalPromotionOrCertification($endpoint_base_url, $id)
     {
-        
+
         if (mb_strlen($id) == 0) {
             $this->log(__METHOD__ . " Missing parameters", "error");
             throw new Exception('Όλες οι παράμετροι είναι υποχρεωτικοί!!!'.$id, Response::HTTP_BAD_REQUEST);
@@ -153,12 +153,12 @@ class Client
         ];
 
         $endpoint = $endpoint_base_url."/".intval($id);
-  
+
         $result = $this->get($endpoint, [], $headers); // data as path params...
         try {
             $crypt = new Crypt();
             $val = 'call:' . print_r($endpoint, true) . ':rcv:' . print_r($result, true);
-            $val_enc = $crypt->encrypt($val); 
+            $val_enc = $crypt->encrypt($val);
             $this->log(__METHOD__ . $val_enc, 'info');
         } catch (\Exception $e) {
             $this->log(__METHOD__ . " cannot log encrypted", 'info');
@@ -214,7 +214,7 @@ class Client
         try {
             $crypt = new Crypt();
             $val = 'call:' . print_r($endpoint, true) . ':rcv:' . print_r($result, true);
-            $val_enc = $crypt->encrypt($val); 
+            $val_enc = $crypt->encrypt($val);
             $this->log(__METHOD__ . $val_enc, 'info');
         } catch (\Exception $e) {
             $this->log(__METHOD__ . " cannot log encrypted", 'info');

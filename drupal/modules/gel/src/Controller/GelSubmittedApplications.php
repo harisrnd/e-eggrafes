@@ -67,7 +67,7 @@ class GelSubmittedApplications extends ControllerBase
         try {
             //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_results
             $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_gel'));
             $eggrafesConfig = reset($eggrafesConfigs);
             if (!$eggrafesConfig) {
                return $this->respondWithStatus([
@@ -174,7 +174,7 @@ class GelSubmittedApplications extends ControllerBase
       try {
           //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_delete
           $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-          $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+          $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_gel'));
           $eggrafesConfig = reset($eggrafesConfigs);
           if (!$eggrafesConfig) {
              return $this->respondWithStatus([
@@ -276,7 +276,7 @@ class GelSubmittedApplications extends ControllerBase
 
                     //ανάκτηση τιμής από ρυθμίσεις διαχειριστή για lock_delete
                     $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-                    $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+                    $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_gel'));
                     $eggrafesConfig = reset($eggrafesConfigs);
                     if (!$eggrafesConfig) {
                        return $this->respondWithStatus([
@@ -350,7 +350,7 @@ class GelSubmittedApplications extends ControllerBase
         if ($gelUser) {
 
             $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+            $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_gel'));
             $eggrafesConfig = reset($eggrafesConfigs);
             if (!$eggrafesConfig) {
                return $this->respondWithStatus([
@@ -508,6 +508,7 @@ class GelSubmittedApplications extends ControllerBase
                             'schoolAddress' => $gelStudent->street_address,
                             'schoolTel' => $gelStudent->phone_number,
                             'applicantsResultsDisabled' => $applicantsResultsDisabled,
+                            'applicantsAppModifyDisabled' => $applicantsAppModifyDisabled,
                             'status' => $status
                         );
 

@@ -45,7 +45,7 @@ import { GelStudentDataFieldsActions } from "../actions/gelstudentdatafields.act
                 </ul>
             </div>
             -->
-            
+
             <div> <p></p><p></p></div>
 
 
@@ -108,7 +108,7 @@ export default class Home implements OnInit, OnDestroy {
                     this.authToken = loginInfoObj.auth_token;
                     this.authRole = loginInfoObj.auth_role;
                     if (this.authToken && this.authToken.length > 0 && this.authRole && this.authRole === STUDENT_ROLE) {
-                        if (loginInfoObj.lock_application === 1)
+                        if (loginInfoObj.lock_application_epal === 1 && loginInfoObj.lock_application_gel === 1)
                             this.router.navigate(["/info"]);
                         else {
                             this._cfc.initEpalClasses();
