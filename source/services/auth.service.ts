@@ -68,6 +68,7 @@ export class AuthService {
         });
     }
 
+    //refers to EPAL apps
     isApplicationLocked(role) {
         return new Promise<boolean>((resolve, reject) => {
             this._ngRedux.select("loginInfo")
@@ -75,7 +76,9 @@ export class AuthService {
                 .subscribe(linfo => {
                     if (linfo.size > 0) {
                         linfo.reduce(({}, loginInfoObj) => {
-                            if ((loginInfoObj.lock_application && loginInfoObj.lock_application === 1 && loginInfoObj.auth_role === role)) {
+                            if ((loginInfoObj.lock_application_epal && loginInfoObj.lock_application_epal === 1 &&
+                                  //loginInfoObj.lock_application_gel && loginInfoObj.lock_application_gel === 1 &&
+                                  loginInfoObj.auth_role === role)) {
                                 resolve(true);
                             }
                             else {
@@ -93,6 +96,60 @@ export class AuthService {
         });
     }
 
+    isGelApplicationLocked(role) {
+        return new Promise<boolean>((resolve, reject) => {
+            this._ngRedux.select("loginInfo")
+                .map(loginInfo => <ILoginInfoRecords>loginInfo)
+                .subscribe(linfo => {
+                    if (linfo.size > 0) {
+                        linfo.reduce(({}, loginInfoObj) => {
+                            if (( loginInfoObj.lock_application_gel && loginInfoObj.lock_application_gel === 1 &&
+                                  loginInfoObj.auth_role === role)) {
+                                resolve(true);
+                            }
+                            else {
+                                resolve(false);
+                            }
+                            return loginInfoObj;
+                        }, {});
+                    } else
+                        resolve(false);
+                },
+                error => {
+                    console.log("Error Getting Auth Data");
+                    reject("Error Getting Auth Data");
+                });
+        });
+    }
+
+    isAllApplicationLocked(role) {
+        return new Promise<boolean>((resolve, reject) => {
+            this._ngRedux.select("loginInfo")
+                .map(loginInfo => <ILoginInfoRecords>loginInfo)
+                .subscribe(linfo => {
+                    if (linfo.size > 0) {
+                        linfo.reduce(({}, loginInfoObj) => {
+                            if (( loginInfoObj.lock_application_gel && loginInfoObj.lock_application_gel === 1 &&
+                                  loginInfoObj.lock_application_epal && loginInfoObj.lock_application_epal === 1 &&
+                                  loginInfoObj.auth_role === role)) {
+                                resolve(true);
+                            }
+                            else {
+                                resolve(false);
+                            }
+                            return loginInfoObj;
+                        }, {});
+                    } else
+                        resolve(false);
+                },
+                error => {
+                    console.log("Error Getting Auth Data");
+                    reject("Error Getting Auth Data");
+                });
+        });
+    }
+
+    //refer to EPAL
     isStudentsLocked(role) {
         return new Promise<boolean>((resolve, reject) => {
             this._ngRedux.select("loginInfo")
@@ -100,7 +157,32 @@ export class AuthService {
                 .subscribe(loginInfo => {
                     if (loginInfo.size > 0) {
                         loginInfo.reduce(({}, loginInfoObj) => {
-                            if ((loginInfoObj.lock_students && loginInfoObj.lock_students === 1 && loginInfoObj.auth_role === role)) {
+                            if ((loginInfoObj.lock_students_epal && loginInfoObj.lock_students_epal === 1 && loginInfoObj.auth_role === role)) {
+                                resolve(true);
+                            }
+                            else {
+                                resolve(false);
+                            }
+                            return loginInfoObj;
+                        }, {});
+                    } else
+                        resolve(false);
+                },
+                error => {
+                    console.log("Error Getting Auth Data");
+                    reject("Error Getting Auth Data");
+                });
+        });
+    }
+
+    isGelStudentsLocked(role) {
+        return new Promise<boolean>((resolve, reject) => {
+            this._ngRedux.select("loginInfo")
+                .map(loginInfo => <ILoginInfoRecords>loginInfo)
+                .subscribe(loginInfo => {
+                    if (loginInfo.size > 0) {
+                        loginInfo.reduce(({}, loginInfoObj) => {
+                            if ((loginInfoObj.lock_students_gel && loginInfoObj.lock_students_gel === 1 && loginInfoObj.auth_role === role)) {
                                 resolve(true);
                             }
                             else {

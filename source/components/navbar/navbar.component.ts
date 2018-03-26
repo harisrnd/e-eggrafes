@@ -22,9 +22,11 @@ import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/
     private authRole: string;
     private schtype: number;
     private lockCapacity: BehaviorSubject<boolean>;
-    private lockStudents: BehaviorSubject<boolean>;
-    private cuName: string;
+    private lockStudentsEpal: BehaviorSubject<boolean>;
+    private lockStudentsGel: BehaviorSubject<boolean>;
+    private userType: BehaviorSubject<string>;
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
+    private cuName: string;
     private cuser: any;
     private loginInfoSub: Subscription;
 
@@ -34,16 +36,16 @@ import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/
 
     constructor(private _ngRedux: NgRedux<IAppState>
     ) {
-
         this.authToken = "";
         this.authRole = "";
         this.schtype = -1;
         this.lockCapacity = new BehaviorSubject(true);
-        this.lockStudents = new BehaviorSubject(true);
+        this.lockStudentsEpal = new BehaviorSubject(true);
+        this.lockStudentsGel = new BehaviorSubject(true);
         this.cuName = "";
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
         this.schooltype$ = new BehaviorSubject(SCHOOLTYPE_INITIAL_STATE);
-
+        this.userType = new BehaviorSubject("");
     };
 
     ngOnInit() {
@@ -58,11 +60,19 @@ import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/
                             this.lockCapacity.next(true);
                         else
                             this.lockCapacity.next(false);
-                        if (loginInfoObj.lock_students === 1)
-                            this.lockStudents.next(true);
+                        if (loginInfoObj.lock_students_epal === 1)
+                            this.lockStudentsEpal.next(true);
                         else
-                            this.lockStudents.next(false);
+                            this.lockStudentsEpal.next(false);
+                        if (loginInfoObj.lock_students_gel === 1)
+                            this.lockStudentsGel.next(true);
+                        else
+                            this.lockStudentsGel.next(false);
                         this.cuName = loginInfoObj.cu_name;
+                        if (this.cuName.slice(-1) === "1")
+                          this.userType.next("gel");
+                        else if (this.cuName.slice(-1) === "2")
+                            this.userType.next("epal");
                         return loginInfoObj;
                     }, {});
                 }

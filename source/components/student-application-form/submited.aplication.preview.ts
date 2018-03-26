@@ -40,7 +40,7 @@ import { IAppState } from "../../store/store";
         <div class="modal-content">
           <div class="modal-header modal-header-danger">
               <h3 class="modal-title pull-left"><i class="fa fa-close"></i>&nbsp;&nbsp;Διαγραφή Δήλωσης Προτίμησης</h3>
-            <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="hideConfirmModal()">
               <span aria-hidden="true"><i class="fa fa-times"></i></span>
             </button>
           </div>
@@ -60,7 +60,7 @@ import { IAppState } from "../../store/store";
         <div class="modal-content">
           <div class="modal-header modal-header-danger">
               <h3 class="modal-title pull-left"><i class="fa fa-ban"></i>&nbsp;&nbsp;Αποτυχία Διαγραφής Δήλωσης Προτίμησης</h3>
-            <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="hideErrorModal()">
               <span aria-hidden="true"><i class="fa fa-times"></i></span>
             </button>
           </div>
@@ -258,11 +258,11 @@ import { IAppState } from "../../store/store";
 
                     <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
                         <div class="col-md-12">
-                            <!-- <div *ngIf = "StudentDetails$.status == '3' || StudentDetails$.status == '4'" > -->
+                            <div *ngIf = "(GelStudentDetails$.status == '0' || GelStudentDetails$.status == '4') && GelStudentDetails$.applicantsAppModifyDisabled == '0'" >
                                 <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 10em;" (click)="editGelApplication()">
                                     <span style="font-size: 0.9em; font-weight: bold;">Επεξεργασία&nbsp;&nbsp;&nbsp;</span>
                                 </button>
-                            <!-- </div> -->
+                            </div>
                             <button type="button" class="btn-primary btn-lg pull-right isclickable" style="width: 10em;" (click)="createGelPdfServerSide()">
                                 <span style="font-size: 0.9em; font-weight: bold;">Εκτύπωση(PDF)&nbsp;&nbsp;&nbsp;</span>
                             </button>
@@ -430,7 +430,7 @@ import { IAppState } from "../../store/store";
                           ενεργοποίηση Τροποποίησης Αίτησης όταν: δεν υπάρχει αποτέλεσμα κατανομής για αυτήν την αίτηση
                           ΚΑΙ επιτρέπεται η τροποποίηση αιτήσεων
                           -->
-                            <div *ngIf = "StudentDetails$.status == '3' || StudentDetails$.status == '4' || StudentDetails$.status == '0'" >
+                            <div *ngIf = "(StudentDetails$.status == '3' || StudentDetails$.status == '4' || StudentDetails$.status == '0') && StudentDetails$.applicantsAppModifyDisabled == '0'" >
                                 <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 10em;" (click)="editEpalApplication()">
                                     <span style="font-size: 0.9em; font-weight: bold;">Επεξεργασία&nbsp;&nbsp;&nbsp;</span>
                                 </button>

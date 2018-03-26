@@ -15,7 +15,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 use Drupal\epal\Crypt;
 
-use Drupal\epal\ClientConsumer;
+//use Drupal\epal\ClientConsumer;
 
 class ApplicationSubmit extends ControllerBase
 {
@@ -56,12 +56,14 @@ class ApplicationSubmit extends ControllerBase
         $this->connection = $connection;
         $this->logger = $loggerChannel->get('epal');
 
+        /*
         $config = $this->config('epal.settings');
         $settings = [];
         foreach (['ws_endpoint', 'ws_username', 'ws_password', 'verbose', 'NO_SAFE_CURL'] as $setting) {
             $settings[$setting] = $config->get($setting);
         }
         $this->client = new ClientConsumer($settings, $entityTypeManager, $loggerChannel);
+        */
     }
 
     public static function create(ContainerInterface $container)
@@ -115,7 +117,7 @@ class ApplicationSubmit extends ControllerBase
         }
 
         //eggrafes configuration validation
-        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+        $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_epal'));
         $eggrafesConfig = reset($eggrafesConfigs);
         if (!$eggrafesConfig) {
             return $this->respondWithStatus([
@@ -345,7 +347,7 @@ class ApplicationSubmit extends ControllerBase
           ], Response::HTTP_BAD_REQUEST);
       }
 
-      $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config'));
+      $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_epal'));
       $eggrafesConfig = reset($eggrafesConfigs);
       if (!$eggrafesConfig) {
           return $this->respondWithStatus([

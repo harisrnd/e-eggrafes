@@ -12,7 +12,7 @@ import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { IAppState } from "../../store/store";
 
 @Component({
-    selector: "minister-settings",
+    selector: "gel-minister-settings",
     template: `
 
     <div
@@ -178,7 +178,7 @@ import { IAppState } from "../../store/store";
    `
 })
 
-@Injectable() export default class MinisterSettings implements OnInit, OnDestroy {
+@Injectable() export default class GelMinisterSettings implements OnInit, OnDestroy {
 
     private formGroup: FormGroup;
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
@@ -233,6 +233,9 @@ import { IAppState } from "../../store/store";
             gsisIdentEnabled:["",[]],
         });
 
+        this.formGroup.get("smallClassApproved").disable();
+        this.formGroup.get("capacityDisabled").disable();
+
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
         this.settings$ = new BehaviorSubject([{}]);
         this.modalTitle = new BehaviorSubject("");
@@ -268,6 +271,8 @@ import { IAppState } from "../../store/store";
 
     ngOnInit() {
 
+        console.log("YESSSSS");
+
         (<any>$("#configNotice")).appendTo("body");
 
         this.loginInfoSub = this._ngRedux.select("loginInfo")
@@ -291,7 +296,7 @@ import { IAppState } from "../../store/store";
 
         this.dataRetrieved = -1;
 
-        this.settingsSub = this._hds.retrieveAdminSettings("epal", this.minedu_userName, this.minedu_userPassword).subscribe(data => {
+        this.settingsSub = this._hds.retrieveAdminSettings("gel", this.minedu_userName, this.minedu_userPassword).subscribe(data => {
             this.settings$.next(data);
 
             this.capacityDisabled = Boolean(Number(this.settings$.value["capacityDisabled"]));
@@ -333,7 +338,7 @@ import { IAppState } from "../../store/store";
             this.dateStartBPeriod = "0-0-0000";
 
 
-        this.settingsSub = this._hds.storeAdminSettings("epal", this.minedu_userName, this.minedu_userPassword,
+        this.settingsSub = this._hds.storeAdminSettings("gel", this.minedu_userName, this.minedu_userPassword,
             this.capacityDisabled, this.directorViewDisabled, this.applicantsLoginDisabled,
             this.applicantsAppModifyDisabled, this.applicantsAppDeleteDisabled, this.applicantsResultsDisabled,
             this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved, this.wsIdentEnabled, this.gsisIdentEnabled)

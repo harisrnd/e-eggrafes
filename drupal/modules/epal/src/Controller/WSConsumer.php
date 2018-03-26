@@ -67,6 +67,34 @@ class WSConsumer extends ControllerBase
 
     public function getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
+        $testmode = false;
+        if ($testmode)  {
+          $obj = array(
+          'message' => 'Επιτυχία',
+
+          'data' => array(
+              'id' => '158',
+              'studentId' => 2666027,
+              'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
+              'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
+              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
+              'custodianFirstName' => '',
+              'birthDate' => '1997-01-04T00:00:00',
+              'addressStreet' => 'ΕΛΛΗΣ 6',
+              'addressPostCode' => '30100',
+              'addressArea' => 'ΑΓΡΙΝΙΟ',
+              'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
+              'levelName' => 'Γ',
+              'sectionName' => 'Τεχνικός Μηχανοσυνθέτης Αεροσκαφών'
+            )
+          //'data' => "null"
+        );
+          return (new JsonResponse($obj))
+            ->setStatusCode(Response::HTTP_OK);
+        }
+
+
+        //formal code
         $ts_start = microtime(true);
 
         try {
@@ -86,6 +114,7 @@ class WSConsumer extends ControllerBase
             ->setStatusCode(Response::HTTP_OK);
     }
 
+    /*
     public function testgetStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
           $obj = array(
@@ -96,7 +125,7 @@ class WSConsumer extends ControllerBase
               'studentId' => 2666027,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
               'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
-              'custodianLastName' =>  'ΓΕΩΡΓΟΥΛΑΣ',
+              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
               //'custodianLastName' =>  preg_replace('/\s+/', '', ' ΚΑΤΣ ΑΟΥΝΟΣ '),
               //'custodianLastName' =>  preg_replace('/[-\s]/', '', ' ΚΑΤΣ - ΑΟΥΝΟΣ '),
               'custodianFirstName' => '',
@@ -115,6 +144,7 @@ class WSConsumer extends ControllerBase
         ->setStatusCode(Response::HTTP_OK);
 
     }
+    */
 
     public function getStudentEpalCertification($id)
     {
