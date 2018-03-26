@@ -1,6 +1,6 @@
 import { List } from "immutable";
 import { recordify } from "typed-immutable-record";
-import { GELCLASSES_INIT, GELCLASSES_SAVE, GELCLASSES_RECEIVED, GELCLASSES_RESET } from "../../constants";
+import { GELCLASSES_INIT, GELCLASSES_SAVE, GELCLASSES_RECEIVED, GELCLASSES_RESET, GELCLASSES_SAVE_WITHIDS } from "../../constants";
 import { GELCLASSES_INITIAL_STATE } from "./gelclasses.initial-state";
 import { IGelClass, IGelClassRecord, IGelClassRecords } from "./gelclasses.types";
 
@@ -22,6 +22,22 @@ export function gelclassesReducer(state: IGelClassRecords = GELCLASSES_INITIAL_S
                 list.setIn([action.payload.selected_id, "selected"], false);
             if (action.payload.new_selected_choice_id >= 0)
                 list.setIn([action.payload.new_selected_choice_id, "selected"], true);
+        });
+
+        case GELCLASSES_SAVE_WITHIDS:
+        return state.withMutations(function(list) {
+            const indexOfListingToUpdate = list.findIndex(listing => {
+                return listing.get('id') === action.payload.new_selected_choice_id;});
+
+            console.log(indexOfListingToUpdate)
+            list.setIn([indexOfListingToUpdate, "selected"], true);
+    
+            const indexOfListingToUpdate2 = list.findIndex(listing => {
+                return listing.get('id') === action.payload.selected_id;});
+
+            console.log(indexOfListingToUpdate2)
+
+            list.setIn([indexOfListingToUpdate2, "selected"], false);
         });
 
         case GELCLASSES_RESET:

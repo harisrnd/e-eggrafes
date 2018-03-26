@@ -19,17 +19,6 @@ export function OrientationGroupReducer(state: IOrientationGroupRecords = ORIENT
             });
             return List(orientalGroupFieldss);
 
-        /*
-        case ORIENTATIONGROUP_SAVE:
-                return state.withMutations(function(list) {
-                if (action.payload.prevChoice >= 0)
-                    list.setIn([action.payload.prevChoice, "selected"], false);
-                if (action.payload.newChoice >= 0)
-                    list.setIn([action.payload.newChoice, "selected"], true);
-            });
-        */
-
-
        case ORIENTATIONGROUP_SAVE_WITHIDS:
        return state.withMutations(function(list) {
         const indexOfListingToUpdate = list.findIndex(listing => {
