@@ -55,6 +55,13 @@
                                         <a class="nav-link" [routerLink]="['/ministry/minister-informstudents']" [routerLinkActive]="['active']"><b>Αποστολή Ειδοποιήσεων</b></a>
                                     </li>
                                 </div>
+
+                                 <div *ngIf="(loginInfo$ | async).size > 0 && ((schtype == 2) || (schtype == 1)) " class="nav-item">
+                                    <li *ngIf=" authRole=='dide'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['school/school-type-selection']" [routerLinkActive]="['active']"><b>Αρχική </b></a>
+                                    </li>
+                                </div>
+
                                 <div *ngIf="(loginInfo$ | async).size > 0 && (userType | async) === 'epal'" class="nav-item">
                                     <li *ngIf="authRole=='supervisor'" class="nav-item">
                                         <a class="nav-link"><b>ΔΙΑΧΕΙΡΙΣΗ ΕΠΑΛ</b></a>
@@ -79,6 +86,7 @@
                                         <a class="nav-link"><b>ΔΙΑΧΕΙΡΙΣΗ ΓΕΛ</b></a>
                                     </li>
                                 </div>
+
 
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
                                     <li *ngIf="authRole=='pde'" class="nav-item">
@@ -119,11 +127,7 @@
                                         <a class="nav-link" [routerLink]="['/school/smallclassapprovement']" [routerLinkActive]="['active']"><b>Εγκρίσεις Ολιγομελών </b></a>
                                     </li>
                                 </div>
-                                <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 2)" class="nav-item">
-                                    <li *ngIf=" authRole=='dide'" class="nav-item">
-                                        <a class="nav-link" [routerLink]="['/school/smallclassapprovement']" [routerLinkActive]="['active']"><b>Εγκρίσεις Ολιγομελών </b></a>
-                                    </li>
-                                </div>
+                               
 
 
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
@@ -135,6 +139,16 @@
                                 <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 2)" class="nav-item">
                                     <li *ngIf="authRole=='dide'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/ministry/minister-reports']" [routerLinkActive]="['active']"><b>Αναφορές</b></a>
+                                    </li>
+                                </div>
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 1)" class="nav-item">
+                                    <li *ngIf="authRole=='dide'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/school/eduadmingel-view']" [routerLinkActive]="['active']"><b>Πληρότητα Σχολείων</b></a>
+                                    </li>
+                                </div>
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 1)" class="nav-item">
+                                    <li *ngIf="authRole=='dide'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['school/gel-distribution']" [routerLinkActive]="['active']"><b>Τοποθετήσεις Μαθητών σε Λύκεια</b></a>
                                     </li>
                                 </div>
 
