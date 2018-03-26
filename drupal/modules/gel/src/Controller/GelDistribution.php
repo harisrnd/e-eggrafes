@@ -219,7 +219,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                             $crypt = new Crypt();
                             try {
                                 $name_decoded = $object->name->value;
-
+                                $am_decoded = $crypt ->decrypt($object->am->value);
                                 $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
                                 $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
                                 $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
@@ -234,8 +234,8 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                             $list[] = array(
                                 'id' => $object->id(),
                                 'name' => $name_decoded,
-
-                              'regionaddress' => $regionaddress_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id()),
@@ -292,16 +292,22 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                ], Response::HTTP_FORBIDDEN);
         }
 
-        if (intval($oldschool) === 999999)
+        $chunks = spliti (",", $studentid, 1000);
+           $this->logger->warning($studentid."1");
+        foreach ($chunks as $studId =>$value )
         {
-        $this->logger->warning($oldschool."1");
+        
         $transaction = $this->connection->startTransaction();
         try {
 
 
+            $this->connection->delete('gelstudenthighschool')
+                            ->condition('student_id', $value, '=')
+                            ->execute();
+
             $student = array(
                 'langcode' => 'el',
-                'student_id' => $studentid,
+                'student_id' => $value,
                 'school_id' => $schoolid,
                 'taxi' => 'Α'
 
@@ -310,10 +316,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
             $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-
-            return $this->respondWithStatus([
-                "error_code" => 0
-            ], Response::HTTP_OK);
+         
         } catch (\Exception $e) {
             $this->logger->warning($e->getMessage());
             $transaction->rollback();
@@ -322,37 +325,9 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                 "error_code" => 5001
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-      }
-      elseif (intval($schoolid) === 0)
-      {
-            $this->logger->warning($schoolid."delete");
-            $this->connection->delete('gelstudenthighschool')
-                            ->condition('student_id', $studentid, '=')
-                            ->execute();
-            return $this->respondWithStatus([
-                "error_code" => 0
-            ], Response::HTTP_OK);
-
-
-
-
-      }
-      else
-      {
-            $this->logger->warning($oldschool."2");
-            $this->logger->warning($schoolid."511111");
-          $schools = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $studentid));
-            $school = reset($schools);
-
-          if ($school) {
-              $school->set('school_id', intval($schoolid));
-              $school->save();
-
-          }
-          return $this->respondWithStatus([
-                "error_code" => 0
-            ], Response::HTTP_OK);
-      }
+     
+    }
+     return $this->respondWithStatus('ok', Response::HTTP_OK);
 
     }
 
@@ -636,7 +611,10 @@ public function getStudentPerSchoolGel(Request $request, $classId)
         }
     }
 
-
+public function getSchoolGel(Request $request)
+{
+    # code...
+}
 
 private function respondWithStatus($arr, $s)
     {

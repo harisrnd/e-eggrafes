@@ -116,3 +116,11 @@ gel.demodata:
     _controller: '\Drupal\gel\Controller\CreateGelDemoData::createData'
   requirements:
     _access: 'TRUE'
+gel.getschools:
+  path: '/gel/schoolsgel-per-perf'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::getSchoolGel'
+  requirements:
+    _user_is_logged_in: 'TRUE'

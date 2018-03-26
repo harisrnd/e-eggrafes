@@ -67,6 +67,7 @@ import SchoolTypeSelection from "../components/student-application-form/schoolty
 import GelApplicationSubmit from "../components/student-application-form/gelapplication.submit";
 import SchoolTypeSelectionDde from "../components/infoviews/school-type-selection";
 import GelDistribution from "../components/geldistribution/geldistridution";
+import EduadminGelView from "../components/infoviews/eduadmingel-view";
 
 
 export const MainRoutes: Routes = [
@@ -123,6 +124,7 @@ export const MainRoutes: Routes = [
     { path: "school-type-select", component: SchoolTypeSelection, canActivate: [StudentAuthGuard]},
     { path: "gel-application-submit", component: GelApplicationSubmit, canActivate: [StudentAuthGuard, StudentGelLockGuard] },
     { path: "school/gel-distribution", component: GelDistribution, canActivate: [EduAdminAuthGuard] },
+    { path: "school/eduadmingel-view", component: EduadminGelView, canActivate: [EduAdminAuthGuard] },
 
 ];
 
@@ -179,5 +181,6 @@ export const MainDeclarations = [
     GelApplicationSubmit,
     SchoolTypeSelectionDde,
     GelDistribution,
-    DirectorViewGel
+    DirectorViewGel,
+    EduadminGelView,
 ];
