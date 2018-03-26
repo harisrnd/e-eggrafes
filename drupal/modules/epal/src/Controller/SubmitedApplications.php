@@ -532,7 +532,8 @@ class SubmitedApplications extends ControllerBase
 
                     $crypt = new Crypt();
                     try {
-                        if (isset($epalStudent->myschool_id ))
+                        //if (isset($epalStudent->myschool_id ))
+                        if (isset($epalStudent->am))
                           $am_decoded = $crypt->decrypt($epalStudent->am);
                         $name_decoded = $crypt->decrypt($epalStudent->name);
                         $studentsurname_decoded = $crypt->decrypt($epalStudent->studentsurname);

@@ -967,7 +967,7 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     getServiceStudentPromotion(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
 
-        let mode="test";
+        //let mode="test";
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -979,13 +979,13 @@ export class HelperDataService implements OnInit, OnDestroy {
         let options = new RequestOptions({ headers: headers });
         let rpath = [didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no].join("/");
 
-        if ( mode ==="test"){
-            return this.http.get(`${AppSettings.API_ENDPOINT}/epal/test-get-student-info/` + rpath, options).map(response => response.json());
-        }
-        else{
+        //if ( mode ==="test"){
+        //    return this.http.get(`${AppSettings.API_ENDPOINT}/epal/test-get-student-info/` + rpath, options).map(response => response.json());
+        //}
+        //else{
             return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-info/` + rpath, options)
             .map(response => response.json());
-        }
+        //}
     }
 
     getServiceStudentCertification(id) {

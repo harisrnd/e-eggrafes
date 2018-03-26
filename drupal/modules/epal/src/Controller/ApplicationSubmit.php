@@ -15,7 +15,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 use Drupal\epal\Crypt;
 
-use Drupal\epal\ClientConsumer;
+//use Drupal\epal\ClientConsumer;
 
 class ApplicationSubmit extends ControllerBase
 {
@@ -56,12 +56,14 @@ class ApplicationSubmit extends ControllerBase
         $this->connection = $connection;
         $this->logger = $loggerChannel->get('epal');
 
+        /*
         $config = $this->config('epal.settings');
         $settings = [];
         foreach (['ws_endpoint', 'ws_username', 'ws_password', 'verbose', 'NO_SAFE_CURL'] as $setting) {
             $settings[$setting] = $config->get($setting);
         }
         $this->client = new ClientConsumer($settings, $entityTypeManager, $loggerChannel);
+        */
     }
 
     public static function create(ContainerInterface $container)
@@ -187,7 +189,7 @@ class ApplicationSubmit extends ControllerBase
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             return $this->respondWithStatus([
-                "error_code" => 5001,
+                "error_code" => 500147654956,
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         unset($crypt);

@@ -15,7 +15,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 use Drupal\gel\Crypt;
 
-use Drupal\epal\ClientConsumer;
+//use Drupal\epal\ClientConsumer;
 
 class GelApplicationSubmit extends ControllerBase
 {
@@ -56,12 +56,14 @@ class GelApplicationSubmit extends ControllerBase
         $this->connection = $connection;
         $this->logger = $loggerChannel->get('gel');
 
+        /*
         $config = $this->config('epal.settings');
         $settings = [];
         foreach (['ws_endpoint', 'ws_username', 'ws_password', 'verbose', 'NO_SAFE_CURL'] as $setting) {
             $settings[$setting] = $config->get($setting);
         }
         $this->client = new ClientConsumer($settings, $entityTypeManager, $loggerChannel);
+        */
 
     }
 

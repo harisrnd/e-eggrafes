@@ -79,11 +79,14 @@ import {
     /*
     private observableSource = (keyword: any): Observable<any[]> => {
         let url: string = "https://mm.sch.gr/api/units?name=" + keyword;
+        //let url: string = "https://mm.sch.gr/api/units?unit_type_id=3";
         if (keyword) {
             return this.http.get(url)
                 .map(res => {
                     let json = res.json();
                     let retArr = <any>Array();
+                    console.log("Size of mm_schhols:");
+                    console.log(json.data.length);
                     for (let i = 0; i < json.data.length; i++) {
                         retArr[i] = {};
                         retArr[i].registry_no = json.data[i].registry_no;
@@ -97,6 +100,7 @@ import {
         }
     };
     */
+
 
     private observableSource = (keyword: any): Observable<any[]> => {
         let headers = new Headers({
@@ -125,6 +129,7 @@ import {
             return Observable.of([]);
         }
     };
+    
 
     constructor(private fb: FormBuilder,
         private _sdfa: GelStudentDataFieldsActions,

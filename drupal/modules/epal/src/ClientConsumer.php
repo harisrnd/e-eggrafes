@@ -1,5 +1,7 @@
 <?php
 
+//obsolete file
+
 namespace Drupal\epal;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -7,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\epal\Client;
 
-class ClientConsumer 
+class ClientConsumer
 {
     protected $entityTypeManager;
     protected $logger;
@@ -98,13 +100,13 @@ class ClientConsumer
     }
 
     /**
-     * If $ending is provided 
+     * If $ending is provided
      *  it is assumed as the second part of the academic-year (i.e. 2017 for 2016-2017),
      *  the function returns the corresponding id to match first;
      * If $id is provided, return the corresponding label.
      * $id has priority over $ending, if both are supplied.
-     * 
-     * @return null|string null if no input or no info located 
+     *
+     * @return null|string null if no input or no info located
      */
     public function getDidacticYear($ending = null, $id = null)
     {
@@ -128,7 +130,7 @@ class ClientConsumer
 
     /**
      * Get the level name of the denoted class level
-     * 
+     *
      * @return string|mixed The level name of the provided failsafe value if not found
      */
     public function getLevelName($id, $failsafe_value = 'X')
