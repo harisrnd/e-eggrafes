@@ -27,7 +27,7 @@ import { IAppState } from "../../store/store";
         <div class="modal-content">
           <div class="modal-header {{modalHeader | async}}" >
               <h3 class="modal-title pull-left"><i class="fa fa-check-square-o"></i>&nbsp;&nbsp;{{ modalTitle | async }}</h3>
-            <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal('#distributionNotice')">
               <span aria-hidden="true"><i class="fa fa-times"></i></span>
             </button>
           </div>
