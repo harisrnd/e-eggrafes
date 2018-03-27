@@ -6,6 +6,7 @@ import {
     REGIONSCHOOLS_ORDER_SAVE,
     REGIONSCHOOLS_RECEIVED,
     REGIONSCHOOLS_SELECTED_SAVE,
+    REGIONSCHOOLS_SELECTED_SAVE_WITHIDS,
 } from "../constants";
 import { HelperDataService } from "../services/helper-data-service";
 import { IAppState } from "../store";
@@ -47,6 +48,17 @@ export class RegionSchoolsActions {
                 checked: checked,
                 rIndex: i,
                 sIndex: j,
+                orderId: orderId
+            }
+        });
+    };
+
+    saveRegionSchoolsSelectedwithIds = (checked, school_id, orderId: number) => {
+        return this._ngRedux.dispatch({
+            type: REGIONSCHOOLS_SELECTED_SAVE_WITHIDS,
+            payload: {
+                checked: checked,
+                school_id: school_id,
                 orderId: orderId
             }
         });

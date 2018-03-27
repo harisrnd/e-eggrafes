@@ -1,7 +1,7 @@
 import { NgRedux } from "@angular-redux/store";
 import { Injectable } from "@angular/core";
 
-import { ELECTIVECOURSEFIELDS_INIT, ELECTIVECOURSEFIELDS_RECEIVED, ELECTIVECOURSEFIELDS_SELECTED_SAVE, ELECTIVECOURSES_ORDER_SAVE } from "../constants";
+import { ELECTIVECOURSEFIELDS_INIT, ELECTIVECOURSEFIELDS_RECEIVED, ELECTIVECOURSEFIELDS_SELECTED_SAVE, ELECTIVECOURSES_ORDER_SAVE, ELECTIVECOURSEFIELDS_SELECTED_SAVE_WITHIDS } from "../constants";
 import { HelperDataService } from "../services/helper-data-service";
 import { IAppState } from "../store";
 
@@ -38,6 +38,17 @@ export class ElectiveCourseFieldsActions {
     saveElectiveCourseFieldsSelected = (newChoice: number, isSelected: number, orderId: number) => {
         return this._ngRedux.dispatch({
             type: ELECTIVECOURSEFIELDS_SELECTED_SAVE,
+            payload: {
+                newChoice: newChoice,
+                isSelected: isSelected,
+                orderId: orderId,
+            }
+        });
+    };
+
+    saveElectiveCourseFieldsSelectedwithIds = (newChoice: number, isSelected: number, orderId: number) => {
+        return this._ngRedux.dispatch({
+            type: ELECTIVECOURSEFIELDS_SELECTED_SAVE_WITHIDS,
             payload: {
                 newChoice: newChoice,
                 isSelected: isSelected,
