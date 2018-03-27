@@ -439,9 +439,9 @@ import { StudentGelCourseChosen } from "../students/student";
                 console.log(birthparts);
 
 
-                //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
-                //date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
-                this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
+                this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
+                date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
+                //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {
                     if (typeof data.data["studentId"] !== "undefined")  {
                       aitisiObj[0].studentId = data.data["studentId"];

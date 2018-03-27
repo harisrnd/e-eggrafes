@@ -190,7 +190,7 @@ class PDFCreator extends ControllerBase {
 
 		$this->pdf->SetFont($this->fontLight, '', 11);
 		//if ($this->applicantsResultsDisabled === "1")
-		//if ($status === "0" ||  $status === "3" || $status === "4")
+		if ($status === "0" ||  $status === "3" || $status === "4")
 			$this->pdf->MultiCell(0, 8, $this->prepareString('(Αρχική)'), 0, 'R');
 
 		$this->pdf->Ln();
@@ -270,7 +270,7 @@ class PDFCreator extends ControllerBase {
 			$regionaddress_decoded = $this->crypt->decrypt($student->regionaddress->value);
 			$regiontk_decoded = $this->crypt->decrypt($student->regiontk->value);
 			$regionarea_decoded = $this->crypt->decrypt($student->regionarea->value);
-			if ( sizeof($student->am)>0 ){
+			if ( !empty($student->am)>0 ){
 				$am_decoded=$this->crypt->decrypt($student->am->value);
 			}
 			else{
@@ -357,7 +357,7 @@ class PDFCreator extends ControllerBase {
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->SetXY($x+$width,$y);
-		if ($am_decoded!=''){
+		if ($am_decoded!==''){
 			$this->pdf->Cell($width, $height, $this->prepareString('Αριθμός Μητρώου:'), 0, 'L');
 		}
 		else{

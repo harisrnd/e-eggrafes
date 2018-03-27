@@ -23,16 +23,15 @@ export function sectorFieldsReducer(state: ISectorFieldRecords = SECTOR_FIELDS_I
                     list.setIn([action.payload.newChoice, "selected"], true);
             });
 
-        //DEN DOYLEYEUI PREPEI NA TO DW KSANA    
         case SECTORFIELDS_SELECTED_SAVE_WITHIDS:
             return state.withMutations(function(list) {
                 const indexOfListingToUpdate = list.findIndex(listing => {
                     return listing.get('id') === action.payload.newChoice;});
-        
-                    console.log(action.payload.newChoice);
-                    console.log(indexOfListingToUpdate);
+                const indexOfListingToUpdate2 = list.findIndex(listing => {
+                    return listing.get('id') === action.payload.prevChoice;});
+
                 if (action.payload.prevChoice >= 0)
-                    list.setIn([action.payload.prevChoice, "selected"], false);
+                    list.setIn([indexOfListingToUpdate2, "selected"], false);
                 if (action.payload.newChoice >= 0)
                     list.setIn([indexOfListingToUpdate, "selected"], true);
             });

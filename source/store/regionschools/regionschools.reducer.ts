@@ -44,24 +44,22 @@ export function regionSchoolsReducer(state: IRegionRecords = REGION_SCHOOLS_INIT
         case REGIONSCHOOLS_SELECTED_SAVE_WITHIDS:
             return state.withMutations(function(list) {
                 let rIndex=0;
+                let sIndex=-1;
+
                 list.reduce((test,lista)=>{
-                    const indexOfListingToUpdate = lista.get('epals').findIndex(listing => {
+
+                    const sIndex = lista.get('epals').findIndex(listing => {
                         return listing.get('epal_id') === action.payload.school_id;});
-                        if (indexOfListingToUpdate>0){
-                            console.log(action.payload.school_id);
-                            console.log(indexOfListingToUpdate);
-                            lista.get('epals').setIn([indexOfListingToUpdate,"selected"],action.payload.checked);
-                            lista.get('epals').setIn([indexOfListingToUpdate,"order_id"],action.payload.orderId);
-                            console.log(lista.get('epals').get(indexOfListingToUpdate));
-                        }
+                    if (sIndex>=0){
+                        list.setIn([rIndex, "epals"], list.get(rIndex).get("epals").setIn([sIndex, "selected"], action.payload.checked));
+                        list.setIn([rIndex, "epals"], list.get(rIndex).get("epals").setIn([sIndex, "order_id"], action.payload.orderId));
+                    }
 
+                    rIndex++;
                     return lista;   
-
                 }
-                ,{});
-        
-               //list.setIn([action.payload.rIndex, "epals"], list.get(action.payload.rIndex).get("epals").setIn([action.payload.sIndex, "selected"], action.payload.checked));
-                //list.setIn([action.payload.rIndex, "epals"], list.get(action.payload.rIndex).get("epals").setIn([action.payload.sIndex, "order_id"], action.payload.orderId));
+               ,{});
+
             });
         case REGIONSCHOOLS_ORDER_SAVE:
             let newState2 = Array<IRegionRecord>();
