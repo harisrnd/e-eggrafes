@@ -293,8 +293,6 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                 if ($studentPerSchool) {
                     $list = array();
                     foreach ($studentPerSchool as $object) {
-
-
                             $crypt = new Crypt();
                             try {
                                 $name_decoded = $object->name->value;
@@ -371,7 +369,9 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                ], Response::HTTP_FORBIDDEN);
         }
 
-        $chunks = spliti (",", $studentid, 1000);
+        //$chunks = spliti (",", $studentid, 1000);
+        $chunks = preg_split(',', $studentid);
+
            $this->logger->warning($studentid."1");
         foreach ($chunks as $studId =>$value )
         {
