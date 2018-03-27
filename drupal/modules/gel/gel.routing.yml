@@ -70,6 +70,14 @@ gel.gethighschool:
     _controller: '\Drupal\gel\Controller\GelDistribution::getHighSchoolperDide'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.gethighschoolsmart:
+  path: '/gel/gethighschoolperdidesmart/{schsearch}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::getHighSchoolperDideSmart'
+  requirements:
+    _user_is_logged_in: 'TRUE'
 gel.getstudentsperschool:
   path: '/gel/getstudentsperschool/{schoolid}'
   options:

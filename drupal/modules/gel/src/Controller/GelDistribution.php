@@ -176,6 +176,85 @@ public function getHighSchoolperDide(Request $request)
     }
 
 
+    public function getHighSchoolperDideSmart(Request $request, $schsearch)
+    {
+            $authToken = $request->headers->get('PHP_AUTH_USER');
+
+            $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+            $user = reset($users);
+            if ($user) {
+                $selectionId = $user->init->value;
+                $userRoles = $user->getRoles();
+                $userRole = '';
+                foreach ($userRoles as $tmpRole) {
+                    if (($tmpRole === 'regioneduadmin') || ($tmpRole === 'eduadmin')) {
+                        $userRole = $tmpRole;
+                    }
+                }
+
+                if ($userRole === '') {
+                    return $this->respondWithStatus([
+                        'error_code' => 4003,
+                    ], Response::HTTP_FORBIDDEN);
+                }
+
+                else
+                {
+                  try {
+
+                      if ($userRole === 'regioneduadmin') {
+                          $sCon = $this->connection->select('gel_school', 'eSchool')
+                              ->fields('eSchool', array('id', 'name', 'region_edu_admin_id'));
+                          $sCon->condition('eSchool.region_edu_admin_id', $selectionId , '=');
+                      }
+                      elseif ($userRole === 'eduadmin') {
+                          $sCon = $this->connection->select('gel_school', 'eSchool')
+                              ->fields('eSchool', array('id', 'name', 'unit_type_id','edu_admin_id'))
+                              ->condition('eSchool.edu_admin_id', $selectionId , '=')
+                              ->condition('eSchool.unit_type_id', 4 , '=');
+                      }
+                      else {
+                          $schools = [];
+                          return $this->respondWithStatus([
+                              'message' => t('No schools found!'),
+                          ], Response::HTTP_FORBIDDEN);
+                      }
+
+                      if ($schsearch != "ΟΛΑ") {
+                  			$words = preg_split('/[\s]+/', $schsearch);
+                  			foreach ($words as $word)
+                  					$sCon->condition('eSchool.name', '%' . db_like($word) . '%', 'LIKE');
+                        }
+
+                				$schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                				$list = array();
+                				foreach ($schools as $object) {
+                						$list[] = array(
+                								'id' => $object->id,
+                								'name' => $object->name,
+                								'status' => 1,
+                						);
+                				}
+                				return $this->respondWithStatus($list, Response::HTTP_OK);
+
+                    }
+                    catch (\Exception $e) {
+                        $this->logger->error($e->getMessage());
+              					return $this->respondWithStatus([
+              									'message' => t("error in getSchoolList function"),
+              							], Response::HTTP_FORBIDDEN);
+                    }
+
+                }
+
+            } else {
+                return $this->respondWithStatus([
+                    'message' => t('User not found!'),
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+      }
+
 
 public function getStudentsPerSchool(Request $request, $schoolid)
     {
@@ -296,7 +375,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
            $this->logger->warning($studentid."1");
         foreach ($chunks as $studId =>$value )
         {
-        
+
         $transaction = $this->connection->startTransaction();
         try {
 
@@ -316,7 +395,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
             $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-         
+
         } catch (\Exception $e) {
             $this->logger->warning($e->getMessage());
             $transaction->rollback();
@@ -325,7 +404,7 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                 "error_code" => 5001
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-     
+
     }
      return $this->respondWithStatus('ok', Response::HTTP_OK);
 

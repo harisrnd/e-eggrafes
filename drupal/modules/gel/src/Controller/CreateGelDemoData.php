@@ -93,14 +93,18 @@ class CreateGelDemoData extends ControllerBase {
 				$am = rand(1,100000);
 				$myschool_id = rand(1,100000);
 				$lastschool_id = rand(0, sizeof($schoolIdsList));
-				$lastschool_schoolname = $gelSchools[$lastschool_id]->name;
-				$lastschool_unittypeid = $gelSchools[$lastschool_id]->unit_type_id;
-				$lastschool_registrynumber = $gelSchools[$lastschool_id]->registry_no;
+				//$lastschool_schoolname = $gelSchools[$lastschool_id]->name;
+				//$lastschool_unittypeid = $gelSchools[$lastschool_id]->unit_type_id;
+				//$lastschool_registrynumber = $gelSchools[$lastschool_id]->registry_no;
+				$lastschool_schoolname = "8ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΙΛΙΟΥ";
+				$lastschool_unittypeid = 3;
+				$lastschool_registrynumber = "0501067";
+
 
 
 				$student = array(
 					'gel_userid' => $geluserid,
-					'am' => $am,
+					'am' => $crypt->encrypt(strval($am)),
 					'myschool_id' =>$myschool_id,
 
 					'name' => $crypt->encrypt("όνομα" . $i),
@@ -138,6 +142,37 @@ class CreateGelDemoData extends ControllerBase {
 				//insert records in entity: 	gel_student_choices
 				//...
 				$entity_storage_student->resetCache();
+
+				/*
+				$studentChoices = array(
+					'name' => $geluserid,
+					'am' =>
+					'choice_id' => 1,
+					'student_id' =>$myschool_id,
+					'order_id' => $crypt->encrypt("όνομα" . $i),
+					'studentsurname' => $crypt->encrypt("επώνυμο" . $i),
+					'birthdate' => '01/01/1970',
+					'fatherfirstname' => $crypt->encrypt("όνομα_πατέρα" . $i),
+					'motherfirstname' => $crypt->encrypt("όνομα_μητέρας" . $i),
+					'regionaddress' => $crypt->encrypt("διεύθυνση" . $i),
+					'regionarea' => $crypt->encrypt("περιοχή" . $i),
+					'regiontk' => $crypt->encrypt("ΤΚ" . $i),
+					'nextclass' => $curclass,
+					'relationtostudent' => 'Γονέας/Κηδεμόνας',
+					'telnum' => $crypt->encrypt('6944123456'),
+					'guardian_name' => $crypt->encrypt('όνομα_κηδεμόνα'),
+					'guardian_surname' => $crypt->encrypt('επώνυμο_κηδεμόνα'),
+					'guardian_fathername' => $crypt->encrypt('όνομα_πατέρα_κηδεμόνα'),
+					'guardian_mothername' => $crypt->encrypt('όνομα_μητέρας_κηδεμόνα'),
+					'lastschool_class' => $lastclass,
+					'lastschool_schoolyear' => "2017-2018",
+					'lastschool_schoolname' => $lastschool_schoolname,
+					'lastschool_unittypeid' => $lastschool_unittypeid,
+					'lastschool_registrynumber' => $lastschool_registrynumber,
+					'agreement' => 1,
+					'myschool_currentsection' => "ΟΝΟΜΑ ΤΟΜΕΑ / ΟΜΑΔΑΣ ΠΡΟΣΑΝΑΤΟΛΙΣΜΟΥ"
+        );
+				*/
 
 
 		}
