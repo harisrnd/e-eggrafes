@@ -242,6 +242,9 @@ import { HelperDataService } from "../../services/helper-data-service";
             this.SaveSelection$.next(data);
             this.showLoader.next(false);
             this.selections = [];
+            this.modalHeader.next("modal-header-success");
+            this.modalTitle.next("Αποθηκεύτηκαν.");
+            this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
             this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive)
 
                 .subscribe(data => {
@@ -266,9 +269,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                     
                     this.showLoader.next(false);
                 });
-               this.modalHeader.next("modal-header-success");
-               this.modalTitle.next("Αποθηκεύτηκαν.");
-               this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
+               
 
 
 

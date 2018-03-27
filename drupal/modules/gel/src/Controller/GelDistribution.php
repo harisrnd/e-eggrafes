@@ -55,7 +55,7 @@ class GelDistribution extends ControllerBase
     public function getJuniorHighSchoolperDide(Request $request)
     {
 
-         $authToken = $request->headers->get('PHP_AUTH_USER');
+        $authToken = $request->headers->get('PHP_AUTH_USER');
 
         $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
         $user = reset($users);
@@ -613,8 +613,65 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
 public function getSchoolGel(Request $request)
 {
-    # code...
-}
+
+ $authToken = $request->headers->get('PHP_AUTH_USER');
+
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if ($user) {
+            $selectionId = $user->init->value;
+            $userRoles = $user->getRoles();
+            $userRole = '';
+            foreach ($userRoles as $tmpRole) {
+                if (($tmpRole === 'regioneduadmin') || ($tmpRole === 'eduadmin')) {
+                    $userRole = $tmpRole;
+                }
+            }
+
+            if ($userRole === '') {
+                return $this->respondWithStatus([
+                    'error_code' => 4003,
+                    "message" => t("1")
+                ], Response::HTTP_FORBIDDEN);
+            } elseif ($userRole === 'regioneduadmin') {
+                $schools = $this->entityTypeManager
+                    ->getStorage('gel_school')
+                    ->loadByProperties(array('region_edu_admin_id' => $selectionId));
+            } elseif ($userRole === 'eduadmin') {
+                $schools = $this->entityTypeManager
+                    ->getStorage('gel_school')
+                    ->loadByProperties(array('edu_admin_id' => $selectionId, 'unit_type_id'=> 4));
+            } else {
+                $schools = [];
+            }
+
+            if ($schools) {
+                $list = array();
+
+                foreach ($schools as $object) {
+                    $status = 1;
+                    $list[] = array(
+                        'id' => $object->id(),
+                        'name' => $object->name->value,
+                        'status' => $status,
+                    );
+                }
+
+                return $this->respondWithStatus($list, Response::HTTP_OK);
+            } else {
+                return $this->respondWithStatus([
+                    'message' => t('No schools found!'),
+                ], Response::HTTP_FORBIDDEN);
+            }
+        } else {
+            return $this->respondWithStatus([
+                'message' => t('User not found!'),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+    }
+
+
 
 private function respondWithStatus($arr, $s)
     {
