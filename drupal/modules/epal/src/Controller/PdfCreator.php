@@ -392,11 +392,11 @@ class PDFCreator extends ControllerBase {
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 		$this->pdf->SetXY($x+$width,$y);
-		if ($am_decoded ===""){
-			$this->pdf->Cell($width, $height, $this->prepareString(''), 0, 'L');
+		if ($am_decoded!==''){
+			$this->pdf->Cell($width, $height, $this->prepareString('Αριθμός Μητρώου:'), 0, 'L');
 		}
 		else{
-			$this->pdf->Cell($width, $height, $this->prepareString('Αριθμός Μητρώου:'), 0, 'L');
+			$this->pdf->Cell($width, $height, "", 0, 'L');
 		}
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 		$this->pdf->multiCell($width, $height, $this->prepareString($am_decoded), 0, 'L');

@@ -1,7 +1,7 @@
 import { NgRedux } from "@angular-redux/store";
 import { Injectable } from "@angular/core";
 
-import { SECTORCOURSES_INIT, SECTORCOURSES_RECEIVED, SECTORCOURSES_SELECTED_SAVE } from "../constants";
+import { SECTORCOURSES_INIT, SECTORCOURSES_RECEIVED, SECTORCOURSES_SELECTED_SAVE, SECTORCOURSES_SELECTED_SAVE_WITHIDS } from "../constants";
 import { HelperDataService } from "../services/helper-data-service";
 import { IAppState } from "../store";
 
@@ -37,6 +37,19 @@ export class SectorCoursesActions {
     saveSectorCoursesSelected = (oldSIndex, oldCIndex, checked, i, j) => {
         return this._ngRedux.dispatch({
             type: SECTORCOURSES_SELECTED_SAVE,
+            payload: {
+                oldSIndex: oldSIndex,
+                oldCIndex: oldCIndex,
+                checked: checked,
+                sIndex: i,
+                cIndex: j
+            }
+        });
+    };
+
+    saveSectorCoursesSelectedwithIds = (oldSIndex, oldCIndex, checked, i, j) => {
+        return this._ngRedux.dispatch({
+            type: SECTORCOURSES_SELECTED_SAVE_WITHIDS,
             payload: {
                 oldSIndex: oldSIndex,
                 oldCIndex: oldCIndex,

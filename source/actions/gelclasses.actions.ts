@@ -1,7 +1,7 @@
 import { NgRedux } from "@angular-redux/store";
 import { Injectable } from "@angular/core";
 import { GELCLASSES_SAVE } from "../constants";
-import { GELCLASSES_INIT, GELCLASSES_RECEIVED, GELCLASSES_RESET } from "../constants";
+import { GELCLASSES_INIT, GELCLASSES_RECEIVED, GELCLASSES_RESET, GELCLASSES_SAVE_WITHIDS } from "../constants";
 import { IAppState } from "../store";
 
 import { HelperDataService } from "../services/helper-data-service";
@@ -37,6 +37,16 @@ export class GelClassesActions {
     saveGelClassesSelected = (selected_id:number, new_selected_choice_id:number) => {
         return this._ngRedux.dispatch({
             type: GELCLASSES_SAVE,
+            payload: {
+                selected_id:selected_id,
+                new_selected_choice_id: new_selected_choice_id
+            }
+        });
+    };
+
+    saveGelClassesSelectedwithIds = (selected_id:number, new_selected_choice_id:number) => {
+        return this._ngRedux.dispatch({
+            type: GELCLASSES_SAVE_WITHIDS,
             payload: {
                 selected_id:selected_id,
                 new_selected_choice_id: new_selected_choice_id
