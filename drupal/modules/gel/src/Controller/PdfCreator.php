@@ -114,7 +114,7 @@ class PDFCreator extends ControllerBase {
 						$gelStudent = reset($gelStudents);
 
 						$config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-						$eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+						$eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_gel'));
 						$eggrafesConfig = reset($eggrafesConfigs);
 						if (!$eggrafesConfig) {
 							 return $this->respondWithStatus([
