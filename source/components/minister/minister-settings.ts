@@ -19,12 +19,33 @@ import { IAppState } from "../../store/store";
       class = "loading" *ngIf="(dataRetrieved == -1  || (showLoader | async) === true)" >
     </div>
 
-    <div id="configNotice" (onHidden)="onHidden()" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div id="approvedWaitingNotice" (onHidden)="onHidden('#approvedWaitingNotice')" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header modal-header-warning">
+            <h3 class="modal-title pull-left"><i class="fa fa-check-square-o"></i>&nbsp;&nbsp;Υπολογισμός ολιγομελών τμημάτων</h3>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal('#approvedWaitingNotice')">
+              <span aria-hidden="true"><i class="fa fa-times"></i></span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Παρακαλώ περιμένετε...Γίνεται υπολογισμός των ολιγομελών τμημάτων, ο οποίος ενδέχετε να <strong>διαρκέσει μερικά δευτερόλεπτα</strong>.
+            Παρακαλώ <strong>μην</strong> εκτελείτε οποιαδήποτε <strong>ενέργεια μετακίνησης</strong> στον φυλλομετρητή σας, μέχρι να ολοκληρωθεί ο υπολογισμός.
+            Παρακαλώ κλείστε αυτό το μήνυμα μόλις το διαβάσετε.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Κλείσιμο</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="configNotice" (onHidden)="onHidden('#configNotice')" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header {{modalHeader | async}}" >
               <h3 class="modal-title pull-left"><i class="fa fa-check-square-o"></i>&nbsp;&nbsp;{{ modalTitle | async }}</h3>
-            <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal('#configNotice')">
               <span aria-hidden="true"><i class="fa fa-times"></i></span>
             </button>
           </div>
@@ -243,15 +264,15 @@ import { IAppState } from "../../store/store";
 
     }
 
-    public showModal(): void {
-        (<any>$("#configNotice")).modal("show");
+    public showModal(popupMsgId): void {
+        (<any>$(popupMsgId)).modal("show");
     }
 
-    public hideModal(): void {
-        (<any>$("#configNotice")).modal("hide");
+    public hideModal(popupMsgId): void {
+        (<any>$(popupMsgId)).modal("hide");
     }
 
-    public onHidden(): void {
+    public onHidden(popupMsgId): void {
         // this.isModalShown.next(false);
     }
 
@@ -259,6 +280,7 @@ import { IAppState } from "../../store/store";
     ngOnDestroy() {
 
         (<any>$("#configNotice")).remove();
+        (<any>$("#approvedWaitingNotice")).remove();
 
         if (this.loginInfoSub)
             this.loginInfoSub.unsubscribe();
@@ -269,6 +291,7 @@ import { IAppState } from "../../store/store";
     ngOnInit() {
 
         (<any>$("#configNotice")).appendTo("body");
+        (<any>$("#approvedWaitingNotice")).appendTo("body");
 
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
@@ -344,7 +367,7 @@ import { IAppState } from "../../store/store";
                 this.modalTitle.next("Ρύθμιση Παραμέτρων");
                 this.modalText.next("Έγινε εφαρμογή των νέων σας ρυθμίσεων.");
                 this.modalHeader.next("modal-header-success");
-                this.showModal();
+                this.showModal("#configNotice");
             },
             error => {
                 this.settings$.next([{}]);
@@ -354,7 +377,7 @@ import { IAppState } from "../../store/store";
                 this.modalTitle.next("Ρύθμιση Παραμέτρων");
                 this.modalText.next("ΑΠΟΤΥΧΙΑ εφαρμογής των νέων σας ρυθμίσεων.");
                 this.modalHeader.next("modal-header-danger");
-                this.showModal();
+                this.showModal("#configNotice");
             });
     }
 
@@ -392,6 +415,7 @@ import { IAppState } from "../../store/store";
        {
 
          this.showLoader.next(true);
+         this.showModal("#approvedWaitingNotice");
          this.OffLineCalculationSub = this._hds.OffLinecalculationofSmallClasses(this.minedu_userName, this.minedu_userPassword)
                   .subscribe(data => {
                       this.showLoader.next(false);
