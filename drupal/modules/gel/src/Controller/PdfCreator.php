@@ -114,7 +114,7 @@ class PDFCreator extends ControllerBase {
 						$gelStudent = reset($gelStudents);
 
 						$config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
-						$eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config'));
+						$eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_gel'));
 						$eggrafesConfig = reset($eggrafesConfigs);
 						if (!$eggrafesConfig) {
 							 return $this->respondWithStatus([
@@ -292,7 +292,7 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->Cell($width+15, $height, $this->prepareString('Σχολείο τελευταίας φοίτησης:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 		$this->pdf->multiCell(0, $height, $this->prepareString($student->lastschool_schoolname->value), 0, 'L');
-		
+
 		if ( empty($student->am->value) || $this->webServiceEnabled==="0" ){
 			$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 			$this->pdf->Cell($width+15, $height, $this->prepareString('Τάξη τελευταίας φοίτησης:'), 0, 'L');
@@ -373,7 +373,7 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->Ln(4);
 
 		if ( empty($student->am->value) || $this->webServiceEnabled==="0" ){
-		
+
 			$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 			$regAddressTxt = 'ΤΚ: ' . $regiontk_decoded . ', ' . $regionarea_decoded;
 			$this->pdf->Cell($width, $height, $this->prepareString('Διεύθυνση κατοικίας: '), 0, 'L');
@@ -391,7 +391,7 @@ class PDFCreator extends ControllerBase {
 
 			$x = ($y_col1 > $y_col2) ? $x_col1 : $x_col2;
 			$y = ($y_col1 > $y_col2) ? $y_col1 : $y_col2;
-			$this->pdf->SetXY($x,$y); 
+			$this->pdf->SetXY($x,$y);
 		}
 
 		$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
