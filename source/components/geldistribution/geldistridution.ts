@@ -63,12 +63,13 @@ import { IAppState } from "../../store/store";
                    </select>
                    <br>
 
+                   <!--
                    <div class="form-group">
                            <label>Λύκειο Υποδοχής (Smart version)<span style="color: #ff0000;"></span>)</label><br/>
                            <input ngui-auto-complete [source]="observableSource.bind(this)" [list-formatter]="schoolListFormatter" [value-formatter]="schoolValueFormatter" [min-chars]="1" no-match-found-text="Δεν βρέθηκαν σχολεία"
                                (valueChanged)="schoolValueChanged($event)" placeholder="Πληκτρολογήστε κείμενο αναζήτησης. Με τη λέξη 'ΟΛΑ' εμφανίζονται όλα τα σχολεία." class="form-control">
                    </div>
-
+                   -->
 
                    <br>
                   <div class = "row selectedout" [hidden]="regionActive !== JuniorHighSchools$.id" style="margin: 0px 2px 0px 2px;">
