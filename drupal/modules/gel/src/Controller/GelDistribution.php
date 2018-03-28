@@ -369,8 +369,8 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                ], Response::HTTP_FORBIDDEN);
         }
 
-        //$chunks = spliti (",", $studentid, 1000);
-        $chunks = preg_split(',', $studentid);
+        $chunks = explode(",", $studentid);
+       // $chunks = preg_split(',', $studentid,1000);
 
            $this->logger->warning($studentid."1");
         foreach ($chunks as $studId =>$value )
