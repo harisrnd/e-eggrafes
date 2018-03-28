@@ -64,6 +64,7 @@ class CreateGelDemoData extends ControllerBase {
 	}
 
 
+
 	public function createData() {
 
 		$crypt = new Crypt();
@@ -75,10 +76,14 @@ class CreateGelDemoData extends ControllerBase {
 			$entity_manager = \Drupal::entityTypeManager();
 
 			$geluserid = \Drupal::currentUser()->id();
+			//$geluserid = 25;
 
 			$schoolIdsList = array();
 			$sCon = $this->connection->select('gel_school', 'eSchool')
-						 ->fields('eSchool', array('name', 'registry_no', 'unit_type_id'))
+						 ->fields('eSchool', array('name', 'registry_no', 'unit_type_id','edu_admin_id'))
+						 //περιοχή Γ' Αθήνας'
+						 ->condition('eSchool.edu_admin_id', 9, '=')
+						 //
 						 ->condition('eSchool.unit_type_id', 3, '=');
 			$gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 			foreach ($gelSchools as $gelSchool)	{
@@ -86,19 +91,20 @@ class CreateGelDemoData extends ControllerBase {
 			}
 
 
-			for ($i = 1; $i <= 10; $i++) {
+			for ($i = 1; $i <= 5000; $i++) {
 
 			  $curclass = rand(1,7);
 				$lastclass = rand(1,4);
 				$am = rand(1,100000);
 				$myschool_id = rand(1,100000);
+
 				$lastschool_id = rand(0, sizeof($schoolIdsList));
-				//$lastschool_schoolname = $gelSchools[$lastschool_id]->name;
-				//$lastschool_unittypeid = $gelSchools[$lastschool_id]->unit_type_id;
-				//$lastschool_registrynumber = $gelSchools[$lastschool_id]->registry_no;
-				$lastschool_schoolname = "8ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΙΛΙΟΥ";
-				$lastschool_unittypeid = 3;
-				$lastschool_registrynumber = "0501067";
+				$lastschool_schoolname = $gelSchools[$lastschool_id]->name;
+				$lastschool_unittypeid = $gelSchools[$lastschool_id]->unit_type_id;
+				$lastschool_registrynumber = $gelSchools[$lastschool_id]->registry_no;
+				//$lastschool_schoolname = "8ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΙΛΙΟΥ";
+				//$lastschool_unittypeid = 3;
+				//$lastschool_registrynumber = "0501067";
 
 
 
@@ -135,49 +141,54 @@ class CreateGelDemoData extends ControllerBase {
 				$entity_object = $entity_storage_student->create($student);
 				$entity_storage_student->save($entity_object);
 
-				$created_student_id = $entity_object->id();
-
-
 
 				//insert records in entity: 	gel_student_choices
 				//...
-				$entity_storage_student->resetCache();
+				$created_student_id = $entity_object->id();
 
-				/*
-				$studentChoices = array(
-					'name' => $geluserid,
-					'am' =>
-					'choice_id' => 1,
-					'student_id' =>$myschool_id,
-					'order_id' => $crypt->encrypt("όνομα" . $i),
-					'studentsurname' => $crypt->encrypt("επώνυμο" . $i),
-					'birthdate' => '01/01/1970',
-					'fatherfirstname' => $crypt->encrypt("όνομα_πατέρα" . $i),
-					'motherfirstname' => $crypt->encrypt("όνομα_μητέρας" . $i),
-					'regionaddress' => $crypt->encrypt("διεύθυνση" . $i),
-					'regionarea' => $crypt->encrypt("περιοχή" . $i),
-					'regiontk' => $crypt->encrypt("ΤΚ" . $i),
-					'nextclass' => $curclass,
-					'relationtostudent' => 'Γονέας/Κηδεμόνας',
-					'telnum' => $crypt->encrypt('6944123456'),
-					'guardian_name' => $crypt->encrypt('όνομα_κηδεμόνα'),
-					'guardian_surname' => $crypt->encrypt('επώνυμο_κηδεμόνα'),
-					'guardian_fathername' => $crypt->encrypt('όνομα_πατέρα_κηδεμόνα'),
-					'guardian_mothername' => $crypt->encrypt('όνομα_μητέρας_κηδεμόνα'),
-					'lastschool_class' => $lastclass,
-					'lastschool_schoolyear' => "2017-2018",
-					'lastschool_schoolname' => $lastschool_schoolname,
-					'lastschool_unittypeid' => $lastschool_unittypeid,
-					'lastschool_registrynumber' => $lastschool_registrynumber,
-					'agreement' => 1,
-					'myschool_currentsection' => "ΟΝΟΜΑ ΤΟΜΕΑ / ΟΜΑΔΑΣ ΠΡΟΣΑΝΑΤΟΛΙΣΜΟΥ"
-        );
-				*/
+				//$entity_storage_student->resetCache();
 
+				if ($curclass === 3 || $curclass === 7 || $curclass === 2 || $curclass === 6 ) 	{
+						$choice_id_OP = 0;
+						if ($curclass === 3 || $curclass === 7 )
+							$choice_id_OP = rand(15,17);
+						else if ($curclass === 2 || $curclass === 6)
+							$choice_id_OP = rand(15,16);
 
-		}
+						$studentChoicesOP = array(
+							'name' => '',
+							'student_id' =>$created_student_id,
+							'choice_id' => strval($choice_id_OP),
+		        );
+						$entity_storage_choice = $entity_manager->getStorage('gel_student_choices');
+						$entity_object = $entity_storage_choice->create($studentChoicesOP);
+						$entity_storage_choice->save($entity_object);
+				}
+				else if ($curclass === 1 || $curclass === 4 || $curclass === 3  )  {
+						//$choice_id_EPIL;
+						if ($curclass === 1 || $curclass === 4)
+							 //$choice_id_EPIL = rand(4,7);
+							 $choice_id_EPIL = $this->UniqueRandNum(4,7,2);
+						else if ($curclass === 3)
+							//$choice_id_EPIL = rand(8,13);
+							 $choice_id_EPIL = $this->UniqueRandNum(8,13,2);
 
-	}
+						for ($j=1; $j <= 2; $j++)	{
+								$studentChoicesEPIL = array(
+									'name' => '',
+									'student_id' =>$created_student_id,
+									'choice_id' => strval($choice_id_EPIL[$j-1]),
+									'order_id' => $j,
+								);
+								$entity_storage_choice = $entity_manager->getStorage('gel_student_choices');
+								$entity_object = $entity_storage_choice->create($studentChoicesEPIL);
+								$entity_storage_choice->save($entity_object);
+					} //end for
+				} //end if
+
+		} //end for
+
+	} //end try
 
 	catch (\Exception $e) {
 			$this->logger->warning($e->getMessage());
@@ -193,6 +204,8 @@ class CreateGelDemoData extends ControllerBase {
   $response->headers->set('X-AUTH-TOKEN', 'HELLOTOKEN');
   return $response;
 
-	}
+
+}
+
 
 }
