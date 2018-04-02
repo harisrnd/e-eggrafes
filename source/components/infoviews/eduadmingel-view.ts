@@ -128,7 +128,7 @@ import { HelperDataService } from "../../services/helper-data-service";
         else {
             this.regionActive = ind;
             this.showLoader.next(true);
-            this.CoursesPerPerfSub = this._hds.getCoursePerPerfecture(this.regionActive)
+            this.CoursesPerPerfSub = this._hds.getCoursePerPerfectureGel(this.regionActive)
                 .subscribe(data => {
                     this.CoursesPerPerf$.next(data);
                     this.showLoader.next(false);
