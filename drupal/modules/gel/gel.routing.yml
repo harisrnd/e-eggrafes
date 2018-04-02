@@ -140,3 +140,11 @@ gel.studentsfromgym:
     _controller: '\Drupal\gel\Controller\GelDistribution::FindStudentsPerSchoolGym'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.getcoursesgel:
+  path: '/gel/coursesperschgel/{schoolid}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::getCoursesGel'
+  requirements:
+    _user_is_logged_in: 'TRUE'
