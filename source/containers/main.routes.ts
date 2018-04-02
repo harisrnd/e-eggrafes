@@ -126,7 +126,7 @@ export const MainRoutes: Routes = [
     { path: "gel-application-submit", component: GelApplicationSubmit, canActivate: [StudentAuthGuard, StudentGelLockGuard] },
     { path: "school/gel-distribution", component: GelDistribution, canActivate: [EduAdminAuthGuard] },
     { path: "school/eduadmingel-view", component: EduadminGelView, canActivate: [EduAdminAuthGuard] },
-    { path: "school/directorgym-view", component: DirectorViewGym, canActivate: [SchoolAuthGuard] },
+    { path: "school/directorgym-view", component: DirectorViewGym, canActivate: [SchoolGelAuthGuard, SchoolGelStudentsLockedGuard]  },
 
 ];
 

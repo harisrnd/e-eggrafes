@@ -65,7 +65,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                 <div class="row"  style="line-height: 2em;">
                   <div class="col-md-6" style="font-weight: bold;" >{{StudentDetails$.name}} {{StudentDetails$.studentsurname}}</div>
                   <div class="col-md-3" style="font-weight: bold;" >{{StudentDetails$.regionaddress}}, {{StudentDetails$.regiontk}} - {{StudentDetails$.regionarea}}</div>
-                  <div class="col-md-3" style="font-weight: bold;" ><span class="pull-right" style="text-align: right; padding-right: 2px;">{{StudentperGym$.school}}</span></div>
+                  <div class="col-md-3" style="font-weight: bold;" ><span class="pull-right" style="text-align: right; padding-right: 2px;">{{StudentDetails$.gel}}</span></div>
                 </div>
                 </li>
        </div>
@@ -227,17 +227,22 @@ import { HelperDataService } from "../../services/helper-data-service";
         (<any>$("#applicationDeleteConfirm")).appendTo("body");
         (<any>$("#applicationDeleteError")).appendTo("body");
         this.showLoader.next(true);
-        this.CoursesPerSchoolSub = this._hds.FindStudentsPerGym().subscribe(x => {
-            this.CoursesPerSchool$.next(x);
+        this.StudentInfoSub = this._hds.FindStudentsPerGym().subscribe(data => {
+            this.StudentInfo$.next(data);
+            //this.retrievedStudent.next(true);
             this.showLoader.next(false);
         },
-            error => {
-                this.CoursesPerSchool$.next([{}]);
-                console.log("Error Getting courses perSchool");
-                this.showLoader.next(false);
-            });
+        error => {
+            this.CoursesPerSchool$.next([{}]);
+            this.showLoader.next(false);
+            if (error.status === 404) {
+                this.showModal("#emptyselection");
+            } else {
+                this.showModal("#errorselection");
+            }
+        });
     }
-
+/* 
     findstudent(taxi) {
         this.showLoader.next(true);
         this.retrievedStudent.next(false);
@@ -258,7 +263,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                 }
             });
 
-    }
+    } */
 
     setActive(ind) {
         this.StudentActive = -1;
