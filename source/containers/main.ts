@@ -32,8 +32,8 @@ export default class Main {
         });
 
         const storeEnhancers =
-          _devTools.isEnabled() ?
-          [ _devTools.enhancer() ] :
+          //_devTools.isEnabled() ?
+          //[ _devTools.enhancer() ] :
           [];
 
         _ngRedux.configureStore(

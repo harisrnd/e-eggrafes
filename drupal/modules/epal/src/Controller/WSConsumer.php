@@ -97,6 +97,10 @@ class WSConsumer extends ControllerBase
         //formal code
         $ts_start = microtime(true);
 
+        //test parameters
+        $didactic_year_id = "25";
+        //end test
+
         try {
             $result = $this->client->getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no);
         } catch (\Exception $e) {
@@ -109,7 +113,7 @@ class WSConsumer extends ControllerBase
 
         return (new JsonResponse([
                 'message' => 'Επιτυχία',
-                'data' => $result
+                'data' => json_decode($result)
             ]))
             ->setStatusCode(Response::HTTP_OK);
     }

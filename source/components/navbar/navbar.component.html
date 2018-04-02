@@ -127,7 +127,7 @@
                                         <a class="nav-link" [routerLink]="['/school/smallclassapprovement']" [routerLinkActive]="['active']"><b>Εγκρίσεις Ολιγομελών </b></a>
                                     </li>
                                 </div>
-                               
+
 
 
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
@@ -148,7 +148,13 @@
                                 </div>
                                 <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 1)" class="nav-item">
                                     <li *ngIf="authRole=='dide'" class="nav-item">
-                                        <a class="nav-link" [routerLink]="['school/gel-distribution']" [routerLinkActive]="['active']"><b>Τοποθετήσεις Μαθητών σε Λύκεια</b></a>
+                                        <a class="nav-link" [routerLink]="['school/gel-distribution']" [routerLinkActive]="['active']"><b>Τοποθετήσεις Μαθητών</b></a>
+                                    </li>
+                                </div>
+
+                                <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 1)" class="nav-item">
+                                    <li *ngIf="authRole=='dide'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['school/gel-distribution-auto']" [routerLinkActive]="['active']"><b>Αυτόματη Τοποθέτηση Μαθητών</b></a>
                                     </li>
                                 </div>
 

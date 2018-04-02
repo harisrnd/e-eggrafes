@@ -82,9 +82,9 @@ class CreateGelDemoData extends ControllerBase {
 			$sCon = $this->connection->select('gel_school', 'eSchool')
 						 ->fields('eSchool', array('name', 'registry_no', 'unit_type_id','edu_admin_id'))
 						 //περιοχή Γ' Αθήνας'
-						 ->condition('eSchool.edu_admin_id', 9, '=')
+						 ->condition('eSchool.edu_admin_id', 9, '=');
 						 //
-						 ->condition('eSchool.unit_type_id', 3, '=');
+						 //->condition('eSchool.unit_type_id', 3, '=');
 			$gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 			foreach ($gelSchools as $gelSchool)	{
 				array_push($schoolIdsList, $gelSchool->id);
