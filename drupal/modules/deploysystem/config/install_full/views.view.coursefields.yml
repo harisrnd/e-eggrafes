@@ -1,3 +1,4 @@
+uuid: eb650573-8e1e-42f5-82a4-8b8ca4608ab2
 langcode: el
 status: true
 dependencies:
@@ -9,13 +10,13 @@ dependencies:
     - user.role.ministry
     - user.role.regioneduadmin
   module:
-    - basic_auth
     - epalreadydata
+    - hal
     - rest
     - serialization
     - user
 _core:
-  default_config_hash: YTXNI4Qb3Jgg7KwwlzgRShhY83j2js-q24x9a-SgLgg
+  default_config_hash: WcW93Bp9a9f1vyI-aQ9K13DuQu-kVKr4CL66wdqU8-w
 id: coursefields
 label: coursefields
 module: views
@@ -292,9 +293,9 @@ display:
       style:
         type: serializer
         options:
-          grouping: {  }
-          uses_fields: false
-          formats: {  }
+          formats:
+            hal_json: hal_json
+            json: json
       row:
         type: data_field
         options:

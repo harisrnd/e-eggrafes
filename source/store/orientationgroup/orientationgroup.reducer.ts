@@ -24,18 +24,14 @@ export function OrientationGroupReducer(state: IOrientationGroupRecords = ORIENT
         const indexOfListingToUpdate = list.findIndex(listing => {
             return listing.get('id') === action.payload.newChoice;});
 
-            console.log(action.payload.newChoice);
-            console.log(indexOfListingToUpdate);
-
-
             if (action.payload.isSelected === 1)
                 list.setIn([indexOfListingToUpdate, "selected"], false);
             else
                 list.setIn([indexOfListingToUpdate, "selected"], true);
-            }); 
+            });
 
 
-   
+
         case ORIENTATIONGROUP_SAVE:
                  return state.withMutations(function(list) {
                        if (action.payload.isSelected === 1)

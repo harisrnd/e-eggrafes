@@ -1,15 +1,19 @@
-﻿uuid: dc758fe1-f283-452d-837a-6b3fa66df6f6
-langcode: en
+uuid: 8c1bd8db-8db0-4f66-9cc1-9dd8be5c67b2
+langcode: el
 status: true
 dependencies:
   config:
     - user.role.administrator
     - user.role.applicant
+    - user.role.authenticated
   module:
     - gel
+    - hal
     - rest
     - serialization
     - user
+_core:
+  default_config_hash: 6QPlOuPuPwUCRXKsWXlO15DFB9KNwglJ6GFOuEYg8-U
 id: classes_list
 label: classes_list
 module: views
@@ -29,6 +33,7 @@ display:
         type: role
         options:
           role:
+            authenticated: authenticated
             administrator: administrator
             applicant: applicant
       cache:
@@ -308,9 +313,9 @@ display:
       style:
         type: serializer
         options:
-          grouping: {  }
-          uses_fields: false
-          formats: {  }
+          formats:
+            hal_json: hal_json
+            json: json
       row:
         type: data_field
         options:

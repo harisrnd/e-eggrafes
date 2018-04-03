@@ -6,6 +6,8 @@ oauthost.log_in_go:
     _access: 'TRUE'
 oauthost.callback_log_in:
   path: /oauth/cb
+  options:
+    no_cache: 'TRUE' 
   defaults:
     _controller: '\Drupal\oauthost\Controller\CBController::loginCB'
   requirements:
@@ -18,7 +20,6 @@ oauthost.log_out_go:
     _controller: '\Drupal\oauthost\Controller\OAuthLogout::logoutGo'
   requirements:
     _user_is_logged_in: 'TRUE'
-
 oauthost.user.send_verification_code:
   path: '/oauth/user/sendvercode'
   options:

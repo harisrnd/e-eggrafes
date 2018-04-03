@@ -29,13 +29,10 @@ export function gelclassesReducer(state: IGelClassRecords = GELCLASSES_INITIAL_S
             const indexOfListingToUpdate = list.findIndex(listing => {
                 return listing.get('id') === action.payload.new_selected_choice_id;});
 
-            console.log(indexOfListingToUpdate)
             list.setIn([indexOfListingToUpdate, "selected"], true);
-    
+
             const indexOfListingToUpdate2 = list.findIndex(listing => {
                 return listing.get('id') === action.payload.selected_id;});
-
-            console.log(indexOfListingToUpdate2)
 
             list.setIn([indexOfListingToUpdate2, "selected"], false);
         });
@@ -46,7 +43,7 @@ export function gelclassesReducer(state: IGelClassRecords = GELCLASSES_INITIAL_S
                 resetedGelClasses.push(recordify<IGelClass, IGelClassRecord>({ id: gelclass.id, name: gelclass.name, category: gelclass.category, selected: false}));
         });
         return List(resetedGelClasses);
-        
+
         case GELCLASSES_INIT:
             return GELCLASSES_INITIAL_STATE;
         default: return state;

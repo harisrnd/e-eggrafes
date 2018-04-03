@@ -28,6 +28,9 @@ class GelDistribution extends ControllerBase
     protected $entityTypeManager;
     protected $logger;
     protected $connection;
+    protected $language;
+    protected $currentuser;
+    protected $globalCounterId = 1;
 
     public function __construct(
         EntityTypeManagerInterface $entityTypeManager,
@@ -40,6 +43,9 @@ class GelDistribution extends ControllerBase
             $connection = Database::getConnection();
             $this->connection = $connection;
         $this->logger = $loggerChannel->get('gel');
+    		$this->language =  \Drupal::languageManager()->getCurrentLanguage()->getId();
+        $this->currentuser = \Drupal::currentUser()->id();
+
     }
 
    public static function create(ContainerInterface $container)
@@ -72,7 +78,6 @@ class GelDistribution extends ControllerBase
             if ($userRole === '') {
                 return $this->respondWithStatus([
                     'error_code' => 4003,
-                    "message" => t("1")
                 ], Response::HTTP_FORBIDDEN);
             } elseif ($userRole === 'regioneduadmin') {
                 $sCon = $this->connection->select('gel_school', 'eSchool')
@@ -89,8 +94,8 @@ class GelDistribution extends ControllerBase
                               ->condition('eSchool.unit_type_id', 3 , '=');
                  $sCon -> orderBy('eSchool.name', 'ASC');
                  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                
-            } 
+
+            }
 
 
 
@@ -748,8 +753,8 @@ public function getSchoolGel(Request $request)
                               ->condition('eSchool.unit_type_id',4  , '=');
                  $sCon -> orderBy('eSchool.name', 'ASC');
                  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                
-            } 
+
+            }
 
 
 
@@ -814,7 +819,7 @@ public function getSchoolGel(Request $request)
             if ($SchoolCat) {
                 $categ = $SchoolCat->metathesis_region->value;
                 $operation_shift = $SchoolCat->operation_shift->value;
-              
+
             } else {
                 return $this->respondWithStatus([
                     'message' => t('No school located'),
@@ -828,7 +833,7 @@ public function getSchoolGel(Request $request)
             if ($CourseA) {
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Α'));
-               
+
                 foreach ($CourseA as $object) {
                     $list[] = array(
                         'id' => '1',
@@ -836,12 +841,12 @@ public function getSchoolGel(Request $request)
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
                 }
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Β'));
-                
+
                 foreach ($CourseA as $object) {
                     $list[] = array(
                         'id' => '2',
@@ -849,12 +854,12 @@ public function getSchoolGel(Request $request)
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
                 }
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Γ'));
-               
+
                 foreach ($CourseA as $object) {
                     $list[] = array(
                         'id' => '3',
@@ -862,14 +867,14 @@ public function getSchoolGel(Request $request)
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
                 }
 
                 if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ') {
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Δ'));
-               
+
                 foreach ($CourseA as $object) {
                     $list[] = array(
                         'id' => '4',
@@ -877,7 +882,7 @@ public function getSchoolGel(Request $request)
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
                 }
               }
@@ -885,7 +890,7 @@ public function getSchoolGel(Request $request)
 
 
 
-                
+
 
                      $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
                     ->loadByProperties(array( 'choicetype' => 'ΕΠΙΛΟΓΗ'));
@@ -910,11 +915,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
                           $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
                     ->loadByProperties(array( 'choicetype' => 'ΟΠ'));
@@ -939,11 +944,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
 
                 $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
@@ -969,11 +974,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
                           $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
                     ->loadByProperties(array( 'choicetype' => 'ΟΠ'));
@@ -998,11 +1003,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
 
                     $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
@@ -1028,11 +1033,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
                           $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
                     ->loadByProperties(array( 'choicetype' => 'ΟΠ'));
@@ -1057,18 +1062,18 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
 
 
             }
 
 
-          
+
 
             if ($CourseA) {
                 return $this->respondWithStatus($list, Response::HTTP_OK);
@@ -1084,13 +1089,140 @@ public function getSchoolGel(Request $request)
         }
     }
 
-
-private function respondWithStatus($arr, $s)
-    {
+    private function respondWithStatus($arr, $s)  {
         $res = new JsonResponse($arr);
         $res->setStatusCode($s);
-
         return $res;
     }
+
+//πιθανότατα ΔΕΝ υπάρχει αναγακιότητα χρήσης της
+/*
+public function autoDistribution(Request $request)
+{
+  // GET method is checked
+  if (!$request->isMethod('GET')) {
+      return $this->respondWithStatus([
+        "message" => t("Method Not Allowed")
+      ], Response::HTTP_METHOD_NOT_ALLOWED);
+  }
+
+  $authToken = $request->headers->get('PHP_AUTH_USER');
+  $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+  $user = reset($users);
+  if ($user) {
+      //check Role
+      $selectionId = $user->init->value;
+      $userRoles = $user->getRoles();
+      $userRole = '';
+      foreach ($userRoles as $tmpRole) {
+          if ($tmpRole === 'eduadmin') {
+              $userRole = $tmpRole;
+          }
+      }
+      if ($userRole !== 'eduadmin') {
+          return $this->respondWithStatus([
+              'message' => "Not Valid Role",
+              'error_code' => 4003,
+          ], Response::HTTP_FORBIDDEN);
+      }
+      else
+      {
+        try {
+            //check gel ministry settings
+            $eggrafesConfigs = $this->entityTypeManager->getStorage('eggrafes_config')->loadByProperties(array('name' => 'eggrafes_config_gel'));
+            $eggrafesConfig = reset($eggrafesConfigs);
+            if (!$eggrafesConfig) {
+                return $this->respondWithStatus([
+                    "error_code" => 3001
+                ], Response::HTTP_FORBIDDEN);
+            }
+            if (!$eggrafesConfig->lock_school_students_view->value) {
+                return $this->respondWithStatus([
+                    "error_code" => 1000
+                ], Response::HTTP_OK);
+            }
+            if (!$eggrafesConfig->lock_results->value) {
+                return $this->respondWithStatus([
+                    "error_code" => 1001
+                ], Response::HTTP_OK);
+            }
+
+            //εύρεση σχολείων ΓΕΛ της ΔΔΕ
+            $sCon = $this->connection->select('gel_school', 'eSchool')
+                ->fields('eSchool', array('id', 'name', 'unit_type_id','edu_admin_id', 'registry_no'))
+                ->condition('eSchool.edu_admin_id', $selectionId , '=')
+                ->condition('eSchool.unit_type_id', 4 , '=');
+
+           $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+           $schoollist_ids = array();
+           $schoollist_regno = array();
+
+           foreach ($schools as $school) {
+              array_push($schoollist_ids, $school->id);
+              array_push($schoollist_regno, $school->registry_no);
+            }
+
+            //εύρεση μαθητών που έχουν κάνει αίτηση για να πάνε Β' / Γ' / Δ' Λυκείου, με σχολείο τελευταίας φοίτησης σε ΓΕΛ της ΔΔΕ
+            $sConStud = $this->connection->select('gel_student', 'eStudent')
+                  ->fields('eStudent', array('id','lastschool_registrynumber'))
+                  ->condition('eStudent.nextclass', 1 , '!=')
+                  ->condition('eStudent.nextclass', 4 , '!=')
+                  //->condition('eStudent.lastschool_registrynumber', $schoollist_regno, 'IN')
+                  ->condition('eStudent.lastschool_unittypeid', "4", '=')
+                  ->condition('eStudent.delapp', 0 , '=');
+            $students = $sConStud->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+            $schoolId = -1;
+            foreach ($students as $student)   {
+              //εύρεση id σχολείου τελευταίας φοίτησης με βάση το registry_no
+              for ($k=0; $k < sizeof($schoollist_regno); $k++) {
+                  if ($student->lastschool_registrynumber === $schoollist_regno[$k])  {
+                      $schoolId =  $schoollist_ids[$k];
+                      break;
+                  }
+              }
+
+              if ($schoolId !== -1) {
+                    //εισαγωγή αποτελεσμάτων
+                    $timestamp = strtotime(date("Y-m-d"));
+                    $this->connection->insert('gelstudenthighschool')->fields([
+                        'id' => $this->globalCounterId++,
+                        'uuid' => \Drupal::service('uuid')->generate(),
+                        'langcode' => $this->language,
+                        'user_id' => $this->currentuser,
+                        //'user_id' => 1,
+                        'student_id'=> $student->id,
+                        'school_id'=> $schoolId,
+                        'status' => 1,
+                        'created' => $timestamp,
+                        'changed' => $timestamp
+                    ])->execute();
+                }
+            }
+
+            return $this->respondWithStatus([
+                    'message' => t("Success"),
+                ], Response::HTTP_OK);
+          }
+
+          catch (\Exception $e) {
+              $this->logger->error($e->getMessage());
+              return $this->respondWithStatus([
+                      "error_code" => 1002,
+                      'message' => t("error in autoDistribution function"),
+                  ], Response::HTTP_FORBIDDEN);
+          }
+      }
+
+  } else {
+      return $this->respondWithStatus([
+          'message' => t('User not found!'),
+      ], Response::HTTP_FORBIDDEN);
+  }
+
+}
+*/
+
+
 
 }

@@ -632,7 +632,6 @@ import { IAppState } from "../../store/store";
 
         this.GelSubmittedDetailsSub = this._hds.getGelStudentDetails(this.applicationGelIdActive).subscribe(data => {
             this.GelSubmittedDetails$.next(data);
-            console.log(this.applicationGelIdActive);
             this.createStoreWithGelAppData();
             this.showLoader$.next(false);
         },
@@ -794,7 +793,7 @@ import { IAppState } from "../../store/store";
             this._sfa.getSectorFields(false).then(()=>{
                 this._sfa.saveSectorFieldsSelectedwithIds(-1, this.EpalSubmittedDetails$.getValue()[0].currentsector_id );
                 this.showLoader$.next(false);
-            }); 
+            });
         }
         else if (class_id === "3" || class_id === "4" ){
             this.showLoader$.next(true);
