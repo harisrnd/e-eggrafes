@@ -94,8 +94,8 @@ class GelDistribution extends ControllerBase
                               ->condition('eSchool.unit_type_id', 3 , '=');
                  $sCon -> orderBy('eSchool.name', 'ASC');
                  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                
-            } 
+
+            }
 
 
 
@@ -753,8 +753,8 @@ public function getSchoolGel(Request $request)
                               ->condition('eSchool.unit_type_id',4  , '=');
                  $sCon -> orderBy('eSchool.name', 'ASC');
                  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                
-            } 
+
+            }
 
 
 
@@ -819,7 +819,7 @@ public function getSchoolGel(Request $request)
             if ($SchoolCat) {
                 $categ = $SchoolCat->metathesis_region->value;
                 $operation_shift = $SchoolCat->operation_shift->value;
-              
+
             } else {
                 return $this->respondWithStatus([
                     'message' => t('No school located'),
@@ -833,7 +833,7 @@ public function getSchoolGel(Request $request)
             if ($CourseA) {
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Α'));
-               
+
                 foreach ($CourseA as $object) {
                     $list[] = array(
                         'id' => '1',
@@ -841,12 +841,12 @@ public function getSchoolGel(Request $request)
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
                 }
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Β'));
-                
+
                 foreach ($CourseA as $object) {
                     $list[] = array(
                         'id' => '2',
@@ -854,12 +854,12 @@ public function getSchoolGel(Request $request)
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
                 }
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Γ'));
-               
+
                 foreach ($CourseA as $object) {
                     $list[] = array(
                         'id' => '3',
@@ -867,14 +867,14 @@ public function getSchoolGel(Request $request)
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
                 }
 
                 if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ') {
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Δ'));
-               
+
                 foreach ($CourseA as $object) {
                     $list[] = array(
                         'id' => '4',
@@ -882,7 +882,7 @@ public function getSchoolGel(Request $request)
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
                 }
               }
@@ -890,7 +890,7 @@ public function getSchoolGel(Request $request)
 
 
 
-                
+
 
                      $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
                     ->loadByProperties(array( 'choicetype' => 'ΕΠΙΛΟΓΗ'));
@@ -915,11 +915,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
                           $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
                     ->loadByProperties(array( 'choicetype' => 'ΟΠ'));
@@ -944,11 +944,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
 
                 $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
@@ -974,11 +974,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
                           $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
                     ->loadByProperties(array( 'choicetype' => 'ΟΠ'));
@@ -1003,11 +1003,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
 
                     $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
@@ -1033,11 +1033,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
                           $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
                     ->loadByProperties(array( 'choicetype' => 'ΟΠ'));
@@ -1062,18 +1062,18 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                          );
                     }
-                    
+
                     }
                     }
-                    }       
-                   
+                    }
+
 
 
 
             }
 
 
-          
+
 
             if ($CourseA) {
                 return $this->respondWithStatus($list, Response::HTTP_OK);
@@ -1089,8 +1089,14 @@ public function getSchoolGel(Request $request)
         }
     }
 
+    private function respondWithStatus($arr, $s)  {
+        $res = new JsonResponse($arr);
+        $res->setStatusCode($s);
+        return $res;
+    }
 
-
+//πιθανότατα ΔΕΝ υπάρχει αναγακιότητα χρήσης της
+/*
 public function autoDistribution(Request $request)
 {
   // GET method is checked
@@ -1215,14 +1221,8 @@ public function autoDistribution(Request $request)
   }
 
 }
+*/
 
 
-private function respondWithStatus($arr, $s)
-    {
-        $res = new JsonResponse($arr);
-        $res->setStatusCode($s);
-
-        return $res;
-    }
 
 }

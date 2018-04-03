@@ -98,7 +98,7 @@ class WSConsumer extends ControllerBase
         $ts_start = microtime(true);
 
         //test parameters
-        $didactic_year_id = "25";
+        //$didactic_year_id = "25";
         //end test
 
         try {

@@ -629,6 +629,7 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     }
 
+    /*
     makeAutoDistribution() {
 
       this.loginInfo$.getValue().forEach(loginInfoToken => {
@@ -642,22 +643,8 @@ export class HelperDataService implements OnInit, OnDestroy {
       let options = new RequestOptions({ headers: headers });
       return this.http.get(`${AppSettings.API_ENDPOINT}/gel/autodistribution/`, options)
          .map(response => response.json());
-
-      /*
-      return new Promise((resolve, reject) => {
-            this.http.post(`${AppSettings.API_ENDPOINT}/gel/autodistribution`, {}, options)
-                .map(response => response.json())
-                .subscribe(data => {
-                    resolve(data);
-                },
-                error => {
-                    reject("Error POST in makeAutoDistribution");
-                });
-        });
-      */
-
-
     }
+    */
 
 
     makeReport(username, userpassword, routepath, regionsel, adminsel, schsel, clsel, secsel, coursel, distribfinal) {
@@ -1538,7 +1525,6 @@ getHighSchoolperDide()
 
 getStudentsPerSchool(schoolid)
 {
-        console.log(schoolid);
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -1577,7 +1563,6 @@ saveHighScoolSelection(studentid,oldschool, schoolid)
 
 getHighSchoolSelection(id)
 {
-        console.log(id);
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
