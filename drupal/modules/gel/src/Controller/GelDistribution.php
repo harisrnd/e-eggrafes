@@ -1122,7 +1122,9 @@ public function FindStudentsPerSchoolGym(Request $request){
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if ($tmpRole === 'gel') {
+                $this->logger->warning('tmpRole='.$tmpRole);
+
+                if ($tmpRole === 'gym') {
                     $userRole = $tmpRole;
                 }
             }
@@ -1130,7 +1132,7 @@ public function FindStudentsPerSchoolGym(Request $request){
                 return $this->respondWithStatus([
                          'error_code' => "school registry_no value",
                      ], Response::HTTP_FORBIDDEN);
-            } elseif ($userRole === 'gel') {
+            } elseif ($userRole === 'gym') {
 
                 $studentPerSchool_gel = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(['lastschool_registrynumber'=> "".$school->registry_no->value]);// '9ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΑΙΓΑΛΕΩ']);
                 $studentPerSchool_epal = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(['lastschool_registrynumber'=> "".$school->registry_no->value]);// '9ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΑΙΓΑΛΕΩ']);
