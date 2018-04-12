@@ -201,7 +201,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.get(`${AppSettings.API_ENDPOINT}/sectorfields/list`, options)
+            this.http.get(`${AppSettings.API_ENDPOINT}/sectorfields/list` + `?q=sectorfields/list&_format=json` , options)
                 .map(response => <ISectorField[]>response.json())
                 .subscribe(data => {
                     resolve(data);
@@ -237,13 +237,13 @@ export class HelperDataService implements OnInit, OnDestroy {
                           (this.lockapp === 1 && editApp === true)  )
                      {
                             if (classActive === 1)
-                                getConnectionString = `${AppSettings.API_ENDPOINT}/regions/list`;
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/regions/list` + `?q=regions/list&_format=json` ;
                             else if (classActive === 2)
-                                getConnectionString = `${AppSettings.API_ENDPOINT}/sectorsperschool/list?sector_id=${courseActive}`;
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/sectorsperschool/list?sector_id=${courseActive}` + `?q=sectorsperschool/list&_format=json`;
                             else if (classActive === 3)
-                                getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool/list?course_id=${courseActive}`;
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool/list?course_id=${courseActive}` + `?q=coursesperschool/list&_format=json`;
                             else if (classActive === 4)
-                                getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool_night/list?course_id=${courseActive}`;
+                                getConnectionString = `${AppSettings.API_ENDPOINT}/coursesperschool_night/list?course_id=${courseActive}` + `?q=coursesperschool_night/list&_format=json`;
                       }
                       else
                       {
@@ -291,7 +291,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.get(`${AppSettings.API_ENDPOINT}/coursesectorfields/list`, options)
+            this.http.get(`${AppSettings.API_ENDPOINT}/coursesectorfields/list` + `?q=coursesectorfields/list&_format=json`, options)
                 .map(response => response.json())
                 .subscribe(data => {
                     resolve(this.transformSectorCoursesSchema(data));
@@ -629,6 +629,23 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     }
 
+    /*
+    makeAutoDistribution() {
+
+      this.loginInfo$.getValue().forEach(loginInfoToken => {
+          this.authToken = loginInfoToken.auth_token;
+          this.authRole = loginInfoToken.auth_role;
+      });
+      let headers = new Headers({
+         "Content-Type": "application/json",
+      });
+      this.createAuthorizationHeader(headers);
+      let options = new RequestOptions({ headers: headers });
+      return this.http.get(`${AppSettings.API_ENDPOINT}/gel/autodistribution/`, options)
+         .map(response => response.json());
+    }
+    */
+
 
     makeReport(username, userpassword, routepath, regionsel, adminsel, schsel, clsel, secsel, coursel, distribfinal) {
 
@@ -757,7 +774,7 @@ export class HelperDataService implements OnInit, OnDestroy {
 
         // return this.http.get(`${AppSettings.API_ENDPOINT}` + routepath , options)
         //    .map(response => response.json());
-        return this.http.get(`${AppSettings.API_ENDPOINT}/regionfields/list`, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/regionfields/list` + `?q=regionfields/list&_format=json`, options)
             .map(response => response.json());
 
     }
@@ -771,7 +788,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createMinistryAuthorizationHeader(headers, username, userpassword);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`${AppSettings.API_ENDPOINT}/adminfields/list/?region=` + regionid, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/adminfields/list/?region=` + regionid + `?q=adminfields/list&_format=json`, options)
             .map(response => response.json());
     }
 
@@ -784,7 +801,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createMinistryAuthorizationHeader(headers, username, userpassword);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`${AppSettings.API_ENDPOINT}/schoolfields_per_region/list/?region=` + regionid, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/schoolfields_per_region/list/?region=` + regionid + `?q=schoolfields_per_region/list&_format=json`, options)
             .map(response => response.json());
     }
 
@@ -797,7 +814,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createMinistryAuthorizationHeader(headers, username, userpassword);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`${AppSettings.API_ENDPOINT}/schoolfields_per_admin/list/?adminarea=` + adminid, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/schoolfields_per_admin/list/?adminarea=` + adminid + `?q=schoolfields_per_admin/list&_format=json`, options)
             .map(response => response.json());
     }
 
@@ -816,9 +833,6 @@ export class HelperDataService implements OnInit, OnDestroy {
     }
 
     retrieveAdminSettings(schooltype, username, userpassword) {
-
-        console.log("What's this???");
-        console.log(schooltype);
 
         let headers = new Headers({
             "Content-Type": "application/json",
@@ -869,7 +883,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createMinistryAuthorizationHeader(headers, username, userpassword);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`${AppSettings.API_ENDPOINT}/sectorfields/list`, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/sectorfields/list` + `?q=sectorfields/list&_format=json`, options)
             .map(response => response.json());
     }
 
@@ -882,7 +896,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createMinistryAuthorizationHeader(headers, username, userpassword);
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.get(`${AppSettings.API_ENDPOINT}/coursefields/list/?sector_id=` + sectorid, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/coursefields/list/?sector_id=` + sectorid + `?q=coursefields/list&_format=json`, options)
             .map(response => response.json());
     }
 
@@ -1095,7 +1109,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(`${AppSettings.API_ENDPOINT}/sectorfields/list`, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/sectorfields/list` + `?q=sectorfields/list&_format=json`, options)
             .map(response => response.json());
 
 
@@ -1113,7 +1127,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(`${AppSettings.API_ENDPOINT}/coursefields/list/?sector_id=` + sectorid, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/coursefields/list/?sector_id=` + sectorid + `?q=coursefields&_format=json`, options)
             .map(response => response.json());
 
     }
@@ -1255,7 +1269,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list/?type_id=`+ typeid + `&class_id=` +classid, options)
+            this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list/?type_id=`+ typeid + `&class_id=` +classid + `?q=choicesperclass/list&_format=json`, options)
                 .map(response => <IOrientationGroupObj[]>response.json())
 
                 .subscribe(data => {
@@ -1280,7 +1294,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list?type_id=ΕΠΙΛΟΓΗ&class_id=` + activeClassId, options)
+            this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list?type_id=ΕΠΙΛΟΓΗ&class_id=` + activeClassId + `?q=choicesperclass&_format=json`, options)
                 .map(response => <IElectiveCourseField[]>response.json())
 
                 .subscribe(data => {
@@ -1306,7 +1320,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list?type_id=ΞΓ&class_id=1`, options)
+            this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list?type_id=ΞΓ&class_id=1` + `?q=choicesperclass/list&_format=json`, options)
                 .map(response => <ILangCourseField[]>response.json())
 
                 .subscribe(data => {
@@ -1332,7 +1346,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.get(`${AppSettings.API_ENDPOINT}/classes_list`, options)
+            this.http.get(`${AppSettings.API_ENDPOINT}/classes_list?q=classes_list&_format=json`, options)
                 .map(response => <IGelClassRecord[]>response.json())
                 .subscribe(data => {
                     resolve(data);
@@ -1511,7 +1525,6 @@ getHighSchoolperDide()
 
 getStudentsPerSchool(schoolid)
 {
-        console.log(schoolid);
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -1550,7 +1563,6 @@ saveHighScoolSelection(studentid,oldschool, schoolid)
 
 getHighSchoolSelection(id)
 {
-        console.log(id);
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;

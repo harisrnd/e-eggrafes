@@ -399,7 +399,7 @@ import { StudentGelCourseChosen } from "../students/student";
 
         //aitisiObj[0].am = std.get("am");;
         //if (aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)
-        //  aitisiObj[0].am =  std.get("am"); 
+        //  aitisiObj[0].am =  std.get("am");
         // else {
         //   aitisiObj[0].regionaddress = std.get("regionaddress");
         //   aitisiObj[0].regionarea = std.get("regionarea");
@@ -431,13 +431,9 @@ import { StudentGelCourseChosen } from "../students/student";
         if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >= this.limitSchoolYear && aitisiObj[0].lastschool_unittypeid != "40")  {
               //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
                       //aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
-                
+
                 let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
                 let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
-
-                console.log(aitisiObj[0].studentbirthdate);
-                console.log(birthparts);
-
 
                 this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
                 date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
@@ -460,7 +456,7 @@ import { StudentGelCourseChosen } from "../students/student";
                         else if (data.data["levelName"]==='Γ'){
                             aitisiObj[0].lastschool_class = 3;
                         }
-                        
+
                         aitisiObj[0].section_name = data.data["sectionName"];
                     }
                     else {

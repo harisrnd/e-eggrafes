@@ -20,6 +20,10 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Drupal\oauthost\Crypt;
 require ('RedirectResponseWithCookieExt.php');
 
+use \Drupal\Core\Routing\TrustedRedirectResponse;
+use \Drupal\Core\Routing\CacheableSecuredRedirectResponse;
+use \Drupal\Component\HttpFoundation\SecuredRedirectResponse;
+
 class CBController extends ControllerBase
 {
     protected $entity_query;
@@ -67,6 +71,10 @@ class CBController extends ControllerBase
 
     public function loginCB(Request $request)
     {
+        //test Redirecting
+        //return new RedirectResponseWithCookieExt("http://www.in.gr", 302, []);
+        //end test
+
         $oauthostSessions = $this->entityTypeManager->getStorage('oauthost_session')->loadByProperties(array('name' => $request->query->get('sid_ost')));
         $this->oauthostSession = reset($oauthostSessions);
         if ($this->oauthostSession) {
@@ -126,17 +134,30 @@ class CBController extends ControllerBase
         //$this->logger->notice('authToken='.$authToken.'***authVerifier='.$authVerifier);
         $schoolToken = $this->authenticatePhase2($request, $authToken, $authVerifier);
         if ($schoolToken) {
-            if ('oauthost_taxisnet_config' === $configRowName) {
+
+            //if ('oauthost_taxisnet_config' === $configRowName) {
                 /* $this->logger->notice('$configRowName='.$configRowName.'***url='.$this->redirect_url);
                 $cookie = new Cookie('auth_token', $schoolToken, 0, '/', null, false, false);
                 $cookie2 = new Cookie('auth_role', 'student', 0, '/', null, false, false); */
-                \Drupal::service('page_cache_kill_switch')->trigger();
-                return new RedirectResponseWithCookieExt($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
-            } else {
-                \Drupal::service('page_cache_kill_switch')->trigger();
-                return new RedirectResponseWithCookieExt($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
-            }
+
+                //$ts_start = microtime(true);
+                //\Drupal::service('page_cache_kill_switch')->trigger();
+                //$duration = microtime(true) - $ts_start;
+                //$this->logger->info(__METHOD__ . " :: timed [{$duration}]");
+                //return new RedirectResponseWithCookieExt($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
+                //return new TrustedRedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302);
+            //} else {
+                //$ts_start = microtime(true);
+                //\Drupal::service('page_cache_kill_switch')->trigger();
+                //$duration = microtime(true) - $ts_start;
+                //$this->logger->info(__METHOD__ . " :: timed [{$duration}]");
+                //return new RedirectResponseWithCookieExt($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
+                //return new TrustedRedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302);
+            //}
             //return new RedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
+
+            return new TrustedRedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302);
+            
         } else {
             $this->logger->notice('schoolToken false');
             $response = new Response();

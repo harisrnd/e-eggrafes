@@ -461,11 +461,6 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             aitisiObj["2"] = new StudentCourseChosen(null, this.courseSelected);
         }
 
-        console.log(this.wsEnabled.getValue());
-        console.log(aitisiObj[0].lastschool_schoolyear);
-        console.log(this.limitSchoolYear);
-
-
         //κλήση myschool web service
         if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >= this.limitSchoolYear && aitisiObj[0].lastschool_unittypeid != "40")  {
             
@@ -473,7 +468,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
 
             //console.log(aitisiObj[0].studentbirthdate);
-            //console.log(birthparts);  
+            //console.log(birthparts);
 
             this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
                       date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
@@ -582,7 +577,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
         let options = new RequestOptions({ headers: headers, method: "post", withCredentials: true });
         let connectionString = `${AppSettings.API_ENDPOINT}/epal/appsubmit`;
-        console.log(record);
+        //console.log(record);
         if (!newapp)
           //connectionString = `${AppSettings.API_ENDPOINT}/epal/appupdate/` + this.appId.getValue();
           connectionString = `${AppSettings.API_ENDPOINT}/epal/appupdate/` + this.appId.getValue() + '/' + nonCheckOccupancy;

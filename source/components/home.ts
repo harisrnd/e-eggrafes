@@ -32,6 +32,9 @@ import { GelStudentDataFieldsActions } from "../actions/gelstudentdatafields.act
     template: `
   <div>
        <form  method = "POST" action="{{apiEndPoint}}/oauth/login{{apiEndPointParams}}" #form>
+       <!--
+       <form  method = "POST" action="https://eduslim2.minedu.gov.gr/drupal//oauth/login{{apiEndPointParams}}" #form>
+       -->
 
             <!--
             <div class="bg-warning" style="padding: 2em;">
