@@ -56,15 +56,17 @@ import { HelperDataService } from "../../services/helper-data-service";
        <p style="margin-top: 20px; line-height: 2em;"> Παρακαλείστε να ελέγξετε και να επικοινωνησετε με την οικεία Διευθυνση Δευτεροβάθμιας Εκπαίδευσης σε περιπτωση που εντοπίσετε ελλείψεις. </p>
 
       <div class="row">
-         <div class="col-md-6" style="font-weight: bold;"> Ονοματεπώνυμο Μαθητή</div>
-         <div class="col-md-3" style="font-weight: bold;"> Διέυθυνση Κατοικίας Μαθητή</div>
-         <div class="col-md-3" style="font-weight: bold;"> <span class="pull-right" style="text-align: right; padding-right: 2px;">Λύκειο Εγγραφής Μαθητή</span></div>
+         <div class="col-md-2" style="font-size: 0.9em; font-weight: bold;"> A.M.</div>
+         <div class="col-md-3" style="font-size: 0.9em; font-weight: bold;"> Ονοματεπώνυμο</div>
+         <div class="col-md-3" style="font-size: 0.9em; font-weight: bold;"> Διέυθυνση Κατοικίας</div>
+         <div class="col-md-4" style="font-size: 0.9em; font-weight: bold;"> <span class="pull-right" style="text-align: right; padding-right: 2px;">Λύκειο Εγγραφής</span></div>
       </div>
-      <div *ngFor="let StudentDetails$  of StudentInfo$ | async; let i=index; let isOdd=odd; let isEven=even" >
+      <div *ngFor="let StudentDetails$  of StudentInfo$ | async; let i=index; let isOdd=odd; let isEven=even" style="font-size: 0.75em; font-weight: bold;" >
                 <li class="list-group-item isclickable" (click)="setActive(i)" [class.oddout]="isOdd" [class.evenout]="isEven">
-                <div class="row"  style="line-height: 2em;">
-                  <div class="col-md-4">{{StudentDetails$.name}} {{StudentDetails$.studentsurname}}</div>
-                  <div class="col-md-4">{{StudentDetails$.regionaddress}}, {{StudentDetails$.regiontk}} - {{StudentDetails$.regionarea}}</div>
+                <div class="row">
+                  <div class="col-md-2">{{StudentDetails$.am}}</div>
+                  <div class="col-md-3">{{StudentDetails$.name}} {{StudentDetails$.studentsurname}}</div>
+                  <div class="col-md-3">{{StudentDetails$.regionaddress}}, {{StudentDetails$.regionarea}}</div>
                   <div class="col-md-4"><span class="pull-right" style="text-align: right; padding-right: 2px;">{{StudentDetails$.gel}}</span></div>
                 </div>
                 </li>

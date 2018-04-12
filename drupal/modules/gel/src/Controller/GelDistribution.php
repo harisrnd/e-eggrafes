@@ -1110,7 +1110,6 @@ public function FindStudentsPerSchoolGym(Request $request){
         $user = reset($users);
         if ($user) {
             $gymId = $user->init->value;
-            $gymId=7;// 0501600; //1288
             $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gymId));
             $school = reset($schools);
             if (!$school) {
@@ -1123,23 +1122,23 @@ public function FindStudentsPerSchoolGym(Request $request){
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if ($tmpRole === 'gym') {
+                if ($tmpRole === 'gel') {
                     $userRole = $tmpRole;
                 }
             }
             if ($userRole === '') {
                 return $this->respondWithStatus([
-                         'error_code' => 4003,
+                         'error_code' => "school registry_no value",
                      ], Response::HTTP_FORBIDDEN);
-            } elseif ($userRole === 'gym') {
+            } elseif ($userRole === 'gel') {
 
-                //$studentPerSchool_epal = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(['lastschool_schoolname'=> '8ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΙΛΙΟΥ']);
-                $studentPerSchool_gel = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(['lastschool_schoolname'=> '8ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΙΛΙΟΥ']);
-            } 
- 
-/* 
+                $studentPerSchool_gel = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(['lastschool_registrynumber'=> "".$school->registry_no->value]);// '9ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΑΙΓΑΛΕΩ']);
+                $studentPerSchool_epal = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(['lastschool_registrynumber'=> "".$school->registry_no->value]);// '9ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΑΙΓΑΛΕΩ']);
+            }
+
+            $list = array();
+
             if ($studentPerSchool_epal) {
-                $list = array();
                 foreach ($studentPerSchool_epal as $epalStudent) {
 
                     $studentId=intval($epalStudent->id->value);
@@ -1149,13 +1148,57 @@ public function FindStudentsPerSchoolGym(Request $request){
                     $asignedschool=$assignedEpal->epal_id->entity->get('name')->value;   
 
 
-                    //.... NA SYBLHRWSW KAI TA YPOLOIPA GIA NA GYRIZEI KAI GEL KAI EPAL
-                }
-            } */
+                    $crypt = new Crypt();
+                    try {
+                        if (!empty($epalStudent->am->value)){
+                            $am_decoded = $crypt->decrypt($epalStudent->am->value);
+                        }
+                        else{
+                            $am_decoded="";
+                        }
+                        $name_decoded = $crypt->decrypt($epalStudent->name->value);
+                        $studentsurname_decoded = $crypt->decrypt($epalStudent->studentsurname->value);
+                        $fatherfirstname_decoded = $crypt->decrypt($epalStudent->fatherfirstname->value);
+                        $motherfirstname_decoded = $crypt->decrypt($epalStudent->motherfirstname->value);
+                        $regionaddress_decoded = $crypt->decrypt($epalStudent->regionaddress->value);
+                        $regiontk_decoded = $crypt->decrypt($epalStudent->regiontk->value);
+                        $regionarea_decoded = $crypt->decrypt($epalStudent->regionarea->value);
+                        $telnum_decoded = $crypt->decrypt($epalStudent->telnum->value);
+                        $guardian_name_decoded = $crypt->decrypt($epalStudent->guardian_name->value);
+                        $guardian_surname_decoded = $crypt->decrypt($epalStudent->guardian_surname->value);
+                        $guardian_fathername_decoded = $crypt->decrypt($epalStudent->guardian_fathername->value);
+                        $guardian_mothername_decoded = $crypt->decrypt($epalStudent->guardian_mothername->value);
+                    } catch (\Exception $e) {
+                        $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                        return $this->respondWithStatus([
+                        "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+
+                    $list[] = array(
+                        'am' => $am_decoded,
+                        'id' => $gelStudent->id->value,
+                        'name' => $name_decoded,
+                        'studentsurname' => $studentsurname_decoded,
+                        'fatherfirstname' => $fatherfirstname_decoded,
+                        'motherfirstname' => $motherfirstname_decoded,
+                        'guardian_name' => $guardian_name_decoded,
+                        'guardian_surname' => $guardian_surname_decoded,
+                        'guardian_fathername' => $guardian_fathername_decoded,
+                        'guardian_mothername' => $guardian_mothername_decoded,
+                        'regionaddress' => $regionaddress_decoded,
+                        'regiontk' => $regiontk_decoded,
+                        'regionarea' => $regionarea_decoded,
+                        'telnum' => $telnum_decoded,
+                        'gel' => $asignedschool,
+
+                    );
+                }                
+            }
+             
 
 
             if ($studentPerSchool_gel) {
-                $list = array();
                 foreach ($studentPerSchool_gel as $gelStudent) {
 
                     $studentId=intval($gelStudent->id->value);
@@ -1166,6 +1209,12 @@ public function FindStudentsPerSchoolGym(Request $request){
 
                     $crypt = new Crypt();
                     try {
+                        if (!empty($gelStudent->am->value)){
+                            $am_decoded = $crypt->decrypt($gelStudent->am->value);
+                        }
+                        else{
+                            $am_decoded="";
+                        }
                         $name_decoded = $crypt->decrypt($gelStudent->name->value);
                         $studentsurname_decoded = $crypt->decrypt($gelStudent->studentsurname->value);
                         $fatherfirstname_decoded = $crypt->decrypt($gelStudent->fatherfirstname->value);
@@ -1186,6 +1235,7 @@ public function FindStudentsPerSchoolGym(Request $request){
                     }
 
                     $list[] = array(
+                        'am' => $am_decoded,
                         'id' => $gelStudent->id->value,
                         'name' => $name_decoded,
                         'studentsurname' => $studentsurname_decoded,
@@ -1211,6 +1261,7 @@ public function FindStudentsPerSchoolGym(Request $request){
                     'message' => t('Students not found!'),
                 ], Response::HTTP_NOT_FOUND);
             }
+
         }
     } catch (\Exception $e) {
         $this->logger->warning($e->getMessage());
@@ -1304,9 +1355,7 @@ public function FindStudentsPerSchoolGym(Request $request){
     }*/
 
 
-private function respondWithStatus($arr, $s)
-    {
-    private function respondWithStatus($arr, $s)  {
+   private function respondWithStatus($arr, $s)  {
         $res = new JsonResponse($arr);
         $res->setStatusCode($s);
         return $res;

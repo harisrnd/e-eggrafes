@@ -70,6 +70,8 @@ import GelDistribution from "../components/geldistribution/geldistridution";
 //import GelDistributionAuto from "../components/geldistribution/geldistribution-auto";
 import EduadminGelView from "../components/infoviews/eduadmingel-view";
 import DirectorViewGym from "../components/director/directorgym-view";
+import SchoolGymAuthGuard from "../guards/schoolgym.auth.guard";
+
 
 
 export const MainRoutes: Routes = [
@@ -128,7 +130,7 @@ export const MainRoutes: Routes = [
     { path: "school/gel-distribution", component: GelDistribution, canActivate: [EduAdminAuthGuard] },
     //{ path: "school/gel-distribution-auto", component: GelDistributionAuto, canActivate: [EduAdminAuthGuard] },
     { path: "school/eduadmingel-view", component: EduadminGelView, canActivate: [EduAdminAuthGuard] },
-    { path: "school/directorgym-view", component: DirectorViewGym },
+    { path: "school/directorgym-view", component: DirectorViewGym, canActivate: [SchoolGymAuthGuard]  },
 
 ];
 
