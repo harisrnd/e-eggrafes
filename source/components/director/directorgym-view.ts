@@ -53,19 +53,19 @@ import { HelperDataService } from "../../services/helper-data-service";
     <div style="min-height: 500px;">
     <form>
        <p style="margin-top: 20px; line-height: 2em;"> H παρακάτω λίστα περιλαμβάνει τους μαθητές της Γ 'ταξης του σχολείου σας οι οποίοι απολύθηκαν και καταχωρησαν την αιτηση δήλωση προτιμησης για εγγραφή σε ΓΕΛ/ΕΠΑΛ. </p>
-       <p style="margin-top: 20px; line-height: 2em;"> Παρακαλείστε να ελέγξετε και να επικοινωνησετε με την οικέια Διευθυνση Δευτεροβάθμιας ΕΚπαίδευσης σε περιπτωση που εντοπίσετε ελλείψεις. </p>
+       <p style="margin-top: 20px; line-height: 2em;"> Παρακαλείστε να ελέγξετε και να επικοινωνησετε με την οικεία Διευθυνση Δευτεροβάθμιας Εκπαίδευσης σε περιπτωση που εντοπίσετε ελλείψεις. </p>
 
       <div class="row">
-         <div class="col-md-6" style="font-weight: bold;"> Ονοματεπώνυμο Μαθητή.</div>
-         <div class="col-md-3" style="font-weight: bold;"> Διέυθυνση Κατοικίας Μαθητή.</div>
+         <div class="col-md-6" style="font-weight: bold;"> Ονοματεπώνυμο Μαθητή</div>
+         <div class="col-md-3" style="font-weight: bold;"> Διέυθυνση Κατοικίας Μαθητή</div>
          <div class="col-md-3" style="font-weight: bold;"> <span class="pull-right" style="text-align: right; padding-right: 2px;">Λύκειο Εγγραφής Μαθητή</span></div>
       </div>
       <div *ngFor="let StudentDetails$  of StudentInfo$ | async; let i=index; let isOdd=odd; let isEven=even" >
                 <li class="list-group-item isclickable" (click)="setActive(i)" [class.oddout]="isOdd" [class.evenout]="isEven">
                 <div class="row"  style="line-height: 2em;">
-                  <div class="col-md-6" style="font-weight: bold;" >{{StudentDetails$.name}} {{StudentDetails$.studentsurname}}</div>
-                  <div class="col-md-3" style="font-weight: bold;" >{{StudentDetails$.regionaddress}}, {{StudentDetails$.regiontk}} - {{StudentDetails$.regionarea}}</div>
-                  <div class="col-md-3" style="font-weight: bold;" ><span class="pull-right" style="text-align: right; padding-right: 2px;">{{StudentDetails$.gel}}</span></div>
+                  <div class="col-md-4">{{StudentDetails$.name}} {{StudentDetails$.studentsurname}}</div>
+                  <div class="col-md-4">{{StudentDetails$.regionaddress}}, {{StudentDetails$.regiontk}} - {{StudentDetails$.regionarea}}</div>
+                  <div class="col-md-4"><span class="pull-right" style="text-align: right; padding-right: 2px;">{{StudentDetails$.gel}}</span></div>
                 </div>
                 </li>
        </div>

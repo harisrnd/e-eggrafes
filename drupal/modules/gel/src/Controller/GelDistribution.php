@@ -1118,7 +1118,7 @@ public function FindStudentsPerSchoolGym(Request $request){
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if ($tmpRole === 'gel') {
+                if ($tmpRole === 'gym') {
                     $userRole = $tmpRole;
                 }
             }
@@ -1126,16 +1126,32 @@ public function FindStudentsPerSchoolGym(Request $request){
                 return $this->respondWithStatus([
                          'error_code' => 4003,
                      ], Response::HTTP_FORBIDDEN);
-            } elseif ($userRole === 'gel') {
+            } elseif ($userRole === 'gym') {
 
-                $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(['lastschool_schoolname'=> '8ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΙΛΙΟΥ']);
+                //$studentPerSchool_epal = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(['lastschool_schoolname'=> '8ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΙΛΙΟΥ']);
+                $studentPerSchool_gel = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(['lastschool_schoolname'=> '8ο ΗΜΕΡΗΣΙΟ ΓΥΜΝΑΣΙΟ ΙΛΙΟΥ']);
             } 
  
-
-
-            if ($studentPerSchool) {
+/* 
+            if ($studentPerSchool_epal) {
                 $list = array();
-                foreach ($studentPerSchool as $gelStudent) {
+                foreach ($studentPerSchool_epal as $epalStudent) {
+
+                    $studentId=intval($epalStudent->id->value);
+
+                    $assignedEpals = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(['student_id'=> $studentId]);
+                    $assignedEpal= reset($assignedEpals);
+                    $asignedschool=$assignedEpal->epal_id->entity->get('name')->value;   
+
+
+                    //.... NA SYBLHRWSW KAI TA YPOLOIPA GIA NA GYRIZEI KAI GEL KAI EPAL
+                }
+            } */
+
+
+            if ($studentPerSchool_gel) {
+                $list = array();
+                foreach ($studentPerSchool_gel as $gelStudent) {
 
                     $studentId=intval($gelStudent->id->value);
 

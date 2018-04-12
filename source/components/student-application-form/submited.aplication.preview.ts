@@ -168,7 +168,7 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.lastschool_schoolyear}}</div>
                     </div>
 
-                    <div *ngIf="(GelStudentDetails$.lastschool_class !== '' && GelStudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                    <div *ngIf="(GelStudentDetails$.lastschool_class !== '' && GelStudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0 || GelStudentDetails$.lastschool_unittypeid =='40'" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
                         <div *ngIf="GelStudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
                         <div *ngIf="GelStudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
@@ -205,7 +205,7 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center">Στοιχεία Επικοινωνίας</div>
                     </div>
 
-                    <div *ngIf="(GelStudentDetails$.lastschool_class !== '' && GelStudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                    <div *ngIf="(GelStudentDetails$.lastschool_class !== '' && GelStudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0 || GelStudentDetails$.lastschool_unittypeid =='40'" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{GelStudentDetails$.regionaddress}}</div>
                         <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>
@@ -347,7 +347,7 @@ import { IAppState } from "../../store/store";
                     <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.lastschool_schoolyear}}</div>
                     </div>
 
-                    <div *ngIf="(StudentDetails$.lastschool_class !== '' && StudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                    <div *ngIf="(StudentDetails$.lastschool_class !== '' && StudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0 || StudentDetails$.lastschool_unittypeid =='40'" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div *ngIf="StudentDetails$.lastschool_class !== ''" class="col-md-3" style="font-size: 0.8em;">Τάξη τελευταίας φοίτησης</div>
                         <div *ngIf="StudentDetails$.lastschool_class === '1'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Α</div>
                         <div *ngIf="StudentDetails$.lastschool_class === '2'" class="col-md-9" style="font-size: 0.8em; font-weight: bold">Β</div>
@@ -381,7 +381,7 @@ import { IAppState } from "../../store/store";
                         <div class="col-md-12" style="font-size: 1em; font-weight: bold; text-align: center;">Στοιχεία Επικοινωνίας</div>
                     </div>
 
-                    <div *ngIf="(StudentDetails$.lastschool_class !== '' && StudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                    <div *ngIf="(StudentDetails$.lastschool_class !== '' && StudentDetails$.lastschool_schoolyear < '2013-2014') || (wsEnabled | async)===0 || StudentDetails$.lastschool_unittypeid =='40'" class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-3" style="font-size: 0.8em;">Διεύθυνση</div>
                         <div class="col-md-3" style="font-size: 0.8em; font-weight: bold">{{StudentDetails$.regionaddress}}</div>
                         <div class="col-md-3" style="font-size: 0.8em;">ΤΚ - Πόλη</div>

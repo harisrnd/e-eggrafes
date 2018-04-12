@@ -236,7 +236,7 @@ import {
                                 this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
                                 this.studentDataGroup.controls["lastschool_class"].setValue(studentDataField.get("lastschool_class"));
 
-                                if (studentDataField.get("lastschool_schoolyear")<"2013-2014"){
+                                if (studentDataField.get("lastschool_schoolyear")<"2013-2014" || studentDataField.get("lastschool_schoolname").unit_type_id =="40"){
                                     this.studentDataGroup.controls["am"].setValidators(null);
                                     this.studentDataGroup.controls["am"].updateValueAndValidity();
                                 }
@@ -257,14 +257,27 @@ import {
                                     this.studentDataGroup.controls["telnum"].setValue(studentDataField.get("telnum"));
                                     this.studentDataGroup.controls["studentbirthdate"].setValue(this.populateDate(studentDataField.get("studentbirthdate")));
 
-                                    this.studentDataGroup.controls["lastschool_class"].setValidators(null);
-                                    this.studentDataGroup.controls["regionaddress"].setValidators(null);
-                                    this.studentDataGroup.controls["regiontk"].setValidators(null);
-                                    this.studentDataGroup.controls["regionarea"].setValidators(null);
-                                    this.studentDataGroup.controls["regionaddress"].updateValueAndValidity();
-                                    this.studentDataGroup.controls["regiontk"].updateValueAndValidity();
-                                    this.studentDataGroup.controls["regionarea"].updateValueAndValidity();
-                                    this.studentDataGroup.controls["lastschool_class"].updateValueAndValidity();
+                                    if (studentDataField.get("lastschool_schoolname").unit_type_id =="40"){
+                                        this.studentDataGroup.controls["regionaddress"].setValue(studentDataField.get("regionaddress"));
+                                        this.studentDataGroup.controls["regiontk"].setValue(studentDataField.get("regiontk"));
+                                        this.studentDataGroup.controls["regionarea"].setValue(studentDataField.get("regionarea"));
+                                        this.studentDataGroup.controls["lastschool_class"].setValue(studentDataField.get("lastschool_class"));
+                                        this.studentDataGroup.controls["am"].setValidators(null);
+                                        this.studentDataGroup.controls["am"].updateValueAndValidity();
+                                    }
+                                    else{
+                                        this.studentDataGroup.controls["regionaddress"].setValidators(null);
+                                        this.studentDataGroup.controls["regiontk"].setValidators(null);
+                                        this.studentDataGroup.controls["regionarea"].setValidators(null);
+                                        this.studentDataGroup.controls["lastschool_class"].setValidators(null);
+                                        this.studentDataGroup.controls["lastschool_class"].updateValueAndValidity();
+                                        this.studentDataGroup.controls["regionaddress"].updateValueAndValidity();
+                                        this.studentDataGroup.controls["regiontk"].updateValueAndValidity();
+                                        this.studentDataGroup.controls["regionarea"].updateValueAndValidity();
+
+                                        this.studentDataGroup.controls["am"].setValue(studentDataField.get("am"));
+
+                                    }
                                 }
                                 else if (studentDataField.get("lastschool_schoolyear")<"2013-2014" && studentDataField.get("lastschool_schoolyear")!=""){
                                     this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
@@ -456,13 +469,20 @@ import {
     };
 
     lastSchoolValueChanged(e: any): void {
+        this.schoolyearselected();
     };
 
     public schoolyearselected(){
 
         if (this.wsEnabled.getValue()===1){
 
-            if (this.studentDataGroup.controls["lastschool_schoolyear"].value >="2013-2014"){
+            if (this.studentDataGroup.controls["lastschool_schoolyear"].value >="2013-2014" && this.studentDataGroup.controls["lastschool_schoolname"].value.unit_type_id != 40){
+                
+                this.studentDataGroup.controls["regionaddress"].setValue("");
+                this.studentDataGroup.controls["regiontk"].setValue("");
+                this.studentDataGroup.controls["regionarea"].setValue("");
+                this.studentDataGroup.controls["lastschool_class"].setValue("");
+
                 this.studentDataGroup.controls["regionaddress"].setValidators(null);
                 this.studentDataGroup.controls["regiontk"].setValidators(null);
                 this.studentDataGroup.controls["regionarea"].setValidators(null);
@@ -480,6 +500,8 @@ import {
                 this.studentDataGroup.controls["regiontk"].setValidators([Validators.pattern(VALID_ADDRESSTK_PATTERN), Validators.required]);
                 this.studentDataGroup.controls["regionarea"].setValidators([Validators.pattern(VALID_NAMES_PATTERN), Validators.required]);
                 this.studentDataGroup.controls["lastschool_class"].setValidators(this.checkChoice);
+
+                this.studentDataGroup.controls["am"].setValue("");
                 this.studentDataGroup.controls["am"].setValidators(null);
 
                 this.studentDataGroup.controls["am"].updateValueAndValidity();
@@ -500,11 +522,12 @@ import {
             this.studentDataGroup.controls["regionarea"].updateValueAndValidity();
             this.studentDataGroup.controls["lastschool_class"].updateValueAndValidity();
 
-            if (this.studentDataGroup.controls["lastschool_schoolyear"].value >="2013-2014"){
+            if (this.studentDataGroup.controls["lastschool_schoolyear"].value >="2013-2014" && this.studentDataGroup.controls["lastschool_schoolname"].value.unit_type_id != 40){
                 this.studentDataGroup.controls["am"].setValidators( [Validators.required]);
                 this.studentDataGroup.controls["am"].updateValueAndValidity();
             }
             else{
+                this.studentDataGroup.controls["am"].setValue("");
                 this.studentDataGroup.controls["am"].setValidators(null);
                 this.studentDataGroup.controls["am"].updateValueAndValidity();
             }

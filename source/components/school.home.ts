@@ -100,9 +100,10 @@ export default class SchoolHome implements OnInit, OnDestroy {
                             }
                             else if (this.authRole === "director_gel")
                             {
-                                this.router.navigate(["/school/directorgym-view"]);                         }
-                                //this.router.navigate(["/school/directorgel-view"]);                         }
-
+                                this.router.navigate(["/school/directorgel-view"]);                         }
+                            else if (this.authRole === "director_gym")
+                                {
+                                    this.router.navigate(["/school/directorgym-view"]);                         }   
                             else if (this.authRole === "pde")
                              {
                                 this.router.navigate(["/school/perfecture-view"]);                         }
