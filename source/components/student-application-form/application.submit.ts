@@ -79,7 +79,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     </div>
     <div><label for="lastschool_schoolyear">Σχολικό έτος τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{studentDataField$.get("lastschool_schoolyear")}} </p></div>
     <div><label for="lastschool_schoolname">Σχολείο τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{studentDataField$.get("lastschool_schoolname").name}} </p></div>
-    <div *ngIf="studentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async)===0">
+    <div *ngIf="( studentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async) === 0 ) || studentDataField$.get('lastschool_schoolname').unit_type_id==40">
         <label for="lastschool_class">Τάξη τελευταίας φοίτησης</label>
         <div *ngIf="studentDataField$.get('lastschool_class') === '1'"> <p class="form-control" style="border:1px solid #eceeef;">Α'</p></div>
         <div *ngIf="studentDataField$.get('lastschool_class') === '2'"><p class="form-control" style="border:1px solid #eceeef;">Β'</p></div>
@@ -90,8 +90,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία μαθητή</div>
     </div>
     <div>
-        <label *ngIf="studentDataField$.get('lastschool_schoolyear') >= '2013-2014'" for="am">Αριθμός Μητρώου Μαθητη</label>
-        <p *ngIf="studentDataField$.get('lastschool_schoolyear') >= '2013-2014'" class="form-control" style="border:1px solid #eceeef;">   {{studentDataField$.get("am")}} </p>
+        <label *ngIf="studentDataField$.get('lastschool_schoolyear') >= '2013-2014' && studentDataField$.get('lastschool_schoolname').unit_type_id !=40" for="am">Αριθμός Μητρώου Μαθητη</label>
+        <p *ngIf="studentDataField$.get('lastschool_schoolyear') >= '2013-2014' && studentDataField$.get('lastschool_schoolname').unit_type_id !=40" class="form-control" style="border:1px solid #eceeef;">   {{studentDataField$.get("am")}} </p>
     </div>
     <div><label for="name">Όνομα μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;">   {{studentDataField$.get("name")}} </p> </div>
     <div><label for="studentsurname">Επώνυμο μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;"> {{studentDataField$.get("studentsurname")}} </p></div>
@@ -103,7 +103,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
         <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Στοιχεία Επικοινωνίας μαθητή</div>
     </div>
-    <table class="col-md-12" align="left" *ngIf="studentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async) === 0">
+    <table class="col-md-12" align="left" *ngIf="( studentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async) === 0 ) || studentDataField$.get('lastschool_schoolname').unit_type_id==40">
         <tr>
             <td>
                 <div><label for="regionaddress">Διεύθυνση Κατοικίας μαθητή</label></div>
@@ -461,19 +461,14 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             aitisiObj["2"] = new StudentCourseChosen(null, this.courseSelected);
         }
 
-        console.log(this.wsEnabled.getValue());
-        console.log(aitisiObj[0].lastschool_schoolyear);
-        console.log(this.limitSchoolYear);
-
-
         //κλήση myschool web service
-        if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)  {
+        if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >= this.limitSchoolYear && aitisiObj[0].lastschool_unittypeid != "40")  {
             
             let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
             let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
 
             //console.log(aitisiObj[0].studentbirthdate);
-            //console.log(birthparts);  
+            //console.log(birthparts);
 
             this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
                       date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
@@ -506,7 +501,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                     else {
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
                       let mText = "Δεν βρέθηκε μαθητής στο ΠΣ myschool με τα στοιχεία που δώσατε. " +
-                        "Παρακαλώ προσπαθήστε ξανά αφού πρώτα ελέγξετε την ορθότητα των ακόλουθων στοιχείων: Αριθμός Μητρώου, Σχολείο τελευτάιας φοίτησης, Ημερομηνία Γέννησης. " +
+                        "Παρακαλώ προσπαθήστε ξανά αφού πρώτα ελέγξετε την ορθότητα των ακόλουθων στοιχείων: Αριθμός Μητρώου, Σχολείο τελευταίας φοίτησης, Ημερομηνία Γέννησης. " +
                         "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
                       let mHeader = "modal-header-danger";
                       this.modalTitle.next(mTitle);
@@ -582,7 +577,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
         let options = new RequestOptions({ headers: headers, method: "post", withCredentials: true });
         let connectionString = `${AppSettings.API_ENDPOINT}/epal/appsubmit`;
-        console.log(record);
+        //console.log(record);
         if (!newapp)
           //connectionString = `${AppSettings.API_ENDPOINT}/epal/appupdate/` + this.appId.getValue();
           connectionString = `${AppSettings.API_ENDPOINT}/epal/appupdate/` + this.appId.getValue() + '/' + nonCheckOccupancy;

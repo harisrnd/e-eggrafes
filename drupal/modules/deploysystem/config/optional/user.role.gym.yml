@@ -1,0 +1,9 @@
+uuid: 9165fac1-4b3a-40bb-b81b-72123a7518d9
+langcode: el
+status: true
+dependencies: {  }
+id: gym
+label: gym
+weight: 8
+is_admin: null
+permissions: {  }

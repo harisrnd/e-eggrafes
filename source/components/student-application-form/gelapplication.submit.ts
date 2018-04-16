@@ -88,7 +88,7 @@ import { StudentGelCourseChosen } from "../students/student";
     </div>
     <div><label for="lastschool_schoolyear">Σχολικό έτος τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("lastschool_schoolyear")}} </p></div>
     <div><label for="lastschool_schoolname">Σχολείο τελευταίας φοίτησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("lastschool_schoolname").name}} </p></div>
-    <div *ngIf="gelstudentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async)===0">
+    <div *ngIf="gelstudentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async)===0 || gelstudentDataField$.get('lastschool_schoolname').unit_type_id==40">
         <label for="lastschool_class">Τάξη τελευταίας φοίτησης</label>
         <div *ngIf="gelstudentDataField$.get('lastschool_class') === '1'"> <p class="form-control" style="border:1px solid #eceeef;">Α'</p></div>
         <div *ngIf="gelstudentDataField$.get('lastschool_class') === '2'"><p class="form-control" style="border:1px solid #eceeef;">Β'</p></div>
@@ -100,8 +100,8 @@ import { StudentGelCourseChosen } from "../students/student";
         <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Προσωπικά Στοιχεία μαθητή</div>
     </div>
     <div>
-        <label *ngIf="gelstudentDataField$.get('lastschool_schoolyear') >= '2013-2014'" for="am">Αριθμός Μητρώου Μαθητη</label>
-        <p *ngIf="gelstudentDataField$.get('lastschool_schoolyear') >= '2013-2014'" class="form-control" style="border:1px solid #eceeef;">   {{gelstudentDataField$.get("am")}} </p>
+        <label *ngIf="gelstudentDataField$.get('lastschool_schoolyear') >= '2013-2014' && gelstudentDataField$.get('lastschool_schoolname').unit_type_id !=40" for="am">Αριθμός Μητρώου Μαθητη</label>
+        <p *ngIf="gelstudentDataField$.get('lastschool_schoolyear') >= '2013-2014' && gelstudentDataField$.get('lastschool_schoolname').unit_type_id !=40" class="form-control" style="border:1px solid #eceeef;">   {{gelstudentDataField$.get("am")}} </p>
     </div>
     <div><label for="name">Όνομα μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;">   {{gelstudentDataField$.get("name")}} </p> </div>
     <div><label for="studentsurname">Επώνυμο μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("studentsurname")}} </p></div>
@@ -113,7 +113,7 @@ import { StudentGelCourseChosen } from "../students/student";
     <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
         <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Στοιχεία Επικοινωνίας μαθητή</div>
     </div>
-    <table class="col-md-12" align="left" *ngIf="gelstudentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async)===0">
+    <table class="col-md-12" align="left" *ngIf="gelstudentDataField$.get('lastschool_schoolyear') < '2013-2014' || (wsEnabled | async)===0 || gelstudentDataField$.get('lastschool_schoolname').unit_type_id==40">
         <tr>
             <td>
                 <div><label for="regionaddress">Διεύθυνση Κατοικίας μαθητή</label></div>
@@ -399,7 +399,7 @@ import { StudentGelCourseChosen } from "../students/student";
 
         //aitisiObj[0].am = std.get("am");;
         //if (aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)
-        //  aitisiObj[0].am =  std.get("am"); 
+        //  aitisiObj[0].am =  std.get("am");
         // else {
         //   aitisiObj[0].regionaddress = std.get("regionaddress");
         //   aitisiObj[0].regionarea = std.get("regionarea");
@@ -428,16 +428,12 @@ import { StudentGelCourseChosen } from "../students/student";
         }
 
         //κλήση myschool web service
-        if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)  {
+        if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >= this.limitSchoolYear && aitisiObj[0].lastschool_unittypeid != "40")  {
               //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
                       //aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
-                
+
                 let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
                 let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
-
-                console.log(aitisiObj[0].studentbirthdate);
-                console.log(birthparts);
-
 
                 this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
                 date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
@@ -460,13 +456,13 @@ import { StudentGelCourseChosen } from "../students/student";
                         else if (data.data["levelName"]==='Γ'){
                             aitisiObj[0].lastschool_class = 3;
                         }
-                        
+
                         aitisiObj[0].section_name = data.data["sectionName"];
                     }
                     else {
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
                       let mText = "Δεν βρέθηκε μαθητής στο ΠΣ myschool με τα στοιχεία που δώσατε. " +
-                        "Παρακαλώ προσπαθήστε ξανά αφού πρώτα ελέγξετε την ορθότητα των ακόλουθων στοιχείων: Αριθμός Μητρώου, Σχολείο τελευτάιας φοίτησης, Ημερομηνία Γέννησης. " +
+                        "Παρακαλώ προσπαθήστε ξανά αφού πρώτα ελέγξετε την ορθότητα των ακόλουθων στοιχείων: Αριθμός Μητρώου, Σχολείο τελευταίας φοίτησης, Ημερομηνία Γέννησης. " +
                         "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
                       let mHeader = "modal-header-danger";
                       this.modalTitle.next(mTitle);

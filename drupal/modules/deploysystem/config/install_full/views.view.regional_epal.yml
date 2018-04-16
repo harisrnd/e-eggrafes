@@ -1,3 +1,4 @@
+uuid: 11f51ae0-5cee-478e-b2d4-75ce7c90716a
 langcode: el
 status: true
 dependencies:
@@ -6,13 +7,13 @@ dependencies:
     - user.role.applicant
     - user.role.authenticated
   module:
-    - basic_auth
     - epalreadydata
+    - hal
     - rest
     - serialization
     - user
 _core:
-  default_config_hash: ZHZhkwcVWVjmlZWp7DXduGPF5RhR1_GHwIV4HQXZC2w
+  default_config_hash: yJVqCyn0DnJeLnIXfl24187jyJhCLq2Fj149hHLDhY8
 id: regional_epal
 label: regional_epal
 module: views
@@ -483,9 +484,9 @@ display:
       style:
         type: serializer
         options:
-          grouping: {  }
-          uses_fields: false
-          formats: {  }
+          formats:
+            hal_json: hal_json
+            json: json
       row:
         type: data_field
         options:

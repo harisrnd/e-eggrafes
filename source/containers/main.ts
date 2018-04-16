@@ -31,6 +31,7 @@ export default class Main {
             // deserializeState: reimmutify,
         });
 
+        //make storeEnhancers = [] in order for PRODUCTION MODE
         const storeEnhancers =
           _devTools.isEnabled() ?
           [ _devTools.enhancer() ] :

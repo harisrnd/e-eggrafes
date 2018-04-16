@@ -42,6 +42,8 @@ import StudentAllLockGuard from "./guards/student.all.lock.guard";
 import { AuthService } from "./services/auth.service";
 import { HelperDataService } from "./services/helper-data-service";
 import { LoaderService } from "./services/Spinner.service";
+import SchoolGymAuthGuard from "./guards/schoolgym.auth.guard";
+
 
 import * as $ from "jquery";
 
@@ -95,7 +97,8 @@ class MyLocalization extends NgLocalization {
         EduAdminAuthGuard,
         DidepdeAuthGuard,
         MinistryAuthGuard,
-        ReportsAuthGuard
+        ReportsAuthGuard,
+        SchoolGymAuthGuard
     ]
 })
 class AppModule { }

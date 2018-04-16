@@ -12,6 +12,8 @@ dependencies:
     - rest
     - serialization
     - user
+_core:
+  default_config_hash: f1LNdRo5oKx3XIzRx1RhDz9PEsZDSVohGJdnH84LYrE
 id: choicesperclass
 label: choicesperclass
 module: views
@@ -330,10 +332,10 @@ display:
           field_options:
             id:
               alias: id
-              raw_output: false
+              raw_output: true
             name_1:
               alias: name
-              raw_output: false
+              raw_output: true
       pager:
         type: some
         options:

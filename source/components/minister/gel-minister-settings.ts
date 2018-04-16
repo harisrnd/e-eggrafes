@@ -271,8 +271,6 @@ import { IAppState } from "../../store/store";
 
     ngOnInit() {
 
-        console.log("YESSSSS");
-
         (<any>$("#configNotice")).appendTo("body");
 
         this.loginInfoSub = this._ngRedux.select("loginInfo")
