@@ -71,7 +71,7 @@ class CurrentUser extends ControllerBase
 
         $userRoles = $user->getRoles();
         foreach ($userRoles as $userRole) {
-            if (($userRole === 'epal') ||($userRole === 'gel') || ($userRole === 'regioneduadmin') || ($userRole === 'eduadmin')) {
+            if (($userRole === 'epal') ||($userRole === 'gel') || ($userRole === 'regioneduadmin') || ($userRole === 'eduadmin') || ($userRole === 'gym')) {
                 return $this->respondWithStatus([
                         'cu_name' => $user->mail->value,
                         'cu_surname' => '',

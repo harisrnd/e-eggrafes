@@ -293,7 +293,7 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 		$this->pdf->multiCell(0, $height, $this->prepareString($student->lastschool_schoolname->value), 0, 'L');
 
-		if ( empty($student->am->value) || $this->webServiceEnabled==="0" ){
+		if ( $am_decoded==="" || $this->webServiceEnabled==="0" ){
 			$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 			$this->pdf->Cell($width+15, $height, $this->prepareString('Τάξη τελευταίας φοίτησης:'), 0, 'L');
 			$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
@@ -372,7 +372,7 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->MultiCell(0, $height, $this->prepareString('Στοιχεία Επικοινωνίας'), 0, 'C',true);
 		$this->pdf->Ln(4);
 
-		if ( empty($student->am->value) || $this->webServiceEnabled==="0" ){
+		if ( $am_decoded==="" || $this->webServiceEnabled==="0" ){
 
 			$this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 			$regAddressTxt = 'ΤΚ: ' . $regiontk_decoded . ', ' . $regionarea_decoded;
