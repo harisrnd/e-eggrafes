@@ -60,35 +60,39 @@ import { HelperDataService } from "../../services/helper-data-service";
                    <br>
                   <div class = "row selectedout" *ngIf ="regionActive === JuniorHighSchools$.id" style="margin: 0px 2px 0px 2px;">
                      
-                     <div class="col-md-1" style="   font-weight: bold;" >Επιλογή Όλων 
+                     <div class="col-md-2" style="   font-weight: bold;" >Επιλογή Όλων 
 
-
+                       
                          <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
-                   
-
+                       
 
                      </div>
-                    <div class="col-md-1" style="   font-weight: bold;" >A/A Αίτησης</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >A/A Αίτησης</div>
                     <div class="col-md-2" style="   font-weight: bold;" >ΑΜ Μαθητη</div>
                     
-                    <div class="col-md-4" style="   font-weight: bold;" >Διεύθυνση</div>
-                    <div class="col-md-3 " style="   font-weight: bold;" >Περιοχή</div>
-                    <div class="col-md-1 " style="   font-weight: bold;" >ΤΚ</div>
+                    <div class="col-md-3" style="   font-weight: bold;" >Διεύθυνση</div>
+                    <div class="col-md-3" style="   font-weight: bold;" >Τύπος Σχολείου</div>
+                
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >Περιοχή</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >ΤΚ</div>
                    </div>
                  <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
                   class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
                    style="margin: 0px 2px 0px 2px;">
-                    <div class="col-md-1 " *ngIf ="regionActive === JuniorHighSchools$.id">
+                    <div class="col-md-2 " *ngIf ="regionActive === JuniorHighSchools$.id">
                      <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
                    </div>
-                    <div class="col-md-1" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
                     <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.am}}</div>
                     
-                    <div class="col-md-4" style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
-                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.regionarea}}</div>
-                    <div class="col-md-1 " style="   font-weight: bold;" >{{AllStudents$.regiontk}}</div>
-                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-10 offset-md-2" style="   font-weight: bold;" >{{AllStudents$.oldschool}}</div>
-                    
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.school_type}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regionarea}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regiontk}}</div>
+                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-10 offset-md-2 changecolor" style="font-weight: bold;">
+                            {{AllStudents$.oldschool}}
+                     </div>
+                  
                    
                     
                     <div  *ngIf="AllStudents$.oldschool === false" class="col-md-11 offset-md-1">
@@ -376,8 +380,8 @@ let server = 0;
 
 selectall()
 {
-  this.selall =! this.selall;
-              this.showLoader.next(true);
+          this.selall =! this.selall;
+             this.showLoader.next(true);
             this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive)
 
                 .subscribe(data => {
@@ -393,7 +397,7 @@ selectall()
                       }
                       else
                       {
-
+                           this.selections = [];
                       }
                     this.HighSchoolSub = this._hds.getHighSchoolperDide().subscribe(x => {
                         this.HighSchool$.next(x);
@@ -404,7 +408,7 @@ selectall()
                   });
 
 
-
+ 
 
                     this.showLoader.next(false);
                 },

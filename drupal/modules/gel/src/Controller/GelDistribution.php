@@ -311,6 +311,9 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                 if ($studentPerSchool) {
                     $list = array();
                     foreach ($studentPerSchool as $object) {
+                      $this->logger ->warning($object ->nextclass->entity->get('id')->value ."nextclass");
+                        if (($object ->nextclass->entity->get('id')->value === "1") || ($object ->nextclass->entity->get('id')->value === "4"))
+                        {
                             $crypt = new Crypt();
                             try {
                                 $name_decoded = $object->name->value;
@@ -321,6 +324,14 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                                 $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
                                 $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
                                 $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                                if ($object ->nextclass->entity->get('id')->value === "4")
+                                {
+                                  $school_type = "Αίτηση για Εσπερινό";
+                                }
+                                else{
+                                  $school_type = "Αίτηση για Ημερήσιο";
+                                }
+
 
                             } catch (\Exception $e) {
                                 $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
@@ -336,10 +347,10 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                                 'regionaddress' => $regionaddress_decoded,
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id()),
-
-
                             );
+                          }
 
                     }
                     return $this->respondWithStatus($list, Response::HTTP_OK);
@@ -866,7 +877,8 @@ public function getSchoolGel(Request $request)
                     );
                 }
 
-                if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ') {
+                if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
+                {
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Δ'));
                
@@ -880,188 +892,43 @@ public function getSchoolGel(Request $request)
                         
                     );
                 }
-              }
+                }
 
+        $taxi = "Α";
+        $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
+        foreach ($selectionPerSchool as $object) {
 
+          $choicenew = $object -> id();
 
-
-                
-
-                     $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
-                    ->loadByProperties(array( 'choicetype' => 'ΕΠΙΛΟΓΗ'));
-                foreach ($selectionPerSchool as $object) {
-                    $desc = $object -> name->value;
-                    $this->logger->error($object ->id()."gel_choices");
-                    $classchoice = $this->entityTypeManager->getStorage('gel_class_choices')
-                    ->loadByProperties(array( 'class_id'=> 1, 'choice_id'=>$object->id()));
-                    if ($classchoice)
-                    {
-                    foreach ($classchoice as $choices)
-                    {
-                       $this->logger->error($choices ->id());
-                     $selectionsize = $this->entityTypeManager->getStorage('gel_student_choices')
-                    ->loadByProperties(array( 'choice_id'=> $object ->id()));
-                    if ($selectionsize)
-                    {
-                      $list[] = array(
-                        'id' => '5',
-                        'name' => "Ά Λυκείου  ".$desc,
-                        'size' => sizeof($selectionsize),
+          $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
+          $sCon->leftJoin('gelstudenthighschool', 'gSchool',
+    'gSchool.student_id = gClassChoice.student_id');
+           $sCon->fields('gSchool', array( 'taxi', 'school_id'))
+                ->fields('gClassChoice', array('choice_id'))
+             ->condition('gClassChoice.choice_id', $choicenew)
+             ->condition('gSchool.taxi', $taxi )
+             ->condition('gSchool.school_id', $schoolid)
+             ->groupBy('gClassChoice.choice_id')
+             ->groupBy('gSchool.taxi')
+             ->groupBy('gSchool.school_id')
+             ;
+        $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
+        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+        foreach ($results as $key ) {
+                  $list[] = array(
+                        'id' => 'ΕΠ',
+                        'name' => $object -> name ->value,
+                        'size' => $key->student_count,
+                        'categ' => $categ,
                         'classes' => 1,
-                         );
+                        
+                    );
                     }
                     
-                    }
-                    }
-                    }       
+            }       
                    
 
-                          $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
-                    ->loadByProperties(array( 'choicetype' => 'ΟΠ'));
-                foreach ($selectionPerSchool as $object) {
-                    $desc = $object -> name->value;
-                    $this->logger->error($object ->id()."gel_choices");
-                    $classchoice = $this->entityTypeManager->getStorage('gel_class_choices')
-                    ->loadByProperties(array( 'class_id'=> 1, 'choice_id'=>$object->id()));
-                    if ($classchoice)
-                    {
-                    foreach ($classchoice as $choices)
-                    {
-                       $this->logger->error($choices ->id());
-                     $selectionsize = $this->entityTypeManager->getStorage('gel_student_choices')
-                    ->loadByProperties(array( 'choice_id'=> $object ->id()));
-                    if ($selectionsize)
-                    {
-                      $list[] = array(
-                        'id' => '5',
-                        'name' => "Ά Λυκείου  ".$desc,
-                        'size' => sizeof($selectionsize),
-                        'classes' => 1,
-                         );
-                    }
-                    
-                    }
-                    }
-                    }       
-                   
-
-
-                $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
-                    ->loadByProperties(array( 'choicetype' => 'ΕΠΙΛΟΓΗ'));
-                foreach ($selectionPerSchool as $object) {
-                    $desc = $object -> name->value;
-                    $this->logger->error($object ->id()."gel_choices");
-                    $classchoice = $this->entityTypeManager->getStorage('gel_class_choices')
-                    ->loadByProperties(array( 'class_id'=> 2, 'choice_id'=>$object->id()));
-                    if ($classchoice)
-                    {
-                    foreach ($classchoice as $choices)
-                    {
-                       $this->logger->error($choices ->id());
-                     $selectionsize = $this->entityTypeManager->getStorage('gel_student_choices')
-                    ->loadByProperties(array( 'choice_id'=> $object ->id()));
-                    if ($selectionsize)
-                    {
-                      $list[] = array(
-                        'id' => '5',
-                        'name' => "Β Λυκείου  ".$desc,
-                        'size' => sizeof($selectionsize),
-                        'classes' => 1,
-                         );
-                    }
-                    
-                    }
-                    }
-                    }       
-                   
-
-                          $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
-                    ->loadByProperties(array( 'choicetype' => 'ΟΠ'));
-                foreach ($selectionPerSchool as $object) {
-                    $desc = $object -> name->value;
-                    $this->logger->error($object ->id()."gel_choices");
-                    $classchoice = $this->entityTypeManager->getStorage('gel_class_choices')
-                    ->loadByProperties(array( 'class_id'=> 2, 'choice_id'=>$object->id()));
-                    if ($classchoice)
-                    {
-                    foreach ($classchoice as $choices)
-                    {
-                       $this->logger->error($choices ->id());
-                     $selectionsize = $this->entityTypeManager->getStorage('gel_student_choices')
-                    ->loadByProperties(array( 'choice_id'=> $object ->id()));
-                    if ($selectionsize)
-                    {
-                      $list[] = array(
-                        'id' => '5',
-                        'name' => "Β Λυκείου  ".$desc,
-                        'size' => sizeof($selectionsize),
-                        'classes' => 1,
-                         );
-                    }
-                    
-                    }
-                    }
-                    }       
-                   
-
-
-                    $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
-                    ->loadByProperties(array( 'choicetype' => 'ΕΠΙΛΟΓΗ'));
-                foreach ($selectionPerSchool as $object) {
-                    $desc = $object -> name->value;
-                    $this->logger->error($object ->id()."gel_choices");
-                    $classchoice = $this->entityTypeManager->getStorage('gel_class_choices')
-                    ->loadByProperties(array( 'class_id'=> 3, 'choice_id'=>$object->id()));
-                    if ($classchoice)
-                    {
-                    foreach ($classchoice as $choices)
-                    {
-                       $this->logger->error($choices ->id());
-                     $selectionsize = $this->entityTypeManager->getStorage('gel_student_choices')
-                    ->loadByProperties(array( 'choice_id'=> $object ->id()));
-                    if ($selectionsize)
-                    {
-                      $list[] = array(
-                        'id' => '5',
-                        'name' => "Γ Λυκείου  ".$desc,
-                        'size' => sizeof($selectionsize),
-                        'classes' => 1,
-                         );
-                    }
-                    
-                    }
-                    }
-                    }       
-                   
-
-                          $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')
-                    ->loadByProperties(array( 'choicetype' => 'ΟΠ'));
-                foreach ($selectionPerSchool as $object) {
-                    $desc = $object -> name->value;
-                    $this->logger->error($object ->id()."gel_choices");
-                    $classchoice = $this->entityTypeManager->getStorage('gel_class_choices')
-                    ->loadByProperties(array( 'class_id'=> 3, 'choice_id'=>$object->id()));
-                    if ($classchoice)
-                    {
-                    foreach ($classchoice as $choices)
-                    {
-                       $this->logger->error($choices ->id());
-                     $selectionsize = $this->entityTypeManager->getStorage('gel_student_choices')
-                    ->loadByProperties(array( 'choice_id'=> $object ->id()));
-                    if ($selectionsize)
-                    {
-                      $list[] = array(
-                        'id' => '5',
-                        'name' => "Γ Λυκείου  ".$desc,
-                        'size' => sizeof($selectionsize),
-                        'classes' => 1,
-                         );
-                    }
-                    
-                    }
-                    }
-                    }       
-                   
+          
 
 
 
