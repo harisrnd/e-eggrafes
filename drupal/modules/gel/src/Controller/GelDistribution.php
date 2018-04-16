@@ -952,16 +952,9 @@ public function getSchoolGel(Request $request)
     }
 
 
-private function respondWithStatus($arr, $s)
-    {
-        $res = new JsonResponse($arr);
-        $res->setStatusCode($s);
 
-        return $res;
-    }
-
-
-public function FindStudentsPerSchoolGym(Request $request){
+public function FindStudentsPerSchoolGym(Request $request)
+{
     
     try{    
 
@@ -1369,6 +1362,5 @@ public function autoDistribution(Request $request)
 
 
 
-    
 
-}
+
