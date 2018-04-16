@@ -37,7 +37,7 @@ import { HelperDataService } from "../../services/helper-data-service";
        επιλέξτε σχολειο για να τοποθετήσετε τους μαθητές με βάση τη διεύθυνση κατοικίας τους στο αντίστοιχο λύκειο.</p>
       <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Τα Γυμνάσια ευθύνης σας. </b></div>
       <div *ngFor="let JuniorHighSchools$  of JuniorHighSchool$ | async; let i=index; let isOdd=odd; let isEven=even" >
-                <li class="list-group-item " [class.oddout]="isOdd" [class.evenout]="isEven"
+                <li class="list-group-item " [class.oddout]="isOdd" [class.evenout]="isEven" 
                 (click)="setActiveRegion(JuniorHighSchools$.id)"
                  [class.selectedout]="regionActive === JuniorHighSchools$.id" >
                 <div class="row">
@@ -53,58 +53,62 @@ import { HelperDataService } from "../../services/helper-data-service";
                  <label> Λύκειο Υποδοχής </label>
                    <select #highscsel class="form-control" (change)="confirmSchool(highscsel)" >
                         <option value="0"></option>
-                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index"
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
                    </select>
                    <br>
                    <br>
                   <div class = "row selectedout" *ngIf ="regionActive === JuniorHighSchools$.id" style="margin: 0px 2px 0px 2px;">
+                     
+                     <div class="col-md-2" style="   font-weight: bold;" >Επιλογή Όλων 
 
-                     <div class="col-md-1" style="   font-weight: bold;" >Επιλογή Όλων
-
-
-                         <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
-
-
+                       
+                         <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
+                       
 
                      </div>
-                    <div class="col-md-1" style="   font-weight: bold;" >A/A Αίτησης</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >A/A Αίτησης</div>
                     <div class="col-md-2" style="   font-weight: bold;" >ΑΜ Μαθητη</div>
-
-                    <div class="col-md-4" style="   font-weight: bold;" >Διεύθυνση</div>
-                    <div class="col-md-3 " style="   font-weight: bold;" >Περιοχή</div>
-                    <div class="col-md-1 " style="   font-weight: bold;" >ΤΚ</div>
+                    
+                    <div class="col-md-3" style="   font-weight: bold;" >Διεύθυνση</div>
+                    <div class="col-md-3" style="   font-weight: bold;" >Τύπος Σχολείου</div>
+                
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >Περιοχή</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >ΤΚ</div>
                    </div>
                  <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
                   class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
                    style="margin: 0px 2px 0px 2px;">
-                    <div class="col-md-1 " *ngIf ="regionActive === JuniorHighSchools$.id">
-                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">
+                    <div class="col-md-2 " *ngIf ="regionActive === JuniorHighSchools$.id">
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
                    </div>
-                    <div class="col-md-1" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
                     <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.am}}</div>
-
-                    <div class="col-md-4" style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
-                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.regionarea}}</div>
-                    <div class="col-md-1 " style="   font-weight: bold;" >{{AllStudents$.regiontk}}</div>
-                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-10 offset-md-2" style="   font-weight: bold;" >{{AllStudents$.oldschool}}</div>
-
-
-
+                    
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.school_type}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regionarea}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regiontk}}</div>
+                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-10 offset-md-2 changecolor" style="font-weight: bold;">
+                            {{AllStudents$.oldschool}}
+                     </div>
+                  
+                   
+                    
                     <div  *ngIf="AllStudents$.oldschool === false" class="col-md-11 offset-md-1">
-
+                    
                     </div>
                  </div>
                  </div>
 
 
-
+              
        </div>
 
       </form>
     </div>
 
-
+  
 
    `
 })
@@ -150,10 +154,10 @@ import { HelperDataService } from "../../services/helper-data-service";
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
         this.modalHeader = new BehaviorSubject("");
-
+       
     }
 
-
+    
     ngOnDestroy() {
       (<any>$("#informationfeedback")).remove();
 
@@ -193,7 +197,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                     if (this.selall === true)
                     {
                      console.log("mphke", this.selections);
-
+                    
                     this.SelectAllIds = this.StudentsPerSchool$.getValue();
                        for (let i = 0; i < this.SelectAllIds.length; i++) {
                         this.selections[i] = this.SelectAllIds[i].id;
@@ -215,7 +219,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-
+                    
                     this.showLoader.next(false);
                 });
         }
@@ -250,7 +254,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-
+                    
                     this.showLoader.next(false);
                 });
            this.modalHeader.next("modal-header-danger");
@@ -260,10 +264,10 @@ import { HelperDataService } from "../../services/helper-data-service";
            this.selall = false;
            this.selections = [];
 
-
+           
        }
         else{
-
+       
         this.SaveSelectionSub = this._hds.saveHighScoolSelection(this.selections, oldschool, schoolid).subscribe(data => {
             this.SaveSelection$.next(data);
             this.showLoader.next(false);
@@ -295,10 +299,10 @@ import { HelperDataService } from "../../services/helper-data-service";
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-
+                    
                     this.showLoader.next(false);
                 });
-
+               
 
 
 
@@ -338,12 +342,12 @@ updateCheckedOptions(k,l)
  else
  {
        this.selections.splice(index, 1);
-      console.log(this.selections,"selections")
+      console.log(this.selections,"selections") 
  }
 
  }
-
-
+  
+ 
 
 findid(id)
 {
@@ -353,7 +357,7 @@ let server = 0;
   let index: number = this.selections.indexOf(server);
   if (index !== -1 && this.selall === true)
   {
-
+    
     console.log(this.selections,"find");
     return true;
 
@@ -376,16 +380,16 @@ let server = 0;
 
 selectall()
 {
-  this.selall =! this.selall;
-              this.showLoader.next(true);
+          this.selall =! this.selall;
+             this.showLoader.next(true);
             this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
                     if (this.selall === true)
                     {
-                     //console.log("mphke", this.selections);
-
+                     console.log("mphke", this.selections);
+                    
                     this.SelectAllIds = this.StudentsPerSchool$.getValue();
                        for (let i = 0; i < this.SelectAllIds.length; i++) {
                         this.selections[i] = this.SelectAllIds[i].id;
@@ -393,7 +397,7 @@ selectall()
                       }
                       else
                       {
-
+                           this.selections = [];
                       }
                     this.HighSchoolSub = this._hds.getHighSchoolperDide().subscribe(x => {
                         this.HighSchool$.next(x);
@@ -404,17 +408,17 @@ selectall()
                   });
 
 
-
+ 
 
                     this.showLoader.next(false);
                 },
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-
+                    
                     this.showLoader.next(false);
                 });
-
+ 
 }
 
 
