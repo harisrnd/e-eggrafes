@@ -118,12 +118,6 @@ gel.getstudents:
     _controller: '\Drupal\gel\Controller\GelDistribution::getStudentPerSchoolGel'
   requirements:
     _user_is_logged_in: 'TRUE'
-gel.demodata:
-  path: '/gel/demodata'
-  defaults:
-    _controller: '\Drupal\gel\Controller\CreateGelDemoData::createData'
-  requirements:
-    _access: 'TRUE'
 gel.getschools:
   path: '/gel/schoolsgel-per-perf'
   options:

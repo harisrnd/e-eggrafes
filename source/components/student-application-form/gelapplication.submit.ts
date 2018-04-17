@@ -38,7 +38,7 @@ import { StudentGelCourseChosen } from "../students/student";
     template: `
 
     <div class = "loading" *ngIf="( loginInfo$ | async).size === 0 || (gelclasses$ | async).size === 0 ||
-      (gelstudentDataFields$ | async).size === 0 || (showLoader | async) === true || (wsEnabled | async) ===-1 ">
+      (gelstudentDataFields$ | async).size === 0 || (showLoader | async) === true  ">
     </div>
 
     <div id="studentFormSentNotice" (onHidden)="onHidden()" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -431,11 +431,12 @@ import { StudentGelCourseChosen } from "../students/student";
         if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >= this.limitSchoolYear && aitisiObj[0].lastschool_unittypeid != "40")  {
               //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
                       //aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
+                this.showLoader.next(true);
 
                 let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
                 let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
 
-                this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
+                this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('null','null','null','null','null',
                 date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {
@@ -471,6 +472,7 @@ import { StudentGelCourseChosen } from "../students/student";
                       this.showModal();
                       (<any>$(".loading")).remove();
 
+                      this.showLoader.next(false);
                       return;
                     }
 
@@ -487,6 +489,7 @@ import { StudentGelCourseChosen } from "../students/student";
                       this.showModal();
                       (<any>$(".loading")).remove();
 
+                      this.showLoader.next(false);
                       return;
                     }
 
@@ -494,7 +497,20 @@ import { StudentGelCourseChosen } from "../students/student";
                     this.submitRecord(newapp, aitisiObj);
                 },
                 error => {
-                    console.log("Error Getting Courses");
+                    console.log("Error Getting StudentInfo from Web Service");
+
+                    let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
+                    let mText = "Αποτυχία κλήσης του web service ταυτοποίησης μαθητή. " +
+                      "Προσπαθήστε ξανά. Σε περίπτωση που το πρόβλημα επιμείνει, παρακαλώ επικοινωνήστε με την ομάδα υποστήριξης.";
+                    let mHeader = "modal-header-danger";
+                    this.modalTitle.next(mTitle);
+                    this.modalText.next(mText);
+                    this.modalHeader.next(mHeader);
+                    this.showModal();
+                    (<any>$(".loading")).remove();
+
+                    this.showLoader.next(false);
+                    return;
                 });
         }
 
