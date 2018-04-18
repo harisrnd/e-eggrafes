@@ -129,6 +129,7 @@ class WSConsumer extends ControllerBase
         } catch (\Exception $e) {
             return (new JsonResponse(['message' => $e->getMessage()]))
                 ->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code);
+                //->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_OK : $code);
         }
 
         $duration = microtime(true) - $ts_start;
@@ -151,7 +152,7 @@ class WSConsumer extends ControllerBase
               'id' => '158',
               'studentId' => 2666027,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
-              'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
+              'firstname' => 'ΚΩΝΣΤΑΝΤΙΣτοιχείαΝΟΣ',
               'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
               //'custodianLastName' =>  preg_replace('/\s+/', '', ' ΚΑΤΣ ΑΟΥΝΟΣ '),
               //'custodianLastName' =>  preg_replace('/[-\s]/', '', ' ΚΑΤΣ - ΑΟΥΝΟΣ '),
