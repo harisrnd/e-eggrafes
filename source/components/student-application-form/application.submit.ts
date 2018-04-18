@@ -475,7 +475,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
                       date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 .subscribe(data => {
-                    if (typeof data.data["studentId"] !== "undefined")  {
+                    //if (typeof data.data["studentId"] !== "undefined")  {
+                    if (data.data!=null)  {
                       aitisiObj[0].studentId = data.data["studentId"];
                       //console.log("Test");
                       //console.log(aitisiObj[0].studentId);
