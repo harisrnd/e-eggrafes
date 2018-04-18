@@ -436,7 +436,7 @@ import { StudentGelCourseChosen } from "../students/student";
                 let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
                 let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
 
-                this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('null','null','null','null','null',
+                this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
                 date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {
