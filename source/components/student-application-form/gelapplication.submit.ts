@@ -440,7 +440,8 @@ import { StudentGelCourseChosen } from "../students/student";
                 date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {
-                    if (typeof data.data["studentId"] !== "undefined")  {
+                    //if (typeof data.data["studentId"] !== "undefined")  {
+                    if (data.data!=null)  {
                       aitisiObj[0].studentId = data.data["studentId"];
                       //aitisiObj[0].websrv_cu_name = data.data["custodianFirstName"];
                       //aitisiObj[0].websrv_studentbirthdate = data.birthDate;
