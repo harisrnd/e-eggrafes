@@ -1004,129 +1004,141 @@ public function FindStudentsPerSchoolGym(Request $request)
 
             $list = array();
 
-            if ($studentPerSchool_epal) {
-                foreach ($studentPerSchool_epal as $epalStudent) {
-
-                    $studentId=intval($epalStudent->id->value);
-
-                    $assignedEpals = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(['student_id'=> $studentId]);
-                    $assignedEpal= reset($assignedEpals);
-                    $asignedschool=$assignedEpal->epal_id->entity->get('name')->value;   
-
-
-                    $crypt = new Crypt();
-                    try {
-                        if (!empty($epalStudent->am->value)){
-                            $am_decoded = $crypt->decrypt($epalStudent->am->value);
-                        }
-                        else{
-                            $am_decoded="";
-                        }
-                        $name_decoded = $crypt->decrypt($epalStudent->name->value);
-                        $studentsurname_decoded = $crypt->decrypt($epalStudent->studentsurname->value);
-                        $fatherfirstname_decoded = $crypt->decrypt($epalStudent->fatherfirstname->value);
-                        $motherfirstname_decoded = $crypt->decrypt($epalStudent->motherfirstname->value);
-                        $regionaddress_decoded = $crypt->decrypt($epalStudent->regionaddress->value);
-                        $regiontk_decoded = $crypt->decrypt($epalStudent->regiontk->value);
-                        $regionarea_decoded = $crypt->decrypt($epalStudent->regionarea->value);
-                        $telnum_decoded = $crypt->decrypt($epalStudent->telnum->value);
-                        $guardian_name_decoded = $crypt->decrypt($epalStudent->guardian_name->value);
-                        $guardian_surname_decoded = $crypt->decrypt($epalStudent->guardian_surname->value);
-                        $guardian_fathername_decoded = $crypt->decrypt($epalStudent->guardian_fathername->value);
-                        $guardian_mothername_decoded = $crypt->decrypt($epalStudent->guardian_mothername->value);
-                    } catch (\Exception $e) {
-                        $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
-                        return $this->respondWithStatus([
-                        "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
-                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
-                    }
-
-                    $list[] = array(
-                        'am' => $am_decoded,
-                        'id' => $gelStudent->id->value,
-                        'name' => $name_decoded,
-                        'studentsurname' => $studentsurname_decoded,
-                        'fatherfirstname' => $fatherfirstname_decoded,
-                        'motherfirstname' => $motherfirstname_decoded,
-                        'guardian_name' => $guardian_name_decoded,
-                        'guardian_surname' => $guardian_surname_decoded,
-                        'guardian_fathername' => $guardian_fathername_decoded,
-                        'guardian_mothername' => $guardian_mothername_decoded,
-                        'regionaddress' => $regionaddress_decoded,
-                        'regiontk' => $regiontk_decoded,
-                        'regionarea' => $regionarea_decoded,
-                        'telnum' => $telnum_decoded,
-                        'gel' => $asignedschool,
-
-                    );
-                }                
-            }
-             
-
-
-            if ($studentPerSchool_gel) {
-                foreach ($studentPerSchool_gel as $gelStudent) {
-
-                    $studentId=intval($gelStudent->id->value);
-
-                    $assignedGels = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(['student_id'=> $studentId]);
-                    $assignedGel= reset($assignedGels);
-                    $asignedschool=$assignedGel->school_id->entity->get('name')->value;                   
-
-                    $crypt = new Crypt();
-                    try {
-                        if (!empty($gelStudent->am->value)){
-                            $am_decoded = $crypt->decrypt($gelStudent->am->value);
-                        }
-                        else{
-                            $am_decoded="";
-                        }
-                        $name_decoded = $crypt->decrypt($gelStudent->name->value);
-                        $studentsurname_decoded = $crypt->decrypt($gelStudent->studentsurname->value);
-                        $fatherfirstname_decoded = $crypt->decrypt($gelStudent->fatherfirstname->value);
-                        $motherfirstname_decoded = $crypt->decrypt($gelStudent->motherfirstname->value);
-                        $regionaddress_decoded = $crypt->decrypt($gelStudent->regionaddress->value);
-                        $regiontk_decoded = $crypt->decrypt($gelStudent->regiontk->value);
-                        $regionarea_decoded = $crypt->decrypt($gelStudent->regionarea->value);
-                        $telnum_decoded = $crypt->decrypt($gelStudent->telnum->value);
-                        $guardian_name_decoded = $crypt->decrypt($gelStudent->guardian_name->value);
-                        $guardian_surname_decoded = $crypt->decrypt($gelStudent->guardian_surname->value);
-                        $guardian_fathername_decoded = $crypt->decrypt($gelStudent->guardian_fathername->value);
-                        $guardian_mothername_decoded = $crypt->decrypt($gelStudent->guardian_mothername->value);
-                    } catch (\Exception $e) {
-                        $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
-                        return $this->respondWithStatus([
-                        "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
-                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
-                    }
-
-                    $list[] = array(
-                        'am' => $am_decoded,
-                        'id' => $gelStudent->id->value,
-                        'name' => $name_decoded,
-                        'studentsurname' => $studentsurname_decoded,
-                        'fatherfirstname' => $fatherfirstname_decoded,
-                        'motherfirstname' => $motherfirstname_decoded,
-                        'guardian_name' => $guardian_name_decoded,
-                        'guardian_surname' => $guardian_surname_decoded,
-                        'guardian_fathername' => $guardian_fathername_decoded,
-                        'guardian_mothername' => $guardian_mothername_decoded,
-                        'regionaddress' => $regionaddress_decoded,
-                        'regiontk' => $regiontk_decoded,
-                        'regionarea' => $regionarea_decoded,
-                        'telnum' => $telnum_decoded,
-                        'gel' => $asignedschool,
-
-                    );
-                }
-                return $this->respondWithStatus($list, Response::HTTP_OK);
-
-            }
-            else {
+            if (sizeof($studentPerSchool_gel)==0 &&sizeof($studentPerSchool_epal)==0) {
                 return $this->respondWithStatus([
                     'message' => t('Students not found!'),
                 ], Response::HTTP_NOT_FOUND);
             }
+            else{
+                if ($studentPerSchool_epal) {
+                    foreach ($studentPerSchool_epal as $epalStudent) {
+    
+                        $studentId=intval($epalStudent->id->value);
+    
+                        $assignedEpals = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(['student_id'=> $studentId]);
+                        if (sizeof($assignedEpals)>0){
+                            $assignedEpal= reset($assignedEpals);
+                            $asignedschool=$assignedEpal->epal_id->entity->get('name')->value;   
+        
+        
+                            $crypt = new Crypt();
+                            try {
+                                if (!empty($epalStudent->am->value)){
+                                    $am_decoded = $crypt->decrypt($epalStudent->am->value);
+                                }
+                                else{
+                                    $am_decoded="";
+                                }
+                                $name_decoded = $crypt->decrypt($epalStudent->name->value);
+                                $studentsurname_decoded = $crypt->decrypt($epalStudent->studentsurname->value);
+                                $fatherfirstname_decoded = $crypt->decrypt($epalStudent->fatherfirstname->value);
+                                $motherfirstname_decoded = $crypt->decrypt($epalStudent->motherfirstname->value);
+                                $regionaddress_decoded = $crypt->decrypt($epalStudent->regionaddress->value);
+                                $regiontk_decoded = $crypt->decrypt($epalStudent->regiontk->value);
+                                $regionarea_decoded = $crypt->decrypt($epalStudent->regionarea->value);
+                                $telnum_decoded = $crypt->decrypt($epalStudent->telnum->value);
+                                $guardian_name_decoded = $crypt->decrypt($epalStudent->guardian_name->value);
+                                $guardian_surname_decoded = $crypt->decrypt($epalStudent->guardian_surname->value);
+                                $guardian_fathername_decoded = $crypt->decrypt($epalStudent->guardian_fathername->value);
+                                $guardian_mothername_decoded = $crypt->decrypt($epalStudent->guardian_mothername->value);
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+        
+                            $list[] = array(
+                                'am' => $am_decoded,
+                                'id' => $gelStudent->id->value,
+                                'name' => $name_decoded,
+                                'studentsurname' => $studentsurname_decoded,
+                                'fatherfirstname' => $fatherfirstname_decoded,
+                                'motherfirstname' => $motherfirstname_decoded,
+                                'guardian_name' => $guardian_name_decoded,
+                                'guardian_surname' => $guardian_surname_decoded,
+                                'guardian_fathername' => $guardian_fathername_decoded,
+                                'guardian_mothername' => $guardian_mothername_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'telnum' => $telnum_decoded,
+                                'gel' => $asignedschool,
+        
+                            );
+    
+                        }
+    
+                    }                
+                }
+                 
+    
+    
+                if ($studentPerSchool_gel) {
+                    foreach ($studentPerSchool_gel as $gelStudent) {
+    
+                        $studentId=intval($gelStudent->id->value);
+    
+                        $assignedGels = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(['student_id'=> $studentId]);
+                        if (sizeof($assignedGels)>0){
+                            $assignedGel= reset($assignedGels);
+                            $asignedschool=$assignedGel->school_id->entity->get('name')->value;                   
+        
+                            $crypt = new Crypt();
+                            try {
+                                if (!empty($gelStudent->am->value)){
+                                    $am_decoded = $crypt->decrypt($gelStudent->am->value);
+                                }
+                                else{
+                                    $am_decoded="";
+                                }
+                                $name_decoded = $crypt->decrypt($gelStudent->name->value);
+                                $studentsurname_decoded = $crypt->decrypt($gelStudent->studentsurname->value);
+                                $fatherfirstname_decoded = $crypt->decrypt($gelStudent->fatherfirstname->value);
+                                $motherfirstname_decoded = $crypt->decrypt($gelStudent->motherfirstname->value);
+                                $regionaddress_decoded = $crypt->decrypt($gelStudent->regionaddress->value);
+                                $regiontk_decoded = $crypt->decrypt($gelStudent->regiontk->value);
+                                $regionarea_decoded = $crypt->decrypt($gelStudent->regionarea->value);
+                                $telnum_decoded = $crypt->decrypt($gelStudent->telnum->value);
+                                $guardian_name_decoded = $crypt->decrypt($gelStudent->guardian_name->value);
+                                $guardian_surname_decoded = $crypt->decrypt($gelStudent->guardian_surname->value);
+                                $guardian_fathername_decoded = $crypt->decrypt($gelStudent->guardian_fathername->value);
+                                $guardian_mothername_decoded = $crypt->decrypt($gelStudent->guardian_mothername->value);
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+        
+                            $list[] = array(
+                                'am' => $am_decoded,
+                                'id' => $gelStudent->id->value,
+                                'name' => $name_decoded,
+                                'studentsurname' => $studentsurname_decoded,
+                                'fatherfirstname' => $fatherfirstname_decoded,
+                                'motherfirstname' => $motherfirstname_decoded,
+                                'guardian_name' => $guardian_name_decoded,
+                                'guardian_surname' => $guardian_surname_decoded,
+                                'guardian_fathername' => $guardian_fathername_decoded,
+                                'guardian_mothername' => $guardian_mothername_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'telnum' => $telnum_decoded,
+                                'gel' => $asignedschool,
+        
+                            );
+                        }
+    
+                        
+                    }   
+                }
+
+                return $this->respondWithStatus($list, Response::HTTP_OK);
+            }
+
+            
 
         }
     } catch (\Exception $e) {
