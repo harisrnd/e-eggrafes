@@ -16,6 +16,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Cookie;
 require ('RedirectResponseWithCookieExt.php');
 
+use \Drupal\Core\Routing\TrustedRedirectResponse;
+use \Drupal\Core\Routing\CacheableSecuredRedirectResponse;
+use \Drupal\Component\HttpFoundation\SecuredRedirectResponse;
+
 class CASLogin extends ControllerBase
 {
 
@@ -158,12 +162,16 @@ class CASLogin extends ControllerBase
 
             $epalToken = $this->authenticatePhase2($request, $CASUser, $userAssigned, $filterAttribute('cn'));
             if ($epalToken) {
+                /*
                 if ('casost_sch_sso_config' === $configRowName) {
                     return new RedirectResponse($this->redirectUrl . $epalToken.'&auth_role=' . $userAssigned["exposedRole"], 302, []);
                 } else {
                     \Drupal::service('page_cache_kill_switch')->trigger();
                     return new RedirectResponseWithCookieExt($this->redirectUrl . $epalToken.'&auth_role=' . $userAssigned["exposedRole"], 302, []);
                 }
+                */
+                return new TrustedRedirectResponse($this->redirectUrl . $epalToken.'&auth_role=' . $userAssigned["exposedRole"], 302);
+
             } else {
                 return $this->redirectForbidden($configRowName, '5005');
             }
@@ -189,7 +197,7 @@ class CASLogin extends ControllerBase
             }
             else{
                 return array("id" => $school->id(), "exposedRole" => "director_gel", "internalRole" => "gel");
-            } 
+            }
         }
         $eduAdmins = $this->entityTypeManager->getStorage('eepal_admin_area')->loadByProperties(array('registry_no' => $registry_no));
         $eduAdmin = reset($eduAdmins);
@@ -208,12 +216,16 @@ class CASLogin extends ControllerBase
     private function redirectForbidden($configRowName, $errorCode) {
         session_unset();
         session_destroy();
+
         \Drupal::service('page_cache_kill_switch')->trigger();
+        /*
         if ('casost_sch_sso_config' === $configRowName) {
             return new RedirectResponse($this->redirectUrl.'&error_code=' . $errorCode, 302, []);
         } else {
             return new RedirectResponseWithCookieExt($this->redirectUrl .'&error_code=' . $errorCode, 302, []);
         }
+        */
+        return new TrustedRedirectResponse($this->redirectUrl .'&error_code=' . $errorCode, 302);
     }
 
     private function authenticatePhase2($request, $CASUser, $userAssigned, $cn)

@@ -429,8 +429,7 @@ import { StudentGelCourseChosen } from "../students/student";
 
         //κλήση myschool web service
         if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >= this.limitSchoolYear && aitisiObj[0].lastschool_unittypeid != "40")  {
-              //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
-                      //aitisiObj[0].studentbirthdate + "T00:00:00", aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
+
                 this.showLoader.next(true);
 
                 let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
@@ -438,28 +437,30 @@ import { StudentGelCourseChosen } from "../students/student";
 
                 this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
                 date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
-                //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {
                     //if (typeof data.data["studentId"] !== "undefined")  {
                     if (data.data!=null)  {
                       aitisiObj[0].studentId = data.data["studentId"];
-                      //aitisiObj[0].websrv_cu_name = data.data["custodianFirstName"];
-                      //aitisiObj[0].websrv_studentbirthdate = data.birthDate;
                       aitisiObj[0].websrv_cu_surname = data.data["custodianLastName"];
                       aitisiObj[0].regionaddress = data.data["addressStreet"];
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];
-                        if (data.data["levelName"]==='Α'){
-                            aitisiObj[0].lastschool_class = 1;
-                        }
-                        else if (data.data["levelName"]==='Β'){
-                            aitisiObj[0].lastschool_class = 2;
-                        }
-                        else if (data.data["levelName"]==='Γ'){
-                            aitisiObj[0].lastschool_class = 3;
-                        }
-
-                        aitisiObj[0].section_name = data.data["sectionName"];
+                      aitisiObj[0].section_name = data.data["sectionName"];
+                      if (data.data["levelName"]==='Α'){
+                          aitisiObj[0].lastschool_class = 1;
+                      }
+                      else if (data.data["levelName"]==='Β'){
+                          aitisiObj[0].lastschool_class = 2;
+                      }
+                      else if (data.data["levelName"]==='Γ'){
+                          aitisiObj[0].lastschool_class = 3;
+                      }
+                      else if (data.data["levelName"]==='Δ'){
+                          aitisiObj[0].lastschool_class = 4;
+                      }
+                      else  {
+                          aitisiObj[0].lastschool_class = -1;
+                      }
                     }
                     else {
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
@@ -494,7 +495,34 @@ import { StudentGelCourseChosen } from "../students/student";
                       return;
                     }
 
-                    //console.log(aitisiObj[0]);
+                    if (aitisiObj[0].regionaddress === null || aitisiObj[0].regionaddress.replace(/ |-/g, "") === "" ) {
+                      let mTitle = "Αποτυχία Ανάκτησης Διεύθυνσης Κατοικίας";
+                      let mText = "Παρακαλώ επικοινωνήστε με το σχολείο σας για να καταχωρηθεί η Διεύθυνση Κατοικίας σας στο ΠΣ myschοol. ";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
+
+                      this.showLoader.next(false);
+                      return;
+                    }
+
+                    if (aitisiObj[0].lastschool_class === -1) {
+                      let mTitle = "Αποτυχία Ανάκτησης Τελευταίας Τάξης Φοίτησης";
+                      let mText = "Παρακαλώ δοκιμάστε ξανά. Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης.";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
+
+                      this.showLoader.next(false);
+                      return;
+                    }
+
                     this.submitRecord(newapp, aitisiObj);
                 },
                 error => {
@@ -543,7 +571,8 @@ import { StudentGelCourseChosen } from "../students/student";
             1022: "Σχολείο τελευταίας φοίτησης",
             1023: "Τάξη τελευταίας φοίτησης",
             1024: "Μοναδικός αριθμός μαθητή για έτος μικρότερο του σχολικού έτους αναφοράς",
-            1025: "Μη Μοναδικός αριθμός μαθητή για έτος μεγαλύτεο ίσο του σχολικού έτους αναφοράς"
+            1025: "Μη Μοναδικός αριθμός μαθητή για έτος μεγαλύτερο ίσο του σχολικού έτους αναφοράς",
+            1026: "Μη έγκυρη τάξη προορισμού"
         };
         let authTokenPost = this.authToken + ":" + this.authToken;
 
@@ -641,6 +670,11 @@ import { StudentGelCourseChosen } from "../students/student";
                     case 1025:
                         mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
                         mText = "Παρακαλούμε ελέγξτε τα στοιχεία που υποβάλλετε. Μη ύπαρξη επιστρεφόμενου μοναδικού αριθμόυ μαθητή για σχολικό έτος >= " + this.limitSchoolYear + ".";
+                        mHeader = "modal-header-danger";
+                        break;
+                    case 1026:
+                        mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
+                        mText = "Δεν μπορείτε να εγγραφείτε στην τάξη που επιλέξατε.";
                         mHeader = "modal-header-danger";
                         break;
                     case 3002:
