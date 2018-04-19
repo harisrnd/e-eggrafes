@@ -69,7 +69,7 @@ class WSConsumer extends ControllerBase
     public function getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
         $testmode = false;
-        $this->logger->info("didactic_year=".$didactic_year_id);
+        //$this->logger->info("didactic_year=".$didactic_year_id);
 
         switch ($didactic_year_id){
             case "2013-2014":
@@ -89,7 +89,7 @@ class WSConsumer extends ControllerBase
                 break;
        }
 
-       $this->logger->info("didactic_year_id=".$didactic_year_id);
+       //$this->logger->info("didactic_year_id=".$didactic_year_id);
 
         if ($testmode)  {
           $obj = array(
@@ -100,10 +100,10 @@ class WSConsumer extends ControllerBase
               'studentId' => 2666021,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
               'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
-              'custodianLastName' =>  'ΓΕΩΡΓΟΥΛΑΣ',
+              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
               'custodianFirstName' => '',
               'birthDate' => '1997-01-04T00:00:00',
-              'addressStreet' => 'ΕΛΛΗΣ 6',
+              'addressStreet' => 'XATZH',
               'addressPostCode' => '30100',
               'addressArea' => 'ΑΓΡΙΝΙΟ',
               'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',

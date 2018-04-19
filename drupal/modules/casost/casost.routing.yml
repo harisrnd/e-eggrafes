@@ -1,5 +1,7 @@
 casost.log_in_go:
   path: /cas/login
+  options:
+    no_cache: 'TRUE' 
   defaults:
     _controller: '\Drupal\casost\Controller\CASLogin::loginGo'
   requirements:

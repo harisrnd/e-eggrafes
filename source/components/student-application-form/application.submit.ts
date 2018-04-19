@@ -476,26 +476,29 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 .subscribe(data => {
                     //if (typeof data.data["studentId"] !== "undefined")  {
-                    if (data.data!=null)  {
+                    if (data.data != null)  {
                       aitisiObj[0].studentId = data.data["studentId"];
-                      //console.log("Test");
-                      //console.log(aitisiObj[0].studentId);
-                      //aitisiObj[0].websrv_cu_name = data.data["custodianFirstName"];
-                      //aitisiObj[0].websrv_studentbirthdate = data.birthDate;
                       aitisiObj[0].websrv_cu_surname = data.data["custodianLastName"];
                       aitisiObj[0].regionaddress = data.data["addressStreet"];
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];
                       aitisiObj[0].section_name = data.data["sectionName"];
-                        if (data.data["levelName"]==='Α'){
-                            aitisiObj[0].lastschool_class = 1;
-                        }
-                        else if (data.data["levelName"]==='Β'){
-                            aitisiObj[0].lastschool_class = 2;
-                        }
-                        else if (data.data["levelName"]==='Γ'){
-                            aitisiObj[0].lastschool_class = 3;
-                        }
+                      if (data.data["levelName"]==='Α'){
+                          aitisiObj[0].lastschool_class = 1;
+                      }
+                      else if (data.data["levelName"]==='Β'){
+                          aitisiObj[0].lastschool_class = 2;
+                      }
+                      else if (data.data["levelName"]==='Γ'){
+                          aitisiObj[0].lastschool_class = 3;
+                      }
+                      else if (data.data["levelName"]==='Δ'){
+                          aitisiObj[0].lastschool_class = 4;
+                      }
+                      else  {
+                          aitisiObj[0].lastschool_class = -1;
+                      }
+
                     }
                     else {
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
@@ -529,7 +532,35 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       this.showLoader.next(false);
                       return;
                     }
-                    //console.log(aitisiObj[0]);
+
+                    if (aitisiObj[0].regionaddress === null || aitisiObj[0].regionaddress.replace(/ |-/g, "") === "" ) {
+                      let mTitle = "Αποτυχία Ανάκτησης Διεύθυνσης Κατοικίας";
+                      let mText = "Παρακαλώ επικοινωνήστε με το σχολείο σας για να καταχωρηθεί η Διεύθυνση Κατοικίας σας στο ΠΣ myschοol. ";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
+
+                      this.showLoader.next(false);
+                      return;
+                    }
+
+                    if (aitisiObj[0].lastschool_class === -1) {
+                      let mTitle = "Αποτυχία Ανάκτησης Τελευταίας Τάξης Φοίτησης";
+                      let mText = "Παρακαλώ δοκιμάστε ξανά. Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης.";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
+
+                      this.showLoader.next(false);
+                      return;
+                    }
+
                     this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
                 },
                 error => {
