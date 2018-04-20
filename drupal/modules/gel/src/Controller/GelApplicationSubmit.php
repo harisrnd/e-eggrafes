@@ -209,6 +209,8 @@ class GelApplicationSubmit extends ControllerBase
                 'telnum' => $telnum_encoded,
                 'second_period' => $second_period,
                 'myschool_currentsection' => $applicationForm[0]['section_name'],
+                'myschool_currentlevelname' => $applicationForm[0]['level_name'],
+                'myschool_currentunittype' => $applicationForm[0]['unittype_name'],
             );
 
             if (($errorCode = $this->validateStudent(array_merge(
@@ -436,6 +438,8 @@ class GelApplicationSubmit extends ControllerBase
               'telnum' => $telnum_encoded,
               'second_period' => $second_period,
               'myschool_currentsection' => $applicationForm[0]['section_name'],
+              'myschool_currentlevelname' => $applicationForm[0]['level_name'],
+              'myschool_currentunittype' => $applicationForm[0]['unittype_name'],
           );
 
           if (($errorCode = $this->validateStudent(array_merge(
@@ -498,6 +502,8 @@ class GelApplicationSubmit extends ControllerBase
             $gelStudent->set('am', $am_encoded);
             $gelStudent->set('myschool_id', $applicationForm[0]['studentId']);
             $gelStudent->set('myschool_currentsection', $applicationForm[0]['section_name']);
+            $gelStudent->set('myschool_currentlevelname', $applicationForm[0]['level_name']);
+            $gelStudent->set('myschool_currentunittype', $applicationForm[0]['unittype_name']);
 
             $gelStudent->save();
           }

@@ -408,6 +408,8 @@ import { StudentGelCourseChosen } from "../students/student";
         // }
 
         aitisiObj[0].section_name = null;
+        aitisiObj[0].level_name = null;
+        aitisiObj[0].unittype_name = null;
 
         //aitisiObj[1]: ομάδα προσανατολισμού
         let classIds = ["2", "3", "6", "7"];
@@ -446,6 +448,8 @@ import { StudentGelCourseChosen } from "../students/student";
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];
                       aitisiObj[0].section_name = data.data["sectionName"];
+                      aitisiObj[0].level_name = data.data["levelName"];
+                      aitisiObj[0].unittype_name = data.data["unitTypeDescription"];
                       if (data.data["levelName"]==='Α'){
                           aitisiObj[0].lastschool_class = 1;
                       }

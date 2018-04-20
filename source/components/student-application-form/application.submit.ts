@@ -451,6 +451,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         // }
 
         aitisiObj[0].section_name = null;
+        aitisiObj[0].level_name = null;
+        aitisiObj[0].unittype_name = null;
 
         let epalSelected = this.epalSelected$.getValue();
         for (let i = 0; i < epalSelected.length; i++) {
@@ -483,6 +485,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];
                       aitisiObj[0].section_name = data.data["sectionName"];
+                      aitisiObj[0].level_name = data.data["levelName"];
+                      aitisiObj[0].unittype_name = data.data["unitTypeDescription"];
                       if (data.data["levelName"]==='Α'){
                           aitisiObj[0].lastschool_class = 1;
                       }

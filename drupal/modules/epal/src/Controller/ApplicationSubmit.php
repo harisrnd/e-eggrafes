@@ -244,6 +244,8 @@ class ApplicationSubmit extends ControllerBase
                 'telnum' => $telnum_encoded,
                 'second_period' => $second_period,
                 'myschool_currentsection' => $applicationForm[0]['section_name'],
+                'myschool_currentlevelname' => $applicationForm[0]['level_name'],
+                'myschool_currentunittype' => $applicationForm[0]['unittype_name'],
             );
 
             if (($errorCode = $this->validateStudent(array_merge(
@@ -520,6 +522,8 @@ class ApplicationSubmit extends ControllerBase
               'telnum' => $telnum_encoded,
               'second_period' => $eggrafesConfig->activate_second_period->value,
               'myschool_currentsection' => $applicationForm[0]['section_name'],
+              'myschool_currentlevelname' => $applicationForm[0]['level_name'],
+              'myschool_currentunittype' => $applicationForm[0]['unittype_name'],
           );
 
           if (($errorCode = $this->validateStudent(array_merge(
@@ -596,6 +600,8 @@ class ApplicationSubmit extends ControllerBase
              $epalStudent->set('am', $am_encoded);
              $epalStudent->set('myschool_id', $applicationForm[0]['studentId']);
              $epalStudent->set('myschool_currentsection', $applicationForm[0]['section_name']);
+             $gelStudent->set('myschool_currentlevelname', $applicationForm[0]['level_name']);
+             $gelStudent->set('myschool_currentunittype', $applicationForm[0]['unittype_name']);
 
              $epalStudent->save();
            }
