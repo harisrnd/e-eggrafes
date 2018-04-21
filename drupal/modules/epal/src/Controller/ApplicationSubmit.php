@@ -174,14 +174,20 @@ class ApplicationSubmit extends ControllerBase
             $fatherfirstname_encoded = $crypt->encrypt($applicationForm[0]['fatherfirstname']);
             $motherfirstname_encoded = $crypt->encrypt($applicationForm[0]['motherfirstname']);
             $regionaddress_encoded = $crypt->encrypt($applicationForm[0]['regionaddress']);
-            $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
             $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
             $telnum_encoded = $crypt->encrypt($applicationForm[0]['telnum']);
             $guardian_name_encoded = $crypt->encrypt($applicationForm[0]['cu_name']);
             $guardian_surname_encoded = $crypt->encrypt($applicationForm[0]['cu_surname']);
             $guardian_fathername_encoded = $crypt->encrypt($applicationForm[0]['cu_fathername']);
             $guardian_mothername_encoded = $crypt->encrypt($applicationForm[0]['cu_mothername']);
-
+            if ($applicationForm[0]['regiontk'] != null)
+              $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
+            else
+              $regiontk_encoded = $applicationForm[0]['regiontk'];
+            if ($applicationForm[0]['regionarea'] != null)
+              $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
+            else
+              $regionarea_encoded = $applicationForm[0]['regionarea'];
             $am_encoded = "";
             if ( $applicationForm[0]['lastschool_schoolyear'] >= self::LIMIT_SCHOOL_YEAR)
                 $am_encoded = $crypt->encrypt($applicationForm[0]['am']);
@@ -258,7 +264,7 @@ class ApplicationSubmit extends ControllerBase
                     ]), sizeof($applicationForm[1]), $applicationForm[0]['currentclass'],
                     $applicationForm[2]['sectorfield_id'],
                     $applicationForm[2]['coursefield_id'],
-                    $epalUser, false)) > 0) {
+                    $epalUser, $eggrafesConfig->ws_ident->value, false)) > 0) {
                 return $this->respondWithStatus([
                     "error_code" => $errorCode
                 ], Response::HTTP_OK);
@@ -445,14 +451,21 @@ class ApplicationSubmit extends ControllerBase
           $fatherfirstname_encoded = $crypt->encrypt($applicationForm[0]['fatherfirstname']);
           $motherfirstname_encoded = $crypt->encrypt($applicationForm[0]['motherfirstname']);
           $regionaddress_encoded = $crypt->encrypt($applicationForm[0]['regionaddress']);
-          $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
-          $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
+          //$regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
+          //$regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
           $telnum_encoded = $crypt->encrypt($applicationForm[0]['telnum']);
           $guardian_name_encoded = $crypt->encrypt($applicationForm[0]['cu_name']);
           $guardian_surname_encoded = $crypt->encrypt($applicationForm[0]['cu_surname']);
           $guardian_fathername_encoded = $crypt->encrypt($applicationForm[0]['cu_fathername']);
           $guardian_mothername_encoded = $crypt->encrypt($applicationForm[0]['cu_mothername']);
-
+          if ($applicationForm[0]['regiontk'] != null)
+            $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
+          else
+            $regiontk_encoded = $applicationForm[0]['regiontk'];
+          if ($applicationForm[0]['regionarea'] != null)
+            $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
+          else
+            $regionarea_encoded = $applicationForm[0]['regionarea'];
           $am_encoded = "";
           if ( $applicationForm[0]['lastschool_schoolyear'] >= self::LIMIT_SCHOOL_YEAR)
               $am_encoded = $crypt->encrypt($applicationForm[0]['am']);
@@ -527,7 +540,7 @@ class ApplicationSubmit extends ControllerBase
                   ]), sizeof($applicationForm[1]), $applicationForm[0]['currentclass'],
                   $applicationForm[2]['sectorfield_id'],
                   $applicationForm[2]['coursefield_id'],
-                  $epalUser, true)) > 0) {
+                  $epalUser, $eggrafesConfig->ws_ident->value, true)) > 0) {
               return $this->respondWithStatus([
                   "error_code" => $errorCode
               ], Response::HTTP_OK);
@@ -721,7 +734,7 @@ class ApplicationSubmit extends ControllerBase
      *  8002 τα στοιχεία φοίτησης δεν επικυρώθηκαν
      *  8003 τα στοιχεία φοίτησης δεν είναι έγκυρα
      */
-    private function validateStudent($student, $numberOfSchools, $chosenClass, $chosenSector, $chosenCourse, $epalUser = null, $appUpdate)
+    private function validateStudent($student, $numberOfSchools, $chosenClass, $chosenSector, $chosenCourse, $epalUser = null, $wsEnabled, $appUpdate)
     {
         $error_code = 0;
         if (!$student["hasright"] && $appUpdate == false) {
@@ -765,13 +778,16 @@ class ApplicationSubmit extends ControllerBase
         if (preg_match(self::VALID_UCASE_NAMES_PATTERN, $student["motherfirstname"]) !== 1) {
             return 1007;
         }
-        if (preg_match(self::VALID_ADDRESS_PATTERN, $student["regionaddress"]) !== 1) {
+        if ( ( ($wsEnabled === 1 && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) || ($wsEnabled === 0) )
+          && preg_match(self::VALID_ADDRESS_PATTERN, $student["regionaddress"]) !== 1) {
             return 1008;
         }
-        if (preg_match(self::VALID_ADDRESSTK_PATTERN, $student["regiontk"]) !== 1) {
+        if (  ( ($wsEnabled === 1 && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) || ($wsEnabled === 0) )
+          && preg_match(self::VALID_ADDRESSTK_PATTERN, $student["regiontk"]) !== 1) {
             return 1009;
         }
-        if (preg_match(self::VALID_NAMES_PATTERN, $student["regionarea"]) !== 1) {
+        if (  ( ($wsEnabled === 1 && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) || ($wsEnabled === 0) )
+          && preg_match(self::VALID_NAMES_PATTERN, $student["regionarea"]) !== 1) {
             return 1010;
         }
         if (!$student["currentclass"] || ($student["currentclass"] !== "1" && $student["currentclass"] !== "2" && $student["currentclass"] !== "3" && $student["currentclass"] !== "4")) {
@@ -804,15 +820,22 @@ class ApplicationSubmit extends ControllerBase
         if (!$student["lastschool_schoolname"]) {
             return 1022;
         }
-        if ($student["am"] && !$student["lastschool_class"]) {
+        /*
+        if ( ( ($wsEnabled === 1 && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) || ($wsEnabled === 0) ) &&
+          $student["am"] && !$student["lastschool_class"]) {
+            return 1023;
+        }
+        */
+        if (!$student["lastschool_class"] || $student["lastschool_class"] == -1) {
             return 1023;
         }
         if ($student["myschool_id"] && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) {
             return 1024;
         }
-        if ($eggrafesConfig->ws_ident->value &&  !$student["myschool_id"] && $student["lastschool_schoolyear"] >= self::LIMIT_SCHOOL_YEAR) {
+        if ($wsEnabled === 1 &&  !$student["myschool_id"] && $student["lastschool_schoolyear"] >= self::LIMIT_SCHOOL_YEAR) {
             return 1025;
         }
+
 
 
         // check if application exists in either gel_student or epal_student entity

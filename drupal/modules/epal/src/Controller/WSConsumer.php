@@ -19,6 +19,7 @@ class WSConsumer extends ControllerBase
     protected $client;
     protected $settings;
 
+
     public function __construct(EntityTypeManagerInterface $entityTypeManager, LoggerChannelFactoryInterface $loggerChannel)
     {
         $config = $this->config('epal.settings');
@@ -68,6 +69,28 @@ class WSConsumer extends ControllerBase
     public function getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
         $testmode = false;
+        //$this->logger->info("didactic_year=".$didactic_year_id);
+
+        switch ($didactic_year_id){
+            case "2013-2014":
+                $didactic_year_id="18";
+                break;
+            case "2014-2015":
+                $didactic_year_id="22";
+                break;
+            case "2015-2016":
+                $didactic_year_id="23";
+                break;
+            case "2016-2017":
+                $didactic_year_id="24";
+                break;
+            case "2017-2018":
+                $didactic_year_id="25";
+                break;
+       }
+
+       //$this->logger->info("didactic_year_id=".$didactic_year_id);
+
         if ($testmode)  {
           $obj = array(
           'message' => 'Επιτυχία',
@@ -77,10 +100,10 @@ class WSConsumer extends ControllerBase
               'studentId' => 2666021,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
               'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
-              'custodianLastName' =>  'ΓΕΩΡΓΟΥΛΑΣ',
+              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
               'custodianFirstName' => '',
               'birthDate' => '1997-01-04T00:00:00',
-              'addressStreet' => 'ΕΛΛΗΣ 6',
+              'addressStreet' => 'XATZH',
               'addressPostCode' => '30100',
               'addressArea' => 'ΑΓΡΙΝΙΟ',
               'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
@@ -98,7 +121,7 @@ class WSConsumer extends ControllerBase
         $ts_start = microtime(true);
 
         //test parameters
-        //$didactic_year_id = "25";
+        //$didactic_year_id = "22";
         //end test
 
         try {
@@ -106,6 +129,7 @@ class WSConsumer extends ControllerBase
         } catch (\Exception $e) {
             return (new JsonResponse(['message' => $e->getMessage()]))
                 ->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code);
+                //->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_OK : $code);
         }
 
         $duration = microtime(true) - $ts_start;
@@ -128,7 +152,7 @@ class WSConsumer extends ControllerBase
               'id' => '158',
               'studentId' => 2666027,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
-              'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
+              'firstname' => 'ΚΩΝΣΤΑΝΤΙΣτοιχείαΝΟΣ',
               'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
               //'custodianLastName' =>  preg_replace('/\s+/', '', ' ΚΑΤΣ ΑΟΥΝΟΣ '),
               //'custodianLastName' =>  preg_replace('/[-\s]/', '', ' ΚΑΤΣ - ΑΟΥΝΟΣ '),

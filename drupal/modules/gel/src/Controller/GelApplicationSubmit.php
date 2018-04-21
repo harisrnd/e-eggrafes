@@ -138,15 +138,21 @@ class GelApplicationSubmit extends ControllerBase
             $fatherfirstname_encoded = $crypt->encrypt($applicationForm[0]['fatherfirstname']);
             $motherfirstname_encoded = $crypt->encrypt($applicationForm[0]['motherfirstname']);
             $regionaddress_encoded = $crypt->encrypt($applicationForm[0]['regionaddress']);
-            $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
-            $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
-            //$relationtostudent = $applicationForm[0]['relationtostudent'];
+            //$regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
+            //$regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
             $telnum_encoded = $crypt->encrypt($applicationForm[0]['telnum']);
             $guardian_name_encoded = $crypt->encrypt($applicationForm[0]['cu_name']);
             $guardian_surname_encoded = $crypt->encrypt($applicationForm[0]['cu_surname']);
             $guardian_fathername_encoded = $crypt->encrypt($applicationForm[0]['cu_fathername']);
             $guardian_mothername_encoded = $crypt->encrypt($applicationForm[0]['cu_mothername']);
-
+            if ($applicationForm[0]['regiontk'] != null)
+              $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
+            else
+              $regiontk_encoded = $applicationForm[0]['regiontk'];
+            if ($applicationForm[0]['regionarea'] != null)
+              $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
+            else
+              $regionarea_encoded = $applicationForm[0]['regionarea'];
             $am_encoded = "";
             if ( $applicationForm[0]['lastschool_schoolyear'] >= self::LIMIT_SCHOOL_YEAR)
                 $am_encoded = $crypt->encrypt($applicationForm[0]['am']);
@@ -224,7 +230,7 @@ class GelApplicationSubmit extends ControllerBase
                     $applicationForm[0]['nextclass'],
                     $applicationForm[1]['choice_id'],
                     $applicationForm[2][0]['choice_id'],
-                    $applicantUser, false)) > 0) {
+                    $applicantUser, $eggrafesConfig->ws_ident->value, false)) > 0) {
                 return $this->respondWithStatus([
                     "error_code" => $errorCode
                 ], Response::HTTP_OK);
@@ -359,15 +365,21 @@ class GelApplicationSubmit extends ControllerBase
           $fatherfirstname_encoded = $crypt->encrypt($applicationForm[0]['fatherfirstname']);
           $motherfirstname_encoded = $crypt->encrypt($applicationForm[0]['motherfirstname']);
           $regionaddress_encoded = $crypt->encrypt($applicationForm[0]['regionaddress']);
-          $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
-          $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
-          //$relationtostudent = $applicationForm[0]['relationtostudent'];
+          //$regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
+          //$regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
           $telnum_encoded = $crypt->encrypt($applicationForm[0]['telnum']);
           $guardian_name_encoded = $crypt->encrypt($applicationForm[0]['cu_name']);
           $guardian_surname_encoded = $crypt->encrypt($applicationForm[0]['cu_surname']);
           $guardian_fathername_encoded = $crypt->encrypt($applicationForm[0]['cu_fathername']);
           $guardian_mothername_encoded = $crypt->encrypt($applicationForm[0]['cu_mothername']);
-
+          if ($applicationForm[0]['regiontk'] != null)
+            $regiontk_encoded = $crypt->encrypt($applicationForm[0]['regiontk']);
+          else
+            $regiontk_encoded = $applicationForm[0]['regiontk'];
+          if ($applicationForm[0]['regionarea'] != null)
+            $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
+          else
+            $regionarea_encoded = $applicationForm[0]['regionarea'];
           $am_encoded = "";
           if ( $applicationForm[0]['lastschool_schoolyear'] >= self::LIMIT_SCHOOL_YEAR)
               $am_encoded = $crypt->encrypt($applicationForm[0]['am']);
@@ -445,7 +457,7 @@ class GelApplicationSubmit extends ControllerBase
                   $applicationForm[0]['nextclass'],
                   $applicationForm[1]['choice_id'],
                   $applicationForm[2][0]['choice_id'],
-                  $applicantUser, true)) > 0) {
+                  $applicantUser, $eggrafesConfig->ws_ident->value, true)) > 0) {
               return $this->respondWithStatus([
                   "error_code" => $errorCode
               ], Response::HTTP_OK);
@@ -570,7 +582,7 @@ class GelApplicationSubmit extends ControllerBase
 
 
 
-    private function validateStudent($student, /*$numberOfSchools,*/ $chosenClass, $chosenOrientation, $chosenElectiveCourse, $applicantUser = null, $appUpdate)
+    private function validateStudent($student, /*$numberOfSchools,*/ $chosenClass, $chosenOrientation, $chosenElectiveCourse, $applicantUser = null, $wsEnabled, $appUpdate)
     {
         if (!$student["hasright"] && $appUpdate == false) {
             return 997;
@@ -610,11 +622,17 @@ class GelApplicationSubmit extends ControllerBase
         if (preg_match(self::VALID_UCASE_NAMES_PATTERN, $student["motherfirstname"]) !== 1) {
             return 1007;
         }
-        if (preg_match(self::VALID_ADDRESS_PATTERN, $student["regionaddress"]) !== 1) {
+        if (( ($wsEnabled === 1 && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) || ($wsEnabled === 0) )
+          && preg_match(self::VALID_ADDRESS_PATTERN, $student["regionaddress"]) !== 1) {
             return 1008;
         }
-        if (preg_match(self::VALID_ADDRESSTK_PATTERN, $student["regiontk"]) !== 1) {
+        if (  ( ($wsEnabled === 1 && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) || ($wsEnabled === 0) )
+          && preg_match(self::VALID_ADDRESSTK_PATTERN, $student["regiontk"]) !== 1) {
             return 1009;
+        }
+        if (  ( ($wsEnabled === 1 && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) || ($wsEnabled === 0) )
+          && preg_match(self::VALID_NAMES_PATTERN, $student["regionarea"]) !== 1) {
+            return 1010;
         }
         if (preg_match(self::VALID_NAMES_PATTERN, $student["regionarea"]) !== 1) {
             return 1010;
@@ -651,14 +669,55 @@ class GelApplicationSubmit extends ControllerBase
         if (!$student["lastschool_schoolname"]) {
             return 1022;
         }
-        if ($student["am"] && !$student["lastschool_class"]) {
+        /*
+        if (( ($wsEnabled === 1 && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) || ($wsEnabled === 0) )
+          && $student["am"] && !$student["lastschool_class"]) {
+            return 1023;
+        }
+        */
+        if (!$student["lastschool_class"] || $student["lastschool_class"] == -1) {
             return 1023;
         }
         if ($student["myschool_id"] && $student["lastschool_schoolyear"] < self::LIMIT_SCHOOL_YEAR) {
             return 1024;
         }
-        if ($eggrafesConfig->ws_ident->value &&  !$student["myschool_id"] && $student["lastschool_schoolyear"] >= self::LIMIT_SCHOOL_YEAR) {
+        if ($wsEnabled === 1 &&  !$student["myschool_id"] && $student["lastschool_schoolyear"] >= self::LIMIT_SCHOOL_YEAR) {
             return 1025;
+        }
+
+        //validate class mobility in GEL schhols
+
+        //$this->logger->error($student["lastschool_class"]);
+        $isNight = $this->isNightSchool($student["lastschool_registrynumber"]);
+        if ( $student["lastschool_unittypeid"] == "4"  )  {
+            if ($isNight &&  $student["lastschool_class"] == "1" && $student["nextclass"] != 1 && $student["nextclass"] != 5) {
+              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 1 Ή 8");
+              return 1026;
+            }
+            if (!$isNight &&  $student["lastschool_class"] == "1" && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
+              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 3 Ή 10");
+              return 1026;
+            }
+            if ($isNight &&  $student["lastschool_class"] == "2" && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
+              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 4 Ή 9");
+              return 1026;
+            }
+            if (!$isNight &&  $student["lastschool_class"] == "2" && $student["nextclass"] != 3 && $student["nextclass"] != 7)  {
+              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 5 Ή 12");
+              return 1026;
+            }
+            if ($isNight &&  $student["lastschool_class"] == "3" && $student["nextclass"] != 3 && $student["nextclass"] != 7)  {
+              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 6 Ή 11");
+              return 1026;
+            }
+            if (!$isNight &&  $student["lastschool_class"] == "3" )  {
+              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 13");
+              return 1026;
+            }
+        }
+        if ($student["lastschool_unittypeid"] == "3"   && $student["nextclass"] != 1 && $student["nextclass"] != 4)  {
+          $this->logger->error("ΠΕΡΙΠΤΩΣΗ 2 Ή 7");
+          return 1026;
         }
 
         // check if application exists in eithe gel_student or epal_student entity
@@ -672,6 +731,25 @@ class GelApplicationSubmit extends ControllerBase
         }
 
         return 0;
+    }
+
+    private function isNightSchool($school_regisrty_no)  {
+      try {
+          $schoolCon = $this->connection->select('gel_school', 'schoolType')
+              ->fields('schoolType', array('operation_shift'))
+              ->condition('schoolType.registry_no', $school_regisrty_no, '=');
+          $results = $schoolCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+      } catch (\Exception $e) {
+          $this->logger->error($e->getMessage());
+          return self::ERROR_DB;
+      }
+
+      if (sizeof($results) > 0)  {
+        $row = reset($results);
+        if ($row->operation_shift === 'ΕΣΠΕΡΙΝΟ')
+          return 1;
+      }
+      return 0;
     }
 
 

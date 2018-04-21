@@ -33,8 +33,8 @@ export default class Main {
 
         //make storeEnhancers = [] in order for PRODUCTION MODE
         const storeEnhancers =
-          _devTools.isEnabled() ?
-          [ _devTools.enhancer() ] :
+          //_devTools.isEnabled() ?
+          //[ _devTools.enhancer() ] :
           [];
 
         _ngRedux.configureStore(

@@ -29,7 +29,10 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 @Component({
     selector: "application-submit",
     template: `
-    <div class = "loading" *ngIf="(studentDataFields$ | async).size === 0 || (epalSelected$ | async).length === 0 || (epalclasses$ | async).size === 0 || (loginInfo$ | async).size === 0 || (showLoader | async) === true"></div>
+    <div class = "loading" *ngIf="(studentDataFields$ | async).size === 0 ||
+        (epalSelected$ | async).length === 0 || (epalclasses$ | async).size === 0 ||
+        (loginInfo$ | async).size === 0 || (showLoader | async) === true">
+    </div>
     <div id="studentFormSentNotice" (onHidden)="onHidden()" class="modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -463,40 +466,72 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
         //κλήση myschool web service
         if (this.wsEnabled.getValue() === 1 && aitisiObj[0].lastschool_schoolyear >= this.limitSchoolYear && aitisiObj[0].lastschool_unittypeid != "40")  {
-            
+
+            this.showLoader.next(true);
+
             let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
             let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
 
-            //console.log(aitisiObj[0].studentbirthdate);
-            //console.log(birthparts);
-
-            this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
+            this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
                       date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
-            //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null',
-            //          aitisiObj[0].studentbirthdate, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
-            //console.log(aitisiObj[0].studentbirthdate);
-            //this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion('24','null','null','null','null','04-01-1997','0540961','777')
                 .subscribe(data => {
-                    if (typeof data.data["studentId"] !== "undefined")  {
+                    //if (typeof data.data["studentId"] !== "undefined")  {
+                    if (data.data != null)  {
                       aitisiObj[0].studentId = data.data["studentId"];
-                      //console.log("Test");
-                      //console.log(aitisiObj[0].studentId);
-                      //aitisiObj[0].websrv_cu_name = data.data["custodianFirstName"];
-                      //aitisiObj[0].websrv_studentbirthdate = data.birthDate;
                       aitisiObj[0].websrv_cu_surname = data.data["custodianLastName"];
                       aitisiObj[0].regionaddress = data.data["addressStreet"];
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];
                       aitisiObj[0].section_name = data.data["sectionName"];
-                        if (data.data["levelName"]==='Α'){
-                            aitisiObj[0].lastschool_class = 1;
-                        }
-                        else if (data.data["levelName"]==='Β'){
-                            aitisiObj[0].lastschool_class = 2;
-                        }
-                        else if (data.data["levelName"]==='Γ'){
-                            aitisiObj[0].lastschool_class = 3;
-                        }
+                      if (data.data["levelName"]==='Α'){
+                        aitisiObj[0].lastschool_class = 1;
+                    }
+                    else if (data.data["levelName"]==='Β'){
+                        aitisiObj[0].lastschool_class = 2;
+                    }
+                    else if (data.data["levelName"]==='Γ'){
+                        aitisiObj[0].lastschool_class = 3;
+                    }
+                    else if (data.data["levelName"]==='Δ'){
+                        aitisiObj[0].lastschool_class = 4;
+                    }
+                    else if (data.data["levelName"]==='Α-ΛΥΚ'){
+                      aitisiObj[0].lastschool_class = 1;
+                    }
+                      else if (data.data["levelName"]==='Β-ΛΥΚ'){
+                      aitisiObj[0].lastschool_class = 2;
+                  }
+                  else if (data.data["levelName"]==='Γ-ΛΥΚ'){
+                      aitisiObj[0].lastschool_class = 3;
+                  }
+                  else if (data.data["levelName"]==='Δ-ΛΥΚ'){
+                      aitisiObj[0].lastschool_class = 4;
+                  }
+                  else if (data.data["levelName"]==='Γ (ΠΑΛΑΙΑ)'){
+                      aitisiObj[0].lastschool_class = 3;
+                  }
+                  else if (data.data["levelName"]==='Δ (ΠΑΛΑΙΑ)'){
+                      aitisiObj[0].lastschool_class = 4;
+                  }
+                  else if (data.data["levelName"]==='Γ-ΛΥΚ (ΠΑΛΑΙΑ)'){
+                      aitisiObj[0].lastschool_class = 3;
+                  }
+                  else if (data.data["levelName"]==='Δ-ΛΥΚ (ΠΑΛΑΙΑ)'){
+                      aitisiObj[0].lastschool_class = 4;
+                  }
+                //   else if (data.data["levelName"]==='ΔΥΕΠ'){
+                //       aitisiObj[0].lastschool_class = 10;
+                //   }
+                //   else if (data.data["levelName"]==='ΠΡΟΚΑΤΑΡΚΤΙΚΗ'){
+                //       aitisiObj[0].lastschool_class = 11;
+                //   }
+                //   else if (data.data["levelName"]==='ΠΡΟΚΑΤΑΡΚΤΙΚΗ-ΛΥΚ'){
+                //       aitisiObj[0].lastschool_class = 12;
+                //   }
+                  else  {
+                        aitisiObj[0].lastschool_class = -1;
+                  }
+
                     }
                     else {
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
@@ -510,6 +545,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       this.showModal();
                       (<any>$(".loading")).remove();
 
+                      this.showLoader.next(false);
                       return;
 
                     }
@@ -526,13 +562,55 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       this.showModal();
                       (<any>$(".loading")).remove();
 
+                      this.showLoader.next(false);
                       return;
                     }
-                    //console.log(aitisiObj[0]);
+
+                    if (aitisiObj[0].regionaddress === null || aitisiObj[0].regionaddress.replace(/ |-/g, "") === "" ) {
+                      let mTitle = "Αποτυχία Ανάκτησης Διεύθυνσης Κατοικίας";
+                      let mText = "Παρακαλώ επικοινωνήστε με το σχολείο σας για να καταχωρηθεί η Διεύθυνση Κατοικίας σας στο ΠΣ myschοol. ";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
+
+                      this.showLoader.next(false);
+                      return;
+                    }
+
+                    if (aitisiObj[0].lastschool_class === -1) {
+                      let mTitle = "Αποτυχία Ανάκτησης Τελευταίας Τάξης Φοίτησης";
+                      let mText = "Παρακαλώ δοκιμάστε ξανά. Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης.";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
+
+                      this.showLoader.next(false);
+                      return;
+                    }
+
                     this.submitRecord(newapp, nonCheckOccupancy, aitisiObj);
                 },
                 error => {
-                    console.log("Error Getting Courses");
+                    console.log("Error Getting StudentInfo from Web Service");
+
+                    let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
+                    let mText = "Αποτυχία κλήσης του web service ταυτοποίησης μαθητή. " +
+                      "Προσπαθήστε ξανά. Σε περίπτωση που το πρόβλημα επιμείνει, παρακαλώ επικοινωνήστε με την ομάδα υποστήριξης.";
+                    let mHeader = "modal-header-danger";
+                    this.modalTitle.next(mTitle);
+                    this.modalText.next(mText);
+                    this.modalHeader.next(mHeader);
+                    this.showModal();
+                    (<any>$(".loading")).remove();
+
+                    this.showLoader.next(false);
+                    return;
                 });
         }
 
