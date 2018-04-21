@@ -1523,7 +1523,7 @@ getHighSchoolperDide()
 
 }
 
-getStudentsPerSchool(schoolid)
+getStudentsPerSchool(schoolid,type)
 {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
@@ -1534,7 +1534,7 @@ getStudentsPerSchool(schoolid)
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/getstudentsperschool/`+ schoolid , options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/getstudentsperschool/`+ schoolid +'/'+ type , options)
             .map(response => response.json());
 
 
