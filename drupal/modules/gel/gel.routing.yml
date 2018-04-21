@@ -1,4 +1,4 @@
-gel.application_submit:
+getstudentsperschoolgel.application_submit:
   path: '/gel/appsubmit'
   options:
     _auth: [ 'basic_auth' ]
@@ -79,7 +79,7 @@ gel.gethighschoolsmart:
   requirements:
     _user_is_logged_in: 'TRUE'
 gel.getstudentsperschool:
-  path: '/gel/getstudentsperschool/{schoolid}'
+  path: '/gel/getstudentsperschool/{schoolid}/{type}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:
