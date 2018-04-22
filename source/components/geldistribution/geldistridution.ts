@@ -387,7 +387,7 @@ import { HelperDataService } from "../../services/helper-data-service";
         else{
          console.log(this.selections, oldschool, "aaaaa",schoolid ,"tralala1");
 
-        this.SaveSelectionSub = this._hds.saveHighScoolSelection(this.selections, oldschool, schoolid).subscribe(data => {
+        this.SaveSelectionSub = this._hds.saveHighScoolSelection(this.selections, oldschool, schoolid,type).subscribe(data => {
             this.SaveSelection$.next(data);
             this.showLoader.next(false);
             this.selections = [];
