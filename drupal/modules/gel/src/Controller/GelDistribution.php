@@ -274,8 +274,10 @@ public function getHighSchoolperDide(Request $request)
       }
 
 
-public function getStudentsPerSchool(Request $request, $schoolid)
+public function getStudentsPerSchool(Request $request, $schoolid, $type)
     {
+        if ($type === '1')
+        {
 
         try {
 
@@ -370,10 +372,354 @@ public function getStudentsPerSchool(Request $request, $schoolid)
                 'message' => t('Unexpected Error'),
             ], Response::HTTP_FORBIDDEN);
         }
+        }
+        elseif ($type == 2)
+        {
+        try {
+
+
+            $authToken = $request->headers->get('PHP_AUTH_USER');
+            $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+            $user = reset($users);
+            if ($user) {
+               $selectionId = $user->init->value;
+                $userRoles = $user->getRoles();
+                $userRole = '';
+                foreach ($userRoles as $tmpRole) {
+                    if ($tmpRole === 'eduadmin') {
+                        $userRole = $tmpRole;
+                    }
+                }
+                if ($userRole === '') {
+                    return $this->respondWithStatus([
+                             'error_code' => 4003,
+                         ], Response::HTTP_FORBIDDEN);
+                } elseif ($userRole === 'eduadmin') {
+
+                $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_unittypeid' => 5, 'delapp' => '0'));
+                $studentPerSchoolfromesp = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_unittypeid' => 4, 'delapp' => '0', 'nextclass' =>'2'));
+                }
+                $list = array();
+                if ($studentPerSchool) {
+              
+                    
+                    foreach ($studentPerSchool as $object) {
+                    $schoolIdNew = $object->lastschool_registrynumber->value;
+
+                    $validSchool = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('edu_admin_id' => $selectionId, 'registry_no' => $schoolIdNew));
+                     $validSchools = reset($validSchool);
+                     
+                    if ($validSchools)
+                    {
+                        $this->logger ->warning($schoolIdNew ."regno".$object ->nextclass->entity->get('id')->value);
+                      
+                        if (($object ->nextclass->entity->get('id')->value === "2") || ($object ->nextclass->entity->get('id')->value === "5"))
+                        {
+                            $crypt = new Crypt();
+                            try {
+                                $name_decoded = $object->name->value;
+                                if ($object->am->value != "")
+                                  $am_decoded = $crypt ->decrypt($object->am->value);
+                                else
+                                  $am_decoded ="Παλιός απόφοιτος";
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
+                                $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                                if ($object ->nextclass->entity->get('id')->value === "5")
+                                {
+                                  $school_type = "Αίτηση για Εσπερινό";
+                                }
+                                else{
+                                  $school_type = "Αίτηση για Ημερήσιο";
+                                }
+
+
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+
+                            $list[] = array(
+                                'id' => $object->id(),
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id()),
+                            );
+                          }
+
+                    }
+                }
+                    
+            
+                }
+
+        if ($studentPerSchoolfromesp) {
+              
+                    
+                    foreach ($studentPerSchoolfromesp as $object) {
+                    $schoolIdNew = $object->lastschool_registrynumber->value;
+                    $this->logger ->warning($schoolIdNew.'fromesp');
+                    $validSchool = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('edu_admin_id' => $selectionId, 'registry_no' => $schoolIdNew,'operation_shift' =>'ΕΣΠΕΡΙΝΟ'));
+                     $validSchools = reset($validSchool);
+                     
+                    if ($validSchools)
+                    {
+                     
+                        if (($object ->nextclass->entity->get('id')->value === "2") || ($object ->nextclass->entity->get('id')->value === "5"))
+                        {
+                            $crypt = new Crypt();
+                            try {
+                                $name_decoded = $object->name->value;
+                                if ($object->am->value != "")
+                                  $am_decoded = $crypt ->decrypt($object->am->value);
+                                else
+                                  $am_decoded ="Παλιός απόφοιτος";
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
+                                $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                                if ($object ->nextclass->entity->get('id')->value === "5")
+                                {
+                                  $school_type = "Αίτηση για Εσπερινό";
+                                }
+                                else{
+                                  $school_type = "Αίτηση για Ημερήσιο";
+                                }
+
+
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+
+                            $list[] = array(
+                                'id' => $object->id(),
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id()),
+                            );
+                          }
+
+                    }
+                }
+                    
+            
+                }
+
+
+
+
+
+
+
+
+                if ($studentPerSchool || $studentPerSchoolfromesp) {
+                    return $this->respondWithStatus($list, Response::HTTP_OK);
+                }
+                else {
+                    return $this->respondWithStatus([
+                        'message' => t('Students not found!'),
+                    ], Response::HTTP_NOT_FOUND);
+                }
+
+            } else {
+                return $this->respondWithStatus([
+                    'message' => t('User not found!'),
+                ], Response::HTTP_FORBIDDEN);
+            }
+        } catch (\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            return $this->respondWithStatus([
+                'message' => t('Unexpected Error'),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        }
+        else
+        {
+
+
+            try {
+
+
+            $authToken = $request->headers->get('PHP_AUTH_USER');
+            $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+            $user = reset($users);
+            if ($user) {
+               $selectionId = $user->init->value;
+                $userRoles = $user->getRoles();
+                $userRole = '';
+                foreach ($userRoles as $tmpRole) {
+                    if ($tmpRole === 'eduadmin') {
+                        $userRole = $tmpRole;
+                    }
+                }
+                if ($userRole === '') {
+                    return $this->respondWithStatus([
+                             'error_code' => 4003,
+                         ], Response::HTTP_FORBIDDEN);
+                } elseif ($userRole === 'eduadmin') {
+
+                $studentPerSchooltoesp = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_unittypeid' => 4, 'delapp' => '0', 'nextclass' =>'6'));
+                $studentPerSchoolfromesp = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_unittypeid' => 4, 'delapp' => '0', 'nextclass' =>'3'));
+                }
+                $list = array();
+                if ($studentPerSchooltoesp) {
+              
+                    
+                    foreach ($studentPerSchooltoesp as $object) {
+                    $schoolIdNew = $object->lastschool_registrynumber->value;
+
+                    $validSchool = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('edu_admin_id' => $selectionId, 'registry_no' => $schoolIdNew));
+                     $validSchools = reset($validSchool);
+                     
+                    if ($validSchools)
+                    {
+                        
+                       
+                            $crypt = new Crypt();
+                            try {
+                                $name_decoded = $object->name->value;
+                                if ($object->am->value != "")
+                                  $am_decoded = $crypt ->decrypt($object->am->value);
+                                else
+                                  $am_decoded ="Παλιός απόφοιτος";
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
+                                $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                               
+                                  $school_type = "Αίτηση για Εσπερινό";
+                                
+                               
+
+
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+
+                            $list[] = array(
+                                'id' => $object->id(),
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id()),
+                            );
+                          
+
+                    }
+                }
+                    
+            
+                }
+
+        if ($studentPerSchoolfromesp) {
+              
+                    
+                    foreach ($studentPerSchoolfromesp as $object) {
+                    $schoolIdNew = $object->lastschool_registrynumber->value;
+                    $this->logger ->warning($schoolIdNew.'fromesp');
+                    $validSchool = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('edu_admin_id' => $selectionId, 'registry_no' => $schoolIdNew,'operation_shift' =>'ΕΣΠΕΡΙΝΟ'));
+                     $validSchools = reset($validSchool);
+                     
+                    if ($validSchools)
+                    {
+                     
+                        
+                            $crypt = new Crypt();
+                            try {
+                                $name_decoded = $object->name->value;
+                                if ($object->am->value != "")
+                                  $am_decoded = $crypt ->decrypt($object->am->value);
+                                else
+                                  $am_decoded ="Παλιός απόφοιτος";
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
+                                $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                                
+                                  $school_type = "Αίτηση για Ημερήσιο";
+                                
+
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+
+                            $list[] = array(
+                                'id' => $object->id(),
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id()),
+                            );
+                          
+
+                    }
+                }
+                    
+            
+                }
+
+
+
+
+
+
+
+
+                if ($studentPerSchooltoesp || $studentPerSchoolfromesp) {
+                    return $this->respondWithStatus($list, Response::HTTP_OK);
+                }
+                else {
+                    return $this->respondWithStatus([
+                        'message' => t('Students not found!'),
+                    ], Response::HTTP_NOT_FOUND);
+                }
+
+            } else {
+                return $this->respondWithStatus([
+                    'message' => t('User not found!'),
+                ], Response::HTTP_FORBIDDEN);
+            }
+        } catch (\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            return $this->respondWithStatus([
+                'message' => t('Unexpected Error'),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+
+
+
+
+
+        }
     }
 
- public function SaveHighSchoolSelection(Request $request, $studentid, $schoolid, $oldschool)
+ public function SaveHighSchoolSelection(Request $request, $studentid, $schoolid, $oldschool, $nextclass)
  {
+
      if (!$request->isMethod('GET')) {
             return $this->respondWithStatus([
                     'message' => t('Method Not Allowed'),
@@ -415,12 +761,18 @@ public function getStudentsPerSchool(Request $request, $schoolid)
             $this->connection->delete('gelstudenthighschool')
                             ->condition('student_id', $value, '=')
                             ->execute();
+            if ($nextclass === '1')
+                $nexttaxi = 'Α';
+            elseif ($nextclass === '2')
+                $nexttaxi = 'Β';
+            else
+                 $nexttaxi = 'Γ';
 
             $student = array(
                 'langcode' => 'el',
                 'student_id' => $value,
                 'school_id' => $schoolid,
-                'taxi' => 'Α'
+                'taxi' => $nexttaxi,
 
             );
 
@@ -834,13 +1186,15 @@ public function getSchoolGel(Request $request)
 
             $list = array();
             $limit = -1;
-            $CourseA = $this->entityTypeManager->getStorage('gel_school')
+            $CoursesA = $this->entityTypeManager->getStorage('gel_school')
                 ->loadByProperties(array('id' => $schoolid));
+            $CourseA = reset($CoursesA);
             if ($CourseA) {
+                $reg_num = $CourseA->get('registry_no')->value;
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Α'));
                
-                foreach ($CourseA as $object) {
+               
                     $list[] = array(
                         'id' => '1',
                         'name' => 'Α Λυκείου',
@@ -849,11 +1203,12 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                         
                     );
-                }
-                $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
-                    ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Β'));
                 
-                foreach ($CourseA as $object) {
+      
+                 $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
+                    ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => 2));
+                
+                
                     $list[] = array(
                         'id' => '2',
                         'name' => 'Β Λυκείου',
@@ -862,11 +1217,11 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                         
                     );
-                }
-                $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
-                    ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Γ'));
+                
+                $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
+                    ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => 3));
                
-                foreach ($CourseA as $object) {
+               
                     $list[] = array(
                         'id' => '3',
                         'name' => 'Γ Λυκείου',
@@ -875,14 +1230,14 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                         
                     );
-                }
+                
 
                 if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
                 {
-                $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
-                    ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Δ'));
+                  $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
+                    ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => 4));
                
-                foreach ($CourseA as $object) {
+               
                     $list[] = array(
                         'id' => '4',
                         'name' => 'Δ Λυκείου',
@@ -891,7 +1246,7 @@ public function getSchoolGel(Request $request)
                         'classes' => 1,
                         
                     );
-                }
+                
                 }
 
         $taxi = "Α";
@@ -917,7 +1272,7 @@ public function getSchoolGel(Request $request)
         foreach ($results as $key ) {
                   $list[] = array(
                         'id' => 'ΕΠ',
-                        'name' => $object -> name ->value,
+                        'name' => 'Α Λυκείου-'.$object -> name ->value,
                         'size' => $key->student_count,
                         'categ' => $categ,
                         'classes' => 1,
@@ -928,7 +1283,70 @@ public function getSchoolGel(Request $request)
             }       
                    
 
-          
+           $taxi = 2;
+        $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
+        foreach ($selectionPerSchool as $object) {
+
+          $choicenew = $object -> id();
+
+          $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
+          $sCon->leftJoin('gel_student', 'gSchool',
+           'gSchool.id = gClassChoice.student_id');
+           $sCon->fields('gSchool', array( 'nextclass', 'lastschool_registrynumber  '))
+                ->fields('gClassChoice', array('choice_id'))
+             ->condition('gClassChoice.choice_id', $choicenew)
+             ->condition('gSchool.nextclass', $taxi )
+             ->condition('gSchool.lastschool_registrynumber ', $reg_num)
+             ->groupBy('gClassChoice.choice_id')
+             ->groupBy('gSchool.nextclass')
+             ->groupBy('gSchool.lastschool_registrynumber ')
+             ;
+        $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
+        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+        foreach ($results as $key ) {
+                  $list[] = array(
+                        'name' => 'B Λυκείου-'.$object -> name ->value,
+                        'size' => $key->student_count,
+                        'categ' => $categ,
+                        'classes' => 2,
+                        
+                    );
+                    }
+                    
+            }       
+                   
+     $taxi = 3;
+        $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
+        foreach ($selectionPerSchool as $object) {
+
+          $choicenew = $object -> id();
+
+          $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
+          $sCon->leftJoin('gel_student', 'gSchool',
+           'gSchool.id = gClassChoice.student_id');
+           $sCon->fields('gSchool', array( 'nextclass', 'lastschool_registrynumber  '))
+                ->fields('gClassChoice', array('choice_id'))
+             ->condition('gClassChoice.choice_id', $choicenew)
+             ->condition('gSchool.nextclass', $taxi )
+             ->condition('gSchool.lastschool_registrynumber ', $reg_num)
+             ->groupBy('gClassChoice.choice_id')
+             ->groupBy('gSchool.nextclass')
+             ->groupBy('gSchool.lastschool_registrynumber ')
+             ;
+        $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
+        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+        foreach ($results as $key ) {
+                  $list[] = array(
+                      
+                        'name' => 'Γ Λυκείου-'.$object -> name ->value,
+                        'size' => $key->student_count,
+                        'categ' => $categ,
+                        'classes' => 3,
+                        
+                    );
+                    }
+                    
+            }       
 
 
 

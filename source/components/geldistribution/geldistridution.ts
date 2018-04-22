@@ -35,10 +35,15 @@ import { HelperDataService } from "../../services/helper-data-service";
 
        <p style="margin-top: 20px; line-height: 2em;"> Στην παρακάτω λίστα βλέπετε τα γυμνάσια της περιοχής ευθύνης σας. Παρακαλώ
        επιλέξτε σχολειο για να τοποθετήσετε τους μαθητές με βάση τη διεύθυνση κατοικίας τους στο αντίστοιχο λύκειο.</p>
+       <div style="font-weight: bold;">
+       <li class="list-group-item isclickable" (click)="setActiveclass(1)">
+          <div class="col-md-12"  [class.selectedout]="aclassActive === 1" > Ά Λυκείου  </div>
+       </li>    
+        <div [hidden] ="aclassActive !== 1">   
       <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Τα Γυμνάσια ευθύνης σας. </b></div>
       <div *ngFor="let JuniorHighSchools$  of JuniorHighSchool$ | async; let i=index; let isOdd=odd; let isEven=even" >
                 <li class="list-group-item " [class.oddout]="isOdd" [class.evenout]="isEven" 
-                (click)="setActiveRegion(JuniorHighSchools$.id)"
+                (click)="setActiveRegion(JuniorHighSchools$.id,1)"
                  [class.selectedout]="regionActive === JuniorHighSchools$.id" >
                 <div class="row">
                 <div class="col-md-12">
@@ -51,7 +56,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                  <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε τους μαθητές που θέλετε να τοποθετήσετε σε κάποιο Λύκειο
                  και στη συνέχεια επιλέξτε το αντίστοιχο Λυκειο.</p>
                  <label> Λύκειο Υποδοχής </label>
-                   <select #highscsel class="form-control" (change)="confirmSchool(highscsel)" >
+                   <select #highscsel class="form-control" (change)="confirmSchool(highscsel,1)" >
                         <option value="0"></option>
                         <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
@@ -104,6 +109,113 @@ import { HelperDataService } from "../../services/helper-data-service";
 
               
        </div>
+       </div>
+       </div>
+
+   
+
+
+    <div style="font-weight: bold;">
+       <li class="list-group-item isclickable" (click)="setActiveclass(2)" (click)="setActiveRegion(0,2)">
+          <div class="col-md-12"  [class.selectedout]="aclassActive === 2" > Β Λυκείου  </div>
+       </li>    
+        <div [hidden] ="aclassActive !== 2">   
+                <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε τους μαθητές που θέλετε να τοποθετήσετε σε κάποιο Λύκειο
+                 και στη συνέχεια επιλέξτε το αντίστοιχο Λυκειο.</p>
+                 <label> Λύκειο Υποδοχής </label>
+                   <select #highscsel1 class="form-control" (change)="confirmSchool(highscsel1,2)" >
+                        <option value="0"></option>
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
+                   </select>
+                   <br>
+                   <br>
+                  <div class = "row selectedout" >
+                     <div class="col-md-2" style="   font-weight: bold;" ></div>
+                    <div class="col-md-2" style="   font-weight: bold;" >A/A Αίτησης</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >ΑΜ Μαθητη</div>
+                    
+                    <div class="col-md-3" style="   font-weight: bold;" >Διεύθυνση</div>
+                    <div class="col-md-3" style="   font-weight: bold;" >Τύπος Σχολείου</div>
+                
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >Περιοχή</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >ΤΚ</div>
+                   </div>
+                 <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
+                  class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
+                   style="margin: 0px 2px 0px 2px;">
+                   <div class="col-md-2 " >
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                   </div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.am}}</div>
+                    
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.school_type}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regionarea}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regiontk}}</div>
+                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-10 offset-md-2 changecolor" style="font-weight: bold;">
+                            {{AllStudents$.oldschool}}
+                    </div>
+                    <div  *ngIf="AllStudents$.oldschool === false" class="col-md-11 offset-md-1">
+                    
+                    </div>
+                 </div>
+
+        </div>
+       </div>
+
+
+     <div style="font-weight: bold;">
+       <li class="list-group-item isclickable" (click)="setActiveclass(3)" (click)="setActiveRegion(0,3)">
+          <div class="col-md-12"  [class.selectedout]="aclassActive === 3" > Γ Λυκείου  </div>
+       </li>    
+        <div [hidden] ="aclassActive !== 3">   
+                <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε τους μαθητές που θέλετε να τοποθετήσετε σε κάποιο Λύκειο
+                 και στη συνέχεια επιλέξτε το αντίστοιχο Λυκειο.</p>
+                 <label> Λύκειο Υποδοχής </label>
+                   <select #highscsel2 class="form-control" (change)="confirmSchool(highscsel2,3)" >
+                        <option value="0"></option>
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
+                   </select>
+                   <br>
+                   <br>
+                  <div class = "row selectedout" >
+                     <div class="col-md-2" style="   font-weight: bold;" ></div>
+                    <div class="col-md-2" style="   font-weight: bold;" >A/A Αίτησης</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >ΑΜ Μαθητη</div>
+                    
+                    <div class="col-md-3" style="   font-weight: bold;" >Διεύθυνση</div>
+                    <div class="col-md-3" style="   font-weight: bold;" >Τύπος Σχολείου</div>
+                
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >Περιοχή</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >ΤΚ</div>
+                   </div>
+                 <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
+                  class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
+                   style="margin: 0px 2px 0px 2px;">
+                   <div class="col-md-2 " >
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                   </div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.am}}</div>
+                    
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.school_type}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regionarea}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regiontk}}</div>
+                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-10 offset-md-2 changecolor" style="font-weight: bold;">
+                            {{AllStudents$.oldschool}}
+                    </div>
+                    <div  *ngIf="AllStudents$.oldschool === false" class="col-md-11 offset-md-1">
+                    
+                    </div>
+                 </div>
+
+        </div>
+       </div>
+
 
       </form>
     </div>
@@ -137,6 +249,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     private SelectAllIds: Array<any>=[];
     //private SelectAllIdsnew: Array<any>=[];
     private selall:boolean;
+    private aclassActive = <number>-1;
 
 
 
@@ -164,6 +277,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     }
 
     ngOnInit() {
+      console.log(this.aclassActive,"aaaaaaa" );
        this.selall = false;
        this.selections = [];
        console.log(this.selall);
@@ -178,19 +292,21 @@ import { HelperDataService } from "../../services/helper-data-service";
             });
     }
 
-     setActiveRegion(ind) {
+     setActiveRegion(ind,type) {
+      
+       console.log(this.aclassActive,"aaaaaaa1" );
        this.selall = false;
        this.selections = [];
-       console.log(this.selall);
+        console.log(this.selall);
         this.StudentsPerSchool$.next([{}]);
-        if (ind === this.regionActive) {
+        if (ind === this.regionActive && ind !== 0) {
             ind = -1;
             this.regionActive = ind;
         }
         else {
             this.regionActive = ind;
             this.showLoader.next(true);
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive)
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -223,17 +339,19 @@ import { HelperDataService } from "../../services/helper-data-service";
                     this.showLoader.next(false);
                 });
         }
-    }
+    
+  }
 
-   confirmSchool(  selection)
+   confirmSchool( selection,type)
    {
-
        let oldschool = 0;
        let schoolid = selection.value;
+       console.log(selection.value, type, "tralala");
        if (this.selections.length === 0)
        {
+
            schoolid = 0;
-           this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive)
+           this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -267,8 +385,9 @@ import { HelperDataService } from "../../services/helper-data-service";
            
        }
         else{
-       
-        this.SaveSelectionSub = this._hds.saveHighScoolSelection(this.selections, oldschool, schoolid).subscribe(data => {
+         console.log(this.selections, oldschool, "aaaaa",schoolid ,"tralala1");
+
+        this.SaveSelectionSub = this._hds.saveHighScoolSelection(this.selections, oldschool, schoolid,type).subscribe(data => {
             this.SaveSelection$.next(data);
             this.showLoader.next(false);
             this.selections = [];
@@ -276,7 +395,7 @@ import { HelperDataService } from "../../services/helper-data-service";
             this.modalHeader.next("modal-header-success");
             this.modalTitle.next("Αποθηκεύτηκαν.");
             this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive)
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -318,7 +437,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 
   findselection(ind)
   {
-
+                  console.log(this.aclassActive,"aaaaaaa2" );
                   this.HighSchoolSelectionSub = this._hds.getHighSchoolSelection(ind).subscribe(x => {
                   this.HighSchoolSelection$.next(x);
 
@@ -331,6 +450,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 
 updateCheckedOptions(k,l)
 {
+  console.log(this.aclassActive,"aaaaaaa3" );
   let server = 0;
   server = this.selections.find(x => x === k);
   let index: number = this.selections.indexOf(server);
@@ -351,18 +471,16 @@ updateCheckedOptions(k,l)
 
 findid(id)
 {
-
 let server = 0;
   server = this.selections.find(x => x === id);
   let index: number = this.selections.indexOf(server);
   if (index !== -1 && this.selall === true)
   {
     
-    console.log(this.selections,"find");
     return true;
 
   }
-  console.log(this.selections,"findno");
+  
   return false;
 
 
@@ -380,9 +498,10 @@ let server = 0;
 
 selectall()
 {
+    console.log(this.aclassActive,"aaaaaaa5" );
           this.selall =! this.selall;
              this.showLoader.next(true);
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive)
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -420,6 +539,20 @@ selectall()
                 });
  
 }
+
+
+
+
+ setActiveclass(ind)
+    {
+      console.log(this.aclassActive,"aaaaaaamaster" );
+      if (this.aclassActive === ind)
+      {
+             ind = -1;
+      }
+
+      this.aclassActive = ind;
+      }
 
 
     public showModal(): void {
