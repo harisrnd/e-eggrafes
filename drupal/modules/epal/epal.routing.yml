@@ -204,22 +204,6 @@ epal.applicant.creationpdf:
     _controller: '\Drupal\epal\Controller\PdfCreator::createApplicantPDF'
   requirements:
     _user_is_logged_in: 'TRUE'
-epal.svc.getdidacticyears:
-  path: '/epal/get-didactic-years'
-  options:
-    _auth: [ 'basic_auth' ]
-  defaults:
-    _controller: '\Drupal\epal\Controller\WSConsumer::getAllDidactiYear'
-  requirements:
-    _user_is_logged_in: 'TRUE'
-epal.svc.getstudentcertification:
-  path: '/epal/get-student-certification/{id}'
-  options:
-    _auth: [ 'basic_auth' ]
-  defaults:
-    _controller: '\Drupal\epal\Controller\WSConsumer::getStudentEpalCertification'
-  requirements:
-    _user_is_logged_in: 'TRUE'
 epal.findcoursesperschool:
   path: '/epal/findcoursesperschool'
   options:
@@ -410,6 +394,14 @@ epal.svc.getstudentinfo:
     _auth: [ 'basic_auth' ]
   defaults:
     _controller: '\Drupal\epal\Controller\WSConsumer::getStudentEpalInfo'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.svc.getstudentpromotion:
+  path: '/epal/get-student-promotion'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\WSConsumer::getStudentEpalPromotion'
   requirements:
     _user_is_logged_in: 'TRUE'
 epal.offlinecalculation:

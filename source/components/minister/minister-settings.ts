@@ -420,6 +420,7 @@ import { IAppState } from "../../store/store";
                   .subscribe(data => {
                       this.showLoader.next(false);
                       this.OffLineCalculation$.next(data);
+                      this.storeSettings();
                   },
                   error => {
                       this.showLoader.next(false);

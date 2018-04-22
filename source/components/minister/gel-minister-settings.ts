@@ -391,6 +391,7 @@ import { IAppState } from "../../store/store";
 
     toggleSmallClassesFilter(){
 
+      /*
        if (this.smallClassApproved == false)
        {
 
@@ -407,6 +408,8 @@ import { IAppState } from "../../store/store";
        }
 
        this.smallClassApproved =!this.smallClassApproved;
+       */
+
     }
 
     toggleWsIdent(){

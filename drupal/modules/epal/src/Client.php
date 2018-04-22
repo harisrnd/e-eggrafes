@@ -234,7 +234,7 @@ class Client
         return $this->getStudentEpalInfoNew($this->_settings['ws_endpoint_studentepalInfo'], $didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no);
     }
 
-    public function getStudentEpalCertification($id)
+    public function getStudentEpalPromotion($id)
     {
         $this->log(__METHOD__);
         return $this->getStudentEpalPromotionOrCertification($this->_settings['ws_endpoint_studentepalpromotion'], $id);

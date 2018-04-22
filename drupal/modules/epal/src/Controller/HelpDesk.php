@@ -119,6 +119,12 @@ class HelpDesk extends ControllerBase {
             ->select('epal_student', 'eStudent')
             ->fields('eStudent', array('id'));
         $numApplications = $sCon->countQuery()->execute()->fetchField();
+
+        $sCon = $this->connection
+            ->select('gel_student', 'eStudent')
+            ->fields('eStudent', array('id'));
+        $numApplications += $sCon->countQuery()->execute()->fetchField();
+
         array_push($list, (object) array('name' => "Αριθμός Αιτήσεων (συνολικά)", 'numStudents' => $numApplications));
 
         return $this->respondWithStatus($list, Response::HTTP_OK);

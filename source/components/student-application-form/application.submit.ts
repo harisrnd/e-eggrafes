@@ -474,7 +474,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
             let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
 
-            this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
+            this.ServiceStudentCertifSub = this._hds.getServiceStudentInfo(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
                       date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 .subscribe(data => {
                     //if (typeof data.data["studentId"] !== "undefined")  {

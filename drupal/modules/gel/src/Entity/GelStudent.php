@@ -733,6 +733,25 @@ class GelStudent extends ContentEntityBase implements GelStudentInterface {
                             ->setDisplayConfigurable('form', true)
                             ->setDisplayConfigurable('view', true);
 
+        $fields['myschool_promoted'] = BaseFieldDefinition::create('boolean')
+                            ->setLabel(t('Μαθητής προάχθηκε / απολύθηκε'))
+                            ->setDescription(t('Μαθητής προάχθηκε / απολύθηκε.'))
+                            ->setSettings(array(
+                              'text_processing' => 0,
+                            ))
+                            ->setRequired(false)
+                            ->setDisplayOptions('view', array(
+                              'label' => 'above',
+                              'type' => 'boolean',
+                              'weight' => -4,
+                             ))
+                            ->setDisplayOptions('form', array(
+                              'type' => 'boolean',
+                              'weight' => -4,
+                             ))
+                            ->setDisplayConfigurable('form', TRUE)
+                            ->setDisplayConfigurable('view', TRUE);
+
        $fields['delapp'] = BaseFieldDefinition::create('boolean')
                             ->setLabel(t('Διαγραφή'))
                             ->setDescription(t('Διαγραφή.'))

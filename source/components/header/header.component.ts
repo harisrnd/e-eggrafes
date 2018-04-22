@@ -88,7 +88,7 @@ export default class HeaderComponent implements OnInit, OnDestroy {
                         return loginInfoObj;
                     }, {});
 
-                    if (this.hasvalue === false) {
+                    if (this.hasvalue === false && this.authRole === STUDENT_ROLE) {
                         this.showLoader.next(true);
                         this.TotalStudentsSub = this._hds.findTotalStudents().subscribe(x => {
                             this.TotalStudents$.next(x);

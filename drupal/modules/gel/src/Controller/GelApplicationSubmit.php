@@ -691,38 +691,45 @@ class GelApplicationSubmit extends ControllerBase
             return 1025;
         }
 
-        //validate class mobility in GEL schhols
+        //validate class mobility in GEL schools
 
         //$this->logger->error($student["lastschool_class"]);
         $isNight = $this->isNightSchool($student["lastschool_registrynumber"]);
+        //από ΓΕΛ
         if ( $student["lastschool_unittypeid"] == "4"  )  {
             if ($isNight &&  $student["lastschool_class"] == "1" && $student["nextclass"] != 1 && $student["nextclass"] != 5) {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 1 Ή 8");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 1 Ή 8");
               return 1026;
             }
             if (!$isNight &&  $student["lastschool_class"] == "1" && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 3 Ή 10");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 3 Ή 10");
               return 1026;
             }
             if ($isNight &&  $student["lastschool_class"] == "2" && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 4 Ή 9");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 4 Ή 9");
               return 1026;
             }
             if (!$isNight &&  $student["lastschool_class"] == "2" && $student["nextclass"] != 3 && $student["nextclass"] != 7)  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 5 Ή 12");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 5 Ή 12");
               return 1026;
             }
             if ($isNight &&  $student["lastschool_class"] == "3" && $student["nextclass"] != 3 && $student["nextclass"] != 7)  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 6 Ή 11");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 6 Ή 11");
               return 1026;
             }
             if (!$isNight &&  $student["lastschool_class"] == "3" )  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 13");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 13");
               return 1026;
             }
         }
+        //από Γυμνάσιο
         if ($student["lastschool_unittypeid"] == "3"   && $student["nextclass"] != 1 && $student["nextclass"] != 4)  {
-          $this->logger->error("ΠΕΡΙΠΤΩΣΗ 2 Ή 7");
+          //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 2 Ή 7");
+          return 1026;
+        }
+        //από ΕΠΑΛ
+        if ($student["lastschool_unittypeid"] == "5"   && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
+          //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 14 Ή 15");
           return 1026;
         }
 

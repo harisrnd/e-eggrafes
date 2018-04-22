@@ -287,17 +287,14 @@ class GelSubmittedApplications extends ControllerBase
                        $applicantsAppDelDisabled = $eggrafesConfig->lock_delete->value;
                     }
 
-                    // $gelStudentClasses = $this->entityTypeManager->getStorage('gel_student_class')->loadByProperties(array('student_id' => $object->id()));
-                    // $gelStudentClass = reset($gelStudentClasses);
-                    // if (!$gelStudentClass && !$applicantsAppDelDisabled) {
-                    //     $canDelete = 1;
-                    // }
-                    // else {
-                    //     $canDelete = 0;
-                    // }
-                    if (!$applicantsAppDelDisabled)
+                    $gelStudentClasses = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $object->id()));
+                    //$gelStudentClass = reset($gelStudentClasses);
+
+                    $this->logger->warning(sizeof($gelStudentClasses));
+
+                    if (sizeof($gelStudentClasses) === 0/*!$gelStudentClass*/ && !$applicantsAppDelDisabled)
                          $canDelete = 1;
-                     else
+                    else
                          $canDelete = 0;
 
                     try {
