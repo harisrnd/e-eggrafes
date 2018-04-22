@@ -717,8 +717,9 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type)
         }
     }
 
- public function SaveHighSchoolSelection(Request $request, $studentid, $schoolid, $oldschool)
+ public function SaveHighSchoolSelection(Request $request, $studentid, $schoolid, $oldschool, $nextclass)
  {
+
      if (!$request->isMethod('GET')) {
             return $this->respondWithStatus([
                     'message' => t('Method Not Allowed'),
@@ -760,12 +761,18 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type)
             $this->connection->delete('gelstudenthighschool')
                             ->condition('student_id', $value, '=')
                             ->execute();
+            if ($nextclass === '1')
+                $nexttaxi = 'Α';
+            elseif ($nextclass === '2')
+                $nexttaxi = 'Β';
+            else
+                 $nexttaxi = 'Γ';
 
             $student = array(
                 'langcode' => 'el',
                 'student_id' => $value,
                 'school_id' => $schoolid,
-                'taxi' => 'Α'
+                'taxi' => $nexttaxi,
 
             );
 
@@ -1265,7 +1272,7 @@ public function getSchoolGel(Request $request)
         foreach ($results as $key ) {
                   $list[] = array(
                         'id' => 'ΕΠ',
-                        'name' => $object -> name ->value,
+                        'name' => 'Α Λυκείου-'.$object -> name ->value,
                         'size' => $key->student_count,
                         'categ' => $categ,
                         'classes' => 1,

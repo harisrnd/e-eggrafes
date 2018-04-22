@@ -1541,7 +1541,7 @@ getStudentsPerSchool(schoolid,type)
 
 }
 
-saveHighScoolSelection(studentid,oldschool, schoolid)
+saveHighScoolSelection(studentid,oldschool, schoolid, nextclass)
 {
     this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
@@ -1556,7 +1556,7 @@ saveHighScoolSelection(studentid,oldschool, schoolid)
         {
             oldschool = 999999;
         }
-        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/saveselection/`+ studentid + '/'+schoolid +'/'+ oldschool , options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/saveselection/`+ studentid + '/'+schoolid +'/'+ oldschool + '/'+ nextclass , options)
             .map(response => response.json());
 
 }
