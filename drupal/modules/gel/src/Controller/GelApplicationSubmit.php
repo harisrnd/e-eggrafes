@@ -209,6 +209,8 @@ class GelApplicationSubmit extends ControllerBase
                 'telnum' => $telnum_encoded,
                 'second_period' => $second_period,
                 'myschool_currentsection' => $applicationForm[0]['section_name'],
+                'myschool_currentlevelname' => $applicationForm[0]['level_name'],
+                'myschool_currentunittype' => $applicationForm[0]['unittype_name'],
             );
 
             if (($errorCode = $this->validateStudent(array_merge(
@@ -436,6 +438,8 @@ class GelApplicationSubmit extends ControllerBase
               'telnum' => $telnum_encoded,
               'second_period' => $second_period,
               'myschool_currentsection' => $applicationForm[0]['section_name'],
+              'myschool_currentlevelname' => $applicationForm[0]['level_name'],
+              'myschool_currentunittype' => $applicationForm[0]['unittype_name'],
           );
 
           if (($errorCode = $this->validateStudent(array_merge(
@@ -498,6 +502,8 @@ class GelApplicationSubmit extends ControllerBase
             $gelStudent->set('am', $am_encoded);
             $gelStudent->set('myschool_id', $applicationForm[0]['studentId']);
             $gelStudent->set('myschool_currentsection', $applicationForm[0]['section_name']);
+            $gelStudent->set('myschool_currentlevelname', $applicationForm[0]['level_name']);
+            $gelStudent->set('myschool_currentunittype', $applicationForm[0]['unittype_name']);
 
             $gelStudent->save();
           }
@@ -685,38 +691,45 @@ class GelApplicationSubmit extends ControllerBase
             return 1025;
         }
 
-        //validate class mobility in GEL schhols
+        //validate class mobility in GEL schools
 
         //$this->logger->error($student["lastschool_class"]);
         $isNight = $this->isNightSchool($student["lastschool_registrynumber"]);
+        //από ΓΕΛ
         if ( $student["lastschool_unittypeid"] == "4"  )  {
             if ($isNight &&  $student["lastschool_class"] == "1" && $student["nextclass"] != 1 && $student["nextclass"] != 5) {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 1 Ή 8");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 1 Ή 8");
               return 1026;
             }
             if (!$isNight &&  $student["lastschool_class"] == "1" && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 3 Ή 10");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 3 Ή 10");
               return 1026;
             }
             if ($isNight &&  $student["lastschool_class"] == "2" && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 4 Ή 9");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 4 Ή 9");
               return 1026;
             }
             if (!$isNight &&  $student["lastschool_class"] == "2" && $student["nextclass"] != 3 && $student["nextclass"] != 7)  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 5 Ή 12");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 5 Ή 12");
               return 1026;
             }
             if ($isNight &&  $student["lastschool_class"] == "3" && $student["nextclass"] != 3 && $student["nextclass"] != 7)  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 6 Ή 11");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 6 Ή 11");
               return 1026;
             }
             if (!$isNight &&  $student["lastschool_class"] == "3" )  {
-              $this->logger->error("ΠΕΡΙΠΤΩΣΗ 13");
+              //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 13");
               return 1026;
             }
         }
+        //από Γυμνάσιο
         if ($student["lastschool_unittypeid"] == "3"   && $student["nextclass"] != 1 && $student["nextclass"] != 4)  {
-          $this->logger->error("ΠΕΡΙΠΤΩΣΗ 2 Ή 7");
+          //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 2 Ή 7");
+          return 1026;
+        }
+        //από ΕΠΑΛ
+        if ($student["lastschool_unittypeid"] == "5"   && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
+          //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 14 Ή 15");
           return 1026;
         }
 

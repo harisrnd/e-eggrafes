@@ -408,6 +408,8 @@ import { StudentGelCourseChosen } from "../students/student";
         // }
 
         aitisiObj[0].section_name = null;
+        aitisiObj[0].level_name = null;
+        aitisiObj[0].unittype_name = null;
 
         //aitisiObj[1]: ομάδα προσανατολισμού
         let classIds = ["2", "3", "6", "7"];
@@ -435,7 +437,7 @@ import { StudentGelCourseChosen } from "../students/student";
                 let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
                 let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
 
-                this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
+                this.ServiceStudentCertifSub = this._hds.getServiceStudentInfo(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
                 date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 .subscribe(data => {
                     //if (typeof data.data["studentId"] !== "undefined")  {
@@ -446,6 +448,8 @@ import { StudentGelCourseChosen } from "../students/student";
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];
                       aitisiObj[0].section_name = data.data["sectionName"];
+                      aitisiObj[0].level_name = data.data["levelName"];
+                      aitisiObj[0].unittype_name = data.data["unitTypeDescription"];
                       if (data.data["levelName"]==='Α'){
                           aitisiObj[0].lastschool_class = 1;
                       }
@@ -461,27 +465,27 @@ import { StudentGelCourseChosen } from "../students/student";
                       else if (data.data["levelName"]==='Α-ΛΥΚ'){
                         aitisiObj[0].lastschool_class = 1;
                       }
-                        else if (data.data["levelName"]==='Β-ΛΥΚ'){
+                      else if (data.data["levelName"]==='Β-ΛΥΚ'){
                         aitisiObj[0].lastschool_class = 2;
-                    }
-                    else if (data.data["levelName"]==='Γ-ΛΥΚ'){
-                        aitisiObj[0].lastschool_class = 3;
-                    }
-                    else if (data.data["levelName"]==='Δ-ΛΥΚ'){
-                        aitisiObj[0].lastschool_class = 4;
-                    }
-                    else if (data.data["levelName"]==='Γ (ΠΑΛΑΙΑ)'){
-                        aitisiObj[0].lastschool_class = 3;
-                    }
-                    else if (data.data["levelName"]==='Δ (ΠΑΛΑΙΑ)'){
-                        aitisiObj[0].lastschool_class = 4;
-                    }
-                    else if (data.data["levelName"]==='Γ-ΛΥΚ (ΠΑΛΑΙΑ)'){
-                        aitisiObj[0].lastschool_class = 3;
-                    }
-                    else if (data.data["levelName"]==='Δ-ΛΥΚ (ΠΑΛΑΙΑ)'){
-                        aitisiObj[0].lastschool_class = 4;
-                    }
+                      }
+                      else if (data.data["levelName"]==='Γ-ΛΥΚ'){
+                          aitisiObj[0].lastschool_class = 3;
+                      }
+                      else if (data.data["levelName"]==='Δ-ΛΥΚ'){
+                          aitisiObj[0].lastschool_class = 4;
+                      }
+                      else if (data.data["levelName"]==='Γ (ΠΑΛΑΙΑ)'){
+                          aitisiObj[0].lastschool_class = 3;
+                      }
+                      else if (data.data["levelName"]==='Δ (ΠΑΛΑΙΑ)'){
+                          aitisiObj[0].lastschool_class = 4;
+                      }
+                      else if (data.data["levelName"]==='Γ-ΛΥΚ (ΠΑΛΑΙΑ)'){
+                          aitisiObj[0].lastschool_class = 3;
+                      }
+                      else if (data.data["levelName"]==='Δ-ΛΥΚ (ΠΑΛΑΙΑ)'){
+                          aitisiObj[0].lastschool_class = 4;
+                      }
                     // else if (data.data["levelName"]==='ΔΥΕΠ'){
                     //     aitisiObj[0].lastschool_class = 10;
                     // }
@@ -491,9 +495,9 @@ import { StudentGelCourseChosen } from "../students/student";
                     // else if (data.data["levelName"]==='ΠΡΟΚΑΤΑΡΚΤΙΚΗ-ΛΥΚ'){
                     //     aitisiObj[0].lastschool_class = 12;
                     // }
-                    else  {
-                          aitisiObj[0].lastschool_class = -1;
-                    }
+                      else  {
+                            aitisiObj[0].lastschool_class = -1;
+                      }
                     }
                     else {
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";

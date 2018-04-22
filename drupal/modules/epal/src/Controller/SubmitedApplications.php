@@ -267,12 +267,10 @@ class SubmitedApplications extends ControllerBase
 
                     $epalStudentClasses = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('student_id' => $object->id()));
                     $epalStudentClass = reset($epalStudentClasses);
-                    if (!$epalStudentClass && !$applicantsAppDelDisabled) {
+                    if (/*!$epalStudentClass*/ sizeof($epalStudentClasses) === 0 && !$applicantsAppDelDisabled)
                         $canDelete = 1;
-                    }
-                    else {
+                    else
                         $canDelete = 0;
-                    }
                     try {
                         $name_decoded = $crypt->decrypt($object->name->value);
                         $studentsurname_decoded = $crypt->decrypt($object->studentsurname->value);
@@ -562,7 +560,7 @@ class SubmitedApplications extends ControllerBase
                     //}
 
                     if ($applicantsResultsDisabled === "0") {
-                      //To $epalStudent->finalized === null υποωοεί ότι δεν είναι κατανεμημένος αυτός ο μαθητής <-- ΝΑ ΕΛΕΓΧΘΕΙ
+                      //To $epalStudent->finalized === null υπονοεί ότι δεν είναι κατανεμημένος αυτός ο μαθητής <-- ΝΑ ΕΛΕΓΧΘΕΙ
                       if ($epalStudent->finalized === "1")
                           $status = "1";
                       else if ($epalStudent->finalized === "0")

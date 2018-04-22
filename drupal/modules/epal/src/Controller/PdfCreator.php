@@ -218,7 +218,8 @@ class PDFCreator extends ControllerBase {
 		//if ($this->applicantsResultsDisabled === "1")
 		if ($status === "0" ||  $status === "3" || $status === "4")
 			$this->pdf->MultiCell(0, 8, $this->prepareString('(Αρχική)'), 0, 'R');
-
+		else
+			$this->pdf->MultiCell(0, 8, $this->prepareString('(Οριστική)'), 0, 'R');
 		$this->pdf->Ln();
 
 	}
