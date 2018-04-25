@@ -52,8 +52,8 @@ import { HelperDataService } from "../../services/helper-data-service";
     <div class = "loading" *ngIf="(showLoader | async) === true"></div>
     <div style="min-height: 500px;">
     <form>
-       <p style="margin-top: 20px; line-height: 2em;"> H παρακάτω λίστα περιλαμβάνει τους μαθητές της Γ 'ταξης του σχολείου σας οι οποίοι απολύθηκαν και καταχωρησαν την αιτηση δήλωση προτιμησης για εγγραφή σε ΓΕΛ/ΕΠΑΛ. </p>
-       <p style="margin-top: 20px; line-height: 2em;"> Παρακαλείστε να ελέγξετε και να επικοινωνησετε με την οικεία Διευθυνση Δευτεροβάθμιας Εκπαίδευσης σε περιπτωση που εντοπίσετε ελλείψεις. </p>
+       <p style="margin-top: 20px; line-height: 2em;"> H παρακάτω λίστα περιλαμβάνει τους μαθητές της Γ 'ταξης του σχολείου σας οι οποίοι απολύθηκαν και καταχώρησαν την αίτηση δήλωση προτίμησης για εγγραφή σε ΓΕΛ/ΕΠΑΛ. </p>
+       <p style="margin-top: 20px; line-height: 2em;"> Παρακαλούμε ελέγξτε τη λίστα και επικοινωνήστε με την οικεία Διεύθυνση Δευτεροβάθμιας Εκπαίδευσης σε περίπτωση που εντοπίσετε ελλείψεις. </p>
 
       <div class="row">
          <div class="col-md-2" style="font-size: 0.9em; font-weight: bold;"> A.M.</div>
@@ -244,7 +244,7 @@ import { HelperDataService } from "../../services/helper-data-service";
             }
         });
     }
-/* 
+/*
     findstudent(taxi) {
         this.showLoader.next(true);
         this.retrievedStudent.next(false);

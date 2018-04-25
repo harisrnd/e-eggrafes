@@ -52,8 +52,9 @@ import { HelperDataService } from "../../services/helper-data-service";
     <div class = "loading" *ngIf="(showLoader | async) === true"></div>
     <div style="min-height: 500px;">
     <form>
-       <p style="margin-top: 20px; line-height: 2em;"> H παρακάτω λίστα διαμορφώνει τη δυναμική του σχολείου σας σε τμήματα με κριτήριο τον αριθμό των διαθεσίμων αιθουσών.  </p>
-       <p style="margin-top: 20px; line-height: 2em;"> Παρακαλείστε να καταγράψετε τον αριθμό των τμημάτων ανά τάξη, τομέα και ειδικότητα.  </p>
+       <p style="margin-top: 20px; line-height: 2em;"> H παρακάτω λίστα εμφανίζει τις αιτήσεις των μαθητών που κατανεμήθηκαν στο σχολείο σας.
+         Παρακαλούμε επιβεβαιώσετε με Ναι ή Όχι την αίτηση του κάθε μαθητή. </p>
+         <!--<p style="margin-top: 20px; line-height: 2em;"> Παρακαλούμε επιβεβαιώσετε με Ναι ή Όχι την αίτηση του κάθε μαθητή.  </p>-->
 
       <div class="row">
          <div class="col-md-10" style="font-weight: bold;"> Τα τμήματα του σχολείου σας.</div>

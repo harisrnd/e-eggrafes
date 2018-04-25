@@ -14,7 +14,7 @@ use Drupal\oauthost\Crypt;
 
 class CurrentUser extends ControllerBase
 {
-    const CHILDREN_LIMIT = 100;
+    const CHILDREN_LIMIT = 200;
 
     protected $entityTypeManager;
     protected $logger;

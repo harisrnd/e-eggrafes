@@ -13,8 +13,9 @@ import { HelperDataService } from "../../services/helper-data-service";
     <form>
 
 
-       <p style="margin-top: 20px; line-height: 2em;"> Στην παρακάτω λίστα βλέπετε τα τμήματα του σχολείου σας με την αντίστοιχη δυναμίκη τους σε αίθουσες. Παρακαλώ για να τροποποποιήσετε τη δυναμικήαυτή κάντε κλικ στον αντίστοιχο σύμβολο,
-       επιλέξτε τη νέα δυναμική και πατήστε το σύμβολο <i>ok</i>. Προσοχή! Κανένα τμήμα δεν πρέπει να έχει δυναμική 0.</p>
+       <p style="margin-top: 20px; line-height: 2em;"> Στην παρακάτω λίστα βλέπετε τα τμήματα του σχολείου σας με την αντίστοιχη δυναμική τους σε αίθουσες.
+          Παρακαλείστε να καταχωρήσετε τον αριθμό των αιθουσών που διαθέτει το σχολείο σας ανά τάξη, τομέα και ειδικότητα.
+          Κάντε κλικ στο αντίστοιχο σύμβολο, επιλέξτε τη νέα δυναμική και πατήστε το σύμβολο <i>ok</i>. Προσοχή! Κανένα τμήμα δεν πρέπει να έχει δυναμική 0.</p>
       <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Οι δηλώσεις σας </b></div>
       <div *ngFor="let CapacityPerCourses$  of CapacityPerCourse$ | async; let i=index; let isOdd=odd; let isEven=even" >
                 <li class="list-group-item " [class.oddout]="isOdd" [class.evenout]="isEven" >
