@@ -34,6 +34,16 @@
                                     </li>
                                 </div>
 
+                                <div *ngIf="(loginInfo$ | async).size > 0 " class="nav-item" >
+                                    <li *ngIf="authRole=='director_gym'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/school/directorgym-view']" [routerLinkActive]="['active']"><b>Λίστα Μαθητών</b></a>
+                                    </li>
+                                </div>
+                                <div *ngIf="(loginInfo$ | async).size > 0 " class="nav-item" >
+                                    <li *ngIf="authRole=='director_gel'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/school/directorgel-view']" [routerLinkActive]="['active']"><b>Δηλώσεις Μαθητών</b></a>
+                                    </li>
+                                </div>
 
                                 <div *ngIf="(loginInfo$ | async).size > 0 && (userType | async) === 'epal'" class="nav-item">
                                     <li *ngIf="authRole=='supervisor'" class="nav-item">

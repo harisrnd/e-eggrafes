@@ -723,10 +723,11 @@ class GelApplicationSubmit extends ControllerBase
             }
         }
         //από Γυμνάσιο
-        if ($student["lastschool_unittypeid"] == "3"   && $student["nextclass"] != 1 && $student["nextclass"] != 4)  {
+        //Προσοχή! Δεν αντιμετωπίζουμε τα Γυμνάσια με Λυκειακες Τάξεις
+        //if ($student["lastschool_unittypeid"] == "3"   && $student["nextclass"] != 1 && $student["nextclass"] != 4)  {
           //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 2 Ή 7");
-          return 1026;
-        }
+        //  return 1026;
+        //}
         //από ΕΠΑΛ
         if ($student["lastschool_unittypeid"] == "5"   && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
           //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 14 Ή 15");
