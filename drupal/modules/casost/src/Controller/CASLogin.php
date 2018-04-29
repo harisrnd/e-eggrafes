@@ -145,14 +145,13 @@ class CASLogin extends ControllerBase
     //        $gsnunitcodedn = $filterAttribute('edupersonorgunitdn:gsnunitcode:extended');
     //        $gsnunitcode = substr($gsnunitcodedn, strpos($gsnunitcodedn, ";") + 1);
             $gsnunitcode = $filterAttribute('edupersonorgunitdn:gsnunitcode');
-/* check if myschool account */
+
             if (!$umdobject || $umdobject !== "ISaccount") {
                 return $this->redirectForbidden($configRowName, '5002');
             }
             if (!$gsnunitcode || $gsnunitcode !== $CASUser) {
                 return $this->redirectForbidden($configRowName, '5003');
             }
-/* end of checking myschool account */
 
             $userAssigned = $this->assignRoleToUser($gsnunitcode);
 
