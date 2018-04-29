@@ -23,6 +23,8 @@ import { GelClassesActions } from "../../actions/gelclasses.actions";
 import { IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
 import { IElectiveCourseFieldRecords } from "../../store/electivecoursesfields/electivecoursesfields.types";
+import { LangCourseFieldsActions } from "../../actions/langcoursesfields.actions";
+import { ILangCourseFieldRecords } from "../../store/langcoursesfields/langcoursesfields.types";
 import { OrientationGroupActions } from "../../actions/orientationgroup.action";
 import { IOrientationGroupRecords } from "../../store/orientationgroup/orientationgroup.types";
 import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
@@ -128,8 +130,6 @@ import { IAppState } from "../../store/store";
                               </div>
                           </div>
                       </div>
-
-
 
 
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
@@ -239,16 +239,30 @@ import { IAppState } from "../../store/store";
                         <div *ngIf="gelChoices$.choice_type === 'ΟΠ' " class="col-md-9" style="font-size: 0.8em; font-weight: bold">{{gelChoices$.choice_name}}</div>
                     </div>
 
+
+                    <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-6" style="font-size: 0.8em; font-weight: bold;">Ξένη Γλώσσα:</div>
+                    </div>
+                    <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                        <div class="col-md-2" style="font-size: 0.8em;"></div>
+                        <div class="col-md-4" style="font-size: 0.8em; text-align: center;">Σειρά Προτίμησης</div>
+                        <div class="col-md-6" style="font-size: 0.8em;">Τίτλος Μαθήματος</div>
+                    </div>
+                    <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;" *ngFor="let gelChoices$  of GelStudentDetails$['gelStudentChoices']; let i=index; let isOdd=odd; let isEven=even" [hidden]="UserData$.id !== applicationGelIdActive">
+                        <div *ngIf="gelChoices$.choice_type === 'ΞΓ' " class="col-md-2" style="font-size: 0.8em;"></div>
+                        <div *ngIf="gelChoices$.choice_type === 'ΞΓ' " class="col-md-4" style="font-size: 0.8em; font-weight: bold; text-align: center;">{{gelChoices$.order_id}}</div>
+                        <div *ngIf="gelChoices$.choice_type === 'ΞΓ' " class="col-md-6" style="font-size: 0.8em; font-weight: bold;">{{gelChoices$.choice_name}}</div>
+                    </div>
+
+
                     <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-6" style="font-size: 0.8em; font-weight: bold;">Μάθημα Επιλογης:</div>
                     </div>
-
                     <div *ngIf="GelStudentDetails$.nextclass==='1' || GelStudentDetails$.nextclass==='3' || GelStudentDetails$.nextclass==='4' " class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;">
                         <div class="col-md-2" style="font-size: 0.8em;"></div>
                         <div class="col-md-4" style="font-size: 0.8em; text-align: center;">Σειρά Προτίμησης</div>
                         <div class="col-md-6" style="font-size: 0.8em;">Τίτλος Μαθήματος</div>
                     </div>
-
                     <div class="row oddin" style="margin: 0px 2px 0px 2px; line-height: 2em;" *ngFor="let gelChoices$  of GelStudentDetails$['gelStudentChoices']; let i=index; let isOdd=odd; let isEven=even" [hidden]="UserData$.id !== applicationGelIdActive">
                         <div *ngIf="gelChoices$.choice_type === 'ΕΠΙΛΟΓΗ' " class="col-md-2" style="font-size: 0.8em;"></div>
                         <div *ngIf="gelChoices$.choice_type === 'ΕΠΙΛΟΓΗ' " class="col-md-4" style="font-size: 0.8em; font-weight: bold; text-align: center;">{{gelChoices$.order_id}}</div>
@@ -475,6 +489,7 @@ import { IAppState } from "../../store/store";
 
     private gelclassesSub: Subscription;
     private electivecourseFieldsSub: Subscription;
+    private langcourseFieldsSub: Subscription;
     private OrientationGroupSub: Subscription;
     private sectorFieldsSub: Subscription;
     private regionsSub: Subscription;
@@ -501,19 +516,17 @@ import { IAppState } from "../../store/store";
 
     constructor(private _ngRedux: NgRedux<IAppState>,
         private _cfa: DataModeActions,
-
         private _eca: EpalClassesActions,
         private _sdfa: StudentDataFieldsActions,
         private _csa: SectorCoursesActions,
         private _sfa: SectorFieldsActions,
         private _rsa: RegionSchoolsActions,
-
         private _sta: SchoolTypeActions,
         private _gca: GelClassesActions,
         private _ecf: ElectiveCourseFieldsActions,
+        private _lcfa: LangCourseFieldsActions,
         private _ogs: OrientationGroupActions,
         private _gsdf: GelStudentDataFieldsActions,
-
         private _hds: HelperDataService,
         private activatedRoute: ActivatedRoute,
         private router: Router,
@@ -541,6 +554,8 @@ import { IAppState } from "../../store/store";
             this.gelclassesSub.unsubscribe();
         if (this.electivecourseFieldsSub)
             this.electivecourseFieldsSub.unsubscribe();
+        if (this.langcourseFieldsSub)
+            this.langcourseFieldsSub.unsubscribe();
         if (this.OrientationGroupSub)
             this.OrientationGroupSub.unsubscribe();
         if (this.sectorFieldsSub)
@@ -656,6 +671,7 @@ import { IAppState } from "../../store/store";
       this._sta.initSchoolType();
       this._gca.initGelClasses();
       this._ecf.initElectiveCourseFields();
+      this._lcfa.initLangCourseFields();
       this._ogs.initOrientationGroup();
       this._gsdf.initGelStudentDataFields();
     }
@@ -844,7 +860,6 @@ import { IAppState } from "../../store/store";
 
     createStoreWithGelAppData()  {
 
-
         let birthdate = this.GelSubmittedDetails$.getValue()[0].birthdate;
         let birthparts = birthdate.split("/",3);
         this._gsdf.saveGelStudentDataFields([{
@@ -892,6 +907,23 @@ import { IAppState } from "../../store/store";
                 this.showLoader$.next(false);
             });
         }
+
+
+        //new code
+        if (class_id === 1 || class_id === 4){
+            this.showLoader$.next(true);
+            this._lcfa.getLangCourseFields(false,class_id).then(()=>{
+                this.showLoader$.next(true);
+                for (let k=0; k < (this.GelSubmittedDetails$.getValue()[0].gelStudentChoices).length; k++)  {
+                    if ( this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_type === "ΞΓ") {
+                        this._lcfa.saveLangCourseFieldsSelectedwithIds(this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].choice_id, 0, this.GelSubmittedDetails$.getValue()[0].gelStudentChoices[k].order_id);
+
+                    }
+                }
+                this.showLoader$.next(false);
+            });
+        }
+        //end new code
 
         if (class_id === 2 || class_id === 3 || class_id === 6 || class_id === 7){
             this.showLoader$.next(true);

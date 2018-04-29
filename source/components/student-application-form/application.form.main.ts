@@ -272,9 +272,9 @@ import {
 
                             //λύση προβλήματος πεδίου "Αίτηση από" στο edit app
                             if (this.appUpdate.getValue() === true) {
-                                if (studentDataField.get("relationtostudent") === 'Γονέας/Κηδεμόνας')
+                                if (studentDataField.get("relationtostudent") === 'Γονέα/Κηδεμόνα')
                                   this.numAppChildren.next(this.numAppChildren.getValue() -1) ;
-                                else if (studentDataField.get("relationtostudent") === 'Μαθητής')
+                                else if (studentDataField.get("relationtostudent") === 'Μαθητή')
                                   this.numAppSelf.next(this.numAppSelf.getValue() - 1);
                             }
 

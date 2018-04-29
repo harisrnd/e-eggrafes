@@ -142,8 +142,8 @@ export default class HeaderComponent implements OnInit, OnDestroy {
                 this._sta.initSchoolType();
                 this._gca.initGelClasses();
                 this._ecfa.initElectiveCourseFields();
-                this._oga.initOrientationGroup();
                 this._lcfa.initLangCourseFields();
+                this._oga.initOrientationGroup();
                 this._gsdfa.initGelStudentDataFields();
                 this.router.navigate([""]);
             }

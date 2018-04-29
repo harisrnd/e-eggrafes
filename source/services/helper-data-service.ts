@@ -1347,8 +1347,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
     };
 
-
-    getLangCourseFields() {
+    getLangCourseFields(activeClassId) {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -1359,7 +1358,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list?type_id=ΞΓ&class_id=1` + `?q=choicesperclass/list&_format=json`, options)
+            this.http.get(`${AppSettings.API_ENDPOINT}/choicesperclass/list?type_id=ΞΓ&class_id=` + activeClassId +  `?q=choicesperclass/list&_format=json`, options)
                 .map(response => <ILangCourseField[]>response.json())
 
                 .subscribe(data => {

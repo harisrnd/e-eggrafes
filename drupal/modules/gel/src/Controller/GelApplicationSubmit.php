@@ -231,6 +231,7 @@ class GelApplicationSubmit extends ControllerBase
                     ]),
                     $applicationForm[0]['nextclass'],
                     $applicationForm[1]['choice_id'],
+                    $applicationForm[3][0]['choice_id'],
                     $applicationForm[2][0]['choice_id'],
                     $applicantUser, $eggrafesConfig->ws_ident->value, false)) > 0) {
                 return $this->respondWithStatus([
@@ -289,6 +290,22 @@ class GelApplicationSubmit extends ControllerBase
                   $entity_storage_coursechosen->save($entity_object);
               }
             }
+
+            //μαθήματα ξένων γλωσσών
+            $classIds = array("1","4");
+            if (in_array($applicationForm[0]['nextclass'], $classIds))  {
+              for ($i = 0; $i < sizeof($applicationForm[3]); $i++) {
+                  $coursechosen = array(
+                      'student_id' => $created_student_id,
+                      'choice_id' => $applicationForm[3][$i]['choice_id'],
+                      'order_id' => $applicationForm[3][$i]['order_id']
+                  );
+                  $entity_storage_langchosen = $this->entityTypeManager->getStorage('gel_student_choices');
+                  $entity_object = $entity_storage_langchosen->create($coursechosen);
+                  $entity_storage_langchosen->save($entity_object);
+              }
+            }
+
             return $this->respondWithStatus([
                 "error_code" => 0
             ], Response::HTTP_OK);
@@ -460,6 +477,7 @@ class GelApplicationSubmit extends ControllerBase
                   ]),
                   $applicationForm[0]['nextclass'],
                   $applicationForm[1]['choice_id'],
+                  $applicationForm[3][0]['choice_id'],
                   $applicationForm[2][0]['choice_id'],
                   $applicantUser, $eggrafesConfig->ws_ident->value, true)) > 0) {
               return $this->respondWithStatus([
@@ -545,6 +563,21 @@ class GelApplicationSubmit extends ControllerBase
               }
           }
 
+          //εισαγωγή νέων εγγραφών στo gel_student_choices (μαθήματα ξένων γλωσσών)
+          $classIds = array("1","4");
+          if (in_array($applicationForm[0]['nextclass'], $classIds))  {
+            for ($i = 0; $i < sizeof($applicationForm[3]); $i++) {
+                $coursechosen = array(
+                    'student_id' => $studentId,
+                    'choice_id' => $applicationForm[3][$i]['choice_id'],
+                    'order_id' => $applicationForm[3][$i]['order_id']
+                );
+                $entity_storage_langchosen = $this->entityTypeManager->getStorage('gel_student_choices');
+                $entity_object = $entity_storage_langchosen->create($coursechosen);
+                $entity_storage_langchosen->save($entity_object);
+            }
+          }
+
 
           return $this->respondWithStatus([
               "error_code" => 0
@@ -588,7 +621,7 @@ class GelApplicationSubmit extends ControllerBase
 
 
 
-    private function validateStudent($student, /*$numberOfSchools,*/ $chosenClass, $chosenOrientation, $chosenElectiveCourse, $applicantUser = null, $wsEnabled, $appUpdate)
+    private function validateStudent($student, $chosenClass, $chosenOrientation, $chosenLangCourse, $chosenElectiveCourse, $applicantUser = null, $wsEnabled, $appUpdate)
     {
         if (!$student["hasright"] && $appUpdate == false) {
             return 997;
@@ -598,6 +631,9 @@ class GelApplicationSubmit extends ControllerBase
         }
         if ( ($chosenClass === "1" || $chosenClass === "3" || $chosenClass === "4") && !isset($chosenElectiveCourse)) {
             return 999;
+        }
+        if ( ($chosenClass === "1" || $chosenClass === "4") && !isset($chosenLangCourse)) {
+            return 1000;
         }
         if (!$student["agreement"] && $appUpdate == false) {
             return 1001;

@@ -18,11 +18,13 @@ import { ISchoolType, ISchoolTypeRecord, ISchoolTypeRecords } from "../../store/
 import { GELCLASSES_INITIAL_STATE } from "../../store/gelclasses/gelclasses.initial-state";
 import { IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 import { IElectiveCourseFieldRecord, IElectiveCourseFieldRecords } from "../../store/electivecoursesfields/electivecoursesfields.types";
+import { ILangCourseFieldRecord, ILangCourseFieldRecords } from "../../store/langcoursesfields/langcoursesfields.types";
 import { IOrientationGroupRecords } from "../../store/orientationgroup/orientationgroup.types";
 import { ORIENTATIONGROUP_INITIAL_STATE } from "../../store/orientationgroup/orientationgroup.initial-state";
 
 import { IAppState } from "../../store/store";
 import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecoursesfields/electivecoursesfields.initial-state";
+import { LANGCOURSE_FIELDS_INITIAL_STATE } from "../../store/langcoursesfields/langcoursesfields.initial-state";
 
 
 @Component({
@@ -62,6 +64,17 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
             </li>
         </ul>
         </div>
+
+        <ul *ngIf="(selectedLangs$ | async).length>0" class="list-group left-side-view" style="margin-bottom: 20px;">
+        <li class="list-group-item active">
+            Ξένη Γλώσσα
+        </li>
+        <div *ngFor="let selectedLang$ of selectedLangs$ | async; let i=index; let isOdd=odd; let isEven=even">
+            <li class="list-group-item" [class.oddout]="isOdd" [class.evenout]="isEven">
+                <span class="roundedNumber">{{(i+1)}}</span> {{selectedLang$.name}}
+            </li>
+        </div>
+        </ul>
 
         <ul *ngIf="(selectedCourses$ | async).length>0" class="list-group left-side-view" style="margin-bottom: 20px;">
         <li class="list-group-item active">
@@ -143,9 +156,11 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
     private schooltype$: BehaviorSubject<ISchoolTypeRecords>;
     private gelclasses$: BehaviorSubject<IGelClassRecords>;
     private electivecourses$: BehaviorSubject<IElectiveCourseFieldRecords>;
+    private langcourses$: BehaviorSubject<ILangCourseFieldRecords>;
     private OrientationGroup$: BehaviorSubject<IOrientationGroupRecords>;
     private OrientationGroupSub: Subscription;
     private electivecoursesSub: Subscription;
+    private langcoursesSub: Subscription;
     private schooltypeSub: Subscription;
     private gelclassesSub: Subscription;
 
@@ -156,7 +171,9 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
     private currentUrl: string;
 
     private electivecourseSelected = <number>0;
+    private langcourseSelected = <number>0;
     private selectedCourses$: BehaviorSubject<Array<IElectiveCourseFieldRecord>> = new BehaviorSubject(Array());
+    private selectedLangs$: BehaviorSubject<Array<ILangCourseFieldRecord>> = new BehaviorSubject(Array());
 
 
     constructor(private _ngRedux: NgRedux<IAppState>,
@@ -173,6 +190,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
         this.gelclasses$ = new BehaviorSubject(GELCLASSES_INITIAL_STATE);
         this.OrientationGroup$ = new BehaviorSubject(ORIENTATIONGROUP_INITIAL_STATE);
         this.electivecourses$= new BehaviorSubject(ELECTIVECOURSE_FIELDS_INITIAL_STATE);
+        this.langcourses$= new BehaviorSubject(LANGCOURSE_FIELDS_INITIAL_STATE);
 
     };
 
@@ -278,7 +296,7 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
             }, error => { console.log("error selecting gelclasses"); });
 
 
-            this.electivecoursesSub = this._ngRedux.select("electivecourseFields")
+          this.electivecoursesSub = this._ngRedux.select("electivecourseFields")
             .map(electivecourseFields => <IElectiveCourseFieldRecords>electivecourseFields)
             .subscribe(sfds => {
                 this.electivecourseSelected = 0;
@@ -298,6 +316,28 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
 
                 this.selectedCourses$.next(selectedCourses);
             }, error => { console.log("error selecting electivecourseFields"); });
+
+
+        this.langcoursesSub = this._ngRedux.select("langcourseFields")
+              .map(langcourseFields => <ILangCourseFieldRecords>langcourseFields)
+              .subscribe(sfds => {
+                  this.langcourseSelected = 0;
+                  let selectedLangs = Array<ILangCourseFieldRecord>();
+                  sfds.reduce(({}, langcourseField) => {
+                      if (langcourseField.get("selected") === true) {
+                          ++this.langcourseSelected;
+                          selectedLangs.push(langcourseField.toJS());
+                      }
+
+                      return langcourseField;
+                  }, {});
+                  this.langcourses$.next(sfds);
+                  selectedLangs.sort(this.compareLangs);
+                  for (let i = 0; i < selectedLangs.length; i++)
+                      selectedLangs[i].order_id = i + 1;
+
+                  this.selectedLangs$.next(selectedLangs);
+              }, error => { console.log("error selecting langcourseFields"); });
 
 
         this.OrientationGroupSub = this._ngRedux.select("orientationGroup")
@@ -324,33 +364,33 @@ import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecourses
         return 0;
     }
 
+    compareLangs(a: ILangCourseFieldRecord, b: ILangCourseFieldRecord) {
+        if (a.order_id < b.order_id)
+            return -1;
+        if (a.order_id > b.order_id)
+            return 1;
+        return 0;
+    }
+
     ngOnDestroy() {
-        if (this.regionsSub) {
+        if (this.regionsSub)
             this.regionsSub.unsubscribe();
-        }
-        if (this.sectorsSub) {
+        if (this.sectorsSub)
             this.sectorsSub.unsubscribe();
-        }
-        if (this.sectorFieldsSub) {
+        if (this.sectorFieldsSub)
             this.sectorFieldsSub.unsubscribe();
-        }
-        if (this.epalclassesSub) {
+        if (this.epalclassesSub)
             this.epalclassesSub.unsubscribe();
-        }
-
-        if (this.electivecoursesSub){
+        if (this.electivecoursesSub)
             this.electivecoursesSub.unsubscribe();
-        }
-        if (this.OrientationGroupSub){
+        if (this.langcoursesSub)
+            this.langcoursesSub.unsubscribe();
+        if (this.OrientationGroupSub)
             this.OrientationGroupSub.unsubscribe();
-        }
-        if (this.gelclassesSub){
+        if (this.gelclassesSub)
             this.gelclassesSub.unsubscribe();
-        }
-        if (this.schooltypeSub){
+        if (this.schooltypeSub)
             this.schooltypeSub.unsubscribe();
-        }
-
     }
 
 }

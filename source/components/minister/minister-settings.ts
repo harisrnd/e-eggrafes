@@ -188,6 +188,19 @@ import { IAppState } from "../../store/store";
         </div>
           <br>
 
+          <!--
+          <div class="row">
+           <div class="col-md-1 ">
+             <input type="checkbox" [checked]="guardianIdentEnabled"  formControlName="guardianIdentEnabled"
+             (click)="toggleGuardianIdent()" >
+           </div>
+           <div class="col-md-9">
+             <label for="guardianIdentEnabled">Ενεργοποίηση Ταυτοποίησης Κηδεμόνα</label>
+           </div>
+         </div>
+           <br>
+           -->
+
           <button type="submit" class="btn btn-md pull-right"  (click)="storeSettings()" [disabled] = "secondPeriodEnabled && formGroup.get('distributionstartdate').hasError('required')" >
               Εφαρμογή
           </button>
@@ -223,6 +236,7 @@ import { IAppState } from "../../store/store";
     private smallClassApproved: boolean;
     private wsIdentEnabled: boolean;
     private gsisIdentEnabled: boolean;
+    private guardianIdentEnabled: boolean;
     private showLoader: BehaviorSubject<boolean>;
 
     private minedu_userName: string;
@@ -252,6 +266,7 @@ import { IAppState } from "../../store/store";
             smallClassApproved:["",[]],
             wsIdentEnabled:["",[]],
             gsisIdentEnabled:["",[]],
+            guardianIdentEnabled:["",[]],
         });
 
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
@@ -333,6 +348,7 @@ import { IAppState } from "../../store/store";
             this.smallClassApproved = Boolean(Number(this.settings$.value["smallClassApproved"]));
             this.wsIdentEnabled = Boolean(Number(this.settings$.value["wsIdentEnabled"]));
             this.gsisIdentEnabled = Boolean(Number(this.settings$.value["gsisIdentEnabled"]));
+            this.guardianIdentEnabled = Boolean(Number(this.settings$.value["guardianIdentEnabled"]));
 
             this.dataRetrieved = 1;
         },
@@ -359,7 +375,8 @@ import { IAppState } from "../../store/store";
         this.settingsSub = this._hds.storeAdminSettings("epal", this.minedu_userName, this.minedu_userPassword,
             this.capacityDisabled, this.directorViewDisabled, this.applicantsLoginDisabled,
             this.applicantsAppModifyDisabled, this.applicantsAppDeleteDisabled, this.applicantsResultsDisabled,
-            this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved, this.wsIdentEnabled, this.gsisIdentEnabled)
+            this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved,
+            this.wsIdentEnabled, this.gsisIdentEnabled/*, this.guardianIdentEnabled*/)
             .subscribe(data => {
                 this.settings$.next(data);
                 this.dataRetrieved = 1;
@@ -437,6 +454,10 @@ import { IAppState } from "../../store/store";
 
     toggleGsisIdent(){
        this.gsisIdentEnabled =!this.gsisIdentEnabled;
+    }
+
+    toggleGuardianIdent(){
+       this.guardianIdentEnabled =!this.guardianIdentEnabled;
     }
 
 

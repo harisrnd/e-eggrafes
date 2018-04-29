@@ -174,7 +174,7 @@ class ApplicationSubmit extends ControllerBase
             $fatherfirstname_encoded = $crypt->encrypt($applicationForm[0]['fatherfirstname']);
             $motherfirstname_encoded = $crypt->encrypt($applicationForm[0]['motherfirstname']);
             $regionaddress_encoded = $crypt->encrypt($applicationForm[0]['regionaddress']);
-            $regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
+            //$regionarea_encoded = $crypt->encrypt($applicationForm[0]['regionarea']);
             $telnum_encoded = $crypt->encrypt($applicationForm[0]['telnum']);
             $guardian_name_encoded = $crypt->encrypt($applicationForm[0]['cu_name']);
             $guardian_surname_encoded = $crypt->encrypt($applicationForm[0]['cu_surname']);
@@ -599,9 +599,12 @@ class ApplicationSubmit extends ControllerBase
 
              $epalStudent->set('am', $am_encoded);
              $epalStudent->set('myschool_id', $applicationForm[0]['studentId']);
+             //if ($applicationForm[0]['section_name'] != null)
              $epalStudent->set('myschool_currentsection', $applicationForm[0]['section_name']);
-             $gelStudent->set('myschool_currentlevelname', $applicationForm[0]['level_name']);
-             $gelStudent->set('myschool_currentunittype', $applicationForm[0]['unittype_name']);
+             //if ($applicationForm[0]['level_name'] != null)
+             $epalStudent->set('myschool_currentlevelname', $applicationForm[0]['level_name']);
+             //if ($applicationForm[0]['unittype_name'] != null)
+              $epalStudent->set('myschool_currentunittype', $applicationForm[0]['unittype_name']);
 
              $epalStudent->save();
            }

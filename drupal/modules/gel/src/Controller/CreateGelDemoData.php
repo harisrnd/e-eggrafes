@@ -122,7 +122,7 @@ class CreateGelDemoData extends ControllerBase {
 					'regionarea' => $crypt->encrypt("περιοχή" . $i),
 					'regiontk' => $crypt->encrypt("ΤΚ" . $i),
 					'nextclass' => $curclass,
-					'relationtostudent' => 'Γονέας/Κηδεμόνας',
+					'relationtostudent' => 'Γονέα/Κηδεμόνα',
 					'telnum' => $crypt->encrypt('6944123456'),
 					'guardian_name' => $crypt->encrypt('όνομα_κηδεμόνα'),
 					'guardian_surname' => $crypt->encrypt('επώνυμο_κηδεμόνα'),

@@ -10,10 +10,10 @@ import { IAppState } from "../../store/store";
 import { HelperDataService } from "../../services/helper-data-service";
 
 import { DataModeActions } from "../../actions/datamode.actions";
-
 import { SchoolTypeActions } from "../../actions/schooltype.actions";
 import { GelClassesActions } from "../../actions/gelclasses.actions";
 import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
+import { LangCourseFieldsActions } from "../../actions/langcoursesfields.actions";
 import { OrientationGroupActions } from "../../actions/orientationgroup.action";
 import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
 
@@ -22,12 +22,14 @@ import { GELCLASSES_INITIAL_STATE } from "../../store/gelclasses/gelclasses.init
 import { GELSTUDENT_DATA_FIELDS_INITIAL_STATE } from "../../store/gelstudentdatafields/gelstudentdatafields.initial-state";
 import { ORIENTATIONGROUP_INITIAL_STATE } from "../../store/orientationgroup/orientationgroup.initial-state";
 import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecoursesfields/electivecoursesfields.initial-state";
+import { LANGCOURSE_FIELDS_INITIAL_STATE } from "../../store/langcoursesfields/langcoursesfields.initial-state";
 
 import { IDataModeRecords } from "../../store/datamode/datamode.types";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { ISchoolTypeRecords } from "../../store/schooltype/schooltype.types";
 import { IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 import { IElectiveCourseFieldRecords } from "../../store/electivecoursesfields/electivecoursesfields.types";
+import { ILangCourseFieldRecords } from "../../store/langcoursesfields/langcoursesfields.types";
 import { IOrientationGroupRecords } from "../../store/orientationgroup/orientationgroup.types";
 import { IGelStudentDataFieldRecords } from "../../store/gelstudentdatafields/gelstudentdatafields.types";
 
@@ -152,6 +154,9 @@ import { StudentGelCourseChosen } from "../students/student";
                  (
                  ( ( (classSelected | async) === '2' || (classSelected | async) === '3' || (classSelected | async) === '6' || (classSelected | async) === '7' ) && (orientationSelected | async) !== '-1' )  ||
                  ( ( (classSelected | async) === '1' || (classSelected | async) === '3' || (classSelected | async) === '4' ) && (courseSelected$ | async).length != 0 ) ||
+
+                 ( ( (classSelected | async) === '1' || (classSelected | async) === '4' ) && (langSelected$ | async).length != 0 ) ||
+
                  (classSelected | async) === '5'
                  )
                  "
@@ -171,16 +176,18 @@ import { StudentGelCourseChosen } from "../students/student";
     private authToken;
     private courseSelectedOrder: Array<number> = new Array();
     private courseSelectedId: Array<number> = new Array();
+    private langSelectedOrder: Array<number> = new Array();
+    private langSelectedId: Array<number> = new Array();
 
     private classSelected: BehaviorSubject<number>;;
     private orientationSelected: BehaviorSubject<number>;
-
     private courseSelected$: BehaviorSubject<Array<number>> = new BehaviorSubject(new Array());
-
+    private langSelected$: BehaviorSubject<Array<number>> = new BehaviorSubject(new Array());
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private gelclasses$: BehaviorSubject<IGelClassRecords>;
     private orientationGroup$: BehaviorSubject<IOrientationGroupRecords>;
     private electivecourseFields$: BehaviorSubject<IElectiveCourseFieldRecords>;
+    private langcourseFields$: BehaviorSubject<ILangCourseFieldRecords>;
     private gelstudentDataFields$: BehaviorSubject<IGelStudentDataFieldRecords>;
 
     private loginInfoSub: Subscription;
@@ -189,6 +196,7 @@ import { StudentGelCourseChosen } from "../students/student";
     private gelclassesSub: Subscription;
     private orientationGroupSub: Subscription;
     private electivecourseFieldsSub: Subscription;
+    private langcourseFieldsSub: Subscription;
     private gelstudentDataFieldsSub: Subscription;
     private gelUserDataSub: Subscription;
 
@@ -215,6 +223,7 @@ import { StudentGelCourseChosen } from "../students/student";
         private _sta: SchoolTypeActions,
         private _gca: GelClassesActions,
         private _efa: ElectiveCourseFieldsActions,
+        private _lcfa: LangCourseFieldsActions,
         private _oga: OrientationGroupActions,
         private _sdfa: GelStudentDataFieldsActions,
         private _ngRedux: NgRedux<IAppState>,
@@ -226,6 +235,7 @@ import { StudentGelCourseChosen } from "../students/student";
         this.gelclasses$ = new BehaviorSubject(GELCLASSES_INITIAL_STATE);
         this.orientationGroup$ = new BehaviorSubject(ORIENTATIONGROUP_INITIAL_STATE);
         this.electivecourseFields$ = new BehaviorSubject(ELECTIVECOURSE_FIELDS_INITIAL_STATE);
+        this.langcourseFields$ = new BehaviorSubject(LANGCOURSE_FIELDS_INITIAL_STATE);
         this.gelstudentDataFields$ = new BehaviorSubject(GELSTUDENT_DATA_FIELDS_INITIAL_STATE);
 
         this.modalTitle = new BehaviorSubject("");
@@ -334,6 +344,25 @@ import { StudentGelCourseChosen } from "../students/student";
                 this.electivecourseFields$.next(sfds);
             }, error => { console.log("error selecting electivecourseFields"); });
 
+
+        this.langcourseFieldsSub = this._ngRedux.select("langcourseFields")
+            .map(langcourseFields => <ILangCourseFieldRecords>langcourseFields)
+            .subscribe(sfds => {
+                let prevSelected: Array<number> = new Array();
+                sfds.reduce(({}, langcourseField) => {
+                    if (langcourseField.get("selected") === true) {
+                        prevSelected = this.langSelected$.getValue();
+                        prevSelected[prevSelected.length] = langcourseField.id;
+                        this.langSelected$.next(prevSelected);
+                        this.langSelectedOrder.push(langcourseField.order_id);
+                        this.langSelectedId.push(langcourseField.id);
+                    }
+                    return langcourseField;
+                }, {});
+                this.langcourseFields$.next(sfds);
+            }, error => { console.log("error selecting langcourseFields"); });
+
+
         this.gelstudentDataFieldsSub = this._ngRedux.select("gelstudentDataFields")
             .subscribe(gelstudentDataFields => {
                 this.gelstudentDataFields$.next(<IGelStudentDataFieldRecords>gelstudentDataFields);
@@ -358,6 +387,10 @@ import { StudentGelCourseChosen } from "../students/student";
             this.wsIdentSub.unsubscribe();
         if (this.ServiceStudentCertifSub)
             this.ServiceStudentCertifSub.unsubscribe();
+        if (this.electivecourseFieldsSub)
+            this.electivecourseFieldsSub.unsubscribe();
+        if (this.langcourseFieldsSub)
+            this.langcourseFieldsSub.unsubscribe();
     }
 
 
@@ -396,17 +429,6 @@ import { StudentGelCourseChosen } from "../students/student";
         aitisiObj[0].hasright = this.hasright;
         aitisiObj[0].nextclass = this.classSelected.getValue();
 
-
-        //aitisiObj[0].am = std.get("am");;
-        //if (aitisiObj[0].lastschool_schoolyear >=   this.limitSchoolYear)
-        //  aitisiObj[0].am =  std.get("am");
-        // else {
-        //   aitisiObj[0].regionaddress = std.get("regionaddress");
-        //   aitisiObj[0].regionarea = std.get("regionarea");
-        //   aitisiObj[0].regiontk = std.get("regiontk");
-        //   aitisiObj[0].lastschool_class = std.get("lastschool_class");
-        // }
-
         aitisiObj[0].section_name = null;
         aitisiObj[0].level_name = null;
         aitisiObj[0].unittype_name = null;
@@ -427,6 +449,17 @@ import { StudentGelCourseChosen } from "../students/student";
               courseObj[i] = new StudentGelCourseChosen(null, courseSelected[i], this.courseSelectedOrder[i]);
           }
           aitisiObj["2"] = courseObj;
+        }
+
+        //aitisiObj[3]: ξένες γλώσσες
+        classIds = ["1", "4"];
+        if (classIds.indexOf(aitisiObj[0]["nextclass"]) != -1) {
+          let langObj: Array<StudentGelCourseChosen> = [];
+          let langSelected = this.langSelected$.getValue();
+          for (let i = 0; i < langSelected.length; i++) {
+              langObj[i] = new StudentGelCourseChosen(null, langSelected[i], this.langSelectedOrder[i]);
+          }
+          aitisiObj["3"] = langObj;
         }
 
         //κλήση myschool web service
@@ -644,6 +677,7 @@ import { StudentGelCourseChosen } from "../students/student";
                         this._sta.initSchoolType();
                         this._gca.initGelClasses();
                         this._efa.initElectiveCourseFields();
+                        this._lcfa.initLangCourseFields();
                         this._oga.initOrientationGroup();
                         this._sdfa.initGelStudentDataFields();
                         break;
@@ -660,6 +694,11 @@ import { StudentGelCourseChosen } from "../students/student";
                     case 999:
                         mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
                         mText = "Δεν έχετε επιλέξει Μάθημα Επιλογής";
+                        mHeader = "modal-header-danger";
+                        break;
+                    case 1000:
+                        mTitle = "Αποτυχία Υποβολής Δήλωσης Προτίμησης";
+                        mText = "Δεν έχετε επιλέξει Ξένη Γλώσσα";
                         mHeader = "modal-header-danger";
                         break;
                     case 1001:

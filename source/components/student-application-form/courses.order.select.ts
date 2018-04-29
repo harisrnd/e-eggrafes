@@ -230,7 +230,9 @@ import { IAppState } from "../../store/store";
 
     navigateBack() {
         this.updateStore();
-        if (this.activeClassId == 3)
+        if (this.activeClassId == 1 || this.activeClassId == 4)
+          this.router.navigate(["/langcourse-fields-select"]);
+        else if (this.activeClassId == 3)
           this.router.navigate(["/orientation-group-select"]);
         else
           this.router.navigate(["/gel-class-select"]);
