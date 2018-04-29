@@ -307,7 +307,8 @@ class PDFCreator extends ControllerBase {
 				$regionarea_decoded = $this->crypt->decrypt($student->regionarea->value);
 			else
 				$regionarea_decoded = $student->regionarea->value;
-			if (!empty($student->am->value)){
+			//if (!empty($student->am->value)){
+			if ($student->am->value != null ){
 				$am_decoded=$this->crypt->decrypt($student->am->value);
 			}
 			else{

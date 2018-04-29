@@ -14,7 +14,7 @@ use Drupal\oauthost\Crypt;
 
 class CurrentUser extends ControllerBase
 {
-    const CHILDREN_LIMIT = 200;
+    const CHILDREN_LIMIT = 100;
 
     protected $entityTypeManager;
     protected $logger;
@@ -120,8 +120,8 @@ class CurrentUser extends ControllerBase
             $userMothername =$mothername_decoded;
             $userEmail = $user->mail->value;
 
-            $numAppSelf = $this->getNumApps($applicantUser->user_id->target_id, "Μαθητής");
-            $numAppChildren = $this->getNumApps($applicantUser->user_id->target_id, "Γονέας/Κηδεμόνας");
+            $numAppSelf = $this->getNumApps($applicantUser->user_id->target_id, "Μαθητή");
+            $numAppChildren = $this->getNumApps($applicantUser->user_id->target_id, "Γονέα/Κηδεμόνα");
             if ($numAppSelf === -1 || $numAppChildren === -1)
               return $this->respondWithStatus([
                   'message' => t("num of children not found"),
@@ -178,8 +178,8 @@ class CurrentUser extends ControllerBase
                 }
                 unset($crypt);
 
-                $numAppSelf = $this->getNumApps($applicantUser->user_id->target_id, "Μαθητής");
-                $numAppChildren = $this->getNumApps($applicantUser->user_id->target_id, "Γονέας/Κηδεμόνας");
+                $numAppSelf = $this->getNumApps($applicantUser->user_id->target_id, "Μαθητή");
+                $numAppChildren = $this->getNumApps($applicantUser->user_id->target_id, "Γονέα/Κηδεμόνα");
                 if ($numAppSelf === -1 || $numAppChildren === -1)
                   return $this->respondWithStatus([
                       'message' => t("num of children not found"),

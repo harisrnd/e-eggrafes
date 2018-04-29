@@ -9,6 +9,7 @@ import { SchoolTypeActions } from "../../actions/schooltype.actions";
 import { GelClassesActions } from "../../actions/gelclasses.actions";
 import { OrientationGroupActions } from "../../actions/orientationgroup.action";
 import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields.actions";
+import { LangCourseFieldsActions } from "../../actions/langcoursesfields.actions";
 import { EpalClassesActions } from "../../actions/epalclass.actions";
 import { RegionSchoolsActions } from "../../actions/regionschools.actions";
 import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
@@ -103,6 +104,7 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         private _gca: GelClassesActions,
         private _ogs: OrientationGroupActions,
         private _cfe: ElectiveCourseFieldsActions,
+        private _lcfa: LangCourseFieldsActions,
         private _eca: EpalClassesActions,
         private _sca: SectorCoursesActions,
         private _sfa: SectorFieldsActions,
@@ -130,6 +132,7 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         this._gca.initGelClasses();
         this._ogs.initOrientationGroup();
         this._cfe.initElectiveCourseFields();
+        this._lcfa.initLangCourseFields();
 
         (<any>$("#SchoolTypeNotice")).appendTo("body");
 

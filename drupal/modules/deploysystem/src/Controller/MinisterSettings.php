@@ -140,7 +140,7 @@ class MinisterSettings extends ControllerBase {
 //refers to EPAL
 public function storeSettings(Request $request, $capacityDisabled, $directorViewDisabled, $applicantsLoginDisabled, $applicantsAppModifyDisabled,
 		$applicantsAppDeleteDisabled, $applicantsResultsDisabled, $secondPeriodEnabled,
-		$dateStart, $smallClassApproved, $ws, $gsis ) {
+		$dateStart, $smallClass, $ws, $gsis ) {
 
 	try {
 		if (!$request->isMethod('GET')) {
@@ -190,7 +190,7 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
 					$eggrafesConfig->set('lock_results', $applicantsResultsDisabled);
 					$eggrafesConfig->set('activate_second_period', $secondPeriodEnabled);
 					$eggrafesConfig->set('date_start_b_period', $dateStart);
-					$eggrafesConfig->set('lock_small_classes', $smallClassApproved);
+					$eggrafesConfig->set('lock_small_classes', $smallClass);
 					$eggrafesConfig->set('ws_ident', $ws );
 					$eggrafesConfig->set('gsis_ident', $gsis );
 					$eggrafesConfig->save();
@@ -224,7 +224,7 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
 				'applicantsResultsDisabled' => $applicantsResultsDisabled,
 				'secondPeriodEnabled' => $secondPeriodEnabled,
 				'dateStart' => $dateStart,
-				'smallClassApproved' =>$smallClassApproved,
+				'smallClassApproved' =>$smallClass,
 				'$wsIdentEnabled' =>$ws,
 				'$gsisIdentEnabled' =>$gsis
 		], Response::HTTP_OK);

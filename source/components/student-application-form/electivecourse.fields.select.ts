@@ -8,7 +8,6 @@ import { ElectiveCourseFieldsActions } from "../../actions/electivecoursesfields
 import { ELECTIVECOURSE_FIELDS_INITIAL_STATE } from "../../store/electivecoursesfields/electivecoursesfields.initial-state";
 import { IElectiveCourseFieldRecords } from "../../store/electivecoursesfields/electivecoursesfields.types";
 import { GelClassesActions } from "../../actions/gelclasses.actions";
-//import { GELCLASSES_INITIAL_STATE } from "../../store/gelclasses/gelclasses.initial-state";
 import { IGelClass, IGelClassRecord, IGelClassRecords } from "../../store/gelclasses/gelclasses.types";
 import { IAppState } from "../../store/store";
 
@@ -42,7 +41,6 @@ import { IAppState } from "../../store/store";
     private electivecourseFields$: BehaviorSubject<IElectiveCourseFieldRecords>;
     private electivecourseFieldsSub: Subscription;
     private gelclassesSub: Subscription;
-    //private activeClassId: number;
 
     constructor(private _cfa: ElectiveCourseFieldsActions,
         private _cfb: GelClassesActions,
@@ -53,7 +51,6 @@ import { IAppState } from "../../store/store";
 
     ngOnInit() {
 
-      //this.activeClassId = -1;
       window.scrollTo(0, 0);
       this.selectClass();
 
@@ -65,8 +62,6 @@ import { IAppState } from "../../store/store";
     }
 
     selectClass() {
-
-      //this._cfb.getClassesList(false);
 
       this.gelclassesSub = this._ngRedux.select("gelclasses")
           .map(gelclasses => <IGelClassRecords>gelclasses)
