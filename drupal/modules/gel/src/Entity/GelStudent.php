@@ -789,6 +789,26 @@ class GelStudent extends ContentEntityBase implements GelStudentInterface {
                             ->setDisplayConfigurable('form', TRUE)
                             ->setDisplayConfigurable('view', TRUE);
 
+    $fields['directorconfirm'] = BaseFieldDefinition::create('boolean')
+          ->setLabel(t('Επιβεβαίωση Διευθυντή'))
+          ->setDescription(t('Επιβεβαίωση Διευθυντή.'))
+          ->setSettings(array(
+            'text_processing' => 0,
+          ))
+      ->setRequired(false)
+          ->setDisplayOptions('view', array(
+            'label' => 'above',
+            'type' => 'boolean',
+            'weight' => -4,
+          ))
+          ->setDisplayOptions('form', array(
+            'type' => 'boolean',
+            'weight' => -4,
+          ))
+          ->setDisplayConfigurable('form', TRUE)
+          ->setDisplayConfigurable('view', TRUE);
+
+
 
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
