@@ -413,12 +413,12 @@ import { HelperDataService } from "../../services/helper-data-service";
         let std = this.StudentInfo$.getValue();
         std[ind].checkstatus = rtype;
 
-        this.SavedStudentsSub = this._hds.saveConfirmStudents(student, type).subscribe(data => {
+        this.SavedStudentsSub = this._hds.saveConfirmStudentsGel(student, type).subscribe(data => {
             this.SavedStudents$.next(data);
             this.StudentInfo$.next(std);
             this.showLoader.next(false);
             this.showModal("#checksaved");
-        },
+        }, 
             error => {
                 this.SavedStudents$.next([{}]);
                 console.log("Error saving Students");

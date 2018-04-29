@@ -142,3 +142,11 @@ gel.getcoursesgel:
     _controller: '\Drupal\gel\Controller\GelDistribution::getCoursesGel'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.confirmstudents:
+  path: '/gel/confirmstudent'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::ConfirmStudents'
+  requirements:
+    _user_is_logged_in: 'TRUE'

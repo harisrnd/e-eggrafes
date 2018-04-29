@@ -882,29 +882,67 @@ public function FindCoursesPerSchoolGel(Request $request)
                        );
                      $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Β' ));
 
+
+                $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+                  ->condition('gSchool.id', $schoolid , '=')                  
+                  ->condition('gStudent.nextclass', '2' , '=')
+                  ->condition('gStudent.delapp', '0' , '=');
+                $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
                     $list[] = array(
                         'class' => 2,
                         'taxi' => 'Β Λυκείου',
                         'globalindex' => $i,
-                        'size' => sizeof($studentPerSchool),
+                        'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
+                        'sizenew' => sizeof($existingstudentPerSchool),
                        );
+
+
+
                      $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $schoolid , 'taxi' => 'Γ'));
+
+
+                     $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+                  ->condition('gSchool.id', $schoolid , '=')                  
+                  ->condition('gStudent.nextclass', '3' , '=')
+                  ->condition('gStudent.delapp', '0' , '=');
+                $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+
 
                     $list[] = array(
                         'class' => 3,
                         'taxi' => 'Γ Λυκείου',
                         'globalindex' => $i,
-                        'size' => sizeof($studentPerSchool),
+                        'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
                        );
                     if ($operation_shift != 'ΗΜΕΡΗΣΙΟ'){
                      $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Δ' ));
+
+
+                     $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+                  ->condition('gSchool.id', $schoolid , '=')                  
+                  ->condition('gStudent.nextclass', '4' , '=')
+                  ->condition('gStudent.delapp', '0' , '=');
+                $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
 
 
                     $list[] = array(
                         'class' => 4,
                         'taxi' => 'Δ Λυκείου',
                         'globalindex' => $i,
-                        'size' => sizeof($studentPerSchool),
+                        'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
                        );
                     }
                 }
@@ -927,19 +965,19 @@ public function getStudentPerSchoolGel(Request $request, $classId)
     {
         if ($classId == 1)
         {
-            $classId = 'Α';
+            $classIdNew = 'Α';
         }
         elseif ($classId == 2)
         {
-            $classId = 'Β';
+            $classIdNew = 'Β';
         }
         elseif ($classId == 3)
         {
-            $classId = 'Γ';
+            $classIdNew = 'Γ';
         }
         else
         {
-            $classId = 'Δ';
+            $classIdNew = 'Δ';
 
         }
 
@@ -986,9 +1024,23 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                          ], Response::HTTP_FORBIDDEN);
                 } elseif ($userRole === 'gel') {
 
-                    $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $gelId, 'taxi' => $classId));
+                $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $gelId, 'taxi' => $classIdNew));
+             
+
+                $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+                  ->condition('gSchool.id', $gelId , '=')                  
+                  ->condition('gStudent.nextclass', $classId , '=')
+                  ->condition('gStudent.delapp', '0' , '=');
+                $existingstudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+                 $this->logger->warning($sCon."existingstudents");
+
+
                 }
-                if ($studentPerSchool) {
+                if ($studentPerSchool || $existingstudents) {
                     $list = array();
                     foreach ($studentPerSchool as $object) {
                         $studentId = $object->student_id->target_id;
@@ -1006,17 +1058,29 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
                             $crypt = new Crypt();
                             try {
+                                if ($gelStudent->name->value !== null)
                                 $name_decoded = $crypt->decrypt($gelStudent->name->value);
+                                if ($gelStudent->studentsurname->value !== null)
                                 $studentsurname_decoded = $crypt->decrypt($gelStudent->studentsurname->value);
+                                if ($gelStudent->fatherfirstname->value !== null)
                                 $fatherfirstname_decoded = $crypt->decrypt($gelStudent->fatherfirstname->value);
+                                if ($gelStudent->motherfirstname->value !== null)
                                 $motherfirstname_decoded = $crypt->decrypt($gelStudent->motherfirstname->value);
+                                if ($gelStudent->regionaddress->value !== null)
                                 $regionaddress_decoded = $crypt->decrypt($gelStudent->regionaddress->value);
+                                if ($gelStudent->regiontk->value !== null)
                                 $regiontk_decoded = $crypt->decrypt($gelStudent->regiontk->value);
+                                if ($gelStudent->regionarea->value !== null)
                                 $regionarea_decoded = $crypt->decrypt($gelStudent->regionarea->value);
+                                if ($gelStudent->telnum->value !== null)
                                 $telnum_decoded = $crypt->decrypt($gelStudent->telnum->value);
+                                if ($gelStudent->guardian_name->value !== null)
                                 $guardian_name_decoded = $crypt->decrypt($gelStudent->guardian_name->value);
+                                if ($gelStudent->guardian_surname->value !== null)
                                 $guardian_surname_decoded = $crypt->decrypt($gelStudent->guardian_surname->value);
+                                if ($gelStudent->guardian_fathername->value !== null)
                                 $guardian_fathername_decoded = $crypt->decrypt($gelStudent->guardian_fathername->value);
+                                if ($gelStudent->guardian_mothername->value !== null)
                                 $guardian_mothername_decoded = $crypt->decrypt($gelStudent->guardian_mothername->value);
                             } catch (\Exception $e) {
                                 $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
@@ -1047,7 +1111,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 'relationtostudent' => $relationtostudent_decoded,
                                 //'birthdate' => substr($gelStudent->birthdate->value, 8, 10) . '/' . substr($gelStudent->birthdate->value, 6, 8) . '/' . substr($gelStudent->birthdate->value, 0, 4),
                                 'birthdate' => date("d-m-Y", strtotime($gelStudent->birthdate->value)),
-                               // 'checkstatus' => $checkstudentstatus -> directorconfirm ->value,
+                                'checkstatus' => $gelStudent -> directorconfirm ->value,
                                 'lock_delete' => $lock_delete,
                                 'created' => date('d/m/Y H:i', $gelStudent -> created ->value),
                                 'choices' => $choices
@@ -1055,6 +1119,115 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                             );
                         }
                     }
+
+
+                    foreach ($existingstudents as $object) {
+                   
+
+                        $studentId = $object->id ;
+                        $this->logger->warning($studentId."Aaaaa");
+                        $gelStudents = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $studentId));
+                        $gelStudent = reset($gelStudents);
+                        if (!$gelStudents) {
+
+                              $this->logger->warning($studentId."Baaaaa");
+                            $studentIdNew = $studentId;
+                            $choices = "";
+                            $studentchoices = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id' => $studentId));
+
+                            foreach ($studentchoices as $objects) {
+
+                                    $choices = $choices."  ".($objects -> choice_id ->entity->get('name')->value)."/" ;
+                                }
+
+                            $crypt = new Crypt();
+                            try {
+                                if ($object->name!== null)
+                                {
+                                $name_decoded = $crypt->decrypt($object->name);
+                                }
+                                if ($object->studentsurname!== null)
+                                {
+                                $studentsurname_decoded = $crypt->decrypt($object->studentsurname );
+                                }
+                                 if ($object->fatherfirstname!== null)
+                                  {
+                                $fatherfirstname_decoded = $crypt->decrypt($object->fatherfirstname );
+                                }
+                                 if ($object->motherfirstname!== null) {
+                                $motherfirstname_decoded = $crypt->decrypt($object->motherfirstname );
+                                } if ($object->regionaddress!== null) {
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress );
+                                } if ($object->regiontk!== null) 
+                                {
+                                $regiontk_decoded = $crypt->decrypt($object->regiontk );
+                                } 
+                                if ($object->regionarea!== null) 
+                                {
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea );
+                                } 
+                                if ($object->telnum!== null) {
+                                $telnum_decoded = $crypt->decrypt($object->telnum );
+                                } if ($object->guardian_name!== null) 
+                                {
+                                $guardian_name_decoded = $crypt->decrypt($object->guardian_name );
+                                }
+                                 if ($object->guardian_surname!== null)
+                                  {
+                                $guardian_surname_decoded = $crypt->decrypt($object->guardian_surname );
+                                } if ($object->guardian_fathername!== null) {
+                                $guardian_fathername_decoded = $crypt->decrypt($object->guardian_fathername );
+                                } if ($object->guardian_mothername!== null) {
+                                $guardian_mothername_decoded = $crypt->decrypt($object->guardian_mothername );
+                                }
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+
+                            $list[] = array(
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'studentsurname' => $studentsurname_decoded,
+                                'fatherfirstname' => $fatherfirstname_decoded,
+                                'motherfirstname' => $motherfirstname_decoded,
+                                'guardian_name' => $guardian_name_decoded,
+                                'guardian_surname' => $guardian_surname_decoded,
+                                'guardian_fathername' => $guardian_fathername_decoded,
+                                'guardian_mothername' => $guardian_mothername_decoded,
+                                'lastschool_schoolname' => $object->lastschool_schoolname ,
+                                'lastschool_schoolyear' => $object->lastschool_schoolyear ,
+                                'lastschool_class' => $object->lastschool_class ,
+                                'currentclass' => $classId,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                //'graduation_year' => $object->graduation_year ,
+                                'telnum' => $telnum_decoded,
+                                'relationtostudent' => $relationtostudent_decoded,
+                                //'birthdate' => substr($object->birthdate , 8, 10) . '/' . substr($object->birthdate , 6, 8) . '/' . substr($object->birthdate , 0, 4),
+                                'birthdate' => date("d-m-Y", strtotime($object->birthdate )),
+                                'checkstatus' => $object -> directorconfirm  ,
+                                'lock_delete' => $lock_delete,
+                                'created' => date('d/m/Y H:i', $object -> created  ),
+                                'choices' => $choices
+
+                            );
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+
+
                     return $this->respondWithStatus($list, Response::HTTP_OK);
                 } else {
                     return $this->respondWithStatus([
@@ -1784,6 +1957,63 @@ public function autoDistribution(Request $request)
 
 }
 */
+
+
+public function ConfirmStudents(Request $request)
+    {
+        if (!$request->isMethod('POST')) {
+            return $this->respondWithStatus(['message' => t('Method Not Allowed')], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
+
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if ($user) {
+            $userRoles = $user->getRoles();
+            $userRole = '';
+            foreach ($userRoles as $tmpRole) {
+                if ($tmpRole === 'gel') {
+                    $userRole = $tmpRole;
+                }
+            }
+            if ($userRole === 'gel') {
+                if ($content = $request->getContent()) {
+                    $postData = json_decode($content);
+                    $arr = $postData->students;
+                    $type = $postData->type;
+                    $valnew = intval($arr);
+                    $typen = intval($type);
+                    $studentForConfirm = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $valnew, 'delapp' => '0' ));
+                    $studentConfirm = reset($studentForConfirm);
+                    if ($studentConfirm) {
+                        if ($typen === 1) {
+                            $studentConfirm->set('directorconfirm', 1);
+                            $studentConfirm->save();
+                            return $this->respondWithStatus(['message' => t('saved')], Response::HTTP_OK);
+                        } elseif ($typen === 2) {
+                            $studentConfirm->set('directorconfirm', 0);
+                            $studentConfirm->save();
+                            return $this->respondWithStatus(['message' => t('saved')], Response::HTTP_OK);
+                        } elseif ($typen === 3) {
+                            unset($studentConfirm->{directorconfirm});
+                            $studentConfirm->save();
+                            return $this->respondWithStatus(['message' => t('saved')], Response::HTTP_OK);
+                        } else {
+                            return $this->respondWithStatus(['message' => t('Bad request')], Response::HTTP_FORBIDDEN);
+                        }
+                    } else {
+                        return $this->respondWithStatus(['message' => t('Student not found')], Response::HTTP_FORBIDDEN);
+                    }
+                } else {
+                    return $this->respondWithStatus(['message' => t('post with no data')], Response::HTTP_BAD_REQUEST);
+                }
+            } else {
+                return $this->respondWithStatus(['error_code' => 4003], Response::HTTP_FORBIDDEN);
+            }
+        } else {
+            return $this->respondWithStatus(['message' => t('GEL user not found')], Response::HTTP_FORBIDDEN);
+        }
+    }
 
 
 

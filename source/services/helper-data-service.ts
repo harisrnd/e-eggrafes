@@ -543,8 +543,6 @@ export class HelperDataService implements OnInit, OnDestroy {
         let options = new RequestOptions({ headers: headers });
         return this.http.post(`${AppSettings.API_ENDPOINT}/epal/confirmstudent`, { students, type }, options)
             .map(response => response.json());
-
-
     }
 
 
@@ -1701,6 +1699,22 @@ getStudentPerSchoolGel(classId) {
             .map(response => response.json());
 
     }
+
+    saveConfirmStudentsGel(students, type) {
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(`${AppSettings.API_ENDPOINT}/gel/confirmstudent`, { students, type }, options)
+            .map(response => response.json());
+    }
+
+
 
 
 }
