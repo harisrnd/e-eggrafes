@@ -451,6 +451,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         // }
 
         aitisiObj[0].section_name = null;
+        aitisiObj[0].level_name = null;
+        aitisiObj[0].unittype_name = null;
 
         let epalSelected = this.epalSelected$.getValue();
         for (let i = 0; i < epalSelected.length; i++) {
@@ -472,7 +474,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             let birthparts = aitisiObj[0].studentbirthdate.split("-",3);
             let date=birthparts[2]+"-"+birthparts[1]+"-"+birthparts[0];
 
-            this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
+            this.ServiceStudentCertifSub = this._hds.getServiceStudentInfo(aitisiObj[0].lastschool_schoolyear,'null','null','null','null',
                       date, aitisiObj[0].lastschool_registrynumber, aitisiObj[0].am)
                 .subscribe(data => {
                     //if (typeof data.data["studentId"] !== "undefined")  {
@@ -483,6 +485,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       aitisiObj[0].regiontk = data.data["addressPostCode"];
                       aitisiObj[0].regionarea = data.data["addressArea"];
                       aitisiObj[0].section_name = data.data["sectionName"];
+                      aitisiObj[0].level_name = data.data["levelName"];
+                      aitisiObj[0].unittype_name = data.data["unitTypeDescription"];
                       if (data.data["levelName"]==='Α'){
                         aitisiObj[0].lastschool_class = 1;
                     }

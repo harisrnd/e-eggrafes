@@ -973,6 +973,63 @@ class EpalStudent extends ContentEntityBase implements EpalStudentInterface
              ->setDisplayConfigurable('form', true)
               ->setDisplayConfigurable('view', true);
 
+        $fields['myschool_currentlevelname'] = BaseFieldDefinition::create('string')
+                        ->setLabel(t('Τάξη στην τρέχουσα περίοδο'))
+                        ->setDescription(t('Τάξη στην τρέχουσα περίοδο'))
+                        ->setSettings(array(
+                              'max_length' => 40,
+                              'text_processing' => 0,
+                              ))
+                        ->setDisplayOptions('view', array(
+                              'label' => 'above',
+                              'type' => 'string',
+                              'weight' => -4,
+                             ))
+                        ->setDisplayOptions('form', array(
+                              'type' => 'string_textfield',
+                              'weight' => -4,
+                             ))
+                        ->setDisplayConfigurable('form', true)
+                        ->setDisplayConfigurable('view', true);
+
+        $fields['myschool_currentunittype'] = BaseFieldDefinition::create('string')
+                        ->setLabel(t('Σχολική μονάδα στην τρέχουσα περίοδο'))
+                        ->setDescription(t('Σχολική μονάδα στην τρέχουσα περίοδο'))
+                        ->setSettings(array(
+                              'max_length' => 100,
+                              'text_processing' => 0,
+                            ))
+                        ->setDisplayOptions('view', array(
+                              'label' => 'above',
+                              'type' => 'string',
+                              'weight' => -4,
+                            ))
+                        ->setDisplayOptions('form', array(
+                              'type' => 'string_textfield',
+                              'weight' => -4,
+                            ))
+                        ->setDisplayConfigurable('form', true)
+                        ->setDisplayConfigurable('view', true);
+
+        $fields['myschool_promoted'] = BaseFieldDefinition::create('boolean')
+                        ->setLabel(t('Μαθητής προάχθηκε / απολύθηκε'))
+                        ->setDescription(t('Μαθητής προάχθηκε / απολύθηκε.'))
+                        ->setSettings(array(
+                          'text_processing' => 0,
+                        ))
+                        ->setRequired(false)
+                        ->setDisplayOptions('view', array(
+                          'label' => 'above',
+                          'type' => 'boolean',
+                          'weight' => -4,
+                         ))
+                        ->setDisplayOptions('form', array(
+                          'type' => 'boolean',
+                          'weight' => -4,
+                         ))
+                        ->setDisplayConfigurable('form', TRUE)
+                        ->setDisplayConfigurable('view', TRUE);
+
       $fields['delapp'] = BaseFieldDefinition::create('boolean')
                             ->setLabel(t('Διαγραφή'))
                             ->setDescription(t('Διαγραφή.'))

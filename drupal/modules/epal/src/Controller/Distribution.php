@@ -414,9 +414,17 @@ class Distribution extends ControllerBase
 
     public function removeFromPendingStudents($val)
     {
+        //$this->logger->error("Message1");
+
         if (is_array($val) && count($val) > 0) {
             $this->pendingStudents = array_diff($this->pendingStudents, $val);
-        } elseif (($key = array_search($val, $this->pendingStudents)) !== false) {
+        }
+        elseif (($key = array_search($val, $this->pendingStudents)) !== false) {
+            //test code
+            //$this->logger->error($this->pendingStudents[$key]);
+            //if ($this->pendingStudents[$key] == '59796')
+            //    $this->logger->error("ΒΡΕΘΗΚΕ Ο 59796");
+            //end
             unset($this->pendingStudents[$key]);
         }
     }
@@ -525,6 +533,7 @@ class Distribution extends ControllerBase
                 if ($this->choice_id !== 1) {
                     // διέγραψε τον μαθητή από τον πίνακα εκκρεμοτήτων (αν βρίσκεται εκεί)
                     // Κάτι τέτοιο δεν είναι δυνατό πια! (έκδοση χωρίς μόρια..)
+                      //$this->logger->error("ΜΠΗΚΑ");
                     $this->removeFromPendingStudents($student->student_id);
                 }
             }

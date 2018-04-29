@@ -142,6 +142,32 @@ class WSConsumer extends ControllerBase
             ->setStatusCode(Response::HTTP_OK);
     }
 
+
+    public function getStudentEpalPromotion()
+    {
+        $ts_start = microtime(true);
+
+        //get Ids
+        $id = 0;
+        //...
+
+        try {
+            $result = $this->client->getStudentEpalPromotion($id);
+        } catch (\Exception $e) {
+            return (new JsonResponse(['message' => $e->getMessage()]))
+                ->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code);
+        }
+
+        $duration = microtime(true) - $ts_start;
+        $this->logger->info(__METHOD__ . " :: timed [{$duration}]");
+
+        return (new JsonResponse([
+                'message' => 'Επιτυχία',
+                'data' => $result
+            ]))
+            ->setStatusCode(Response::HTTP_OK);
+    }
+
     /*
     public function testgetStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
@@ -174,6 +200,7 @@ class WSConsumer extends ControllerBase
     }
     */
 
+    /*
     public function getStudentEpalCertification($id)
     {
         $ts_start = microtime(true);
@@ -194,6 +221,7 @@ class WSConsumer extends ControllerBase
             ]))
             ->setStatusCode(Response::HTTP_OK);
     }
+    */
 
     private function generateRandomString($length)
     {

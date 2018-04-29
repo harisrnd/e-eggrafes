@@ -190,8 +190,10 @@ class PDFCreator extends ControllerBase {
 
 		$this->pdf->SetFont($this->fontLight, '', 11);
 		//if ($this->applicantsResultsDisabled === "1")
-		if ($status === "0" ||  $status === "3" || $status === "4")
+		if ($status === "0" || $status === "4")
 			$this->pdf->MultiCell(0, 8, $this->prepareString('(Αρχική)'), 0, 'R');
+		else
+			$this->pdf->MultiCell(0, 8, $this->prepareString('(Οριστική)'), 0, 'R');
 
 		$this->pdf->Ln();
 
@@ -268,8 +270,16 @@ class PDFCreator extends ControllerBase {
 			$motherfirstname_decoded = $this->crypt->decrypt($student->motherfirstname->value);
 			$telnum_decoded = $this->crypt->decrypt($student->telnum->value);
 			$regionaddress_decoded = $this->crypt->decrypt($student->regionaddress->value);
-			$regiontk_decoded = $this->crypt->decrypt($student->regiontk->value);
-			$regionarea_decoded = $this->crypt->decrypt($student->regionarea->value);
+			//$regiontk_decoded = $this->crypt->decrypt($student->regiontk->value);
+			//$regionarea_decoded = $this->crypt->decrypt($student->regionarea->value);
+			if ($student->regiontk->value != null)
+				$regiontk_decoded = $this->crypt->decrypt($student->regiontk->value);
+			else
+				$regiontk_decoded = $student->regiontk->value;
+			if ($student->regionarea->value != null)
+				$regionarea_decoded = $this->crypt->decrypt($student->regionarea->value);
+			else
+				$regionarea_decoded = $student->regionarea->value;
 			if ( !empty($student->am)>0 ){
 				$am_decoded=$this->crypt->decrypt($student->am->value);
 			}

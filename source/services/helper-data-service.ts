@@ -963,6 +963,7 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     }
 
+    //not used
     getServiceAllDidacticYears() {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
@@ -977,9 +978,8 @@ export class HelperDataService implements OnInit, OnDestroy {
             .map(response => response.json());
     }
 
-    getServiceStudentPromotion(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
+    getServiceStudentInfo(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
 
-        //let mode="test";
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -991,16 +991,54 @@ export class HelperDataService implements OnInit, OnDestroy {
         let options = new RequestOptions({ headers: headers });
         let rpath = [didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no].join("/");
 
-        //if ( mode ==="test"){
-        //    return this.http.get(`${AppSettings.API_ENDPOINT}/epal/test-get-student-info/` + rpath, options).map(response => response.json());
-        //}
-        //else{
-            return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-info/` + rpath, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-info/` + rpath, options)
             .map(response => response.json());
-        //}
+
     }
 
-    getServiceStudentCertification(id) {
+
+    //test-copy
+    /*
+    makeDistribution(username, userpassword) {
+
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+
+        this.createMinistryAuthorizationHeader(headers, username, userpassword);
+        let options = new RequestOptions({ headers: headers });
+
+        return new Promise((resolve, reject) => {
+            this.http.post(`${AppSettings.API_ENDPOINT}/epal/distribution`, {}, options)
+                .map(response => response.json())
+                .subscribe(data => {
+                    resolve(data);
+                },
+                error => {
+                    reject("Error POST in makeDistribution");
+                });
+        });
+
+    }
+    */
+
+
+    getServiceStudentPromotion(username, userpassword) {
+
+      let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+
+      this.createMinistryAuthorizationHeader(headers, username, userpassword);
+      let options = new RequestOptions({ headers: headers });
+
+      return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-promotion/` , options)
+          .map(response => response.json());
+
+    }
+
+    /*
+    getServiceStudentPromotion(id) {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -1014,6 +1052,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-certification/` + rpath, options)
             .map(response => response.json());
     }
+    */
 
     createPdfServerSide(headerid, status) {
 

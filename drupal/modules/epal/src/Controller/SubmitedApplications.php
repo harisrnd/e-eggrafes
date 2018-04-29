@@ -267,12 +267,10 @@ class SubmitedApplications extends ControllerBase
 
                     $epalStudentClasses = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('student_id' => $object->id()));
                     $epalStudentClass = reset($epalStudentClasses);
-                    if (!$epalStudentClass && !$applicantsAppDelDisabled) {
+                    if (/*!$epalStudentClass*/ sizeof($epalStudentClasses) === 0 && !$applicantsAppDelDisabled)
                         $canDelete = 1;
-                    }
-                    else {
+                    else
                         $canDelete = 0;
-                    }
                     try {
                         $name_decoded = $crypt->decrypt($object->name->value);
                         $studentsurname_decoded = $crypt->decrypt($object->studentsurname->value);
@@ -350,14 +348,21 @@ class SubmitedApplications extends ControllerBase
                         $fatherfirstname_decoded = $crypt->decrypt($object->fatherfirstname->value);
                         $motherfirstname_decoded = $crypt->decrypt($object->motherfirstname->value);
                         $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
-                        $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
-                        $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
-                        //$relationtostudent_decoded = $crypt->decrypt($object->relationtostudent->value);
+                        //$regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                        //$regionarea_decoded = $crypt->decrypt($object->regionarea->value);
                         $telnum_decoded = $crypt->decrypt($object->telnum->value);
                         $guardian_name_decoded = $crypt->decrypt($object->guardian_name->value);
                         $guardian_surname_decoded = $crypt->decrypt($object->guardian_surname->value);
                         $guardian_fathername_decoded = $crypt->decrypt($object->guardian_fathername->value);
                         $guardian_mothername_decoded = $crypt->decrypt($object->guardian_mothername->value);
+                        if ($object->regiontk->value != null)
+                          $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                        else
+                          $regiontk_decoded = $object->regiontk->value;
+                        if ($object->regionarea->value != null)
+                          $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                        else
+                          $regionarea_decoded = $object->regionarea->value;
                     } catch (\Exception $e) {
                         //print_r($e->getMessage());
                         unset($crypt);
@@ -540,13 +545,22 @@ class SubmitedApplications extends ControllerBase
                         $fatherfirstname_decoded = $crypt->decrypt($epalStudent->fatherfirstname);
                         $motherfirstname_decoded = $crypt->decrypt($epalStudent->motherfirstname);
                         $regionaddress_decoded = $crypt->decrypt($epalStudent->regionaddress);
-                        $regiontk_decoded = $crypt->decrypt($epalStudent->regiontk);
-                        $regionarea_decoded = $crypt->decrypt($epalStudent->regionarea);
+                        //$regiontk_decoded = $crypt->decrypt($epalStudent->regiontk);
+                        //$regionarea_decoded = $crypt->decrypt($epalStudent->regionarea);
                         $telnum_decoded = $crypt->decrypt($epalStudent->telnum);
                         $guardian_name_decoded = $crypt->decrypt($epalStudent->guardian_name);
                         $guardian_surname_decoded = $crypt->decrypt($epalStudent->guardian_surname);
                         $guardian_fathername_decoded = $crypt->decrypt($epalStudent->guardian_fathername);
                         $guardian_mothername_decoded = $crypt->decrypt($epalStudent->guardian_mothername);
+                        if ($epalStudent->regiontk != null)
+                          $regiontk_decoded = $crypt->decrypt($epalStudent->regiontk);
+                        else
+                          $regiontk_decoded = $epalStudent->regiontk;
+                        if ($epalStudent->regionarea != null)
+                          $regionarea_decoded = $crypt->decrypt($epalStudent->regionarea);
+                        else
+                          $regionarea_decoded = $epalStudent->regionarea;
+
                     } catch (\Exception $e) {
                         unset($crypt);
                         $this->logger->warning($e->getMessage());
@@ -562,7 +576,7 @@ class SubmitedApplications extends ControllerBase
                     //}
 
                     if ($applicantsResultsDisabled === "0") {
-                      //To $epalStudent->finalized === null υποωοεί ότι δεν είναι κατανεμημένος αυτός ο μαθητής <-- ΝΑ ΕΛΕΓΧΘΕΙ
+                      //To $epalStudent->finalized === null υπονοεί ότι δεν είναι κατανεμημένος αυτός ο μαθητής <-- ΝΑ ΕΛΕΓΧΘΕΙ
                       if ($epalStudent->finalized === "1")
                           $status = "1";
                       else if ($epalStudent->finalized === "0")

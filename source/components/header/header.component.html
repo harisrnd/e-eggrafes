@@ -26,13 +26,13 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <i class="fa fa-home isclickable" (click)="goHome()"></i>
-                                <span class="signout isclickable" (click)="goHome()" style="color:#CC3300;">&nbsp;&nbsp;Νέα Αίτηση</span>
+                                <span *ngIf="loginInfoRow$.auth_role===studentRole" class="signout isclickable" (click)="goHome()" style="color:#CC3300;">&nbsp;&nbsp;Νέα Αίτηση</span>
                             </div>
                             <div class="col-md-2">
                                 <span *ngIf="loginInfoRow$.auth_role===studentRole" class="signout isclickable" (click)="gohelpDesk()" style="color:#CC3300;">Επικοινωνία</span>
                             </div>
                             <div class="col-md-4">
-                                <span class="signout" style="color:#CC3300;">
+                                <span *ngIf="loginInfoRow$.auth_role===studentRole" class="signout" style="color:#CC3300;">
                                 <div *ngFor="let TotalStudent$  of TotalStudents$ | async;">
                                     Σύνολο Δηλώσεων: {{TotalStudent$.numStudents}}
                                 </div>

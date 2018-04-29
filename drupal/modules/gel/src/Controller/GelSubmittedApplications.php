@@ -287,17 +287,14 @@ class GelSubmittedApplications extends ControllerBase
                        $applicantsAppDelDisabled = $eggrafesConfig->lock_delete->value;
                     }
 
-                    // $gelStudentClasses = $this->entityTypeManager->getStorage('gel_student_class')->loadByProperties(array('student_id' => $object->id()));
-                    // $gelStudentClass = reset($gelStudentClasses);
-                    // if (!$gelStudentClass && !$applicantsAppDelDisabled) {
-                    //     $canDelete = 1;
-                    // }
-                    // else {
-                    //     $canDelete = 0;
-                    // }
-                    if (!$applicantsAppDelDisabled)
+                    $gelStudentClasses = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $object->id()));
+                    //$gelStudentClass = reset($gelStudentClasses);
+
+                    $this->logger->warning(sizeof($gelStudentClasses));
+
+                    if (sizeof($gelStudentClasses) === 0/*!$gelStudentClass*/ && !$applicantsAppDelDisabled)
                          $canDelete = 1;
-                     else
+                    else
                          $canDelete = 0;
 
                     try {
@@ -451,13 +448,22 @@ class GelSubmittedApplications extends ControllerBase
                         $fatherfirstname_decoded = $crypt->decrypt($gelStudent->fatherfirstname);
                         $motherfirstname_decoded = $crypt->decrypt($gelStudent->motherfirstname);
                         $regionaddress_decoded = $crypt->decrypt($gelStudent->regionaddress);
-                        $regiontk_decoded = $crypt->decrypt($gelStudent->regiontk);
-                        $regionarea_decoded = $crypt->decrypt($gelStudent->regionarea);
+                        //$regiontk_decoded = $crypt->decrypt($gelStudent->regiontk);
+                        //$regionarea_decoded = $crypt->decrypt($gelStudent->regionarea);
                         $telnum_decoded = $crypt->decrypt($gelStudent->telnum);
                         $guardian_name_decoded = $crypt->decrypt($gelStudent->guardian_name);
                         $guardian_surname_decoded = $crypt->decrypt($gelStudent->guardian_surname);
                         $guardian_fathername_decoded = $crypt->decrypt($gelStudent->guardian_fathername);
                         $guardian_mothername_decoded = $crypt->decrypt($gelStudent->guardian_mothername);
+                        if ($gelStudent->regiontk != null)
+                          $regiontk_decoded = $crypt->decrypt($gelStudent->regiontk);
+                        else
+                          $regiontk_decoded = $gelStudent->regiontk;
+                        if ($gelStudent->regionarea != null)
+                          $regionarea_decoded = $crypt->decrypt($gelStudent->regionarea);
+                        else
+                          $regionarea_decoded = $gelStudent->regionarea;
+
                     } catch (\Exception $e) {
                         unset($crypt);
                         $this->logger->warning($e->getMessage());

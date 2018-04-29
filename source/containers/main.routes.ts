@@ -12,6 +12,7 @@ import SmallClassApprovement from "../components/mergeschools/smallclassapprovme
 import PerfectureView from "../components/infoviews/perfecture-view";
 import Breadcrumbs from "../components/main/breadcrumbs";
 import InformStudents from "../components/minister/minister-informstudents";
+import UpdatePromotion from "../components/minister/minister-updatepromotion";
 import MinisterReports from "../components/minister/minister-reports";
 import MinisterSettings from "../components/minister/minister-settings";
 import GelMinisterSettings from "../components/minister/gel-minister-settings";
@@ -107,6 +108,7 @@ export const MainRoutes: Routes = [
     { path: "ministry/report-users/:reportId", component: ReportUsers, canActivate: [MinistryAuthGuard] },
     { path: "ministry/report-no-capacity/:reportId", component: ReportNoCapacity, canActivate: [MinistryAuthGuard] },
     { path: "ministry/minister-informstudents", component: InformStudents, canActivate: [MinistryAuthGuard] },
+    { path: "ministry/minister-updatepromotion", component: UpdatePromotion, canActivate: [MinistryAuthGuard] },
     { path: "ministry/minister-settings", component: MinisterSettings, canActivate: [MinistryAuthGuard] },
     { path: "ministry/gel-minister-settings", component: GelMinisterSettings, canActivate: [MinistryAuthGuard] },
     { path: "school/perfecture-view", component: PerfectureView, canActivate: [RegionEduAuthGuard] },
@@ -162,6 +164,7 @@ export const MainDeclarations = [
     ReportUsers,
     ReportNoCapacity,
     InformStudents,
+    UpdatePromotion,
     MinisterSettings,
     GelMinisterSettings,
     PerfectureView,
