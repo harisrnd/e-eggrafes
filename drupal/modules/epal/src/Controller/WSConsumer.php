@@ -66,30 +66,10 @@ class WSConsumer extends ControllerBase
             ->setStatusCode(Response::HTTP_OK);
     }
 
-    public function getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
+    public function getStudentEpalInfo($didactic_year, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
         $testmode = false;
-        //$this->logger->info("didactic_year=".$didactic_year_id);
-
-        switch ($didactic_year_id){
-            case "2013-2014":
-                $didactic_year_id="18";
-                break;
-            case "2014-2015":
-                $didactic_year_id="22";
-                break;
-            case "2015-2016":
-                $didactic_year_id="23";
-                break;
-            case "2016-2017":
-                $didactic_year_id="24";
-                break;
-            case "2017-2018":
-                $didactic_year_id="25";
-                break;
-       }
-
-       //$this->logger->info("didactic_year_id=".$didactic_year_id);
+        $didactic_year_id=$this->getdidacticyear($didactic_year);
 
         if ($testmode)  {
           $obj = array(
@@ -97,10 +77,10 @@ class WSConsumer extends ControllerBase
 
           'data' => array(
               'id' => '158',
-              'studentId' => 2666021,
+              'studentId' => 2666023,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
               'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
-              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
+              'custodianLastName' =>  'ΓΕΩΡΓΟΥΛΑΣ',
               'custodianFirstName' => '',
               'birthDate' => '1997-01-04T00:00:00',
               'addressStreet' => 'XATZH',
@@ -118,11 +98,7 @@ class WSConsumer extends ControllerBase
 
 
         //formal code
-        $ts_start = microtime(true);
-
-        //test parameters
-        //$didactic_year_id = "22";
-        //end test
+        //$ts_start = microtime(true);
 
         try {
             $result = $this->client->getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no);
@@ -132,8 +108,8 @@ class WSConsumer extends ControllerBase
                 //->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_OK : $code);
         }
 
-        $duration = microtime(true) - $ts_start;
-        $this->logger->info(__METHOD__ . " :: timed [{$duration}]");
+        //$duration = microtime(true) - $ts_start;
+        //$this->logger->info(__METHOD__ . " :: timed [{$duration}]");
 
         return (new JsonResponse([
                 'message' => 'Επιτυχία',
@@ -232,6 +208,28 @@ class WSConsumer extends ControllerBase
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    private function getdidacticyear($didactic_year)
+    {
+        switch ($didactic_year){
+            case "2013-2014":
+                $didactic_year_id="18";
+                break;
+            case "2014-2015":
+                $didactic_year_id="22";
+                break;
+            case "2015-2016":
+                $didactic_year_id="23";
+                break;
+            case "2016-2017":
+                $didactic_year_id="24";
+                break;
+            case "2017-2018":
+                $didactic_year_id="25";
+                break;
+       }
+        return $didactic_year_id;
     }
 
 }

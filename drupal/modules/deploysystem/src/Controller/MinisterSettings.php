@@ -106,6 +106,7 @@ class MinisterSettings extends ControllerBase {
 					$smallClassApproved = $eggrafesConfig->lock_small_classes->getString();
 					$wsIdentEnabled = $eggrafesConfig->ws_ident->getString();
 					$gsisIdentEnabled = $eggrafesConfig->gsis_ident->getString();
+					$guardianIdentEnabled = $eggrafesConfig->guardian_ident->getString();
 	 		 }
 	 		 $config_storage->resetCache();
 
@@ -121,7 +122,8 @@ class MinisterSettings extends ControllerBase {
 					'dateStart' => $dateStart,
 					'smallClassApproved' => $smallClassApproved,
 					'wsIdentEnabled' => $wsIdentEnabled,
-					'gsisIdentEnabled' => $gsisIdentEnabled
+					'gsisIdentEnabled' => $gsisIdentEnabled,
+					'guardianIdentEnabled' => $guardianIdentEnabled
 			], Response::HTTP_OK);
 
 		}	//end try
@@ -140,7 +142,7 @@ class MinisterSettings extends ControllerBase {
 //refers to EPAL
 public function storeSettings(Request $request, $capacityDisabled, $directorViewDisabled, $applicantsLoginDisabled, $applicantsAppModifyDisabled,
 		$applicantsAppDeleteDisabled, $applicantsResultsDisabled, $secondPeriodEnabled,
-		$dateStart, $smallClass, $ws, $gsis ) {
+		$dateStart, $smallClass, $ws, $gsis, $guardian ) {
 
 	try {
 		if (!$request->isMethod('GET')) {
@@ -191,8 +193,9 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
 					$eggrafesConfig->set('activate_second_period', $secondPeriodEnabled);
 					$eggrafesConfig->set('date_start_b_period', $dateStart);
 					$eggrafesConfig->set('lock_small_classes', $smallClass);
-					$eggrafesConfig->set('ws_ident', $ws );
-					$eggrafesConfig->set('gsis_ident', $gsis );
+					$eggrafesConfig->set('ws_ident', $ws);
+					$eggrafesConfig->set('gsis_ident', $gsis);
+					$eggrafesConfig->set('guardian_ident', $guardian);
 					$eggrafesConfig->save();
  		 }
 
@@ -207,6 +210,7 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
 		 else {
 				 $eggrafesGelConfig->set('ws_ident', $ws );
 				 $eggrafesGelConfig->set('gsis_ident', $gsis );
+				 $eggrafesGelConfig->set('guardian_ident', $guardian );
 				 $eggrafesGelConfig->save();
 		 }
 
@@ -226,7 +230,8 @@ public function storeSettings(Request $request, $capacityDisabled, $directorView
 				'dateStart' => $dateStart,
 				'smallClassApproved' =>$smallClass,
 				'$wsIdentEnabled' =>$ws,
-				'$gsisIdentEnabled' =>$gsis
+				'$gsisIdentEnabled' =>$gsis,
+				'$guardianIdentEnabled' =>$guardian
 		], Response::HTTP_OK);
 
 	}	//end try
@@ -298,6 +303,7 @@ public function retrieveSettingsGel(Request $request) {
 				$smallClassApproved = $eggrafesConfig->lock_small_classes->getString();
 				$wsIdentEnabled = $eggrafesConfig->ws_ident->getString();
 				$gsisIdentEnabled = $eggrafesConfig->gsis_ident->getString();
+				$guardianIdentEnabled = $eggrafesConfig->guardian_ident->getString();
 		 }
 		 $config_storage->resetCache();
 
@@ -313,7 +319,8 @@ public function retrieveSettingsGel(Request $request) {
 				'dateStart' => $dateStart,
 				'smallClassApproved' => $smallClassApproved,
 				'wsIdentEnabled' => $wsIdentEnabled,
-				'gsisIdentEnabled' => $gsisIdentEnabled
+				'gsisIdentEnabled' => $gsisIdentEnabled,
+				'guardianIdentEnabled' => $guardianIdentEnabled
 		], Response::HTTP_OK);
 
 	}	//end try
@@ -332,7 +339,7 @@ public function retrieveSettingsGel(Request $request) {
 
 public function storeSettingsGel(Request $request, $capacityDisabled, $directorViewDisabled, $applicantsLoginDisabled, $applicantsAppModifyDisabled,
 	$applicantsAppDeleteDisabled, $applicantsResultsDisabled, $secondPeriodEnabled,
-	$dateStart, $smallClassApproved, $ws, $gsis ) {
+	$dateStart, $smallClass, $ws, $gsis, $guardian ) {
 
 	try {
 
@@ -384,9 +391,10 @@ public function storeSettingsGel(Request $request, $capacityDisabled, $directorV
 						$eggrafesConfig->set('lock_results', $applicantsResultsDisabled);
 						$eggrafesConfig->set('activate_second_period', $secondPeriodEnabled);
 						$eggrafesConfig->set('date_start_b_period', $dateStart);
-						$eggrafesConfig->set('lock_small_classes', $smallClassApproved);
+						$eggrafesConfig->set('lock_small_classes', $smallClass);
 						$eggrafesConfig->set('ws_ident', $ws );
 						$eggrafesConfig->set('gsis_ident', $gsis );
+						$eggrafesConfig->set('guardian_ident', $guardian );
 						$eggrafesConfig->save();
 			 }
 
@@ -401,6 +409,7 @@ public function storeSettingsGel(Request $request, $capacityDisabled, $directorV
 			 else {
 					 $eggrafesEpalConfig->set('ws_ident', $ws );
 					 $eggrafesEpalConfig->set('gsis_ident', $gsis );
+					 $eggrafesEpalConfig->set('guardian_ident', $guardian );
 					 $eggrafesEpalConfig->save();
 			 }
 
@@ -417,9 +426,10 @@ public function storeSettingsGel(Request $request, $capacityDisabled, $directorV
 					'applicantsResultsDisabled' => $applicantsResultsDisabled,
 					'secondPeriodEnabled' => $secondPeriodEnabled,
 					'dateStart' => $dateStart,
-					'smallClassApproved' =>$smallClassApproved,
+					'smallClassApproved' =>$smallClass,
 					'$wsIdentEnabled' =>$ws,
-					'$gsisIdentEnabled' =>$gsis
+					'$gsisIdentEnabled' =>$gsis,
+					'$guardianIdentEnabled' =>$guardian
 			], Response::HTTP_OK);
 
 	}	//end try
@@ -480,6 +490,29 @@ public function isGsisIdentEnabled(Request $request)
 						], Response::HTTP_FORBIDDEN);
 			 else
 						return $this->respondWithStatus(array('res' => $eggrafesConfig->gsis_ident->value), Response::HTTP_OK);
+
+}
+
+public function isGuardianIdentEnabled(Request $request)
+{
+			 $authToken = $request->headers->get('PHP_AUTH_USER');
+			 $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+			 $user = reset($users);
+			 if (!$user) {
+					 return $this->respondWithStatus([
+							 'message' => t("User not found"),
+					 ], Response::HTTP_FORBIDDEN);
+			 }
+
+			 $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
+			 $eggrafesConfigs = $config_storage->loadByProperties(array('name' => 'eggrafes_config_epal'));
+			 $eggrafesConfig = reset($eggrafesConfigs);
+			 if (!$eggrafesConfig)
+						return $this->respondWithStatus([
+							 'message' => t("eggrafesConfig Enity not found"),
+						], Response::HTTP_FORBIDDEN);
+			 else
+						return $this->respondWithStatus(array('res' => $eggrafesConfig->guardian_ident->value), Response::HTTP_OK);
 
 }
 

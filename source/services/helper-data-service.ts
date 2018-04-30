@@ -848,7 +848,7 @@ export class HelperDataService implements OnInit, OnDestroy {
     }
 
     storeAdminSettings(schooltype, username, userpassword, capac, dirview, applogin, appmodify, appdelete,
-                    appresults, secondperiod, datestart, smallClassApproved, wsIdentEnabled, gsisIdentEnabled) {
+                    appresults, secondperiod, datestart, smallClassApproved, wsIdentEnabled, gsisIdentEnabled, guardianIdentEnabled) {
 
         let headers = new Headers({
             "Content-Type": "application/json",
@@ -861,13 +861,13 @@ export class HelperDataService implements OnInit, OnDestroy {
             return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings-gel/` +
                 Number(capac) + "/" + Number(dirview) + "/" + Number(applogin) + "/" + Number(appmodify) + "/" +
                 Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" +
-                Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) +  "/"  + Number(gsisIdentEnabled) , options)
+                Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) +  "/"  + Number(gsisIdentEnabled) +  "/"  + Number(guardianIdentEnabled) , options)
                 .map(response => response.json());
         else if (schooltype === "epal")
             return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings/` +
                 Number(capac) + "/" + Number(dirview) + "/" + Number(applogin) + "/" + Number(appmodify) + "/" +
                 Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" +
-                Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) +  "/"  + Number(gsisIdentEnabled) , options)
+                Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) +  "/"  + Number(gsisIdentEnabled) +  "/"  + Number(guardianIdentEnabled), options)
                 .map(response => response.json());
     }
 
@@ -978,7 +978,7 @@ export class HelperDataService implements OnInit, OnDestroy {
             .map(response => response.json());
     }
 
-    getServiceStudentInfo(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
+    getServiceStudentInfo(didactic_year, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
 
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
@@ -989,7 +989,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        let rpath = [didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no].join("/");
+        let rpath = [didactic_year, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no].join("/");
 
         return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-info/` + rpath, options)
             .map(response => response.json());
@@ -1508,6 +1508,22 @@ isGSIS_ident_enabled()
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return this.http.get(`${AppSettings.API_ENDPOINT}/deploysystem/isgsisenabled`, options)
+            .map(response => response.json());
+
+}
+
+isGuardian_ident_enabled()
+{
+         this.loginInfo$.getValue().forEach(loginInfoToken => {
+             this.authToken = loginInfoToken.auth_token;
+             this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+        return this.http.get(`${AppSettings.API_ENDPOINT}/deploysystem/isguardianenabled`, options)
             .map(response => response.json());
 
 }

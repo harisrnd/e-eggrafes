@@ -390,8 +390,8 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
               ->setDisplayConfigurable('view', TRUE);
 
       $fields['gsis_ident'] = BaseFieldDefinition::create('boolean')
-              ->setLabel(t('Ενεργοποίηση χρήστης στοιχείων από ΓΓΠΣ'))
-              ->setDescription(t('Ενεργοποίηση χρήστης στοιχείων από ΓΓΠΣ'))
+              ->setLabel(t('Ενεργοποίηση χρήσης στοιχείων από ΓΓΠΣ'))
+              ->setDescription(t('Ενεργοποίηση χρήσης στοιχείων από ΓΓΠΣ'))
               ->setSettings(array(
                 'text_processing' => 0,
               ))
@@ -408,6 +408,26 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
               ))
               ->setDisplayConfigurable('form', TRUE)
               ->setDisplayConfigurable('view', TRUE);
+
+       $fields['guardian_ident'] = BaseFieldDefinition::create('boolean')
+                ->setLabel(t('Ενεργοποίηση ταυτοποίησης κηδεμόνα'))
+                ->setDescription(t('Ενεργοποίηση ταυτοποίησης κηδεμόνα'))
+                ->setSettings(array(
+                  'text_processing' => 0,
+                ))
+                ->setRequired(FALSE)
+                ->setDefaultValue(FALSE)
+                ->setDisplayOptions('view', array(
+                  'label' => 'above',
+                  'type' => 'boolean',
+                  'weight' => -4,
+                ))
+                ->setDisplayOptions('form', array(
+                  'type' => 'boolean',
+                  'weight' => -4,
+                ))
+                ->setDisplayConfigurable('form', TRUE)
+                ->setDisplayConfigurable('view', TRUE);
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))

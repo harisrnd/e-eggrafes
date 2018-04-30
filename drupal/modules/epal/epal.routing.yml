@@ -389,7 +389,7 @@ epal.getcoursesperschoolsmallclasses_night:
   requirements:
     _user_is_logged_in: 'TRUE'
 epal.svc.getstudentinfo:
-  path: '/epal/get-student-info/{didactic_year_id}/{lastname}/{firstname}/{father_firstname}/{mother_firstname}/{birthdate}/{registry_no}/{registration_no}'
+  path: '/epal/get-student-info/{didactic_year}/{lastname}/{firstname}/{father_firstname}/{mother_firstname}/{birthdate}/{registry_no}/{registration_no}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:

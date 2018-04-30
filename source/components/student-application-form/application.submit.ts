@@ -200,6 +200,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private wsIdentSub: Subscription;
     private wsEnabled: BehaviorSubject<number>;
     private limitSchoolYear: string;
+    private guardianIdentSub: Subscription;
+    private guardianEnabled: BehaviorSubject<number>;
 
     constructor(
         private _hds: HelperDataService,
@@ -231,19 +233,23 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         this.previousCourse = new BehaviorSubject("");
         this.previousSchools = new BehaviorSubject("");
         this.wsEnabled = new BehaviorSubject(-1);
+        this.guardianEnabled = new BehaviorSubject(-1);
 
-        //this.sectorSelectedName = null;
-        //this.courseSelectedName = null;
         this.sectorSelected = null;
         this.courseSelected = null;
         this.hasright = 1;
         this.previousSchools.next("");
-        //this.ServiceStudentCertif$ = new BehaviorSubject([{}]);
+
         this.limitSchoolYear = "2013-2014";
 
         this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
             this.wsEnabled.next(Number(z.res)) ;
        });
+
+       this.guardianIdentSub = this._hds.isGuardian_ident_enabled().subscribe(w => {
+           this.guardianEnabled.next(Number(w.res)) ;
+      });
+
     };
 
     ngOnInit() {
@@ -391,6 +397,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             this.wsIdentSub.unsubscribe();
         if (this.ServiceStudentCertifSub)
             this.ServiceStudentCertifSub.unsubscribe();
+        if (this.guardianIdentSub)
+            this.guardianIdentSub.unsubscribe();
     }
 
     submitNow(newapp) {
@@ -554,10 +562,10 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
                     }
 
-                    if (aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
+                    if (this.guardianEnabled.getValue() === 1 && aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
                       let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
-                      let mText = "Ο Κηδεμόνας που έχει δηλωθεί στο ΠΣ myschool έχει ΔΙΑΦΟΡΕΤΙΚΑ στοιχεία από το χρήστη που έχει κάνει είσοδο σε αυτό το σύστημα μέσω των κωδικών του taxisnet. " +
-                        "Παρακαλώ επικοινωνήστε με το σχολείο σας για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καθοριστεί σωστά στο ΠΣ myschοol. " +
+                      let mText = "Ο Κηδεμόνας που έχει δηλωθεί στο Πληροφοριακό Σύστημα του Σχολείου έχει ΔΙΑΦΟΡΕΤΙΚΑ στοιχεία από το χρήστη που έχει κάνει είσοδο σε αυτό το σύστημα μέσω των κωδικών του taxisnet. " +
+                        "Παρακαλώ επικοινωνήστε με το σχολείο σας για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καταχωρηθεί στο Πληροφοριακό Σύστημα του Σχολείου (myschοol) όπως είναι καταχωρημένο στην εφορία. " +
                         "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
                       let mHeader = "modal-header-danger";
                       this.modalTitle.next(mTitle);
