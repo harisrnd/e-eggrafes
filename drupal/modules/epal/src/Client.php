@@ -23,8 +23,8 @@ class Client
     ];
     private $logger; // if this is set and settings sets verbose mode, it will be used for logging
 
-    private $_token = null; // cache JWT
-    private $_tokenExpirationTS = null; // try to calculate token expiration time
+    //private $_token = null; // cache JWT
+    //private $_tokenExpirationTS = null; // try to calculate token expiration time
 
     public function __construct($settings = [], $logger = null)
     {
@@ -45,14 +45,20 @@ class Client
      */
     public function getTokenBearer()
     {
-        if ($this->_token !== null && $this->_tokenExpirationTS !== null && intval($this->_tokenExpirationTS) >= time()) {
-            $this->log(__METHOD__ . " reusing token");
-            return $this->_token;
-        }
-        $this->_token = null;
-        $this->_tokenExpirationTS = null;
 
-        $this->log(__METHOD__ . " new token");
+        $tempstore = \Drupal::service('user.shared_tempstore')->get('epal');
+        $token = $tempstore->get('myschool_token');
+        $tokenExpirationTS = $tempstore->get('myschool_tokenExpirationTS');
+
+        if ($token !== null && $tokenExpirationTS !== null && intval($tokenExpirationTS) >= time()) {
+            //$this->log(__METHOD__ . " reusing token");
+            return $token;
+        }
+
+        $token = null;
+        $tokenExpirationTS = null;
+
+        //$this->log(__METHOD__ . " new token");
 
         $headers = [
             'Accept: application/json',
@@ -74,9 +80,12 @@ class Client
         }
 
         if (($response = json_decode($result['response'], true)) !== null) {
-            $this->_tokenExpirationTS = time() + intval($response['expires_in']) - 15; // skip 15 seconds... just in case
-            $this->_token = ucfirst($response['token_type']) . " {$response['access_token']}";
-            return $this->_token;
+            $tokenExpirationTS = time() + intval($response['expires_in']) - 15; // skip 15 seconds... just in case
+            $token = ucfirst($response['token_type']) . " {$response['access_token']}";
+ 
+            $tempstore->set('myschool_token', $token);
+            $tempstore->set('myschool_tokenExpirationTS', $tokenExpirationTS);
+            return $token;
         } else {
             $this->log(__METHOD__ . " Error while getting token from response {$result['response']}.", "error");
             throw new Exception("Προέκυψε λάθος κατά την λήψη του token. Αδυναμία άντλησης του token από το response.");
@@ -215,7 +224,7 @@ class Client
             $crypt = new Crypt();
             $val = 'call:' . print_r($endpoint, true) . ':rcv:' . print_r($result, true);
             $val_enc = $crypt->encrypt($val);
-            $this->log(__METHOD__ . $val_enc, 'info');
+            //$this->log(__METHOD__ . $val_enc, 'info');
         } catch (\Exception $e) {
             $this->log(__METHOD__ . " cannot log encrypted", 'info');
         }
@@ -230,7 +239,7 @@ class Client
 
     public function getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
-        $this->log(__METHOD__);
+        //$this->log(__METHOD__);
         return $this->getStudentEpalInfoNew($this->_settings['ws_endpoint_studentepalInfo'], $didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no);
     }
 

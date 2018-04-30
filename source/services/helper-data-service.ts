@@ -978,7 +978,7 @@ export class HelperDataService implements OnInit, OnDestroy {
             .map(response => response.json());
     }
 
-    getServiceStudentInfo(didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
+    getServiceStudentInfo(didactic_year, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no) {
 
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
@@ -989,7 +989,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        let rpath = [didactic_year_id, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no].join("/");
+        let rpath = [didactic_year, lastname, firstname, father_firstname, mother_firstname, birthdate, registry_no, registration_no].join("/");
 
         return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-info/` + rpath, options)
             .map(response => response.json());
