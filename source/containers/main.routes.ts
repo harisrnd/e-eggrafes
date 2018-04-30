@@ -62,6 +62,7 @@ import ElectiveCourseFieldsSelect from "../components/student-application-form/e
 import OrientationGroup from "../components/student-application-form/orientation.group";
 import LangCourseFieldsSelect from "../components/student-application-form/langcourse.fields.select";
 import CoursesOrderSelect from "../components/student-application-form/courses.order.select";
+import LangsOrderSelect from "../components/student-application-form/lang.order.select";
 import ClassSelection from "../components/student-application-form/class.selection";
 import GelStudentApplicationMain from "../components/student-application-form/gelapplication.form.main";
 import SchoolTypeSelection from "../components/student-application-form/schooltype.selection";
@@ -125,6 +126,7 @@ export const MainRoutes: Routes = [
     { path: "electivecourse-fields-select", component: ElectiveCourseFieldsSelect, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
     { path: "langcourse-fields-select", component: LangCourseFieldsSelect, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
     { path: "course-order-select", component: CoursesOrderSelect, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
+    { path: "lang-order-select", component: LangsOrderSelect, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
     { path: "gel-class-select", component: ClassSelection, canActivate: [StudentAuthGuard, StudentGelLockGuard]},
     { path: "gelstudent-application-form-main", component: GelStudentApplicationMain, canActivate: [StudentAuthGuard, StudentGelLockGuard] },
     { path: "school-type-select", component: SchoolTypeSelection, canActivate: [StudentAuthGuard]},
@@ -184,6 +186,7 @@ export const MainDeclarations = [
     ElectiveCourseFieldsSelect,
     LangCourseFieldsSelect,
     CoursesOrderSelect,
+    LangsOrderSelect,
     ClassSelection,
     GelStudentApplicationMain,
     SchoolTypeSelection,

@@ -280,7 +280,8 @@ class PDFCreator extends ControllerBase {
 				$regionarea_decoded = $this->crypt->decrypt($student->regionarea->value);
 			else
 				$regionarea_decoded = $student->regionarea->value;
-			if ( !empty($student->am)>0 ){
+			//if ( !empty($student->am)>0 ){
+		  if ($student->am->value != null ){
 				$am_decoded=$this->crypt->decrypt($student->am->value);
 			}
 			else{
@@ -435,23 +436,20 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->Cell($width, $height, $this->prepareString('Τάξη εγγραφής:'), 0, 'L');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
 
-        //$this->pdf->Cell($width, $height, $this->prepareString($this->retrieveGelClassName($student->nextclass->entity->get('id')->value )), 0, 'L');
-        //both work
-        $this->pdf->Cell($width, $height, $this->prepareString($this->retrieveGelClassName($student->nextclass->getString() )), 0, 'L');
-
+    $this->pdf->Cell($width, $height, $this->prepareString($this->retrieveGelClassName($student->nextclass->getString() )), 0, 'L');
 		$this->pdf->Ln();
 
-        if ($student->nextclass->getString() === "2" || $student->nextclass->getString() === "3" || $student->nextclass->getString() === "6"|| $student->nextclass->getString() === "7" )
-            $this->createOrientationGroupChoice($student);
-
-        if ($student->nextclass->getString() === "1" || $student->nextclass->getString() === "3" || $student->nextclass->getString() === "4" )
-            $this->createElectiveCourseChoices($student);
+    if ($student->nextclass->getString() === "2" || $student->nextclass->getString() === "3" || $student->nextclass->getString() === "6"|| $student->nextclass->getString() === "7" )
+        $this->createOrientationGroupChoice($student);
+    if ($student->nextclass->getString() === "1" || $student->nextclass->getString() === "3" || $student->nextclass->getString() === "4" )
+        $this->createElectiveCourseChoices($student);
+		if ($student->nextclass->getString() === "1" || $student->nextclass->getString() === "4" )
+		      $this->createLangCourseChoices($student);
 	}
 
 
 
-
-    private function createOrientationGroupChoice($student)	{
+  private function createOrientationGroupChoice($student)	{
 
         $width = 55;
         $height = 8;
@@ -459,36 +457,34 @@ class PDFCreator extends ControllerBase {
 
         $OrientGroups = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id'=> $student->id->value));
         $this->pdf->Cell($width, $height, $this->prepareString('Ομάδα Προσανατολισμού:'), 0, 'L');
-        foreach ($OrientGroups as $OrientGroup){
-
+        foreach ($OrientGroups as $OrientGroup) {
             if ($OrientGroup->choice_id->entity->get('choicetype')->value === "ΟΠ"){
                 $this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
                 $this->pdf->Cell($width, $height, $this->prepareString($OrientGroup->choice_id->entity->get('name')->value), 0, 'L');
-
             }
         }
     }
 
-    private function createElectiveCourseChoices($student)	{
+  private function createElectiveCourseChoices($student)	{
 
         $width = 55;
         $height = 8;
         $this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
 
         $result = \Drupal::entityQuery('gel_student_choices')
-		->condition('student_id', $student->id->value)
-        ->sort('order_id')
-        ->execute();
+					->condition('student_id', $student->id->value)
+        	->sort('order_id')
+        	->execute();
         $ElectiveCourses = \Drupal::entityTypeManager()->getStorage('gel_student_choices')->loadMultiple($result);
 
-        $this->pdf->Ln();
+        //$this->pdf->Ln();
         $this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
-        $this->pdf->Cell(35, $height, $this->prepareString('Μάθημα Επιλογής:'), 0, 'L');
+        $this->pdf->Cell(35, $height, $this->prepareString('Μάθημα Επιλογής'), 0, 'L');
         $this->pdf->Ln();
         $this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
         $this->pdf->Cell(20, $height, $this->prepareString(''), 0, 'L');
-        $this->pdf->Cell(50, $height, $this->prepareString('Σειρα Προτιμησης:'), 0, 0, 'C');
-        $this->pdf->Cell($width, $height, $this->prepareString('Τιτλος Μαθήματος:'), 0, 'L');
+        $this->pdf->Cell(50, $height, $this->prepareString('Σειρά Προτίμησης'), 0, 0, 'C');
+        $this->pdf->Cell($width, $height, $this->prepareString('Τίτλος Μαθήματος'), 0, 'L');
 
         $this->pdf->Ln();
 
@@ -503,6 +499,41 @@ class PDFCreator extends ControllerBase {
             }
         }
     }
+
+		private function createLangCourseChoices($student)	{
+
+	        $width = 55;
+	        $height = 8;
+	        $this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
+
+	        $result = \Drupal::entityQuery('gel_student_choices')
+						->condition('student_id', $student->id->value)
+	        	->sort('order_id')
+	        	->execute();
+	        $LangCourses = \Drupal::entityTypeManager()->getStorage('gel_student_choices')->loadMultiple($result);
+
+	        //$this->pdf->Ln();
+	        $this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
+	        $this->pdf->Cell(35, $height, $this->prepareString('Ξένη Γλώσσα'), 0, 'L');
+	        $this->pdf->Ln();
+	        $this->pdf->SetFont($this->fontLight, '', $this->fontSizeRegular);
+	        $this->pdf->Cell(20, $height, $this->prepareString(''), 0, 'L');
+	        $this->pdf->Cell(50, $height, $this->prepareString('Σειρά Προτίμησης'), 0, 0, 'C');
+	        $this->pdf->Cell($width, $height, $this->prepareString('Τίτλος Μαθήματος'), 0, 'L');
+
+	        $this->pdf->Ln();
+
+	        foreach ($LangCourses as $LangCourse){
+
+	            if ($LangCourse->choice_id->entity->get('choicetype')->value === "ΞΓ"){
+	                $this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
+	                $this->pdf->Cell(20, $height, $this->prepareString(''), 0, 'L');
+	                $this->pdf->Cell(50, $height, $this->prepareString($LangCourse->order_id->value), 0, 0, 'C');
+	                $this->pdf->Cell($width, $height, $this->prepareString($LangCourse->choice_id->entity->get('name')->value), 0, 'L');
+	                $this->pdf->Ln();
+	            }
+	        }
+	    }
 
 
 

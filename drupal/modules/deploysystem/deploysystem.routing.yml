@@ -7,7 +7,7 @@ deploysystem.ministry.retrievesettings:
   requirements:
     _user_is_logged_in: 'TRUE'
 deploysystem.ministry.storesettings:
-  path: '/ministry/store-settings/{capacityDisabled}/{directorViewDisabled}/{applicantsLoginDisabled}/{applicantsAppModifyDisabled}/{applicantsAppDeleteDisabled}/{applicantsResultsDisabled}/{secondPeriodEnabled}/{dateStart}/{smallClassApproved}/{ws}/{gsis}'
+  path: '/ministry/store-settings/{capacityDisabled}/{directorViewDisabled}/{applicantsLoginDisabled}/{applicantsAppModifyDisabled}/{applicantsAppDeleteDisabled}/{applicantsResultsDisabled}/{secondPeriodEnabled}/{dateStart}/{smallClass}/{ws}/{gsis}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:

@@ -99,7 +99,7 @@
     <div class="alert alert-danger" *ngIf="studentDataGroup.get('am').touched && studentDataGroup.get('am').hasError('required')">
             Το πεδίο δεν μπορεί να αφεθεί κενό!
     </div>
-    
+
     <div class="form-group">
         <label for="name">Όνομα μαθητή(<span style="color: #ff0000;">*</span>)</label><input class="form-control" type="text" formControlName="name">
     </div>
@@ -151,7 +151,7 @@
     <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
                 <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Στοιχεία Επικοινωνίας</div>
     </div>
-    
+
     <table class="col-md-12" align="left" *ngIf=" (studentDataGroup.get('lastschool_schoolyear').value  !='' && studentDataGroup.get('lastschool_schoolyear').value < '2013-2014') || (wsEnabled | async)===0 || studentDataGroup.get('lastschool_schoolname').value.unit_type_id ==40">
             <tr>
                 <td>
@@ -214,12 +214,9 @@
         <!--
         <option *ngIf = "(appUpdate | async)" [selected]="true" value={{reltostud.value}}>{{reltostud.value}}</option>
         -->
-        <option *ngIf = "(numAppChildren | async) <  (numChildren | async) " value="Γονέας/Κηδεμόνας">Γονέας/Κηδεμόνας</option>
-        <option *ngIf = "!(numAppSelf | async)"  value="Μαθητής">Μαθητής</option>
-        <!--
-        <option *ngIf = "(appUpdate | async) && (reltostud.value != 'Γονέας/Κηδεμόνας') && (numAppChildren | async) <  (numChildren | async)" value="Γονέας/Κηδεμόνας">Γονέας/Κηδεμόνας</option>
-        <option *ngIf = "(appUpdate | async) && (reltostud.value != 'Μαθητής') && (numAppSelf | async) == 0 " value="Μαθητής">Μαθητής</option>
-        -->
+        <option *ngIf = "(numAppChildren | async) <  (numChildren | async) " value="Γονέα/Κηδεμόνα">Γονέα/Κηδεμόνα</option>
+        <option *ngIf = "!(numAppSelf | async)"  value="Μαθητή">Μαθητή</option>
+
     </select>
 
     <div class="alert alert-danger" *ngIf="studentDataGroup.get('relationtostudent').dirty && studentDataGroup.get('relationtostudent').hasError('status')">

@@ -129,7 +129,7 @@ import {
             return Observable.of([]);
         }
     };
-    
+
 
     constructor(private fb: FormBuilder,
         private _sdfa: GelStudentDataFieldsActions,
@@ -302,9 +302,9 @@ import {
 
                             //λύση προβλήματος πεδίου "Αίτηση από" στο edit app
                             if (this.appUpdate.getValue() === true) {
-                                if (studentDataField.get("relationtostudent") === 'Γονέας/Κηδεμόνας')
+                                if (studentDataField.get("relationtostudent") === 'Γονέα/Κηδεμόνα')
                                   this.numAppChildren.next(this.numAppChildren.getValue() -1) ;
-                                else if (studentDataField.get("relationtostudent") === 'Μαθητής')
+                                else if (studentDataField.get("relationtostudent") === 'Μαθητή')
                                   this.numAppSelf.next(this.numAppSelf.getValue() - 1);
 
                             }
@@ -477,7 +477,7 @@ import {
         if (this.wsEnabled.getValue()===1){
 
             if (this.studentDataGroup.controls["lastschool_schoolyear"].value >="2013-2014" && this.studentDataGroup.controls["lastschool_schoolname"].value.unit_type_id != 40){
-                
+
                 this.studentDataGroup.controls["regionaddress"].setValue("");
                 this.studentDataGroup.controls["regiontk"].setValue("");
                 this.studentDataGroup.controls["regionarea"].setValue("");
