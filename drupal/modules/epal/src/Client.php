@@ -51,14 +51,14 @@ class Client
         $tokenExpirationTS = $tempstore->get('myschool_tokenExpirationTS');
 
         if ($token !== null && $tokenExpirationTS !== null && intval($tokenExpirationTS) >= time()) {
-            $this->log(__METHOD__ . " reusing token");
+            //$this->log(__METHOD__ . " reusing token");
             return $token;
         }
 
         $token = null;
         $tokenExpirationTS = null;
 
-        $this->log(__METHOD__ . " new token");
+        //$this->log(__METHOD__ . " new token");
 
         $headers = [
             'Accept: application/json',
@@ -224,7 +224,7 @@ class Client
             $crypt = new Crypt();
             $val = 'call:' . print_r($endpoint, true) . ':rcv:' . print_r($result, true);
             $val_enc = $crypt->encrypt($val);
-            $this->log(__METHOD__ . $val_enc, 'info');
+            //$this->log(__METHOD__ . $val_enc, 'info');
         } catch (\Exception $e) {
             $this->log(__METHOD__ . " cannot log encrypted", 'info');
         }
@@ -239,7 +239,7 @@ class Client
 
     public function getStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
-        $this->log(__METHOD__);
+        //$this->log(__METHOD__);
         return $this->getStudentEpalInfoNew($this->_settings['ws_endpoint_studentepalInfo'], $didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no);
     }
 
