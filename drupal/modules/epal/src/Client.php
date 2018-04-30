@@ -23,8 +23,8 @@ class Client
     ];
     private $logger; // if this is set and settings sets verbose mode, it will be used for logging
 
-    private $_token = null; // cache JWT
-    private $_tokenExpirationTS = null; // try to calculate token expiration time
+    //private $_token = null; // cache JWT
+    //private $_tokenExpirationTS = null; // try to calculate token expiration time
 
     public function __construct($settings = [], $logger = null)
     {
@@ -45,12 +45,18 @@ class Client
      */
     public function getTokenBearer()
     {
-        if ($this->_token !== null && $this->_tokenExpirationTS !== null && intval($this->_tokenExpirationTS) >= time()) {
+
+        $tempstore = \Drupal::service('user.shared_tempstore')->get('epal');
+        $token = $tempstore->get('myschool_token');
+        $tokenExpirationTS = $tempstore->get('myschool_tokenExpirationTS');
+
+        if ($token !== null && $tokenExpirationTS !== null && intval($tokenExpirationTS) >= time()) {
             $this->log(__METHOD__ . " reusing token");
-            return $this->_token;
+            return $token;
         }
-        $this->_token = null;
-        $this->_tokenExpirationTS = null;
+
+        $token = null;
+        $tokenExpirationTS = null;
 
         $this->log(__METHOD__ . " new token");
 
@@ -74,9 +80,12 @@ class Client
         }
 
         if (($response = json_decode($result['response'], true)) !== null) {
-            $this->_tokenExpirationTS = time() + intval($response['expires_in']) - 15; // skip 15 seconds... just in case
-            $this->_token = ucfirst($response['token_type']) . " {$response['access_token']}";
-            return $this->_token;
+            $tokenExpirationTS = time() + intval($response['expires_in']) - 15; // skip 15 seconds... just in case
+            $token = ucfirst($response['token_type']) . " {$response['access_token']}";
+ 
+            $tempstore->set('myschool_token', $token);
+            $tempstore->set('myschool_tokenExpirationTS', $tokenExpirationTS);
+            return $token;
         } else {
             $this->log(__METHOD__ . " Error while getting token from response {$result['response']}.", "error");
             throw new Exception("Προέκυψε λάθος κατά την λήψη του token. Αδυναμία άντλησης του token από το response.");
