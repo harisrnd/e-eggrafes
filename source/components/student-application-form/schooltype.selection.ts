@@ -58,11 +58,12 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
         </div> -->
 
         <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
-        <div class="col-md-6">
-            <button class="buttonGelHov pull-center" (click)="GelSelected()"><span>Γενικό Λυκειο</span></button>
+       
+        <div class="col-md-6 ">
+           <button class="button  isclickable pull-center" (click)="GelSelected()"><img class="isclickable pull-center" src="../theme/assets/images/GEL.png" alt=""></button>
         </div>
-        <div class="col-md-6">
-            <button class="buttonGelHov pull-center" (click)="EpalSelected()"><span>Επαγγελματικό Λύκειο</span></button>
+        <div class="col-md-6 ">
+            <button class="button isclickable pull-center" (click)="EpalSelected()"><img class = "isclickable pull-center" src="../theme/assets/images/LOGO epal.png" alt=""></button>
         </div>
 
         </div>
