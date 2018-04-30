@@ -1059,29 +1059,53 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                             $crypt = new Crypt();
                             try {
                                 if ($gelStudent->name->value !== null)
-                                $name_decoded = $crypt->decrypt($gelStudent->name->value);
+                                {
+                                    $name_decoded = $crypt->decrypt($gelStudent->name->value);
+                                }   
                                 if ($gelStudent->studentsurname->value !== null)
+                                {
                                 $studentsurname_decoded = $crypt->decrypt($gelStudent->studentsurname->value);
+                                }
                                 if ($gelStudent->fatherfirstname->value !== null)
+                                {
                                 $fatherfirstname_decoded = $crypt->decrypt($gelStudent->fatherfirstname->value);
+                                }
                                 if ($gelStudent->motherfirstname->value !== null)
+                                {
                                 $motherfirstname_decoded = $crypt->decrypt($gelStudent->motherfirstname->value);
+                                }
                                 if ($gelStudent->regionaddress->value !== null)
+                                {
                                 $regionaddress_decoded = $crypt->decrypt($gelStudent->regionaddress->value);
+                                }
                                 if ($gelStudent->regiontk->value !== null)
+                                {
                                 $regiontk_decoded = $crypt->decrypt($gelStudent->regiontk->value);
+                                }
                                 if ($gelStudent->regionarea->value !== null)
+                                {
                                 $regionarea_decoded = $crypt->decrypt($gelStudent->regionarea->value);
+                                }
                                 if ($gelStudent->telnum->value !== null)
+                                {
                                 $telnum_decoded = $crypt->decrypt($gelStudent->telnum->value);
+                                }
                                 if ($gelStudent->guardian_name->value !== null)
+                                {
                                 $guardian_name_decoded = $crypt->decrypt($gelStudent->guardian_name->value);
+                                }
                                 if ($gelStudent->guardian_surname->value !== null)
+                                {
                                 $guardian_surname_decoded = $crypt->decrypt($gelStudent->guardian_surname->value);
+                                }
                                 if ($gelStudent->guardian_fathername->value !== null)
+                                {
                                 $guardian_fathername_decoded = $crypt->decrypt($gelStudent->guardian_fathername->value);
+                                }
                                 if ($gelStudent->guardian_mothername->value !== null)
+                                {
                                 $guardian_mothername_decoded = $crypt->decrypt($gelStudent->guardian_mothername->value);
+                                }
                             } catch (\Exception $e) {
                                 $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
                                 return $this->respondWithStatus([
