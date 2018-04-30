@@ -97,10 +97,10 @@ class WSConsumer extends ControllerBase
 
           'data' => array(
               'id' => '158',
-              'studentId' => 2666021,
+              'studentId' => 2666023,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
               'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
-              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
+              'custodianLastName' =>  'ΓΕΩΡΓΟΥΛΑΣ',
               'custodianFirstName' => '',
               'birthDate' => '1997-01-04T00:00:00',
               'addressStreet' => 'XATZH',
