@@ -188,8 +188,7 @@ import { IAppState } from "../../store/store";
         </div>
           <br>
 
-          <!--
-          <div class="row">
+        <div class="row">
            <div class="col-md-1 ">
              <input type="checkbox" [checked]="guardianIdentEnabled"  formControlName="guardianIdentEnabled"
              (click)="toggleGuardianIdent()" >
@@ -197,9 +196,8 @@ import { IAppState } from "../../store/store";
            <div class="col-md-9">
              <label for="guardianIdentEnabled">Ενεργοποίηση Ταυτοποίησης Κηδεμόνα</label>
            </div>
-         </div>
-           <br>
-           -->
+        </div>
+        <br>
 
           <button type="submit" class="btn btn-md pull-right"  (click)="storeSettings()" [disabled] = "secondPeriodEnabled && formGroup.get('distributionstartdate').hasError('required')" >
               Εφαρμογή
@@ -376,7 +374,7 @@ import { IAppState } from "../../store/store";
             this.capacityDisabled, this.directorViewDisabled, this.applicantsLoginDisabled,
             this.applicantsAppModifyDisabled, this.applicantsAppDeleteDisabled, this.applicantsResultsDisabled,
             this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved,
-            this.wsIdentEnabled, this.gsisIdentEnabled/*, this.guardianIdentEnabled*/)
+            this.wsIdentEnabled, this.gsisIdentEnabled, this.guardianIdentEnabled)
             .subscribe(data => {
                 this.settings$.next(data);
                 this.dataRetrieved = 1;
