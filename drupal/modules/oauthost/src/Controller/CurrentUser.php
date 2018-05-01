@@ -137,6 +137,7 @@ class CurrentUser extends ControllerBase
                     'minedu_userpassword' => '',
                     'lock_capacity' => $eggrafesConfigEpal->lock_school_capacity->value,
                     'lock_students_epal' => $eggrafesConfigEpal->lock_school_students_view->value,
+                    'lock_students_gel' => $eggrafesConfigGel->lock_school_students_view->value,
                     'lock_application_epal' => $eggrafesConfigEpal->lock_application->value,
                     'lock_application_gel' => $eggrafesConfigGel->lock_application->value,
                     'disclaimer_checked' => "0",

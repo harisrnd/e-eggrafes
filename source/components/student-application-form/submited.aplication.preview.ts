@@ -121,7 +121,7 @@ import { IAppState } from "../../store/store";
                           <div *ngIf = "GelStudentDetails$.status == '1'" >
                               <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
                                   Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{GelStudentDetails$.schoolName}}.
-                                  Παρακαλώ να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
+                                  Παρακαλείστε να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
                               </div>
                           </div>
                           <div *ngIf = "GelStudentDetails$.status == '4' " >
@@ -310,7 +310,7 @@ import { IAppState } from "../../store/store";
                         <div *ngIf = "StudentDetails$.status == '1'" >
                             <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
                                 Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{StudentDetails$.schoolName}}.
-                                Παρακαλώ να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{StudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{StudentDetails$.schoolTel}}.<br><br>
+                                Παρακαλείστε να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{StudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{StudentDetails$.schoolTel}}.<br><br>
                             </div>
                         </div>
                         <div *ngIf = "StudentDetails$.status == '2' " >
