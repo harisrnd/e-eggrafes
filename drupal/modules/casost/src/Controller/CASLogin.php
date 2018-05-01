@@ -156,9 +156,9 @@ class CASLogin extends ControllerBase
             $this->logger->warning("umdobject");
 
 /* check if myschool account */
-/*
+
             if (!$umdobject || $umdobject !== "ISaccount") {
-                return $this->redirectForbidden($configRowName, '5002');
+                return $this->redirectForbidden($configRowName, '5003');
             }
             if (!$gsnunitcode || $gsnunitcode !== $CASUser) {
                 return $this->redirectForbidden($configRowName, '5003');

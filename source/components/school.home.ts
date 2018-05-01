@@ -14,7 +14,7 @@ import { IAppState } from "../store/store";
 @Component({
     selector: "school-home",
     template: `
-<div style="min-height: 300px; margin-top: 100px;">
+<div style="min-height: 300px; margin-top: 60px;">
     <div *ngIf="(errorCode$ | async) != ''">
         <div [ngSwitch]="errorCode$ | async">
             <p class="text-danger" *ngSwitchCase="5001">Προέκυψε σφάλμα κατά την διαδικασία αυθεντικοποίησης σας.</p>
@@ -44,7 +44,24 @@ import { IAppState } from "../store/store";
                     </button>
                 </div>
             </div>
+
+            <br/><br/>
+            <p>Θα ζητηθούν <i><strong>Όνομα Χρήστη</strong></i> και <i><strong>Κωδικός Πρόσβασης</strong></i> για τα οποία θα πρέπει να δοθούν αυτά που χρησιμοποιεί το σχολείο σας
+              για την πρόσβαση στην υπηρεσία του myschool. Aν δεν γίνεται δεκτός ο κωδικός σας και εφόσον δοκιμάσετε και επιβεβαιώσετε την ορθότητα του
+              στο <a href = "https:/myschool.sch.gr"> https://myschool.sch.gr</a> μπορείτε να αναφέρετε το πρόβλημα άμεσα στο Πανελλήνιο Σχολικό Δίκτυο με μήνυμα σας στο info@sch.gr.
+            </p>
+
         </form>
+
+
+        <p align="left"><strong> Οδηγίες προς Διευθυντές</strong></p>
+            <ul class="list-group">
+            <li class="list-group-item isclickable evenout"  >
+                <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiessxoleio.pdf" target="_blank">Οδηγίες προς Διευθυντές ΕΠΑ.Λ. σχετικά με τα αποτελέσματα των Ηλεκτρονικών Δηλώσεων Προτίμησης</a>
+            </li>
+            </ul>
+
+
     </div>
 </div>
 `
@@ -95,7 +112,7 @@ export default class SchoolHome implements OnInit, OnDestroy {
                         if (this.authToken && this.authToken.length > 0) {
                             if (this.authRole === "director") {
                                 this.router.navigate(["/school/director-buttons"]);
-                                //this.router.navigate(["/school/directorgym-view"]);                         
+                                //this.router.navigate(["/school/directorgym-view"]);
 
                             }
                             else if (this.authRole === "director_gel")
@@ -103,13 +120,13 @@ export default class SchoolHome implements OnInit, OnDestroy {
                                 this.router.navigate(["/school/directorgel-view"]);                         }
                             else if (this.authRole === "director_gym")
                                 {
-                                    this.router.navigate(["/school/directorgym-view"]);                         }   
+                                    this.router.navigate(["/school/directorgym-view"]);                         }
                             else if (this.authRole === "pde")
                              {
                                 this.router.navigate(["/school/perfecture-view"]);                         }
                             else if (this.authRole === "dide")
                                 this.router.navigate(["/school/school-type-selection"]);
-   
+
                         }
                         return loginInfoObj;
                     }, {});
