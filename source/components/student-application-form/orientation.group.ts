@@ -55,6 +55,7 @@ import { IAppState } from "../../store/store";
 
       <br/>
 
+      <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
       <div class="col-md-6">
             <button type="button" class="btn-primary btn-lg pull-left" (click)="router.navigate(['/gel-class-select']);" >
           <i class="fa fa-backward"></i>
@@ -64,6 +65,7 @@ import { IAppState } from "../../store/store";
             <button type="button" class="btn-primary btn-lg pull-right isclickable" style="width: 9em;" (click)="navigateNext()" >
                 <span style="font-size: 0.9em; font-weight: bold;">Συνέχεια&nbsp;&nbsp;&nbsp;</span><i class="fa fa-forward"></i>
             </button>
+      </div>
       </div>
 
 `
