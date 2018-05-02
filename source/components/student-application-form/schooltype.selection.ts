@@ -57,13 +57,17 @@ import { schooltypeReducer } from "../../store/schooltype/schooltype.reducer";
             </select>
         </div> -->
 
-        <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+        <div class="row" style="margin-top: 60px; margin-bottom: 80px;">
        
-        <div class="col-md-6 ">
+        <div class="col-md-1 ">
+        </div>
+        <div class="col-md-5 ">
            <button class="button  isclickable pull-center" (click)="GelSelected()"><img class="isclickable pull-center" src="../theme/assets/images/GEL.png" alt=""></button>
         </div>
-        <div class="col-md-6 ">
+        <div class="col-md-5 ">
             <button class="button isclickable pull-center" (click)="EpalSelected()"><img class = "isclickable pull-center" src="../theme/assets/images/LOGO epal.png" alt=""></button>
+        </div>
+        <div class="col-md-1 ">
         </div>
 
         </div>
