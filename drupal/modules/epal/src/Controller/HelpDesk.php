@@ -68,7 +68,7 @@ class HelpDesk extends ControllerBase {
         if ($content = $request->getContent()) {
             $postData = json_decode($content);
 
-                $this->sendEmailToHelpDesk($postData->userEmail, $postData->userName, $postData->userMessage,$postData->userSurname);
+                $this->sendEmailToHelpDesk($postData->userEmail, $postData->userName, $postData->userMessage,$postData->userSurname, $postData ->school_type);
             return $this->respondWithStatus([
                 'error_code' => 0,
             ], Response::HTTP_OK);
@@ -80,13 +80,17 @@ class HelpDesk extends ControllerBase {
         }
     }
 
-    private function sendEmailToHelpDesk($email, $name, $cont_message, $surname) {
+    private function sendEmailToHelpDesk($email, $name, $cont_message, $surname, $school_type) {
 
         $mailManager = \Drupal::service('plugin.manager.mail');
 
         $module = 'epal';
         $key = 'help_desk';
-        $to = 'dialogos_eek@minedu.gov.gr';
+        if ($school_type == "ΕΠΑΛ")
+            $to = 'dialogos_eek@minedu.gov.gr';
+        else
+            $to = 'egel@minedu.gov.gr';
+        
         $params['message'] = '<p>Αποστολέας:'.$email.'</p><p>Όνομα: '.$name.'</p><p>Επώνυμο: '.$surname.'</p><p>Μήνυμα: '.$cont_message .'</p>';
         $langcode = 'el';
         $send = true;
@@ -94,7 +98,7 @@ class HelpDesk extends ControllerBase {
         $mail_sent = $mailManager->mail($module, $key, $to, $langcode, $params, NULL, $send);
 
         if ($mail_sent) {
-            $this->logger->info("Mail Sent successfully.");
+            $this->logger->info("Mail Sent successfully.".$to);
         }
         else {
             $this->logger->info("There was an error in sending mail.");

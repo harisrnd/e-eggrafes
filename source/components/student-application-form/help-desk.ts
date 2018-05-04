@@ -36,6 +36,13 @@ import { IAppState } from "../../store/store";
         Πληκτρολογήστε ένα σωστό συντακτικά email!
     </div>
     </div>
+     <div class="form-group">
+        <label for="category">Τύπος Σχολείου:</label><br/>
+            <select #type_sel class="form-control" formControlName="category" >
+                <option value="ΓΕΛ">ΓΕΛ</option>
+                <option value="ΕΠΑΛ">ΕΠΑΛ</option>
+            </select>
+    </div>
 
     <div class="form-group">
         <label for="userName">Όνομα(<span style="color: #ff0000;">*</span>)</label>
@@ -84,7 +91,9 @@ import { IAppState } from "../../store/store";
     </div>
 
         <p style="text-align: left, font-size: 0.9em;">
-      <strong>Τηλ. Επικοινωνίας:</strong> 2103442034, 2103443309, 2103442231, 2103442859 (ώρες: 8:00 - 16:00)</p>
+      <strong>Τηλ. Επικοινωνίας ΓΕΛ:</strong> 2103442034 (ώρες: 8:00 - 16:00)</p>
+        <p style="text-align: left, font-size: 0.9em;">
+      <strong>Τηλ. Επικοινωνίας ΕΠΑΛ:</strong> 2103442034, 2103443309, 2103442231, 2103442859 (ώρες: 8:00 - 16:00)</p>
 
 
   <div id="mailsent" (onHidden)="onHidden('#mailsent')"
@@ -170,6 +179,7 @@ import { IAppState } from "../../store/store";
             userName: ["", [Validators.pattern(VALID_NAMES_PATTERN), Validators.required]],
             userSurname: ["", [Validators.pattern(VALID_NAMES_PATTERN), Validators.required]],
             userMessage: ["", [Validators.required]],
+            category: ["",[Validators.required]],
         });
         this.emailSent = new BehaviorSubject(false);
     }
@@ -216,7 +226,7 @@ import { IAppState } from "../../store/store";
         }
         else {
             this.showLoader.next(true);
-            this.hds.sendmail(this.formGroup.value.userEmail, this.formGroup.value.userName, this.formGroup.value.userSurname, this.formGroup.value.userMessage)
+            this.hds.sendmail(this.formGroup.value.userEmail, this.formGroup.value.userName, this.formGroup.value.userSurname, this.formGroup.value.userMessage, this.formGroup.value.category)
                 .then(res => {
                     this.emailSent.next(true);
                     this.showLoader.next(false);
