@@ -22,10 +22,11 @@ import { IAppState } from "../../store/store";
     <h4> Επιλογή Μαθήματος Επιλογής </h4>
     <div class = "loading" *ngIf=" !(electivecourseFields$ | async) || (electivecourseFields$ | async).size === 0"></div>
 
-    <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε το μάθημα επιλογής το οποίο θα παρακολουθήσει ο μαθητής το νέο σχολικό έτος.
+    <p style="margin-top: 20px; line-height: 2em;"> Επιλέξτε το μάθημα επιλογής το οποίο θα παρακολουθήσει ο/η μαθητής/τρια το νέο σχολικό έτος.
        Μπορείτε να επιλέξετε / απο-επιλέξετε περισσότερες προτιμήσεις, κάνοντας κλικ πάνω στην αντίστοιχη επιλογή.
        Σε περίπτωση περισσοτέρων της μίας επιλογής, βάλτε τις επιλογές σας σε επιθυμητή σειρά προτίμησης στην εμφανιζόμενη λίστα στο κάτω μέρος της οθόνης.
        Έπειτα επιλέξτε <i>Συνέχεια</i>.</p>
+       
         <div class="list-group" *ngFor="let electivecourseField$ of electivecourseFields$ | async; let i=index;">
             <button *ngIf = "electivecourseField$.selected === true" type="button" class="list-group-item list-group-item-action active" (click)="saveSelected(i, 1)" >{{electivecourseField$.name}}</button>
             <button *ngIf = "electivecourseField$.selected === false" type="button" class="list-group-item list-group-item-action" (click)="saveSelected(i, 0)" >{{electivecourseField$.name}}</button>

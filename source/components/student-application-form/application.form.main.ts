@@ -160,7 +160,6 @@ import {
 
         this.wsIdentSub = this.hds.isWS_ident_enabled().subscribe(z => {
             this.wsEnabled.next(Number(z.res)) ;
-            //console.log(this.wsEnabled.getValue());
        });
     };
 
@@ -317,10 +316,6 @@ import {
     }
 
     submitSelected() {
-        //console.log(this.studentDataGroup.get("lastschool_schoolyear"));
-        //console.log(this.studentDataGroup.invalid);
-        //console.log(this.studentDataGroup.get("am"));
-        //console.log(this.studentDataGroup);
 
         let invalidFlag = 0;
         if (this.studentDataGroup.invalid || (invalidFlag = this.invalidFormData()) > 0) {
@@ -452,9 +447,6 @@ import {
 
             if (this.studentDataGroup.controls["lastschool_schoolyear"].value >="2013-2014" && this.studentDataGroup.controls["lastschool_schoolname"].value.unit_type_id != 40){
 
-                //console.log("2 ");
-                //console.log(this.studentDataGroup.controls["lastschool_schoolname"].value.unit_type_id);
-
                 this.studentDataGroup.controls["regionaddress"].setValue("");
                 this.studentDataGroup.controls["regiontk"].setValue("");
                 this.studentDataGroup.controls["regionarea"].setValue("");
@@ -472,7 +464,6 @@ import {
                 this.studentDataGroup.controls["lastschool_class"].updateValueAndValidity();
             }
             else{
-                //console.log("2");
                 this.studentDataGroup.controls["regionaddress"].setValidators([Validators.pattern(VALID_ADDRESS_PATTERN), Validators.required]);
                 this.studentDataGroup.controls["regiontk"].setValidators([Validators.pattern(VALID_ADDRESSTK_PATTERN), Validators.required]);
                 this.studentDataGroup.controls["regionarea"].setValidators([Validators.pattern(VALID_NAMES_PATTERN), Validators.required]);

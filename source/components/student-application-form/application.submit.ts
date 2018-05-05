@@ -7,6 +7,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
 
 import { IDataModeRecords } from "../../store/datamode/datamode.types";
 import { DataModeActions } from "../../actions/datamode.actions";
+import { SchoolTypeActions } from "../../actions/schooltype.actions";
 import { EpalClassesActions } from "../../actions/epalclass.actions";
 import { RegionSchoolsActions } from "../../actions/regionschools.actions";
 import { SectorCoursesActions } from "../../actions/sectorcourses.actions";
@@ -205,6 +206,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
     constructor(
         private _hds: HelperDataService,
+        private _sta: SchoolTypeActions,
         private _csa: SectorCoursesActions,
         private _sfa: SectorFieldsActions,
         private _rsa: RegionSchoolsActions,
@@ -495,60 +497,13 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       aitisiObj[0].section_name = data.data["sectionName"];
                       aitisiObj[0].level_name = data.data["levelName"];
                       aitisiObj[0].unittype_name = data.data["unitTypeDescription"];
-                      if (data.data["levelName"]==='Α'){
-                        aitisiObj[0].lastschool_class = 1;
-                    }
-                    else if (data.data["levelName"]==='Β'){
-                        aitisiObj[0].lastschool_class = 2;
-                    }
-                    else if (data.data["levelName"]==='Γ'){
-                        aitisiObj[0].lastschool_class = 3;
-                    }
-                    else if (data.data["levelName"]==='Δ'){
-                        aitisiObj[0].lastschool_class = 4;
-                    }
-                    else if (data.data["levelName"]==='Α-ΛΥΚ'){
-                      aitisiObj[0].lastschool_class = 1;
-                    }
-                      else if (data.data["levelName"]==='Β-ΛΥΚ'){
-                      aitisiObj[0].lastschool_class = 2;
-                  }
-                  else if (data.data["levelName"]==='Γ-ΛΥΚ'){
-                      aitisiObj[0].lastschool_class = 3;
-                  }
-                  else if (data.data["levelName"]==='Δ-ΛΥΚ'){
-                      aitisiObj[0].lastschool_class = 4;
-                  }
-                  else if (data.data["levelName"]==='Γ (ΠΑΛΑΙΑ)'){
-                      aitisiObj[0].lastschool_class = 3;
-                  }
-                  else if (data.data["levelName"]==='Δ (ΠΑΛΑΙΑ)'){
-                      aitisiObj[0].lastschool_class = 4;
-                  }
-                  else if (data.data["levelName"]==='Γ-ΛΥΚ (ΠΑΛΑΙΑ)'){
-                      aitisiObj[0].lastschool_class = 3;
-                  }
-                  else if (data.data["levelName"]==='Δ-ΛΥΚ (ΠΑΛΑΙΑ)'){
-                      aitisiObj[0].lastschool_class = 4;
-                  }
-                //   else if (data.data["levelName"]==='ΔΥΕΠ'){
-                //       aitisiObj[0].lastschool_class = 10;
-                //   }
-                //   else if (data.data["levelName"]==='ΠΡΟΚΑΤΑΡΚΤΙΚΗ'){
-                //       aitisiObj[0].lastschool_class = 11;
-                //   }
-                //   else if (data.data["levelName"]==='ΠΡΟΚΑΤΑΡΚΤΙΚΗ-ΛΥΚ'){
-                //       aitisiObj[0].lastschool_class = 12;
-                //   }
-                  else  {
-                        aitisiObj[0].lastschool_class = -1;
-                  }
 
+                      aitisiObj[0].lastschool_class = this.levelNametoClass(data.data["levelName"]);
                     }
                     else {
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
-                      let mText = "Δεν βρέθηκε μαθητής στο ΠΣ myschool με τα στοιχεία που δώσατε. " +
-                        "Παρακαλώ προσπαθήστε ξανά αφού πρώτα ελέγξετε την ορθότητα των ακόλουθων στοιχείων: Αριθμός Μητρώου, Σχολείο τελευταίας φοίτησης, Ημερομηνία Γέννησης. " +
+                      let mText = "Δεν βρέθηκε μαθητής στο Πληροφοριακό Σύστημα του Σχολείου (myschool) με τα στοιχεία που δώσατε. " +
+                        "Προσπαθήστε ξανά, αφού πρώτα ελέγξετε την ορθότητα των ακόλουθων στοιχείων: Αριθμός Μητρώου, Σχολείο τελευταίας φοίτησης, Ημερομηνία Γέννησης. " +
                         "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
                       let mHeader = "modal-header-danger";
                       this.modalTitle.next(mTitle);
@@ -565,7 +520,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                     if (this.guardianEnabled.getValue() === 1 && aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
                       let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
                       let mText = "Ο Κηδεμόνας που έχει δηλωθεί στο Πληροφοριακό Σύστημα του Σχολείου έχει ΔΙΑΦΟΡΕΤΙΚΑ στοιχεία από το χρήστη που έχει κάνει είσοδο σε αυτό το σύστημα μέσω των κωδικών του taxisnet. " +
-                        "Παρακαλώ επικοινωνήστε με το σχολείο σας για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καταχωρηθεί στο Πληροφοριακό Σύστημα του Σχολείου (myschοol) όπως είναι καταχωρημένο στην εφορία. " +
+                        "Παρακαλείστε να επικοινωνήσετε με το σχολείο όπου φοιτά τώρα το παιδί για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καταχωρηθεί στο Πληροφοριακό Σύστημα του Σχολείου (myschοol) όπως είναι καταχωρημένο στην εφορία. " +
                         "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
                       let mHeader = "modal-header-danger";
                       this.modalTitle.next(mTitle);
@@ -667,9 +622,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
         let options = new RequestOptions({ headers: headers, method: "post", withCredentials: true });
         let connectionString = `${AppSettings.API_ENDPOINT}/epal/appsubmit`;
-        //console.log(record);
         if (!newapp)
-          //connectionString = `${AppSettings.API_ENDPOINT}/epal/appupdate/` + this.appId.getValue();
           connectionString = `${AppSettings.API_ENDPOINT}/epal/appupdate/` + this.appId.getValue() + '/' + nonCheckOccupancy;
         this.showLoader.next(true);
         this.http.post(connectionString, record, options)
@@ -687,6 +640,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                         mTitle = "Υποβολή Δήλωσης Προτίμησης";
                         mText = "Η υποβολή της δήλωσής σας πραγματοποιήθηκε. Μπορείτε να τη δείτε και να την εκτυπώσετε από την επιλογή 'Εμφάνιση - Εκτύπωση Δήλωσης Προτίμησης'. Από την επιλογή 'Υποβληθείσες Δηλώσεις' θα μπορείτε να ενημερωθείτε όταν υπάρξει εξέλιξη σχετική με τη δήλωση σας.";
                         mHeader = "modal-header-success";
+                        this._sta.initSchoolType();
                         this._eca.initEpalClasses();
                         this._sfa.initSectorFields();
                         this._rsa.initRegionSchools();
@@ -843,6 +797,24 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
     navigateBack() {
         this.router.navigate(["/student-application-form-main"]);
+    }
+
+    private levelNametoClass($level)
+    {
+        switch ($level){
+            case "Α"||"Α-ΛΥΚ":
+                return 1;
+            case "Β"||"Β-ΛΥΚ":
+                return 2;
+            case "Γ"||"Γ-ΛΥΚ"||"Γ (ΠΑΛΑΙΑ)"||"Γ-ΛΥΚ (ΠΑΛΑΙΑ)":
+                return 3;
+            case "Δ"||"Δ-ΛΥΚ"||"Δ (ΠΑΛΑΙΑ)"||"Δ-ΛΥΚ (ΠΑΛΑΙΑ)":
+                return 4;
+            //case "ΔΥΕΠ"||"ΠΡΟΚΑΤΑΡΚΤΙΚΗ"||"ΠΡΟΚΑΤΑΡΚΤΙΚΗ-ΛΥΚ":
+            //    return -1;
+            default:
+                return -1;
+       }
     }
 
 }

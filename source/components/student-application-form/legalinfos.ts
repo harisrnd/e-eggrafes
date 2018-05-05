@@ -58,7 +58,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
     <br>
     <p align="left"><strong> Οδηγίες Ενημέρωσης ΓΕ.Λ. </strong></p>
         <ul class="list-group">
-        <div *ngIf="(hasvalue | async) == true">
+        <div *ngIf="hasvalue  == true">
         <li class="list-group-item isclickable evenout"  >
             <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" 
             href="../pdfs/files/odigiessxoleiogel.pdf" target="_blank">Οδηγίες προς Διευθυντές ΓΕ.Λ. σχετικά με τα αποτελέσματα των Ηλεκτρονικών Δηλώσεων Προτίμησης</a>
@@ -75,7 +75,8 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
     <br>
     <p align="left"><strong> Οδηγίες Ενημέρωσης ΕΠΑ.Λ. </strong></p>
         <ul class="list-group">
-        <div *ngIf="(hasvalue | async) == true">
+
+        <div *ngIf="hasvalue == true">
         <li class="list-group-item isclickable evenout"  >
             <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiessxoleio.pdf" target="_blank">Οδηγίες προς Διευθυντές ΕΠΑ.Λ. σχετικά με τα αποτελέσματα των Ηλεκτρονικών Δηλώσεων Προτίμησης</a>
         </li>
@@ -146,6 +147,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
                     }, {});
 
                     if (this.authRole === SCHOOL_ROLE || this.authRole === SCHOOLGEL_ROLE || this.authRole === SCHOOLGYM_ROLE) {
+                        console.log(this.authRole,"role");
                         this.hasvalue = true;
                         
                     }
