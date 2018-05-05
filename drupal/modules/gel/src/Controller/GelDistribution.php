@@ -1026,7 +1026,12 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $gelId, 'taxi' => $classIdNew));
              
-
+                if ($classIdNew === "Α")
+                {
+                    $existingstudents =array();
+                }
+                else
+                {    
                 $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
@@ -1035,6 +1040,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                   ->condition('gStudent.nextclass', $classId , '=')
                   ->condition('gStudent.delapp', '0' , '=');
                 $existingstudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                }
 
                  $this->logger->warning($sCon."existingstudents");
 
