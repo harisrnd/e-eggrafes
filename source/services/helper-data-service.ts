@@ -1078,14 +1078,14 @@ export class HelperDataService implements OnInit, OnDestroy {
     }
 
 
-    sendmail(email, name, surname, message) {
+    sendmail(email, name, surname, message, school_type) {
         let headers = new Headers({
             "Content-Type": "application/json",
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return new Promise((resolve, reject) => {
-            this.http.post(`${AppSettings.API_ENDPOINT}/epal/user/sendmail`, { userEmail: email, userName: name, userSurname: surname, userMessage: message }, options)
+            this.http.post(`${AppSettings.API_ENDPOINT}/epal/user/sendmail`, { userEmail: email, userName: name, userSurname: surname, userMessage: message, school_type:school_type }, options)
                 .map(response => response.json())
                 .subscribe(data => {
                     resolve(data);
