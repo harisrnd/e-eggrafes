@@ -401,6 +401,9 @@ export class HelperDataService implements OnInit, OnDestroy {
             "lock_application_epal": parseInt(userlogin.lock_application_epal),
             "lock_application_gel": parseInt(userlogin.lock_application_gel),
             "disclaimer_checked": parseInt(userlogin.disclaimer_checked),
+
+            "ws_ident": parseInt(userlogin.ws_ident),
+            "guardian_ident": parseInt(userlogin.guardian_ident),
         });
         return rsa;
 

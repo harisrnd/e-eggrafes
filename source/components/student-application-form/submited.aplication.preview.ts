@@ -30,6 +30,7 @@ import { IOrientationGroupRecords } from "../../store/orientationgroup/orientati
 import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
 import { IGelStudentDataFieldRecords } from "../../store/gelstudentdatafields/gelstudentdatafields.types";
 
+import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 
 import { HelperDataService } from "../../services/helper-data-service";
 import { IAppState } from "../../store/store";
@@ -509,8 +510,9 @@ import { IAppState } from "../../store/store";
     //private applicationGelId = <number>0;
     private schooltype: string;
 
-    private wsIdentSub: Subscription;
+    //private wsIdentSub: Subscription;
     private wsEnabled:  BehaviorSubject<number>;
+    private loginInfoSub: Subscription;
 
     @ViewChild("target") element: ElementRef;
 
@@ -568,6 +570,8 @@ import { IAppState } from "../../store/store";
             this.SubmittedGelUsersSub.unsubscribe();
         if (this.GelSubmittedDetailsSub)
             this.GelSubmittedDetailsSub.unsubscribe();
+        if (this.loginInfoSub)
+            this.loginInfoSub.unsubscribe();
     }
 
     ngOnInit() {
@@ -576,9 +580,9 @@ import { IAppState } from "../../store/store";
         (<any>jQuery("#applicationDeleteError")).appendTo("body");
         this.showLoader$.next(true);
 
-        this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
-            this.wsEnabled.next(Number(z.res)) ;
-       });
+        //this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
+        //    this.wsEnabled.next(Number(z.res)) ;
+        //});
 
         this.resetStore();
 
@@ -602,6 +606,20 @@ import { IAppState } from "../../store/store";
                 this.showLoader$.next(false);
                 console.log("Error Getting Schools");
             });
+
+        this.loginInfoSub = this._ngRedux.select("loginInfo")
+           .map(loginInfo => <ILoginInfoRecords>loginInfo)
+           .subscribe(linfo => {
+             //new piece of code
+             if (linfo.size > 0) {
+                 linfo.reduce(({ }, loginInfoObj) => {
+                     this.wsEnabled.next(loginInfoObj.ws_ident);
+                     return loginInfoObj;
+                 }, {});
+               }
+               //end new piece of code
+               //this.loginInfo$.next(linfo);
+         }, error => { console.log("error selecting loginInfo"); });
 
     }
 

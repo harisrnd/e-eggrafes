@@ -109,8 +109,10 @@ import { StudentGelCourseChosen } from "../students/student";
     <div><label for="studentsurname">Επώνυμο μαθητή</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("studentsurname")}} </p></div>
     <div><label for="fatherfirstname">Όνομα Πατέρα</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("fatherfirstname")}} </p></div>
     <div><label for="motherfirstname">Όνομα Μητέρας</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("motherfirstname")}} </p></div>
+    <!--
     <div><label for="birthdate">Ημερομηνία Γέννησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{gelstudentDataField$.get("studentbirthdate")}} </p></div>
-
+    -->
+    <div><label for="birthdate">Ημερομηνία Γέννησης</label> <p class="form-control" style="border:1px solid #eceeef;"> {{birtdateFormView | async}} </p></div>
 
     <div class="row evenin" style="margin: 20px 2px 10px 2px; line-height: 2em;">
         <div class="col-md-12" style="font-size: 1.5em; font-weight: bold; text-align: center;">Στοιχεία Επικοινωνίας μαθητή</div>
@@ -214,11 +216,12 @@ import { StudentGelCourseChosen } from "../students/student";
     private hasright: number;
     private app_update: BehaviorSubject<boolean>;
     private appId: BehaviorSubject<string>;
-    private wsIdentSub: Subscription;
+    //private wsIdentSub: Subscription;
     private wsEnabled: BehaviorSubject<number>;
     private limitSchoolYear: string;
-    private guardianIdentSub: Subscription;
+    //private guardianIdentSub: Subscription;
     private guardianEnabled: BehaviorSubject<number>;
+    private birtdateFormView: BehaviorSubject<string>;
 
     constructor(
         private _hds: HelperDataService,
@@ -251,12 +254,13 @@ import { StudentGelCourseChosen } from "../students/student";
         this.classSelected = new BehaviorSubject(-1);
         this.wsEnabled = new BehaviorSubject(-1);
         this.guardianEnabled = new BehaviorSubject(-1);
+        this.birtdateFormView = new BehaviorSubject("");
         this.hasright = 1;
         this.limitSchoolYear = "2013-2014";
 
-        this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
-            this.wsEnabled.next(Number(z.res)) ;
-       });
+        //this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
+        //    this.wsEnabled.next(Number(z.res)) ;
+       //});
 
     };
 
@@ -270,9 +274,9 @@ import { StudentGelCourseChosen } from "../students/student";
               this.hasright = 0;
         });
 
-        this.guardianIdentSub = this._hds.isGuardian_ident_enabled().subscribe(w => {
-            this.guardianEnabled.next(Number(w.res)) ;
-       });
+        //this.guardianIdentSub = this._hds.isGuardian_ident_enabled().subscribe(w => {
+        //    this.guardianEnabled.next(Number(w.res)) ;
+       //});
 
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
@@ -287,6 +291,9 @@ import { StudentGelCourseChosen } from "../students/student";
                         this.disclaimer_checked = loginInfoObj.disclaimer_checked;
                         //if ( Number(loginInfoObj.numapp_self) > 0 && Number(loginInfoObj.numapp_children) >= Number(loginInfoObj.numchildren) )
                         //  this.hasright = 0;
+                        this.wsEnabled.next(loginInfoObj.ws_ident);
+                        this.guardianEnabled.next(loginInfoObj.guardian_ident);
+
                         return loginInfoObj;
                     }, {});
                 }
@@ -375,6 +382,12 @@ import { StudentGelCourseChosen } from "../students/student";
                 this.gelstudentDataFields$.next(<IGelStudentDataFieldRecords>gelstudentDataFields);
             }, error => { console.log("error selecting gelstudentDataFields"); });
 
+        //new piece of code
+        let sdf = this.gelstudentDataFields$.getValue().get(0);
+        let parts = sdf.get("studentbirthdate").split("-",3);
+        this.birtdateFormView.next(parts[2] +"/" + parts[1] + "/" + parts[0]);
+        //end new piece of code
+
 
     };
 
@@ -390,12 +403,12 @@ import { StudentGelCourseChosen } from "../students/student";
             this.datamodeSub.unsubscribe();
         if (this.gelUserDataSub)
             this.gelUserDataSub.unsubscribe();
-        if (this.wsIdentSub)
-            this.wsIdentSub.unsubscribe();
+        //if (this.wsIdentSub)
+        //    this.wsIdentSub.unsubscribe();
         if (this.ServiceStudentCertifSub)
             this.ServiceStudentCertifSub.unsubscribe();
-        if (this.guardianIdentSub)
-            this.guardianIdentSub.unsubscribe();
+        //if (this.guardianIdentSub)
+        //    this.guardianIdentSub.unsubscribe();
         if (this.electivecourseFieldsSub)
             this.electivecourseFieldsSub.unsubscribe();
         if (this.langcourseFieldsSub)

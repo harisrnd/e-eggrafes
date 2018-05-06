@@ -86,6 +86,8 @@ class CurrentUser extends ControllerBase
                         'lock_application_epal' => $eggrafesConfigEpal->lock_application->value,
                         'lock_application_gel' => $eggrafesConfigGel->lock_application->value,
                         'disclaimer_checked' => "0",
+                        'ws_ident' => $eggrafesConfigEpal->ws_ident->value,
+                        'guardian_ident' => $eggrafesConfigEpal->guardian_ident->value,
                         'title' => $user->init->value
                     ], Response::HTTP_OK);
             } else if ($userRole === 'applicant') {
@@ -140,6 +142,8 @@ class CurrentUser extends ControllerBase
                     'lock_students_gel' => $eggrafesConfigGel->lock_school_students_view->value,
                     'lock_application_epal' => $eggrafesConfigEpal->lock_application->value,
                     'lock_application_gel' => $eggrafesConfigGel->lock_application->value,
+                    'ws_ident' => $eggrafesConfigEpal->ws_ident->value,
+                    'guardian_ident' => $eggrafesConfigEpal->guardian_ident->value,
                     'disclaimer_checked' => "0",
                     'verificationCodeVerified' => $applicantUser->verificationcodeverified->value,
                     'numapp_self' => $numAppSelf,

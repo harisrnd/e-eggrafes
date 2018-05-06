@@ -446,7 +446,7 @@ public function storeSettingsGel(Request $request, $capacityDisabled, $directorV
 }
 
 
-
+//OBSOLETE
 public function isWSIdentEnabled(Request $request)
 {
 			 $authToken = $request->headers->get('PHP_AUTH_USER');
@@ -493,6 +493,7 @@ public function isGsisIdentEnabled(Request $request)
 
 }
 
+//OBSOLETE
 public function isGuardianIdentEnabled(Request $request)
 {
 			 $authToken = $request->headers->get('PHP_AUTH_USER');
