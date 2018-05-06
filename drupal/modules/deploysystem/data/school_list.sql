@@ -2,10 +2,10 @@
 -- version 4.5.4.1deb2ubuntu2
 -- http://www.phpmyadmin.net
 --
--- Φιλοξενητής: localhost
--- Χρόνος δημιουργίας: 09 Μαρ 2018 στις 00:01:36
--- Έκδοση διακομιστή: 5.7.21-0ubuntu0.16.04.1
--- Έκδοση PHP: 7.0.22-0ubuntu0.16.04.1
+-- Host: localhost
+-- Generation Time: May 06, 2018 at 03:31 PM
+-- Server version: 5.7.22-0ubuntu0.16.04.1
+-- PHP Version: 7.0.28-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,16 +17,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Βάση δεδομένων: `mydrupal`
+-- Database: `mydrupal`
 --
 
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `school_list`
+-- Table structure for table `school_list`
 --
 
-CREATE TABLE IF NOT EXISTS  `school_list` (
+CREATE TABLE IF NOT EXISTS `school_list` (
   `id` int(10) UNSIGNED NOT NULL,
   `uuid` varchar(128) CHARACTER SET ascii NOT NULL,
   `langcode` varchar(12) CHARACTER SET ascii NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS  `school_list` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='The base table for school_list entities.';
 
 --
--- Άδειασμα δεδομένων του πίνακα `school_list`
+-- Dumping data for table `school_list`
 --
 
 INSERT INTO `school_list` (`id`, `uuid`, `langcode`, `user_id`, `status`, `created`, `changed`, `registry_no`, `unit_type_id`, `name`, `unit_type`) VALUES
@@ -15108,4 +15108,6 @@ INSERT INTO `school_list` (`id`, `uuid`, `langcode`, `user_id`, `status`, `creat
 (15016, '4c017f8e-fa81-478e-b471-2b235e3da14d', 'el', 1, 1, 1520459597, 1520459597, '7191123', 1, 'ΙΔΙΩΤΙΚΟ ΣΥΣΤΕΓΑΖΟΜΕΝΟ ΝΗΠΙΑΓΩΓΕΙΟ - ΑΜΑΛΘΕΙΑ', 'ΝΗΠΙΑΓΩΓΕΙΟ'),
 (15017, 'e2324dd6-b50f-4b7d-9829-df7ac836278c', 'el', 1, 1, 1520459597, 1520459597, '7054163', 1, 'ΙΔΙΩΤΙΚΟ ΝΗΠΙΑΓΩΓΕΙΟ - ΠΑΡΑΣΚΕΥΟΥΔΗ - ΚΑΠΕΤΑΝΑΚΗ ΣΤΕΛΛΑ', 'ΝΗΠΙΑΓΩΓΕΙΟ'),
 (15018, 'e2324dd6-b50f-4b7d-9829-df7ac8360000', 'el', 1, 1, 1520459597, 1520459597, '0000000', 40, 'ΣΧΟΛΕΙΟ ΔΕΥΤΕΡΗΣ ΕΥΚΑΙΡΙΑΣ (ΣΔΕ)', 'ΣΔΕ'),
-(15019, 'e2324dd6-b50f-4b7d-9829-df7ac8368888', 'el', 1, 1, 1520459597, 1520459597, '0000000', 40, 'ΕΛΛΗΝΙΚΟ ΣΧΟΛΕΙΟ ΕΞΩΤΕΡΙΚΟΥ', 'ΕΞΩΤΕΡΙΚΟΥ');
+(15019, 'e2324dd6-b50f-4b7d-9829-df7ac8368888', 'el', 1, 1, 1520459597, 1520459597, '0000000', 40, 'ΕΛΛΗΝΙΚΟ ΣΧΟΛΕΙΟ ΕΞΩΤΕΡΙΚΟΥ', 'ΕΞΩΤΕΡΙΚΟΥ'),
+(15020, '82744b3c-e936-45f4-9764-5d4e4334011d', 'el', 1, 1, 1525424815, 1525424815, '0552004', 5, '1ο ΗΜΕΡΗΣΙΟ ΕΠΑΛ ΚΕΡΑΤΣΙΝΙ ΑΤΤΙΚΗΣ', 'ΕΠΑΓΓΕΛΜΑΤΙΚΟ ΛΥΚΕΙΟ'),
+(15021, 'eaea0080-ec23-497d-8841-666ce13156da', 'el', 1, 1, 1525424862, 1525424862, '1953001', 5, 'ΕΣΠΕΡΙΝΟ ΕΠΑ.Λ. ΚΑΛΑΜΑΡΙΑΣ', 'ΕΠΑΓΓΕΛΜΑΤΙΚΟ ΛΥΚΕΙΟ');

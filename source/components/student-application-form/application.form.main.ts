@@ -62,9 +62,9 @@ import {
     private numAppChildren: BehaviorSubject<number>;
     private numChildren: BehaviorSubject<number>;
     //private epalUserData$: BehaviorSubject<any>;
-    private wsIdentSub: Subscription;
+    //private wsIdentSub: Subscription;
     private wsEnabled:  BehaviorSubject<number>;
-    ;
+
 
     private myDatePickerOptions: IMyDpOptions = {
         // other options...
@@ -158,18 +158,14 @@ import {
 
         });
 
-        this.wsIdentSub = this.hds.isWS_ident_enabled().subscribe(z => {
-            this.wsEnabled.next(Number(z.res)) ;
-       });
+        //this.wsIdentSub = this.hds.isWS_ident_enabled().subscribe(z => {
+        //    this.wsEnabled.next(Number(z.res)) ;
+        //});
     };
 
     ngOnInit() {
         (<any>$("#applicationFormNotice")).appendTo("body");
         window.scrollTo(0, 0);
-
-
-        //this.wsEnabled=1;
-
 
         this.epalUserDataSub = this.hds.getApplicantUserData().subscribe(x => {
             //this.epalUserData$.next(x);
@@ -287,6 +283,14 @@ import {
          this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(linfo => {
+              //new piece of code
+              if (linfo.size > 0) {
+                  linfo.reduce(({ }, loginInfoObj) => {
+                      this.wsEnabled.next(loginInfoObj.ws_ident);
+                      return loginInfoObj;
+                  }, {});
+                }
+                //end new piece of code
                 this.loginInfo$.next(linfo);
           }, error => { console.log("error selecting loginInfo"); });
 
@@ -308,6 +312,7 @@ import {
         if (this.studentDataFieldsSub) this.studentDataFieldsSub.unsubscribe();
         if (this.datamodeSub) this.datamodeSub.unsubscribe();
         if (this.epalUserDataSub) this.epalUserDataSub.unsubscribe();
+        if (this.loginInfoSub) this.loginInfoSub.unsubscribe();
     }
 
     navigateBack() {

@@ -290,7 +290,7 @@ class GelSubmittedApplications extends ControllerBase
                     $gelStudentClasses = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $object->id()));
                     //$gelStudentClass = reset($gelStudentClasses);
 
-                    $this->logger->warning(sizeof($gelStudentClasses));
+                    //$this->logger->warning(sizeof($gelStudentClasses));
 
                     if (sizeof($gelStudentClasses) === 0/*!$gelStudentClass*/ && !$applicantsAppDelDisabled)
                          $canDelete = 1;

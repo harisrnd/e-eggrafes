@@ -2,10 +2,10 @@
 -- version 4.5.4.1deb2ubuntu2
 -- http://www.phpmyadmin.net
 --
--- Φιλοξενητής: localhost
--- Χρόνος δημιουργίας: 20 Απρ 2018 στις 15:36:29
--- Έκδοση διακομιστή: 5.7.21-0ubuntu0.16.04.1
--- Έκδοση PHP: 7.0.28-0ubuntu0.16.04.1
+-- Host: localhost
+-- Generation Time: May 06, 2018 at 03:28 PM
+-- Server version: 5.7.22-0ubuntu0.16.04.1
+-- PHP Version: 7.0.28-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,16 +17,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Βάση δεδομένων: `mydrupal`
+-- Database: `mydrupal`
 --
 
 -- --------------------------------------------------------
 
 --
--- Δομή πίνακα για τον πίνακα `eepal_sectors_in_epal_field_data`
+-- Table structure for table `eepal_sectors_in_epal_field_data`
 --
 
-CREATE TABLE IF NOT EXISTS  `eepal_sectors_in_epal_field_data` (
+CREATE TABLE IF NOT EXISTS `eepal_sectors_in_epal_field_data` (
   `id` int(10) UNSIGNED NOT NULL,
   `langcode` varchar(12) CHARACTER SET ascii NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL COMMENT 'The ID of the target entity.',
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS  `eepal_sectors_in_epal_field_data` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='The data table for eepal_sectors_in_epal entities.';
 
 --
--- Άδειασμα δεδομένων του πίνακα `eepal_sectors_in_epal_field_data`
+-- Dumping data for table `eepal_sectors_in_epal_field_data`
 --
 
 INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `name`, `epal_id`, `sector_id`, `capacity_class_sector`, `status`, `created`, `changed`, `default_langcode`, `approved_sector`, `approv_decision`, `approv_role`, `approvdate`) VALUES
@@ -307,7 +307,7 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (256, 'el', 1, 'record256', 64, 6, 0, 1, 1482308338, 1497421759, 1, 1, NULL, NULL, NULL),
 (257, 'el', 1, 'record257', 64, 8, 0, 1, 1482308338, 1497421807, 1, 1, NULL, NULL, NULL),
 (258, 'el', 1, 'record258', 64, 9, 0, 1, 1482308338, 1497421856, 1, 1, NULL, NULL, NULL),
-(260, 'el', 1, 'record260', 65, 2, 0, 1, 1482308338, 1497522131, 1, 1, NULL, NULL, NULL),
+(260, 'el', 1, 'record260', 68, 2, 0, 1, 1482308338, 1497522131, 1, 1, NULL, NULL, NULL),
 (261, 'el', 1, 'record261', 65, 8, 0, 1, 1482308338, 1497522135, 1, 1, NULL, NULL, NULL),
 (262, 'el', 1, 'record262', 65, 9, 0, 1, 1482308338, 1497525376, 1, 1, NULL, NULL, NULL),
 (263, 'el', 1, 'record263', 66, 2, 0, 1, 1482308338, 1497416040, 1, 1, NULL, NULL, NULL),
@@ -318,17 +318,14 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (268, 'el', 1, 'record268', 67, 6, 0, 1, 1482308338, 1497471130, 1, 1, NULL, NULL, NULL),
 (269, 'el', 1, 'record269', 67, 8, 0, 1, 1482308338, 1497471123, 1, 1, NULL, NULL, NULL),
 (270, 'el', 1, 'record270', 67, 9, 0, 1, 1482308338, 1497471142, 1, 1, NULL, NULL, NULL),
-(271, 'el', 1, 'record271', 68, 2, 0, 1, 1482308338, 1497423898, 1, 1, NULL, NULL, NULL),
 (272, 'el', 1, 'record272', 68, 5, 0, 1, 1482308338, 1497423906, 1, 1, NULL, NULL, NULL),
 (273, 'el', 1, 'record273', 68, 6, 0, 1, 1482308338, 1497423914, 1, 1, NULL, NULL, NULL),
-(274, 'el', 1, 'record274', 68, 9, 0, 1, 1482308338, 1497423926, 1, 1, NULL, NULL, NULL),
 (275, 'el', 1, 'record275', 69, 3, 0, 1, 1482308338, 1497430610, 1, 1, NULL, NULL, NULL),
 (276, 'el', 1, 'record276', 69, 4, 0, 1, 1482308338, 1497430617, 1, 1, NULL, NULL, NULL),
 (277, 'el', 1, 'record277', 69, 5, 0, 1, 1482308338, 1497430622, 1, 1, NULL, NULL, NULL),
 (278, 'el', 1, 'record278', 70, 5, 0, 1, 1482308338, 1497496383, 1, 1, NULL, NULL, NULL),
 (279, 'el', 1, 'record279', 70, 9, 0, 1, 1482308338, 1497496391, 1, 1, NULL, NULL, NULL),
 (280, 'el', 1, 'record280', 71, 2, 0, 1, 1482308338, 1497440254, 1, 1, NULL, NULL, NULL),
-(281, 'el', 1, 'record281', 71, 5, 0, 1, 1482308338, 1497440262, 1, 1, NULL, NULL, NULL),
 (282, 'el', 1, 'record282', 71, 6, 0, 1, 1482308338, 1497440268, 1, 1, NULL, NULL, NULL),
 (283, 'el', 1, 'record283', 71, 7, 0, 1, 1482308338, 1497440279, 1, 1, NULL, NULL, NULL),
 (284, 'el', 1, 'record284', 71, 8, 0, 1, 1482308338, 1497440286, 1, 1, NULL, NULL, NULL),
@@ -614,11 +611,11 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (564, 'el', 1, 'record564', 132, 5, 0, 1, 1482308338, 1497420363, 1, 1, NULL, NULL, NULL),
 (565, 'el', 1, 'record565', 132, 6, 0, 1, 1482308338, 1497420371, 1, 1, NULL, NULL, NULL),
 (566, 'el', 1, 'record566', 132, 8, 0, 1, 1482308338, 1497420440, 1, 1, NULL, NULL, NULL),
-(567, 'el', 1, 'record567', 132, 9, 0, 1, 1482308338, 1497420466, 1, 1, NULL, NULL, NULL);
-INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `name`, `epal_id`, `sector_id`, `capacity_class_sector`, `status`, `created`, `changed`, `default_langcode`, `approved_sector`, `approv_decision`, `approv_role`, `approvdate`) VALUES
+(567, 'el', 1, 'record567', 132, 9, 0, 1, 1482308338, 1497420466, 1, 1, NULL, NULL, NULL),
 (568, 'el', 1, 'record568', 133, 2, 0, 1, 1482308338, 1497427258, 1, 1, NULL, NULL, NULL),
 (569, 'el', 1, 'record569', 133, 3, 0, 1, 1482308338, 1497427265, 1, 1, NULL, NULL, NULL),
-(570, 'el', 1, 'record570', 133, 7, 0, 1, 1482308338, 1497427271, 1, 1, NULL, NULL, NULL),
+(570, 'el', 1, 'record570', 133, 7, 0, 1, 1482308338, 1497427271, 1, 1, NULL, NULL, NULL);
+INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `name`, `epal_id`, `sector_id`, `capacity_class_sector`, `status`, `created`, `changed`, `default_langcode`, `approved_sector`, `approv_decision`, `approv_role`, `approvdate`) VALUES
 (571, 'el', 1, 'record571', 134, 2, 0, 1, 1482308338, 1497472147, 1, 1, NULL, NULL, NULL),
 (572, 'el', 1, 'record572', 134, 7, 0, 1, 1482308338, 1497472158, 1, 1, NULL, NULL, NULL),
 (573, 'el', 1, 'record573', 135, 7, 0, 1, 1482308338, 1497413789, 1, 1, NULL, NULL, NULL),
@@ -682,11 +679,11 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (631, 'el', 1, 'record631', 150, 1, 0, 1, 1482308338, 1497517447, 1, 1, NULL, NULL, NULL),
 (632, 'el', 1, 'record632', 150, 2, 0, 1, 1482308338, 1497517455, 1, 1, NULL, NULL, NULL),
 (633, 'el', 1, 'record633', 150, 7, 0, 1, 1482308338, 1497518035, 1, 1, NULL, NULL, NULL),
-(634, 'el', 1, 'record634', 151, 2, 0, 1, 1482308338, 1497458267, 1, 1, NULL, NULL, NULL),
+(634, 'el', 1, 'record634', 159, 2, 0, 1, 1482308338, 1497458267, 1, 1, NULL, NULL, NULL),
 (635, 'el', 1, 'record635', 151, 4, 0, 1, 1482308338, 1497458273, 1, 1, NULL, NULL, NULL),
-(636, 'el', 1, 'record636', 151, 5, 0, 1, 1482308338, 1497458280, 1, 1, NULL, NULL, NULL),
+(636, 'el', 1, 'record636', 158, 5, 0, 1, 1482308338, 1497458280, 1, 1, NULL, NULL, NULL),
 (637, 'el', 1, 'record637', 151, 6, 0, 1, 1482308338, 1497458285, 1, 1, NULL, NULL, NULL),
-(638, 'el', 1, 'record638', 151, 8, 0, 1, 1482308338, 1497454630, 1, 1, NULL, NULL, NULL),
+(638, 'el', 1, 'record638', 159, 8, 0, 1, 1482308338, 1497454630, 1, 1, NULL, NULL, NULL),
 (639, 'el', 1, 'record639', 151, 9, 0, 1, 1482308338, 1497458298, 1, 1, NULL, NULL, NULL),
 (640, 'el', 1, 'record640', 152, 2, 0, 1, 1482308338, 1497420652, 1, 1, NULL, NULL, NULL),
 (641, 'el', 1, 'record641', 152, 8, 0, 1, 1482308338, 1497420662, 1, 1, NULL, NULL, NULL),
@@ -707,13 +704,8 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (656, 'el', 1, 'record656', 157, 2, 0, 1, 1482308338, 1497518604, 1, 1, NULL, NULL, NULL),
 (657, 'el', 1, 'record657', 157, 5, 0, 1, 1482308338, 1497518648, 1, 1, NULL, NULL, NULL),
 (658, 'el', 1, 'record658', 157, 6, 0, 1, 1482308338, 1497518677, 1, 1, NULL, NULL, NULL),
-(659, 'el', 1, 'record659', 158, 4, 0, 1, 1482308338, 1497414428, 1, 1, NULL, NULL, NULL),
-(660, 'el', 1, 'record660', 158, 5, 0, 1, 1482308338, 1497414443, 1, 1, NULL, NULL, NULL),
 (661, 'el', 1, 'record661', 158, 6, 0, 1, 1482308338, 1497414448, 1, 1, NULL, NULL, NULL),
-(662, 'el', 1, 'record662', 158, 9, 0, 1, 1482308338, 1497414452, 1, 1, NULL, NULL, NULL),
-(663, 'el', 1, 'record663', 159, 2, 0, 1, 1482308338, 1498214327, 1, 1, NULL, NULL, NULL),
-(664, 'el', 1, 'record664', 159, 3, 0, 1, 1482308338, 1498214334, 1, 1, NULL, NULL, NULL),
-(665, 'el', 1, 'record665', 159, 6, 0, 1, 1482308338, 1498214339, 1, 1, NULL, NULL, NULL),
+(664, 'el', 1, 'record664', 158, 3, 0, 1, 1482308338, 1498214334, 1, 1, NULL, NULL, NULL),
 (666, 'el', 1, 'record666', 159, 9, 0, 1, 1482308338, 1498214344, 1, 1, NULL, NULL, NULL),
 (667, 'el', 1, 'record667', 160, 3, 0, 1, 1482308338, 1497603686, 1, 1, NULL, NULL, NULL),
 (668, 'el', 1, 'record668', 160, 5, 0, 1, 1482308338, 1497603723, 1, 1, NULL, NULL, NULL),
@@ -853,7 +845,6 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (802, 'el', 1, 'record802', 188, 4, 0, 1, 1482308338, 1497421441, 1, 1, NULL, NULL, NULL),
 (803, 'el', 1, 'record803', 189, 2, 0, 1, 1482308338, 1497411067, 1, 1, NULL, NULL, NULL),
 (804, 'el', 1, 'record804', 189, 8, 0, 1, 1482308338, 1497411074, 1, 1, NULL, NULL, NULL),
-(805, 'el', 1, 'record805', 190, 8, 0, 1, 1482308338, 1497428112, 1, 1, NULL, NULL, NULL),
 (806, 'el', 1, 'record806', 191, 1, 0, 1, 1482308338, 1497471810, 1, 1, NULL, NULL, NULL),
 (807, 'el', 1, 'record807', 191, 2, 0, 1, 1482308338, 1497471834, 1, 1, NULL, NULL, NULL),
 (808, 'el', 1, 'record808', 191, 5, 0, 1, 1482308338, 1497471848, 1, 1, NULL, NULL, NULL),
@@ -1171,8 +1162,7 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (1121, 'el', 1, 'record1121', 270, 5, 0, 1, 1482308338, 1497438757, 1, 1, NULL, NULL, NULL),
 (1122, 'el', 1, 'record1122', 270, 6, 0, 1, 1482308338, 1498131336, 1, 1, NULL, NULL, NULL),
 (1123, 'el', 1, 'record1123', 270, 8, 0, 1, 1482308338, 1497438777, 1, 1, NULL, NULL, NULL),
-(1124, 'el', 1, 'record1124', 270, 9, 0, 1, 1482308338, 1497438782, 1, 1, NULL, NULL, NULL);
-INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `name`, `epal_id`, `sector_id`, `capacity_class_sector`, `status`, `created`, `changed`, `default_langcode`, `approved_sector`, `approv_decision`, `approv_role`, `approvdate`) VALUES
+(1124, 'el', 1, 'record1124', 270, 9, 0, 1, 1482308338, 1497438782, 1, 1, NULL, NULL, NULL),
 (1125, 'el', 1, 'record1125', 271, 1, 0, 1, 1482308338, 1497417047, 1, 1, NULL, NULL, NULL),
 (1126, 'el', 1, 'record1126', 271, 2, 0, 1, 1482308338, 1497417043, 1, 1, NULL, NULL, NULL),
 (1127, 'el', 1, 'record1127', 271, 5, 0, 1, 1482308338, 1497417050, 1, 1, NULL, NULL, NULL),
@@ -1180,7 +1170,8 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (1129, 'el', 1, 'record1129', 271, 8, 0, 1, 1482308338, 1497417058, 1, 1, NULL, NULL, NULL),
 (1130, 'el', 1, 'record1130', 271, 9, 0, 1, 1482308338, 1497417061, 1, 1, NULL, NULL, NULL),
 (1131, 'el', 1, 'record1131', 272, 1, 0, 1, 1482308338, 1497429863, 1, 1, NULL, NULL, NULL),
-(1132, 'el', 1, 'record1132', 272, 2, 0, 1, 1482308338, 1497430456, 1, 1, NULL, NULL, NULL),
+(1132, 'el', 1, 'record1132', 272, 2, 0, 1, 1482308338, 1497430456, 1, 1, NULL, NULL, NULL);
+INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `name`, `epal_id`, `sector_id`, `capacity_class_sector`, `status`, `created`, `changed`, `default_langcode`, `approved_sector`, `approv_decision`, `approv_role`, `approvdate`) VALUES
 (1133, 'el', 1, 'record1133', 272, 5, 0, 1, 1482308338, 1497430460, 1, 1, NULL, NULL, NULL),
 (1134, 'el', 1, 'record1134', 272, 6, 0, 1, 1482308338, 1497430225, 1, 1, NULL, NULL, NULL),
 (1135, 'el', 1, 'record1135', 272, 8, 0, 1, 1482308338, 1497430466, 1, 1, NULL, NULL, NULL),
@@ -1238,7 +1229,7 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (1187, 'el', 1, 'record1187', 283, 4, 0, 1, 1482308338, 1497428292, 1, 1, NULL, NULL, NULL),
 (1188, 'el', 1, 'record1188', 283, 5, 0, 1, 1482308338, 1497428305, 1, 1, NULL, NULL, NULL),
 (1189, 'el', 1, 'record1189', 283, 6, 0, 1, 1482308338, 1497428313, 1, 1, NULL, NULL, NULL),
-(1190, 'el', 1, 'record1190', 283, 8, 0, 1, 1482308338, 1497428347, 1, 1, NULL, NULL, NULL),
+(1190, 'el', 1, 'record1190', 285, 8, 0, 1, 1482308338, 1497428347, 1, 1, NULL, NULL, NULL),
 (1191, 'el', 1, 'record1191', 283, 9, 0, 1, 1482308338, 1497428396, 1, 1, NULL, NULL, NULL),
 (1192, 'el', 1, 'record1192', 284, 1, 0, 1, 1482308338, 1497425808, 1, 1, NULL, NULL, NULL),
 (1193, 'el', 1, 'record1193', 284, 2, 0, 1, 1482308338, 1497425817, 1, 1, NULL, NULL, NULL),
@@ -1246,7 +1237,6 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (1195, 'el', 1, 'record1195', 284, 9, 0, 1, 1482308338, 1497425836, 1, 1, NULL, NULL, NULL),
 (1196, 'el', 1, 'record1196', 285, 1, 0, 1, 1482308338, 1497420739, 1, 1, NULL, NULL, NULL),
 (1197, 'el', 1, 'record1197', 285, 2, 0, 1, 1482308338, 1497420747, 1, 1, NULL, NULL, NULL),
-(1198, 'el', 1, 'record1198', 285, 8, 0, 1, 1482308338, 1497420752, 1, 1, NULL, NULL, NULL),
 (1199, 'el', 1, 'record1199', 285, 9, 0, 1, 1482308338, 1497420761, 1, 1, NULL, NULL, NULL),
 (1200, 'el', 1, 'record1200', 286, 1, 0, 1, 1482308338, 1497455347, 1, 1, NULL, NULL, NULL),
 (1201, 'el', 1, 'record1201', 286, 2, 0, 1, 1482308338, 1497455353, 1, 1, NULL, NULL, NULL),
@@ -1390,7 +1380,6 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (1339, 'el', 1, 'record1339', 316, 9, 0, 1, 1482308338, 1497461371, 1, 1, NULL, NULL, NULL),
 (1340, 'el', 1, 'record1340', 317, 1, 0, 1, 1482308338, 1497423488, 1, 1, NULL, NULL, NULL),
 (1341, 'el', 1, 'record1341', 317, 2, 0, 1, 1482308338, 1497423494, 1, 1, NULL, NULL, NULL),
-(1342, 'el', 1, 'record1342', 317, 9, 0, 1, 1482308338, 1497427255, 1, 1, NULL, NULL, NULL),
 (1343, 'el', 1, 'record1343', 318, 1, 0, 1, 1482308338, 1497423350, 1, 1, NULL, NULL, NULL),
 (1344, 'el', 1, 'record1344', 318, 2, 0, 1, 1482308338, 1497423706, 1, 1, NULL, NULL, NULL),
 (1345, 'el', 1, 'record1345', 318, 3, 0, 1, 1482308338, 1497437405, 1, 1, NULL, NULL, NULL),
@@ -1718,8 +1707,7 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (1668, 'el', 1, 'record1668', 391, 1, 0, 1, 1482308338, 1497509131, 1, 1, NULL, NULL, NULL),
 (1669, 'el', 1, 'record1669', 391, 2, 0, 1, 1482308338, 1497509139, 1, 1, NULL, NULL, NULL),
 (1670, 'el', 1, 'record1670', 391, 5, 0, 1, 1482308338, 1497509143, 1, 1, NULL, NULL, NULL),
-(1671, 'el', 1, 'record1671', 391, 7, 0, 1, 1482308338, 1497509218, 1, 1, NULL, NULL, NULL);
-INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `name`, `epal_id`, `sector_id`, `capacity_class_sector`, `status`, `created`, `changed`, `default_langcode`, `approved_sector`, `approv_decision`, `approv_role`, `approvdate`) VALUES
+(1671, 'el', 1, 'record1671', 391, 7, 0, 1, 1482308338, 1497509218, 1, 1, NULL, NULL, NULL),
 (1672, 'el', 1, 'record1672', 391, 8, 0, 1, 1482308338, 1497515196, 1, 1, NULL, NULL, NULL),
 (1673, 'el', 1, 'record1673', 392, 8, 0, 1, 1482308338, 1497426732, 1, 1, NULL, NULL, NULL),
 (1674, 'el', 1, 'record1674', 393, 1, 0, 1, 1482308338, 1497423122, 1, 1, NULL, NULL, NULL),
@@ -1729,7 +1717,8 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (1678, 'el', 1, 'record1678', 393, 6, 0, 1, 1482308338, 1497423019, 1, 1, NULL, NULL, NULL),
 (1679, 'el', 1, 'record1679', 393, 8, 0, 1, 1482308338, 1497423037, 1, 1, NULL, NULL, NULL),
 (1680, 'el', 1, 'record1680', 393, 9, 0, 1, 1482308338, 1497423077, 1, 1, NULL, NULL, NULL),
-(1681, 'el', 1, 'record1681', 394, 1, 0, 1, 1482308338, 1497420259, 1, 1, NULL, NULL, NULL),
+(1681, 'el', 1, 'record1681', 394, 1, 0, 1, 1482308338, 1497420259, 1, 1, NULL, NULL, NULL);
+INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `name`, `epal_id`, `sector_id`, `capacity_class_sector`, `status`, `created`, `changed`, `default_langcode`, `approved_sector`, `approv_decision`, `approv_role`, `approvdate`) VALUES
 (1682, 'el', 1, 'record1682', 394, 5, 0, 1, 1482308338, 1497420266, 1, 1, NULL, NULL, NULL),
 (1683, 'el', 1, 'record1683', 394, 6, 0, 1, 1482308338, 1497420270, 1, 1, NULL, NULL, NULL),
 (1684, 'el', 1, 'record1684', 395, 1, 0, 1, 1482308338, 1498125891, 1, 1, NULL, NULL, NULL),
@@ -1777,4 +1766,6 @@ INSERT INTO `eepal_sectors_in_epal_field_data` (`id`, `langcode`, `user_id`, `na
 (1726, 'el', 1, 'record1726', 401, 1, 0, 1, 1482308338, 1498819202, 1, 1, NULL, NULL, NULL),
 (1727, 'el', 1, 'record1727', 401, 2, 0, 1, 1482308338, 1498819211, 1, 1, NULL, NULL, NULL),
 (1728, 'el', 1, 'record1728', 401, 6, 0, 1, 1482308338, 1498819256, 1, 1, NULL, NULL, NULL),
-(1729, 'el', 1, 'record1729', 401, 9, 0, 1, 1482308338, 1498819263, 1, 1, NULL, NULL, NULL);
+(1729, 'el', 1, 'record1729', 401, 9, 0, 1, 1482308338, 1498819263, 1, 1, NULL, NULL, NULL),
+(1730, 'el', 1, 'record1730', 190, 1, 0, 1, 1525426313, 1525426313, 1, 1, NULL, NULL, NULL),
+(1731, 'el', 1, 'record1731', 311, 9, 0, 1, 1525426341, 1525426341, 1, 1, NULL, NULL, NULL);

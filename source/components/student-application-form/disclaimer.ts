@@ -39,16 +39,22 @@ import { IAppState } from "../../store/store";
     <p align="left"><strong>Όροι και Προϋποθέσεις Συμμετοχής στην Ηλεκτρονική Υπηρεσία</strong></p>
 
 
-<p>Παρακαλώ, πριν προχωρήσετε στην υποβολή της Ηλεκτρονικής Δήλωσης Προτίμησης για την εγγραφή στα ΕΠΑΛ, διαβάστε με προσοχή και ενημερωθείτε
-για τις προϋποθέσεις και τις επιλογές που έχετε προκειμένου να αποκτήσετε απολυτήριο τίτλο και πτυχίο ή μόνο πτυχίο της ειδικότητας που επιθυμείτε.</p>
-
-<p>Επίσης πρέπει να γνωρίζετε ότι η Ηλεκτρονική Δήλωση Προτίμησης υπέχει θέση Υπ. Δήλωσης του ν. 1599/1986 (Α ́ 75)
-   και οφείλετε τα στοιχεία που καταχωρίζετε σε αυτή να είναι αληθή.
-   Η εφαρμογή πληρεί τις προδιαγραφές του γενικού κανονισμού προστασίας δεδομένων.
+<p>
+Παρακαλώ, πριν προχωρήσετε στην υποβολή της Ηλεκτρονικής Δήλωσης Προτίμησης για την εγγραφή στα ΕΠΑΛ,
+διαβάστε με προσοχή και ενημερωθείτε για τις προϋποθέσεις και τις επιλογές που έχετε προκειμένου να αποκτήσετε
+απολυτήριο τίτλο και πτυχίο ή μόνο πτυχίο της ειδικότητας που επιθυμείτε.
+</p>
+<p>
+Η Ηλεκτρονική Δήλωση Προτίμησης υπέχει θέση Υπ. Δήλωσης του ν. 1599/1986 (Α ́ 75).
+Δηλώνω υπεύθυνα ότι με τη συμμετοχή μου στην παρούσα διαδικασία αποδέχομαι πλήρως
+τους όρους και τις διαδικασίες εγγραφής στα δημόσια Λύκεια, έχω διαβάσει τις οδηγίες
+και δηλώνω την ορθότητα των προσωπικών μου στοιχείων, τα οποία θα καταχωρισθούν
+και θα τηρηθούν σύμφωνα με τις αρχές του κανονισμού προστασίας προσωπικών δεδομένων.
 </p>
 
 
-      <form novalidate [formGroup]="formGroup" #form>
+
+  <form novalidate [formGroup]="formGroup" #form>
       <p align="left"><strong> Νομοθεσία  </strong></p>
       <ul class="list-group">
       <li class="list-group-item isclickable evenout"  >
@@ -59,9 +65,9 @@ import { IAppState } from "../../store/store";
       </li>
       </ul>
 
-  <br>
-  <br>
-  <p align="left"><strong> Χρήσιμες Πληροφορίες  </strong></p>
+      <br>
+
+      <p align="left"><strong> Χρήσιμες Πληροφορίες  </strong></p>
       <ul class="list-group">
       <li class="list-group-item isclickable evenout"  >
           <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/infos.pdf" target="_blank">Ενημερωτικά Στοιχεία</a>
@@ -75,32 +81,42 @@ import { IAppState } from "../../store/store";
       </ul>
 
       <br>
-    <br>
-    <p align="left"><strong> Οδηγίες Ενημέρωσης  </strong></p>
-        <ul class="list-group">
+
+      <p align="left"><strong> Οδηγίες Ενημέρωσης  </strong></p>
+      <ul class="list-group">
         <!--
         <li class="list-group-item isclickable evenout"  >
             <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiessxoleio.pdf" target="_blank">Οδηγίες προς Διευθυντές ΕΠΑ.Λ. σχετικά με τα αποτελέσματα των Ηλεκτρονικών Δηλώσεων Προτίμησης</a>
         </li>
         -->
         <li class="list-group-item isclickable oddout"  >
-            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiesstudent.pdf" target="_blank">Οδηγίες ενημέρωσης μαθητών/μαθητριών σχετικά με το αποτέλεσμα της
-Ηλεκτρονικής τους Δήλωσης Προτίμησης
-για τα ΕΠΑ.Λ.</a>
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiesstudent.pdf" target="_blank">
+              Οδηγίες ενημέρωσης μαθητών/μαθητριών σχετικά με το αποτέλεσμα της
+              Ηλεκτρονικής τους Δήλωσης Προτίμησης για τα ΕΠΑ.Λ.</a>
         </li>
-
         </ul>
 
-          <div class="row" style="margin-top: 20px;">
+        <br>
+        <p align="left"><strong> Προτεινόμενοι φυλλομετρητές  </strong></p>
+        <ul class="list-group">
+        <li class="list-group-item oddout"  >
+            <a class="col-md-12" style="font-size: 0.8em; " target="_blank">
+              Firefox (v.47 και πάνω), Chrome (v.49 και πάνω), IE (v.11 και πάνω) , Edge (v.13 και πάνω), Safari (v.6 και πάνω).</a>
+        </li>
+        </ul>
+
+
+        <div class="row" style="margin-top: 20px;">
             <div class="col-md-1 ">
               <input type="checkbox" [checked]="disclaimerChecked | async"  formControlName="disclaimerChecked" >
             </div>
             <div class="col-md-9">
-              <label for="disclaimerChecked">Συμφωνώ με τα παραπάνω</label>
+              <label for="disclaimerChecked">Διάβασα και αποδέχομαι τους παραπάνω όρους</label>
             </div>
-          </div>
+        </div>
 
-         </form>
+    </form>
+
          <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
              <div class="col-md-6">
                  <button type="button" class="btn-primary btn-lg pull-left" (click)="navigateBack()">
