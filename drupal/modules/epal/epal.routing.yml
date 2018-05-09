@@ -412,3 +412,11 @@ epal.offlinecalculation:
     _controller: '\Drupal\epal\Controller\SmallClassDistribution::OffLineCalculationSmallClasses'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.school.report-capacity:
+  path: '/school/report-capacity'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportEpalCapacity'
+  requirements:
+    _user_is_logged_in: 'TRUE'

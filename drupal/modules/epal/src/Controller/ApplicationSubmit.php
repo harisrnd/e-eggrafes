@@ -130,40 +130,45 @@ class ApplicationSubmit extends ControllerBase
             ], Response::HTTP_FORBIDDEN);
         }
 
+        $second_period = $eggrafesConfig->activate_second_period->value;
+
         //έλεγχος πληρότητας τμήματος
-        $classIdChecked = $applicationForm[0]['currentclass'];
-        $secIdChecked = "-1";
-        if ($classIdChecked === "2")
-          $secIdChecked = $applicationForm[2]['sectorfield_id'];
-        else if ($classIdChecked === "3" || $classIdChecked === "4")
-          $secIdChecked =  $applicationForm[2]['coursefield_id'];
-        for ($i = 0; $i < sizeof($applicationForm[1]); $i++) {
-            $epalIdChecked = $applicationForm[1][$i]['epal_id'];
-            $retval = $this->isFull($epalIdChecked, $classIdChecked, $secIdChecked);
-            if ($retval !== self::NON_FULL_CLASS) {
-                if ($retval === self::FULL_CLASS) {
-                  $err_code = 9001;
-                  $schoolName = $this->retrieveSchoolName($epalIdChecked);
-                  if ($schoolName !== self::ERROR_DB)
+        if ($second_period === "1") {
+          $classIdChecked = $applicationForm[0]['currentclass'];
+          $secIdChecked = "-1";
+          if ($classIdChecked === "2")
+            $secIdChecked = $applicationForm[2]['sectorfield_id'];
+          else if ($classIdChecked === "3" || $classIdChecked === "4")
+            $secIdChecked =  $applicationForm[2]['coursefield_id'];
+          for ($i = 0; $i < sizeof($applicationForm[1]); $i++) {
+              $epalIdChecked = $applicationForm[1][$i]['epal_id'];
+              $retval = $this->isFull($epalIdChecked, $classIdChecked, $secIdChecked);
+              if ($retval !== self::NON_FULL_CLASS) {
+                  if ($retval === self::FULL_CLASS) {
+                    $err_code = 9001;
+                    $schoolName = $this->retrieveSchoolName($epalIdChecked);
+                    if ($schoolName !== self::ERROR_DB)
+                        return $this->respondWithStatus([
+                              "error_code" => $err_code,
+                              "school_name" => $schoolName
+                          ], Response::HTTP_OK);
+                    else {
+                      $err_code = 9002;
                       return $this->respondWithStatus([
                             "error_code" => $err_code,
-                            "school_name" => $schoolName
-                        ], Response::HTTP_OK);
-                  else {
+                        ], Response::HTTP_FORBIDDEN);
+                    }
+                  }
+                  else {  //if ($retval === self::ERROR_DB)  {
                     $err_code = 9002;
                     return $this->respondWithStatus([
                           "error_code" => $err_code,
                       ], Response::HTTP_FORBIDDEN);
                   }
                 }
-                else {  //if ($retval === self::ERROR_DB)  {
-                  $err_code = 9002;
-                  return $this->respondWithStatus([
-                        "error_code" => $err_code,
-                    ], Response::HTTP_FORBIDDEN);
-                }
-              }
-        }
+          }
+
+      }
         //τέλος ελέγχου πληρότητας
 
         $crypt = new Crypt();
@@ -212,7 +217,7 @@ class ApplicationSubmit extends ControllerBase
                 ], Response::HTTP_FORBIDDEN);
             }
 
-            $second_period = $eggrafesConfig->activate_second_period->value;
+            //$second_period = $eggrafesConfig->activate_second_period->value;
 
             $student = array(
                 'langcode' => 'el',

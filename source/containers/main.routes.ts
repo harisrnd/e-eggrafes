@@ -4,6 +4,7 @@ import DirectorClassCapacity from "../components/director/director-classcapacity
 import DirectorView from "../components/director/director-view";
 import DirectorViewGel from "../components/director/directorgel-view";
 import DirectorButtons from "../components/director/director.buttons";
+import DirectorReports from "../components/director/director-reports";
 import Home from "../components/home";
 import EduadminView from "../components/infoviews/eduadmin-view";
 import MergeSchools from "../components/mergeschools/mergeschools";
@@ -74,6 +75,8 @@ import EduadminGelView from "../components/infoviews/eduadmingel-view";
 import DirectorViewGym from "../components/director/directorgym-view";
 import SchoolGymAuthGuard from "../guards/schoolgym.auth.guard";
 
+import ReportCapacity from "../components/director/report-capacity";
+
 
 
 export const MainRoutes: Routes = [
@@ -101,6 +104,10 @@ export const MainRoutes: Routes = [
     { path: "school/directorgel-view", component: DirectorViewGel, canActivate: [SchoolGelAuthGuard, SchoolGelStudentsLockedGuard] },
     { path: "school/director-buttons", component: DirectorButtons, canActivate: [SchoolAuthGuard] },
     { path: "school/director-classcapacity", component: DirectorClassCapacity, canActivate: [SchoolAuthGuard, SchoolCapacityLockedGuard] },
+    { path: "school/director-reports", component: DirectorReports, canActivate: [SchoolAuthGuard] },
+
+    { path: "school/report-capacity", component: ReportCapacity, canActivate: [SchoolAuthGuard] },
+
     { path: "ministry/minister-view", component: MinisterView, canActivate: [MinistryAuthGuard] },
     { path: "school/school-type-selection", component: SchoolTypeSelectionDde, canActivate: [EduAdminAuthGuard] },
     { path: "ministry/minister-reports", component: MinisterReports, canActivate: [ReportsAuthGuard] },
@@ -159,12 +166,14 @@ export const MainDeclarations = [
     AfterSubmit,
     DirectorView,
     DirectorClassCapacity,
+    DirectorReports,
     MinisterView,
     MinisterReports,
     ReportAllStat,
     ReportGeneral,
     ReportUsers,
     ReportNoCapacity,
+    ReportCapacity,
     InformStudents,
     UpdatePromotion,
     MinisterSettings,

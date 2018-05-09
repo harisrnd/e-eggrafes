@@ -386,6 +386,31 @@ export class ReportsSchema {
         }
     };
 
+
+    reportEpalCapacity = {
+        actions: false,
+        fileName: "e-ΕΠΑΛ Χωρητικότητα Σχολικής Μονάδας",
+        pager: {
+            display: true,
+            perPage: 15
+        },
+        noDataMessage: "Δεν υπάρχουν δεδομένα που περιέχουν το κείμενο αναζήτησης",
+        columns: {
+            section: {
+                title: "Τάξη/Τομέας/Ειδικότητα",
+                width: "22%",
+                filter: false
+            },
+            capacity: {
+                title: "Χωρητικότητα",
+                width: "15%",
+                filter: false
+            }
+        }
+    };
+
+
+
     constructor() { }
 
 }

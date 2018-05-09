@@ -146,7 +146,7 @@ class CASLogin extends ControllerBase
     //        $gsnunitcode = substr($gsnunitcodedn, strpos($gsnunitcodedn, ";") + 1);
             $gsnunitcode = $filterAttribute('edupersonorgunitdn:gsnunitcode');
 
-
+            /*
             $this->logger->warning("gsnunitcode");
             $this->logger->warning($gsnunitcode);
             $this->logger->warning("gsnunitcode");
@@ -154,6 +154,7 @@ class CASLogin extends ControllerBase
             $this->logger->warning("umdobject");
             $this->logger->warning($umdobject);
             $this->logger->warning("umdobject");
+            */
 
 /* check if myschool account */
 
@@ -165,9 +166,6 @@ class CASLogin extends ControllerBase
             }
 
 /* end of checking myschool account */
-
-
-
 
             $userAssigned = $this->assignRoleToUser($gsnunitcode);
 

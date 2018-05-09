@@ -2,10 +2,10 @@
 -- version 4.5.4.1deb2ubuntu2
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: May 06, 2018 at 03:28 PM
--- Server version: 5.7.22-0ubuntu0.16.04.1
--- PHP Version: 7.0.28-0ubuntu0.16.04.1
+-- Φιλοξενητής: localhost
+-- Χρόνος δημιουργίας: 08 Μάη 2018 στις 11:53:29
+-- Έκδοση διακομιστή: 5.7.22-0ubuntu0.16.04.1
+-- Έκδοση PHP: 7.0.28-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `mydrupal`
+-- Βάση δεδομένων: `mydrupal`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `eepal_specialties_in_epal`
+-- Δομή πίνακα για τον πίνακα `eepal_specialties_in_epal`
 --
 
 CREATE TABLE IF NOT EXISTS `eepal_specialties_in_epal` (
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `eepal_specialties_in_epal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='The base table for eepal_specialties_in_epal entities.';
 
 --
--- Dumping data for table `eepal_specialties_in_epal`
+-- Άδειασμα δεδομένων του πίνακα `eepal_specialties_in_epal`
 --
 
 INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
@@ -2633,7 +2633,6 @@ INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (3159, '8b03ce05-7e81-477a-969c-e1c8647901dd', 'el'),
 (3160, 'cd96e277-6458-4834-9c5e-2c5012c06b88', 'el'),
 (3161, '1d8f199f-6be8-4e2e-8482-86e93c7f9547', 'el'),
-(3162, '0897e719-4ab2-4fbc-b176-1cf88e6efcd9', 'el'),
 (3163, 'cf50f3d0-f444-44d7-ad19-553c462f33ad', 'el'),
 (3164, 'c594b6cc-38ba-472e-808e-b6c17768e778', 'el'),
 (3165, 'd75d0c6e-cc17-472e-bdfb-376442742030', 'el'),

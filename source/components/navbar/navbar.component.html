@@ -15,7 +15,8 @@
                                         <a class="nav-link" [routerLink]="['/submited-preview']" [routerLinkActive]="['active']"><b>Υποβληθείσες δηλώσεις</b></a>
                                     </li>
                                 </div>
-                                <div *ngIf="(loginInfo$ | async).size > 0 && !(lockStudentsEpal | async)" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
+                                <!--&& !(lockStudentsEpal | async)-->
+                                <div *ngIf="(loginInfo$ | async).size > 0 " class="nav-item" [ngClass]="{active: path=='submited-preview'}">
                                     <li *ngIf="authRole=='director'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/director-view']" [routerLinkActive]="['active']"><b>Δηλώσεις Μαθητών</b></a>
                                     </li>
@@ -31,6 +32,11 @@
                                 <div *ngIf="(loginInfo$ | async).size > 0 && !(lockCapacity | async)" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
                                     <li *ngIf="authRole=='director'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/director-classcapacity']" [routerLinkActive]="['active']"><b>Δυναμική Τμημάτων</b></a>
+                                    </li>
+                                </div>
+                                <div *ngIf="(loginInfo$ | async).size > 0 " class="nav-item" [ngClass]="{active: path=='submited-preview'}">
+                                    <li *ngIf="authRole=='director'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/school/director-reports']" [routerLinkActive]="['active']"><b>Αναφορές</b></a>
                                     </li>
                                 </div>
 

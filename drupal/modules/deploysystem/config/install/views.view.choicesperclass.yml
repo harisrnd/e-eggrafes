@@ -1,0 +1,354 @@
+uuid: f25389b8-6535-4565-8d4b-e52b702e41e1
+langcode: el
+status: true
+dependencies:
+  config:
+    - user.role.administrator
+    - user.role.applicant
+    - user.role.authenticated
+  module:
+    - gel
+    - hal
+    - rest
+    - serialization
+    - user
+_core:
+  default_config_hash: f1LNdRo5oKx3XIzRx1RhDz9PEsZDSVohGJdnH84LYrE
+id: choicesperclass
+label: choicesperclass
+module: views
+description: ''
+tag: ''
+base_table: gel_class_choices
+base_field: id
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      access:
+        type: role
+        options:
+          role:
+            authenticated: authenticated
+            administrator: administrator
+            applicant: applicant
+      cache:
+        type: tag
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: none
+        options:
+          items_per_page: 0
+          offset: 0
+      style:
+        type: table
+      row:
+        type: fields
+      fields:
+        id:
+          id: id
+          table: gel_choices
+          field: id
+          relationship: choice_id
+          group_type: group
+          admin_label: ''
+          label: ID
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_integer
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: gel_choices
+          entity_field: id
+          plugin_id: field
+        name_1:
+          id: name_1
+          table: gel_choices
+          field: name
+          relationship: choice_id
+          group_type: group
+          admin_label: ''
+          label: 'όνομα επιλογής'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: gel_choices
+          entity_field: name
+          plugin_id: field
+      filters: {  }
+      sorts: {  }
+      title: choicesperclass
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships:
+        choice_id:
+          id: choice_id
+          table: gel_class_choices
+          field: choice_id
+          relationship: none
+          group_type: group
+          admin_label: 'Gel choices'
+          required: true
+          entity_type: gel_class_choices
+          entity_field: choice_id
+          plugin_id: standard
+      arguments:
+        choicetype:
+          id: choicetype
+          table: gel_choices
+          field: choicetype
+          relationship: choice_id
+          group_type: group
+          admin_label: ''
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: query_parameter
+          default_argument_options:
+            query_param: type_id
+            fallback: ''
+            multiple: and
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            items_per_page: 25
+            override: false
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          glossary: false
+          limit: 0
+          case: none
+          path_case: none
+          transform_dash: false
+          break_phrase: false
+          entity_type: gel_choices
+          entity_field: choicetype
+          plugin_id: string
+        class_id:
+          id: class_id
+          table: gel_class_choices
+          field: class_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: query_parameter
+          default_argument_options:
+            query_param: class_id
+            fallback: ''
+            multiple: and
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            items_per_page: 25
+            override: false
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: false
+          not: false
+          entity_type: gel_class_choices
+          entity_field: class_id
+          plugin_id: numeric
+      display_extenders: {  }
+    cache_metadata:
+      max-age: 0
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - user.roles
+      tags: {  }
+  rest_export_1:
+    display_plugin: rest_export
+    id: rest_export_1
+    display_title: 'REST export'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      path: choicesperclass/list
+      style:
+        type: serializer
+        options:
+          uses_fields: false
+          formats:
+            hal_json: hal_json
+            json: json
+      defaults:
+        style: false
+        row: false
+      row:
+        type: data_field
+        options:
+          field_options:
+            id:
+              alias: id
+              raw_output: true
+            name_1:
+              alias: name
+              raw_output: true
+      pager:
+        type: some
+        options:
+          items_per_page: 10
+          offset: 0
+      auth:
+        - basic_auth
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - request_format
+        - url
+        - user.roles
+      tags: {  }

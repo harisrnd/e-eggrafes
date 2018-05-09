@@ -1258,7 +1258,7 @@ class ReportsCreator extends ControllerBase
             $sCon->condition('eStudent.delapp', 0 , '=');
             $sCon->groupBy('eStudent.user_id');
             $sCon->addExpression('count(eStudent.user_id)', 'apps_count');
-            $sCon->having('count(eStudent.user_id)>5');                        
+            $sCon->having('count(eStudent.user_id)>5');
             $sCon->orderBy('apps_count', 'DESC');
             $applications = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -2077,5 +2077,137 @@ class ReportsCreator extends ControllerBase
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
+    public function makeReportEpalCapacity(Request $request)
+    {
+        try {
+            if (!$request->isMethod('GET')) {
+                 return $this->respondWithStatus([
+					              "message" => t("Method Not Allowed")
+				                  ], Response::HTTP_METHOD_NOT_ALLOWED);
+            }
+
+            //user validation
+            $authToken = $request->headers->get('PHP_AUTH_USER');
+            $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+            $user = reset($users);
+            if (!$user) {
+				          return $this->respondWithStatus([
+					               'message' => t("User not found"),
+				                   ], Response::HTTP_FORBIDDEN);
+            }
+            $schoolid = $user->init->value;
+            $this->logger->warning("School Id:" . $schoolid);
+
+            //user role validation
+            $roles = $user->getRoles();
+            $validRole = false;
+            foreach ($roles as $role) {
+                if ($role === "epal") {
+                    $validRole = true;
+                    break;
+                }
+            }
+            if (!$validRole) {
+				          return $this->respondWithStatus([
+					               'message' => t("User Invalid Role"),
+				                   ], Response::HTTP_FORBIDDEN);
+            }
+
+            $list = array();
+            //βρες το σχολείο
+            $sCon = $this->connection
+                ->select('eepal_school_field_data', 'eSchool')
+                ->fields('eSchool', array('id', 'name', 'capacity_class_a', 'operation_shift','registry_no'))
+                ->condition('eSchool.id', $schoolid, '=');
+            $epalSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+            $epalSchool = reset($epalSchools);
+
+            $schoolSectionColumn = array();
+            $capacityColumn = array();
+
+            //εύρεση αριθμού τμημάτων (χωρητικότητα) για κάθε τμήμα της Α' τάξης
+					   array_push($schoolSectionColumn, 'Α\' τάξη');
+					   array_push($capacityColumn, $epalSchool->capacity_class_a);
+
+            //εύρεση αριθμού τμημάτων (χωρητικότητα) για κάθε τομέα της Β' τάξης
+            $sCon = $this->connection
+					     ->select('eepal_sectors_in_epal_field_data', 'eSchool')
+               ->fields('eSchool', array('sector_id','capacity_class_sector'))
+                ->condition('eSchool.epal_id', $epalSchool->id, '=');
+            $sectorsInEpals = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+            foreach ($sectorsInEpals as $sectorsInEpal) {
+                $sCon = $this->connection
+						          ->select('eepal_sectors_field_data', 'eSectors')
+                      ->fields('eSectors', array('name'))
+                      ->condition('eSectors.id', $sectorsInEpal->sector_id, '=');
+                $sectorsNamesInEpals = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                foreach ($sectorsNamesInEpals as $sectorsNamesInEpal) {
+                      //array_push($schoolNameColumn, $epalSchool->name);
+                      array_push($schoolSectionColumn, 'Β\' τάξη / ' . $sectorsNamesInEpal->name );
+                      array_push($capacityColumn, $sectorsInEpal->capacity_class_sector);
+                  }   //end foreach sectorsNamesInEpals
+            }   //end foreach sectorsInEpal
+
+            //εύρεση αριθμού τμημάτων (χωρητικότητα) για κάθε ειδικότητα της Γ' τάξης
+            $sCon = $this->connection
+					       ->select('eepal_specialties_in_epal_field_data', 'eSchool')
+                 ->fields('eSchool', array('specialty_id', 'capacity_class_specialty'))
+                  ->condition('eSchool.epal_id', $epalSchool->id, '=');
+            $specialtiesInEpals = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+            foreach ($specialtiesInEpals as $specialtiesInEpal) {
+					         $sCon = $this->connection
+						            ->select('eepal_specialty_field_data', 'eSpecialties')
+                        ->fields('eSpecialties', array('name'))
+                        ->condition('eSpecialties.id', $specialtiesInEpal->specialty_id, '=');
+					          $specialtiesNamesInEpals = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                    foreach ($specialtiesNamesInEpals as $specialtiesNamesInEpal) {
+						             array_push($schoolSectionColumn, 'Γ\' τάξη / ' . $specialtiesNamesInEpal->name );
+						             array_push($capacityColumn, $specialtiesInEpal->capacity_class_specialty);
+                    }   //end foreach $specialtiesNamesInEpal
+              } //end foreach $specialtiesInEpals
+
+              //εύρεση αριθμού τμημάτων (χωρητικότητα) για κάθε ειδικότητα της Δ' τάξης
+              $sCon = $this->connection
+					          ->select('eepal_specialties_in_epal_field_data', 'eSchool')
+                    ->fields('eSchool', array('specialty_id', 'capacity_class_specialty_d'))
+                    ->condition('eSchool.epal_id', $epalSchool->id, '=');
+              $specialtiesInEpals = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+              foreach ($specialtiesInEpals as $specialtiesInEpal) {
+					           $sCon = $this->connection
+						            ->select('eepal_specialty_field_data', 'eSpecialties')
+                        ->fields('eSpecialties', array('name'))
+                        ->condition('eSpecialties.id', $specialtiesInEpal->specialty_id, '=');
+					          $specialtiesNamesInEpals = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                    foreach ($specialtiesNamesInEpals as $specialtiesNamesInEpal) {
+                        if ($epalSchool->operation_shift === "ΕΣΠΕΡΙΝΟ") {
+                            array_push($schoolSectionColumn, 'Δ\' τάξη / ' . $specialtiesNamesInEpal->name );
+                            array_push($capacityColumn, $specialtiesInEpal->capacity_class_specialty_d);
+                        }
+                    }   //end foreach $specialtiesNamesInEpal
+                } //end foreach $specialtiesInEpals
+
+              //εισαγωγή εγγραφών στο tableschema
+              for ($j = 0; $j < sizeof($schoolSectionColumn); $j++) {
+					           array_push($list, (object) array(
+                              'section' => str_replace(",", "", $schoolSectionColumn[$j]),
+						                  'capacity' => $capacityColumn[$j],
+					                   ));
+                }
+          //  } //end foreach school
+
+            return $this->respondWithStatus($list, Response::HTTP_OK);
+        } //end try
+
+        catch (\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            return $this->respondWithStatus([
+				          "message" => t("An unexpected problem occured during makeReportEpalCapacity Method")
+			             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
