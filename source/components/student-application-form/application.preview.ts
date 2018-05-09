@@ -276,20 +276,23 @@ import { LANGCOURSE_FIELDS_INITIAL_STATE } from "../../store/langcoursesfields/l
             .subscribe(gelclasses => {
                 let ecs = <IGelClassRecords>gelclasses;
                 ecs.reduce(({}, gelclass) => {
-                    if (gelclass.get("name") === "Α' Λυκείου - ΗΜΕΡΗΣΙΟ")
-                        this.classSelected = 1;
-                    else if (gelclass.get("name") === "Β' Λυκείου")
-                        this.classSelected = 2;
-                    else if (gelclass.get("name") === "Γ' Λυκείου")
-                        this.classSelected = 3;
-                    else if (gelclass.get("name") === "A' Λυκείου")
-                        this.classSelected = 4;
-                    else if (gelclass.get("name") === "B' Λυκείου")
-                        this.classSelected = 5;
-                    else if (gelclass.get("name") === "Γ' Λυκείου")
-                        this.classSelected = 6;
-                    else if (gelclass.get("name") === "Δ' Λυκείου")
-                        this.classSelected = 7;
+                    if (gelclass.get("selected")===true ){
+                        this.classSelected = gelclass.get("id");
+                    }
+                    // if (gelclass.get("name") === "Α' Λυκείου - ΗΜΕΡΗΣΙΟ")
+                    //     this.classSelected = 1;
+                    // else if (gelclass.get("name") === "Β' Λυκείου")
+                    //     this.classSelected = 2;
+                    // else if (gelclass.get("name") === "Γ' Λυκείου")
+                    //     this.classSelected = 3;
+                    // else if (gelclass.get("name") === "A' Λυκείου")
+                    //     this.classSelected = 4;
+                    // else if (gelclass.get("name") === "B' Λυκείου")
+                    //     this.classSelected = 5;
+                    // else if (gelclass.get("name") === "Γ' Λυκείου")
+                    //     this.classSelected = 6;
+                    // else if (gelclass.get("name") === "Δ' Λυκείου")
+                    //     this.classSelected = 7;
                     return gelclass;
                 }, {});
                 this.gelclasses$.next(ecs);

@@ -718,6 +718,7 @@ import { IAppState } from "../../store/store";
     deleteApplicationDo(): void {
         this.hideConfirmModal();
         this.showLoader$.next(true);
+        this.resetStore();
         this._hds.deleteApplication(this.applicationId, this.schooltype).then(data => {
             if (this.schooltype === "epal") {
               this.SubmitedUsersSub.unsubscribe();
@@ -751,6 +752,7 @@ import { IAppState } from "../../store/store";
             this.showErrorModal();
             console.log(err);
         });
+
     }
 
     public showConfirmModal(): void {
@@ -859,7 +861,7 @@ import { IAppState } from "../../store/store";
         }
         else if (class_id === "3" || class_id === "4" ){
             this.showLoader$.next(true);
-            console.log(this.EpalSubmittedDetails$.getValue()[0].currentcourse_id);
+            //console.log(this.EpalSubmittedDetails$.getValue()[0].currentcourse_id);
             this._rsa.getRegionSchools(parseInt(class_id), parseInt(this.EpalSubmittedDetails$.getValue()[0].currentcourse_id), true, false).then(()=>{
                 this.showLoader$.next(true);
                 for (let k=0; k < (this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen).length; k++)  {
