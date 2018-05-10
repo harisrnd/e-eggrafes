@@ -420,3 +420,11 @@ epal.school.report-capacity:
     _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportEpalCapacity'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.school.report-applications:
+  path: '/school/report-epal-applications'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportEpalApplications'
+  requirements:
+    _user_is_logged_in: 'TRUE'

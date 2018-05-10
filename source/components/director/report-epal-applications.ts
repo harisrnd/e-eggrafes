@@ -12,18 +12,16 @@ import { CsvCreator } from "../minister/csv-creator";
 import { ReportsSchema, TableColumn } from "../minister/reports-schema";
 
 @Component({
-    selector: "report-capacity",
+    selector: "report-epal-applications",
     template: `
 
     <div class="reports-container">
         <div class = "loading" *ngIf="validCreator == 0" ></div>
-        <h5>Δυναμική τμημάτων Σχολικής Μονάδας</h5>
+        <h5>Δηλώσεις μαθητών Σχολικής Μονάδας</h5>
         <button type="submit" class="btn btn-alert pull-right"  (click)="navigateBack()" > Επιστροφή</button>
 
         <div *ngIf="validCreator == 1 ">
-          <!--
-          <input #search class="search" type="text" placeholder="Αναζήτηση..." (keydown.enter)="onSearch(search.value)">
-          -->
+        <!--<input #search class="search" type="text" placeholder="Αναζήτηση..." (keydown.enter)="onSearch(search.value)">-->
           <div class="smart-table-container table table-hover table-striped" reportScroll>
             <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
           </div>
@@ -34,7 +32,7 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
    `
 })
 
-@Injectable() export default class ReportCapacity implements OnInit, OnDestroy {
+@Injectable() export default class ReportEpalApplications implements OnInit, OnDestroy {
 
     private generalReport$: BehaviorSubject<any>;
     private generalReportSub: Subscription;
@@ -77,8 +75,8 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
 
     createReport() {
         this.validCreator = 0;
-        let route = "/school/report-capacity/";
-        this.settings = this.reportSchema.reportEpalCapacity;
+        let route = "/school/report-epal-applications/";
+        this.settings = this.reportSchema.reportEpalApplications;
 
         this.generalReportSub = this._hds.makeEpalReports(route).subscribe(data => {
             this.generalReport$.next(data);
@@ -96,7 +94,7 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
             error => {
                 this.generalReport$.next([{}]);
                 this.validCreator = -1;
-                console.log("Error Getting ReportNoCapacity");
+                console.log("Error Getting ReportEpalApplications");
             });
 
     }

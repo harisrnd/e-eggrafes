@@ -69,7 +69,7 @@ import { IAppState } from "../../store/store";
                         <div class="row">
                             <div class="col-md-2 col-md-offset-1">
                                 <input #cb *ngIf = "(numSelected | async) !== 3 || epal$.get('selected')" type="checkbox" formControlName="{{ epal$.get('globalIndex') }}"
-                                (change)="saveSelected(cb.checked,i,j)" >
+                                (change)="saveSelected(cb.checked,i,j,epal$.get('epal_id'))" >
 
                              </div>
                             <div class="col-md-8  col-md-offset-1 isclickable">
@@ -383,7 +383,14 @@ import { IAppState } from "../../store/store";
         this.regionActive = ind;
     }
 
-    saveSelected(checked, i, j) {
+    saveSelected(checked, i, j, epalid) {
+        if (epalid === "69" && checked) {
+          this.modalHeader.next("modal-header-success");
+          this.modalTitle.next("Ενημέρωση Μεταφοράς Σχολείου");
+          this.modalText.next("Από το σχ. έτος 2018-19 το 1ο ΕΠΑΛ Χαλανδρίου μεταφέρεται από το Χαλάνδρι (Κ. Παλαμά & Ναυαρίνου 5) " +
+              "στην Αγία Παρασκευή (Παπαφλέσσα) και θα μετονομαστεί σε 2ο ΕΠΑΛ Αγίας Παρασκευής.");
+          this.showModal();
+        }
         this._rsa.saveRegionSchoolsSelected(checked, i, j, 0);
     }
 

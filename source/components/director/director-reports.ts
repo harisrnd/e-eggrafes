@@ -21,6 +21,9 @@ import { IAppState } from "../../store/store";
         <div *ngIf = "userRole == 'director' ">
             <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(0)"><i class="fa fa-file-text"></i> Δυναμική Τμημάτων</button>
         </div>
+        <div *ngIf = "userRole == 'director' ">
+            <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(1)"><i class="fa fa-file-text"></i> Δηλώσεις Μαθητών</button>
+        </div>
 
     </div>
 
@@ -32,8 +35,6 @@ import { IAppState } from "../../store/store";
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private loginInfoSub: Subscription;
     private apiEndPoint = API_ENDPOINT;
-    //private minedu_userName: string;
-    //private minedu_userPassword: string;
     private userRole: string;
 
     constructor(
@@ -43,8 +44,6 @@ import { IAppState } from "../../store/store";
         private router: Router
     ) {
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
-        //this.minedu_userName = "";
-        //this.userRole = DIRECTOR_ROLE;
     }
 
     ngOnInit() {
@@ -54,12 +53,8 @@ import { IAppState } from "../../store/store";
             .subscribe(loginInfo => {
                 if (loginInfo.size > 0) {
                     loginInfo.reduce(({}, loginInfoObj) => {
-                        //this.minedu_userName = loginInfoObj.minedu_username;
-                        //this.minedu_userPassword = loginInfoObj.minedu_userpassword;
                         if (loginInfoObj.auth_role === SCHOOL_ROLE ) {
                             this.userRole = loginInfoObj.auth_role;
-                            //this.minedu_userName = loginInfoObj.auth_token;
-                            //this.minedu_userPassword = loginInfoObj.auth_token;
                         }
                         return loginInfoObj;
                     }, {});
@@ -79,11 +74,10 @@ import { IAppState } from "../../store/store";
             //this.router.navigate(["/school/report-capacity", repId]);
             this.router.navigate(["/school/report-capacity"]);
         }
-        /*
         else if (repId === 1) {
-            this.router.navigate(["..."]);
+            this.router.navigate(["/school/report-epal-applications"]);
         }
-        */
+
     }
 
 }

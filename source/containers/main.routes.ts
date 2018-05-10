@@ -76,6 +76,7 @@ import DirectorViewGym from "../components/director/directorgym-view";
 import SchoolGymAuthGuard from "../guards/schoolgym.auth.guard";
 
 import ReportCapacity from "../components/director/report-capacity";
+import ReportEpalApplications from "../components/director/report-epal-applications";
 
 
 
@@ -107,6 +108,7 @@ export const MainRoutes: Routes = [
     { path: "school/director-reports", component: DirectorReports, canActivate: [SchoolAuthGuard] },
 
     { path: "school/report-capacity", component: ReportCapacity, canActivate: [SchoolAuthGuard] },
+    { path: "school/report-epal-applications", component: ReportEpalApplications, canActivate: [SchoolAuthGuard] },
 
     { path: "ministry/minister-view", component: MinisterView, canActivate: [MinistryAuthGuard] },
     { path: "school/school-type-selection", component: SchoolTypeSelectionDde, canActivate: [EduAdminAuthGuard] },
@@ -174,6 +176,7 @@ export const MainDeclarations = [
     ReportUsers,
     ReportNoCapacity,
     ReportCapacity,
+    ReportEpalApplications,
     InformStudents,
     UpdatePromotion,
     MinisterSettings,

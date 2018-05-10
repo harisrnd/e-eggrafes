@@ -19,7 +19,7 @@ import { IAppState } from "../store/store";
         <div [ngSwitch]="errorCode$ | async">
             <p class="text-danger" *ngSwitchCase="5001">Προέκυψε σφάλμα κατά την διαδικασία αυθεντικοποίησης σας.</p>
             <p class="text-danger" *ngSwitchCase="5002">Πρέπει να συνδεθείτε με λογαριασμό του Πανελλήνιου Σχολικού Δικτύου, για να χρησιμοποιήσετε την εφαρμογή.</p>
-            <p class="text-danger" *ngSwitchCase="5003">Πρέπει να συνδεθείτε με τον λογαριασμό που χρησιμοποιείτε για να συνδεθείτε στο Myschool, για να χρησιμοποιήσετε την εφαρμογή.</p>
+            <p class="text-danger" *ngSwitchCase="5003">Πρέπει να συνδεθείτε με τον λογαριασμό που χρησιμοποιείτε για να συνδεθείτε στο ΠΣΔ, για να χρησιμοποιήσετε την εφαρμογή.</p>
             <p class="text-danger" *ngSwitchCase="5004">Ο ρόλος που αντιστοιχεί στον λογαριασμό σας στο Πανελλήνιο Σχολικό Δίκτυο δεν επιτρέπεται να χρησιμοποιήσετε την εφαρμογή.</p>
             <p class="text-danger" *ngSwitchCase="5005">Προέκυψε σφάλμα κατά την διαδικασία αυθεντικοποίησης σας.</p>
             <p class="text-danger" *ngSwitchCase="6000">Προέκυψε σφάλμα κατά την διαδικασία αυθεντικοποίησης σας. <br/>Παρακαλώ συνδεθείτε χρησιμοποιώντας τα στοιχεία του λογαριασμού με τον οποίο συνδέεστε στο Myschool.</p>
@@ -46,9 +46,17 @@ import { IAppState } from "../store/store";
             </div>
 
             <br/><br/>
+            <!--
             <p>Θα ζητηθούν <i><strong>Όνομα Χρήστη</strong></i> και <i><strong>Κωδικός Πρόσβασης</strong></i> για τα οποία θα πρέπει να δοθούν αυτά που χρησιμοποιεί το σχολείο σας
               για την πρόσβαση στην υπηρεσία του myschool. Aν δεν γίνεται δεκτός ο κωδικός σας και εφόσον δοκιμάσετε και επιβεβαιώσετε την ορθότητα του
               στο <a href = "https:/myschool.sch.gr"> https://myschool.sch.gr</a> μπορείτε να αναφέρετε το πρόβλημα άμεσα στο Πανελλήνιο Σχολικό Δίκτυο με μήνυμα σας στο info@sch.gr.
+            </p>
+            -->
+            <p>Θα ζητηθούν <i><strong>Όνομα Χρήστη</strong></i> και <i><strong>Κωδικός Πρόσβασης</strong></i> για τα οποία θα πρέπει να δοθούν αυτά που χρησιμοποιεί το σχολείο σας
+              για την πρόσβαση στην <strong>υπηρεσία Ηλεκτρονικού Ταχυδρομείου του Πανελλήνιου Σχολικού Δικτύου - Επίσημος Λογαριασμός της Μονάδας</strong>.
+              Aν δεν γίνεται δεκτός ο κωδικός σας και εφόσον δοκιμάσετε και επιβεβαιώσετε την ορθότητα του
+              στο <a href = "http://www.sch.gr"> www.sch.gr</a> ή  στο <a href = "https://webmail.sch.gr"> https://webmail.sch.gr</a>
+              μπορείτε να αναφέρετε το πρόβλημα άμεσα στο Πανελλήνιο Σχολικό Δίκτυο με μήνυμα σας στο info@sch.gr.
             </p>
 
         </form>
@@ -57,7 +65,14 @@ import { IAppState } from "../store/store";
         <p align="left"><strong> Οδηγίες προς Διευθυντές</strong></p>
             <ul class="list-group">
             <li class="list-group-item isclickable evenout"  >
+                <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/MANUAL_epal_sxoleia.pdf" target="_blank">Οδηγίες προς Διευθυντές ΕΠΑ.Λ. σχετικά με τη Δήλωση της Δυναμικής της Σχολικής Μονάδας σε Αίθουσες</a>
+            </li>
+            <li class="list-group-item isclickable evenout"  >
                 <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiessxoleio.pdf" target="_blank">Οδηγίες προς Διευθυντές ΕΠΑ.Λ. σχετικά με τα αποτελέσματα των Ηλεκτρονικών Δηλώσεων Προτίμησης</a>
+            </li>
+            <li class="list-group-item isclickable evenout"  >
+                <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;"
+                href="../pdfs/files/odigiessxoleiogel.pdf" target="_blank">Οδηγίες προς Διευθυντές ΓΕ.Λ. σχετικά με τα αποτελέσματα των Ηλεκτρονικών Δηλώσεων Προτίμησης</a>
             </li>
             </ul>
 
