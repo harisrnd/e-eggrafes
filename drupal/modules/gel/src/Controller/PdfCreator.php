@@ -477,7 +477,7 @@ class PDFCreator extends ControllerBase {
         	->execute();
         $ElectiveCourses = \Drupal::entityTypeManager()->getStorage('gel_student_choices')->loadMultiple($result);
 
-        //$this->pdf->Ln();
+        $this->pdf->Ln();
         $this->pdf->SetFont($this->fontBold, '', $this->fontSizeRegular);
         $this->pdf->Cell(35, $height, $this->prepareString('Μάθημα Επιλογής'), 0, 'L');
         $this->pdf->Ln();

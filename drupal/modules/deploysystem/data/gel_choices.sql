@@ -2,10 +2,10 @@
 -- version 4.5.4.1deb2ubuntu2
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: May 06, 2018 at 03:30 PM
--- Server version: 5.7.22-0ubuntu0.16.04.1
--- PHP Version: 7.0.28-0ubuntu0.16.04.1
+-- Φιλοξενητής: localhost
+-- Χρόνος δημιουργίας: 10 Μάη 2018 στις 12:21:50
+-- Έκδοση διακομιστή: 5.7.22-0ubuntu0.16.04.1
+-- Έκδοση PHP: 7.0.28-0ubuntu0.16.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `mydrupal`
+-- Βάση δεδομένων: `mydrupal`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gel_choices`
+-- Δομή πίνακα για τον πίνακα `gel_choices`
 --
 
 CREATE TABLE IF NOT EXISTS `gel_choices` (
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `gel_choices` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='The base table for gel_choices entities.';
 
 --
--- Dumping data for table `gel_choices`
+-- Άδειασμα δεδομένων του πίνακα `gel_choices`
 --
 
 INSERT INTO `gel_choices` (`id`, `uuid`, `langcode`, `user_id`, `name`, `choicetype`, `status`, `created`, `changed`) VALUES
@@ -60,4 +60,4 @@ INSERT INTO `gel_choices` (`id`, `uuid`, `langcode`, `user_id`, `name`, `choicet
 (15, '50be4626-45ee-40d7-afee-eebf9e5135bc', 'el', 1, 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών', 'ΟΠ', 1, 1515488864, 1515488864),
 (16, '95e08266-2d72-4eb7-9f15-2c0c5de2474a', 'el', 1, 'Ομάδα Προσανατολισμού Θετικών Σπουδών', 'ΟΠ', 1, 1515488909, 1515488909),
 (17, 'e3de9dc8-15b5-47f8-a894-b2028e014e4f', 'el', 1, 'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής', 'ΟΠ', 1, 1515488970, 1515489678),
-(18, '7096e2ba-2aa2-4e95-9c01-8c7a8411676c', 'el', 1, 'Ιταλικά', 'ΞΓ', 1, 1525262325, 1525262761);
+(18, '7096e2ba-2aa2-4e95-9c01-8c7a8411676c', 'el', 1, 'Ιταλικά', NULL, 1, 1525262325, 1525943763);

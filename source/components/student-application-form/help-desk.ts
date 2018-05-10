@@ -91,9 +91,9 @@ import { IAppState } from "../../store/store";
     </div>
 
         <p style="text-align: left, font-size: 0.9em;">
-      <strong>Τηλ. Επικοινωνίας ΓΕΛ:</strong> 2103442034 (ώρες: 8:00 - 16:00)</p>
+      <strong>Τηλ. Επικοινωνίας ΓΕΛ:</strong> 2103443911 (ώρες: 8:00 - 16:00)</p>
         <p style="text-align: left, font-size: 0.9em;">
-      <strong>Τηλ. Επικοινωνίας ΕΠΑΛ:</strong> 2103442034, 2103443309, 2103442231, 2103442859 (ώρες: 8:00 - 16:00)</p>
+      <strong>Τηλ. Επικοινωνίας ΕΠΑΛ:</strong> 2103443913 (ώρες: 8:00 - 16:00)</p>
 
 
   <div id="mailsent" (onHidden)="onHidden('#mailsent')"

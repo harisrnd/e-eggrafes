@@ -157,7 +157,7 @@ class CBController extends ControllerBase
             //return new RedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
 
             return new TrustedRedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302);
-            
+
         } else {
             $this->logger->notice('schoolToken false');
             $response = new Response();
@@ -201,6 +201,7 @@ class CBController extends ControllerBase
             $currentTime = time();
 
             $hashId = hash("sha256", $taxis_userData['tin']);
+            //$hashId = $taxis_userData['tin'];
             $schoolUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('taxis_userid' => $hashId));
             //$schoolUsers = $this->entityTypeManager->getStorage('school_users')->loadByProperties(array('taxis_userid' => $taxis_userData['tin']));
             $schoolUser = reset($schoolUsers);
@@ -280,6 +281,7 @@ class CBController extends ControllerBase
                     unset($crypt);
 
                     $hashId = hash("sha256", $taxis_userData['tin']);
+                    //$hashId = $taxis_userData['tin'];
                     $schoolUser = $this->entityTypeManager()->getStorage('applicant_users')->create(array(
                         'langcode' => 'el',
                         'user_id' => $user->id(),

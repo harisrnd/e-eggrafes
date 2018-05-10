@@ -40,9 +40,9 @@ import { IAppState } from "../../store/store";
 
 
 <p>
-Παρακαλώ, πριν προχωρήσετε στην υποβολή της Ηλεκτρονικής Δήλωσης Προτίμησης για την εγγραφή στα ΕΠΑΛ,
+Παρακαλώ, πριν προχωρήσετε στην υποβολή της Ηλεκτρονικής Δήλωσης Προτίμησης για την εγγραφή σας,
 διαβάστε με προσοχή και ενημερωθείτε για τις προϋποθέσεις και τις επιλογές που έχετε προκειμένου να αποκτήσετε
-απολυτήριο τίτλο και πτυχίο ή μόνο πτυχίο της ειδικότητας που επιθυμείτε.
+απολυτήριο τίτλο και πτυχίο ή μόνο πτυχίο της ειδικότητας που επιθυμείτε στα ΕΠΑΛ ή απολυτήριο τίτλο στα ΓΕΛ.
 </p>
 <p>
 Η Ηλεκτρονική Δήλωση Προτίμησης υπέχει θέση Υπ. Δήλωσης του ν. 1599/1986 (Α ́ 75).
@@ -58,16 +58,28 @@ import { IAppState } from "../../store/store";
       <p align="left"><strong> Νομοθεσία  </strong></p>
       <ul class="list-group">
       <li class="list-group-item isclickable evenout"  >
-          <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypourgikh.pdf" target="_blank">Υπουργική Απόφαση - αριθμ. Φ1α/98933/Δ4</a>
+          <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypourgikh.pdf" target="_blank">Υπουργική Απόφαση - αριθμ. 10645/ΓΔ4/23-01-2018</a>
       </li>
       <li class="list-group-item isclickable oddout" >
-          <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/egkyklios.pdf" target="_blank">Εγκύκλιος του Υ.Π.Π.Ε.Θ.- αρ.πρωτ. 89047/ΓΔ4/26-05-2017 </a>
+          <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/egkyklios.pdf" target="_blank">Εγκύκλιος του Υ.Π.Π.Ε.Θ.- αρ.πρωτ. Φ1α/73611/Δ4/09-05-2018 </a>
       </li>
       </ul>
 
       <br>
 
-      <p align="left"><strong> Χρήσιμες Πληροφορίες  </strong></p>
+      <p align="left"><strong> Χρήσιμες Πληροφορίες για μαθητές ΓΕ.Λ. </strong></p>
+      <ul class="list-group">
+      <li class="list-group-item isclickable evenout"  >
+          <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/infosgel.pdf" target="_blank">Ενημερωτικά Στοιχεία</a>
+      </li>
+      <li class="list-group-item isclickable evenout"  >
+         <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="http://www.minedu.gov.gr/lykeio-2/to-thema-lykeio" target="_blank">Πληροφορίες για το Λύκειο </a>
+      </li>
+      </ul>
+
+      <br>
+
+      <p align="left"><strong> Χρήσιμες Πληροφορίες για μαθητές ΕΠΑ.Λ. </strong></p>
       <ul class="list-group">
       <li class="list-group-item isclickable evenout"  >
           <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/infos.pdf" target="_blank">Ενημερωτικά Στοιχεία</a>
@@ -82,17 +94,17 @@ import { IAppState } from "../../store/store";
 
       <br>
 
-      <p align="left"><strong> Οδηγίες Ενημέρωσης  </strong></p>
+      <p align="left"><strong> Οδηγίες Ενημέρωσης</strong></p>
       <ul class="list-group">
-        <!--
-        <li class="list-group-item isclickable evenout"  >
-            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiessxoleio.pdf" target="_blank">Οδηγίες προς Διευθυντές ΕΠΑ.Λ. σχετικά με τα αποτελέσματα των Ηλεκτρονικών Δηλώσεων Προτίμησης</a>
-        </li>
-        -->
         <li class="list-group-item isclickable oddout"  >
-            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiesstudent.pdf" target="_blank">
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold; " href="../pdfs/files/odigiesstudent.pdf"  target="_blank">
               Οδηγίες ενημέρωσης μαθητών/μαθητριών σχετικά με το αποτέλεσμα της
               Ηλεκτρονικής τους Δήλωσης Προτίμησης για τα ΕΠΑ.Λ.</a>
+        </li>
+        <li class="list-group-item isclickable oddout"  >
+        <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiesstudentgel.pdf" target="_blank">
+          Οδηγίες ενημέρωσης μαθητών/μαθητριών σχετικά με το αποτέλεσμα της
+          Ηλεκτρονικής τους Δήλωσης Προτίμησης για τα ΓΕ.Λ.</a>
         </li>
         </ul>
 
@@ -100,7 +112,7 @@ import { IAppState } from "../../store/store";
         <p align="left"><strong> Προτεινόμενοι φυλλομετρητές  </strong></p>
         <ul class="list-group">
         <li class="list-group-item oddout"  >
-            <a class="col-md-12" style="font-size: 0.8em; " target="_blank">
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold; " target="_blank">
               Firefox (v.47 και πάνω), Chrome (v.49 και πάνω), IE (v.11 και πάνω) , Edge (v.13 και πάνω), Safari (v.6 και πάνω).</a>
         </li>
         </ul>
