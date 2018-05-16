@@ -312,6 +312,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type)
                 }
                 if ($studentPerSchool) {
                     $list = array();
+                    $i = 0;
                     foreach ($studentPerSchool as $object) {
                       $this->logger ->warning($object ->nextclass->entity->get('id')->value ."nextclass");
                         if (($object ->nextclass->entity->get('id')->value === "1") || ($object ->nextclass->entity->get('id')->value === "4"))
@@ -341,8 +342,9 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type)
                                 "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
-
+                            $i++;
                             $list[] = array(
+                                'idnew' => $i,
                                 'id' => $object->id(),
                                 'name' => $name_decoded,
                                 'am' => $am_decoded,
@@ -1160,7 +1162,6 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                         $gelStudent = reset($gelStudents);
                         if (!$gelStudents) {
 
-                              $this->logger->warning($studentId."Baaaaa");
                             $studentIdNew = $studentId;
                             $choices = "";
                             $studentchoices = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id' => $studentId));

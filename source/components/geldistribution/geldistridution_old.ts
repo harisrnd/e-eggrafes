@@ -1,15 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs/Rx";
-import { HelperDataService } from "../../services/helper-data-service";
-import {
-    FormBuilder,
-    FormGroup,
-    FormControl,
-    FormArray,
-    Validators,
-} from '@angular/forms';
 
+import { HelperDataService } from "../../services/helper-data-service";
 
 @Component({
     selector: "gel-distribution",
@@ -37,7 +30,7 @@ import {
 
     <div class = "loading" *ngIf="(showLoader | async) === true"></div>
     <div style="min-height: 500px;">
-    <form [formGroup]="formGroup">
+    <form>
 
 
        <p style="margin-top: 20px; line-height: 2em;"> Στην παρακάτω λίστα βλέπετε τα γυμνάσια της περιοχής ευθύνης σας. Παρακαλώ
@@ -46,119 +39,183 @@ import {
        <li class="list-group-item isclickable" (click)="setActiveclass(1)">
           <div class="col-md-12"  [class.selectedout]="aclassActive === 1" > Ά Λυκείου  </div>
        </li>    
-      <div [hidden] ="aclassActive !== 1">   
-      <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Επιλέξτε Γυμνάσιο Προέλευσης</b></div>
-            <div class="col-md-11 offset-md-1">
-                
-                <select #secsel class="form-control"  
-                        (change)="setActiveRegion(secsel,1,1)">
-                    <option value="0"></option>
-                    <option *ngFor="let JuniorHighSchools$  of JuniorHighSchool$ | async; let i=index; let isOdd=odd; let isEven=even" [value]="JuniorHighSchools$.id"> {{JuniorHighSchools$.name}}</option>
-                </select>
-                </div>
-           <br>
-           <br>
-           <div class="list-group-item selectedout">
-                    <div class="col-md-2" style="   font-weight: bold;" >Επιλογή Όλων 
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
-                    </div>
-                    <div class="col-md-4" style="   font-weight: bold;" >
-                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div> 
-                      <div>Διεύθυνση Κατοικίας </div>
-                      
-                    </div>
-                    <div class="col-md-2 " style="   font-weight: bold;" >Τύπος Σχολείου</div>
-                    <div class="col-md-4 " style="font-weight: bold;">
-                            Σχολείο Τοποθέτησης
-                     </div>
-
-                     </div>
-                 
-                 
-                 <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
-                  class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
-                   style="margin: 0px 2px 0px 2px;"  [hidden]="calchidden(AllStudents$.idnew)" [class.changecolor]="AllStudents$.oldschool !== false">
-
-                    
-                    <div class="col-md-2 " >
-                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
-                   </div>
-
-                    <div class="col-md-4" style="   font-weight: bold;" >
-
-                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div> 
-                      <div>{{AllStudents$.regionaddress}}</div>
-                      <div>{{AllStudents$.regionarea}} </div>
-                      <div>{{AllStudents$.regiontk}}</div>
-                    </div>
-                    <div class="col-md-2 " style="   font-weight: bold;" >{{AllStudents$.school_type}}</div>
-                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-4 changecolor" style="font-weight: bold;">
-                            {{AllStudents$.oldschool}}
-                     </div>
-
-                     <div *ngIf="AllStudents$.oldschool !== true" class="col-md-4" style="font-weight: bold;">
-                           
-                     </div>
-                                     
-              
+        <div [hidden] ="aclassActive !== 1">   
+      <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Τα Γυμνάσια ευθύνης σας. </b></div>
+      <div *ngFor="let JuniorHighSchools$  of JuniorHighSchool$ | async; let i=index; let isOdd=odd; let isEven=even" >
+                <li class="list-group-item " [class.oddout]="isOdd" [class.evenout]="isEven" 
+                (click)="setActiveRegion(JuniorHighSchools$.id,1)"
+                 [class.selectedout]="regionActive === JuniorHighSchools$.id" >
+                <div class="row">
+                <div class="col-md-12">
+                   <h5>{{JuniorHighSchools$.name}}</h5>
                  </div>
- 
-     
+                 </div>
 
-                
-              
-         <div class="container selectedout">
-         <span class="border border-info">
-          <div class="form-group" class="row">
-         
-          Βρίσκεστε στη σελίδα:
-          <div class="col-1">
-           <input #pageno type="text" class="form-control" placeholder=".col-1" formControlName="pageno">
-          </div> 
-           απο  
-           <div class="col-1">
-           <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage">
-           </div> 
-           </div>
- 
-           
-             <br>
-             <nav aria-label="pagination">
-              <ul class="pagination justify-content-center">
-                <li class="page-item " >
-                  <button class="page-link"  (click)="prevpage(secsel)">Προηγούμενη</button>
-                </li>
-                <li class="page-item">
-                  <button class="page-link"  (click) ="nextpage(secsel) ">Επόμενη</button>
-                </li>
-              </ul>
-              
-            </nav>
-            </span>
-         </div>
-
-
-          <div style="width: 100%; color: #000000;">
-                 <p style="margin-top: 20px; line-height: 2em;"> Αφού έχετε επιλέξει τους μαθητες απο την παραπάνω λίστα, στη συνέχεια επιλέξτε το αντίστοιχο Λύκειο υποδοχής.</p>
+                 </li>
+                 <div *ngIf ="regionActive === JuniorHighSchools$.id" >
+                 <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε τους μαθητές που θέλετε να τοποθετήσετε σε κάποιο Λύκειο
+                 και στη συνέχεια επιλέξτε το αντίστοιχο Λυκειο.</p>
                  <label> Λύκειο Υποδοχής </label>
                    <select #highscsel class="form-control" (change)="confirmSchool(highscsel,1)" >
                         <option value="0"></option>
                         <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
                    </select>
-          </div>
                    <br>
                    <br>
-        
+                  <div class = "row selectedout" *ngIf ="regionActive === JuniorHighSchools$.id" style="margin: 0px 2px 0px 2px;">
+                     
+                     <div class="col-md-2" style="   font-weight: bold;" >Επιλογή Όλων 
 
-      </div>
+                       
+                         <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
+                       
+
+                     </div>
+                    <div class="col-md-2" style="   font-weight: bold;" >A/A Αίτησης</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >ΑΜ Μαθητη</div>
+                    
+                    <div class="col-md-3" style="   font-weight: bold;" >Διεύθυνση</div>
+                    <div class="col-md-3" style="   font-weight: bold;" >Τύπος Σχολείου</div>
+                
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >Περιοχή</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >ΤΚ</div>
+                   </div>
+                 <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
+                  class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
+                   style="margin: 0px 2px 0px 2px;">
+                    <div class="col-md-2 " *ngIf ="regionActive === JuniorHighSchools$.id">
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                   </div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.am}}</div>
+                    
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.school_type}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regionarea}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regiontk}}</div>
+                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-10 offset-md-2 changecolor" style="font-weight: bold;">
+                            {{AllStudents$.oldschool}}
+                     </div>
+                  
+                   
+                    
+                    <div  *ngIf="AllStudents$.oldschool === false" class="col-md-11 offset-md-1">
+                    
+                    </div>
+                 </div>
+                 </div>
+
+
+              
+       </div>
+       </div>
+       </div>
+
+   
+
+
+    <div style="font-weight: bold;">
+       <li class="list-group-item isclickable" (click)="setActiveclass(2)" (click)="setActiveRegion(0,2)">
+          <div class="col-md-12"  [class.selectedout]="aclassActive === 2" > Β Λυκείου  </div>
+       </li>    
+        <div [hidden] ="aclassActive !== 2">   
+                <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε τους μαθητές που θέλετε να τοποθετήσετε σε κάποιο Λύκειο
+                 και στη συνέχεια επιλέξτε το αντίστοιχο Λυκειο.</p>
+                 <label> Λύκειο Υποδοχής </label>
+                   <select #highscsel1 class="form-control" (change)="confirmSchool(highscsel1,2)" >
+                        <option value="0"></option>
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
+                   </select>
+                   <br>
+                   <br>
+                  <div class = "row selectedout" >
+                     <div class="col-md-2" style="   font-weight: bold;" ></div>
+                    <div class="col-md-2" style="   font-weight: bold;" >A/A Αίτησης</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >ΑΜ Μαθητη</div>
+                    
+                    <div class="col-md-3" style="   font-weight: bold;" >Διεύθυνση</div>
+                    <div class="col-md-3" style="   font-weight: bold;" >Τύπος Σχολείου</div>
+                
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >Περιοχή</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >ΤΚ</div>
+                   </div>
+                 <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
+                  class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
+                   style="margin: 0px 2px 0px 2px;">
+                   <div class="col-md-2 " >
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                   </div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.am}}</div>
+                    
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.school_type}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regionarea}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regiontk}}</div>
+                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-10 offset-md-2 changecolor" style="font-weight: bold;">
+                            {{AllStudents$.oldschool}}
+                    </div>
+                    <div  *ngIf="AllStudents$.oldschool === false" class="col-md-11 offset-md-1">
+                    
+                    </div>
+                 </div>
+
+        </div>
        </div>
 
 
+     <div style="font-weight: bold;">
+       <li class="list-group-item isclickable" (click)="setActiveclass(3)" (click)="setActiveRegion(0,3)">
+          <div class="col-md-12"  [class.selectedout]="aclassActive === 3" > Γ Λυκείου  </div>
+       </li>    
+        <div [hidden] ="aclassActive !== 3">   
+                <p style="margin-top: 20px; line-height: 2em;"> Παρακαλώ επιλέξτε τους μαθητές που θέλετε να τοποθετήσετε σε κάποιο Λύκειο
+                 και στη συνέχεια επιλέξτε το αντίστοιχο Λυκειο.</p>
+                 <label> Λύκειο Υποδοχής </label>
+                   <select #highscsel2 class="form-control" (change)="confirmSchool(highscsel2,3)" >
+                        <option value="0"></option>
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
+                   </select>
+                   <br>
+                   <br>
+                  <div class = "row selectedout" >
+                     <div class="col-md-2" style="   font-weight: bold;" ></div>
+                    <div class="col-md-2" style="   font-weight: bold;" >A/A Αίτησης</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >ΑΜ Μαθητη</div>
+                    
+                    <div class="col-md-3" style="   font-weight: bold;" >Διεύθυνση</div>
+                    <div class="col-md-3" style="   font-weight: bold;" >Τύπος Σχολείου</div>
+                
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >Περιοχή</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="   font-weight: bold;" >ΤΚ</div>
+                   </div>
+                 <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
+                  class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
+                   style="margin: 0px 2px 0px 2px;">
+                   <div class="col-md-2 " >
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                   </div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.id}}</div>
+                    <div class="col-md-2" style="   font-weight: bold;" >{{AllStudents$.am}}</div>
+                    
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.regionaddress}}</div>
+                    <div class="col-md-3 " style="   font-weight: bold;" >{{AllStudents$.school_type}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regionarea}}</div>
+                    <div class="col-md-3 offset-md-6 col-md-offset-right-3" style="font-weight: bold;" >{{AllStudents$.regiontk}}</div>
+                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-10 offset-md-2 changecolor" style="font-weight: bold;">
+                            {{AllStudents$.oldschool}}
+                    </div>
+                    <div  *ngIf="AllStudents$.oldschool === false" class="col-md-11 offset-md-1">
+                    
+                    </div>
+                 </div>
 
+        </div>
+       </div>
 
-
-  
 
       </form>
     </div>
@@ -169,7 +226,7 @@ import {
 })
 
 @Injectable() export default class GelDistribution implements OnInit, OnDestroy {
-    public formGroup: FormGroup;
+
     private JuniorHighSchool$: BehaviorSubject<any>;
     private JuniorHighSchoolSub: Subscription;
     private HighSchool$: BehaviorSubject<any>;
@@ -193,16 +250,12 @@ import {
     //private SelectAllIdsnew: Array<any>=[];
     private selall:boolean;
     private aclassActive = <number>-1;
-    private pageno = 1;
-    private pageNew = 1;
-    private tot_pages = 1;
 
 
 
 
     constructor(
         private _hds: HelperDataService,
-        private fb: FormBuilder,
            ) {
         this.JuniorHighSchool$ = new BehaviorSubject([{}]);
         this.HighSchool$ = new BehaviorSubject([{}]);
@@ -214,11 +267,6 @@ import {
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
         this.modalHeader = new BehaviorSubject("");
-        this.formGroup = this.fb.group({
-            maxpage:[{value: '', disabled: true}, []],
-            pageno:[{value: '', disabled: true}, []],
-        });
-
        
     }
 
@@ -244,51 +292,27 @@ import {
             });
     }
 
-     setActiveRegion(ind,type, changed) {
-       
-       if (changed === 1)
-       {
-         this.pageno = 1;
-         this.tot_pages = 0;
-       }
-
-
-       ind = ind.value;
+     setActiveRegion(ind,type) {
+      
+       console.log(this.aclassActive,"aaaaaaa1" );
        this.selall = false;
        this.selections = [];
         console.log(this.selall);
         this.StudentsPerSchool$.next([{}]);
-        if (ind === this.regionActive && ind !== 0 && changed === 1) {
+        if (ind === this.regionActive && ind !== 0) {
             ind = -1;
             this.regionActive = ind;
         }
         else {
-
             this.regionActive = ind;
             this.showLoader.next(true);
-
-           this.formGroup.get('pageno').setValue(this.pageno); 
-      
-              
-               this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type)
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type)
 
                 .subscribe(data => {
-                    console.log("first", this.pageno);
                     this.StudentsPerSchool$.next(data);
-                    if (this.pageno == 1){
-                    this.tot_pages = data.length %3;
-                    if (data.length%3 >0)
-                        this.tot_pages = (data.length - (data.length%3))/3 +1;
-                    else
-                      this.tot_pages = data.length /3;
-                    if (this.tot_pages == 0)
-                        this.tot_pages = 1;
-                    this.formGroup.get('maxpage').setValue(this.tot_pages);
-                     
-                   }
-                   this.pageNew = this.pageno;
                     if (this.selall === true)
                     {
+                     console.log("mphke", this.selections);
                     
                     this.SelectAllIds = this.StudentsPerSchool$.getValue();
                        for (let i = 0; i < this.SelectAllIds.length; i++) {
@@ -314,10 +338,9 @@ import {
                     
                     this.showLoader.next(false);
                 });
-        
+        }
     
   }
-}
 
    confirmSchool( selection,type)
    {
@@ -484,12 +507,11 @@ selectall()
                     this.StudentsPerSchool$.next(data);
                     if (this.selall === true)
                     {
-                     
+                     console.log("mphke", this.selections);
                     
                     this.SelectAllIds = this.StudentsPerSchool$.getValue();
                        for (let i = 0; i < this.SelectAllIds.length; i++) {
-                         if (this.SelectAllIds[i].idnew >= (this.pageNew-1)*3 + 1 && this.SelectAllIds[i].idnew <= this.pageNew*3)
-                            this.selections[i] = this.SelectAllIds[i].id;
+                        this.selections[i] = this.SelectAllIds[i].id;
                         }
                       }
                       else
@@ -540,38 +562,5 @@ selectall()
     public hideModal(): void {
         (<any>$("#informationfeedback")).modal("hide");
     }
-
-
-
-    calchidden(idn)
-    {
-      
-         if (idn < (this.pageNew-1)*3 + 1 || idn > this.pageNew*3)
-            return true;
-         else
-             return false;
-      
-    }
-
-    nextpage(secsel)
-    {
-      if (this.pageno === this.tot_pages) 
-       return;  
-
-        this.pageno = this.pageno + 1;
-       this.setActiveRegion(secsel,1,0)
-      
-    }
-
-
-    prevpage(secsel)
-    {
-      if (this.pageno ===1) 
-        return;  
-      this.pageno = this.pageno - 1;
-      this.setActiveRegion(secsel,1,0)
-
-    }
-
 
 }
