@@ -146,6 +146,9 @@ class CASLogin extends ControllerBase
             //$gsnunitcode = substr($gsnunitcodedn, strpos($gsnunitcodedn, ";") + 1);
             $gsnunitcode = $filterAttribute('edupersonorgunitdn:gsnunitcode');
 
+            $this->logger->warning("casuser");
+            $this->logger->warning($CASUser);
+            $this->logger->warning("casuser");
 
             $this->logger->warning("gsnunitcode");
             $this->logger->warning($gsnunitcode);

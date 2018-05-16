@@ -530,6 +530,22 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
                     }
 
+                    if (this.guardianEnabled.getValue() === 1 && (aitisiObj[0].websrv_cu_surname === null || aitisiObj[0].websrv_cu_surname === "") ) {
+                      let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
+                      let mText = "Δεν έχει δηλωθεί Κηδεμόνας στο Πληροφοριακό Σύστημα του Σχολείου. " +
+                        "Παρακαλείστε να επικοινωνήσετε με το σχολείο όπου φοιτά τώρα το παιδί για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καταχωρηθεί στο Πληροφοριακό Σύστημα του Σχολείου (myschοol) όπως είναι καταχωρημένο στην εφορία. " +
+                        "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
+                      let mHeader = "modal-header-danger";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal();
+                      (<any>$(".loading")).remove();
+
+                      this.showLoader.next(false);
+                      return;
+                    }
+
                     if (this.guardianEnabled.getValue() === 1 && aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
                       let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
                       let mText = "Ο Κηδεμόνας που έχει δηλωθεί στο Πληροφοριακό Σύστημα του Σχολείου έχει ΔΙΑΦΟΡΕΤΙΚΑ στοιχεία από το χρήστη που έχει κάνει είσοδο σε αυτό το σύστημα μέσω των κωδικών του taxisnet. " +
@@ -812,6 +828,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         this.router.navigate(["/student-application-form-main"]);
     }
 
+    /*
     private levelNametoClass($level)
     {
         switch ($level){
@@ -828,6 +845,27 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             default:
                 return -1;
        }
+    }
+    */
+
+    private levelNametoClass($level)
+    {
+
+        if ($level=="Α" || $level=="Α-ΛΥΚ"){
+            return 1;
+        }
+        else if($level=="Β" || $level=="Β-ΛΥΚ"){
+            return 2;
+        }
+        else if($level=="Γ" || $level=="Γ-ΛΥΚ"|| $level=="Γ (ΠΑΛΑΙΑ)"|| $level=="Γ-ΛΥΚ (ΠΑΛΑΙΑ)"){
+            return 3
+        }
+        else if($level=="Δ" || $level=="Δ-ΛΥΚ"|| $level=="Δ (ΠΑΛΑΙΑ)"|| $level=="Δ-ΛΥΚ (ΠΑΛΑΙΑ)"){
+            return 4;
+        }
+        else{
+            return -1;
+        }
     }
 
 }

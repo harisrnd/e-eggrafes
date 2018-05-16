@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Φιλοξενητής: localhost
--- Χρόνος δημιουργίας: 08 Μάη 2018 στις 11:53:07
+-- Χρόνος δημιουργίας: 11 Μάη 2018 στις 11:29:46
 -- Έκδοση διακομιστή: 5.7.22-0ubuntu0.16.04.1
 -- Έκδοση PHP: 7.0.28-0ubuntu0.16.04.1
 
@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Δομή πίνακα για τον πίνακα `eepal_sectors_in_epal`
 --
 
-CREATE TABLE IF NOT EXISTS  `eepal_sectors_in_epal` (
+CREATE TABLE IF NOT EXISTS `eepal_sectors_in_epal` (
   `id` int(10) UNSIGNED NOT NULL,
   `uuid` varchar(128) CHARACTER SET ascii NOT NULL,
   `langcode` varchar(12) CHARACTER SET ascii NOT NULL
@@ -166,8 +166,6 @@ INSERT INTO `eepal_sectors_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (128, '639a630f-0ee1-4ae6-af6f-23abc45679f127', 'el'),
 (129, '639a630f-0ee1-4ae6-af6f-23abc45679f128', 'el'),
 (130, '639a630f-0ee1-4ae6-af6f-23abc45679f129', 'el'),
-(131, '639a630f-0ee1-4ae6-af6f-23abc45679f130', 'el'),
-(132, '639a630f-0ee1-4ae6-af6f-23abc45679f131', 'el'),
 (133, '639a630f-0ee1-4ae6-af6f-23abc45679f132', 'el'),
 (134, '639a630f-0ee1-4ae6-af6f-23abc45679f133', 'el'),
 (135, '639a630f-0ee1-4ae6-af6f-23abc45679f134', 'el'),
@@ -373,7 +371,6 @@ INSERT INTO `eepal_sectors_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (339, '639a630f-0ee1-4ae6-af6f-23abc45679f338', 'el'),
 (340, '639a630f-0ee1-4ae6-af6f-23abc45679f339', 'el'),
 (341, '639a630f-0ee1-4ae6-af6f-23abc45679f340', 'el'),
-(342, '639a630f-0ee1-4ae6-af6f-23abc45679f341', 'el'),
 (343, '639a630f-0ee1-4ae6-af6f-23abc45679f342', 'el'),
 (344, '639a630f-0ee1-4ae6-af6f-23abc45679f343', 'el'),
 (345, '639a630f-0ee1-4ae6-af6f-23abc45679f344', 'el'),
@@ -982,11 +979,11 @@ INSERT INTO `eepal_sectors_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (954, '639a630f-0ee1-4ae6-af6f-23abc45679f953', 'el'),
 (955, '639a630f-0ee1-4ae6-af6f-23abc45679f954', 'el'),
 (956, '639a630f-0ee1-4ae6-af6f-23abc45679f955', 'el'),
-(957, '639a630f-0ee1-4ae6-af6f-23abc45679f956', 'el');
-INSERT INTO `eepal_sectors_in_epal` (`id`, `uuid`, `langcode`) VALUES
+(957, '639a630f-0ee1-4ae6-af6f-23abc45679f956', 'el'),
 (958, '639a630f-0ee1-4ae6-af6f-23abc45679f957', 'el'),
 (959, '639a630f-0ee1-4ae6-af6f-23abc45679f958', 'el'),
-(960, '639a630f-0ee1-4ae6-af6f-23abc45679f959', 'el'),
+(960, '639a630f-0ee1-4ae6-af6f-23abc45679f959', 'el');
+INSERT INTO `eepal_sectors_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (961, '639a630f-0ee1-4ae6-af6f-23abc45679f960', 'el'),
 (962, '639a630f-0ee1-4ae6-af6f-23abc45679f961', 'el'),
 (963, '639a630f-0ee1-4ae6-af6f-23abc45679f962', 'el'),
