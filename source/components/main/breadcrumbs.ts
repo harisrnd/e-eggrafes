@@ -35,14 +35,14 @@ import { DataModeActions } from "../../actions/datamode.actions";
     ngOnInit() {
         this.currentUrl = this._router.url;
 
-        this.appStatusTxt = "Νέα Δήλωση Προτίμησης";
+        this.appStatusTxt = "Νέα Αίτηση Εγγραφής - Δήλωση Προτίμησης";
         this.datamodeSub = this._ngRedux.select("datamode")
             .map(datamode => <IDataModeRecords>datamode)
             .subscribe(ecs => {
                 if (ecs.size > 0) {
                     ecs.reduce(({}, datamode,i) => {
                         if (datamode.get("app_update") === true) {
-                            this.appStatusTxt = "Τροποποίηση Δήλωσης Προτίμησης";
+                            this.appStatusTxt = "Τροποποίηση Αίτησης Εγγραφής -Δήλωσης Προτίμησης";
                         }
                         return datamode;
                     }, {});

@@ -210,6 +210,8 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
         this.classActive=this.formGroup.value.classId;
         this._cfe.initElectiveCourseFields();
         this._ogs.initOrientationGroup();
+        this._lcfa.initLangCourseFields();
+
 
         //Πρεπει να γινουν init και τα 2 καθε φορα
         //π.χ. επιλεγει αρχικα Γ - Εσπερινο και διαλεγεις ΟΠ

@@ -141,11 +141,14 @@ class CASLogin extends ControllerBase
             $umdobject = $filterAttribute("umdobject");
 
             phpCAS::trace($umdobject);
-//            phpCAS::trace($physicaldeliveryofficename);
-    //        $gsnunitcodedn = $filterAttribute('edupersonorgunitdn:gsnunitcode:extended');
-    //        $gsnunitcode = substr($gsnunitcodedn, strpos($gsnunitcodedn, ";") + 1);
+            //phpCAS::trace($physicaldeliveryofficename);
+            //$gsnunitcodedn = $filterAttribute('edupersonorgunitdn:gsnunitcode:extended');
+            //$gsnunitcode = substr($gsnunitcodedn, strpos($gsnunitcodedn, ";") + 1);
             $gsnunitcode = $filterAttribute('edupersonorgunitdn:gsnunitcode');
 
+            $this->logger->warning("casuser");
+            $this->logger->warning($CASUser);
+            $this->logger->warning("casuser");
 
             $this->logger->warning("gsnunitcode");
             $this->logger->warning($gsnunitcode);
@@ -155,19 +158,26 @@ class CASLogin extends ControllerBase
             $this->logger->warning($umdobject);
             $this->logger->warning("umdobject");
 
-/* check if myschool account */
 
+            /* check if myschool account */
+            /*
             if (!$umdobject || $umdobject !== "ISaccount") {
                 return $this->redirectForbidden($configRowName, '5003');
             }
             if (!$gsnunitcode || $gsnunitcode !== $CASUser) {
                 return $this->redirectForbidden($configRowName, '5003');
             }
+            */
+            /* end of checking myschool account */
 
-/* end of checking myschool account */
-
-
-
+            /* check if account is not myschool account */
+            if (!$umdobject || $umdobject !== "Account") {
+                return $this->redirectForbidden($configRowName, '5003');
+            }
+            //if (!$gsnunitcode || $gsnunitcode !== $CASUser) {
+            //    return $this->redirectForbidden($configRowName, '5003');
+            //}
+            /* end of checking  account */
 
             $userAssigned = $this->assignRoleToUser($gsnunitcode);
 

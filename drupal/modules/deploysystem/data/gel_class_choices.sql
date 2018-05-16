@@ -1,4 +1,47 @@
+-- phpMyAdmin SQL Dump
+-- version 4.5.4.1deb2ubuntu2
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: May 06, 2018 at 03:30 PM
+-- Server version: 5.7.22-0ubuntu0.16.04.1
+-- PHP Version: 7.0.28-0ubuntu0.16.04.1
 
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `mydrupal`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gel_class_choices`
+--
+
+CREATE TABLE IF NOT EXISTS `gel_class_choices` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `uuid` varchar(128) CHARACTER SET ascii NOT NULL,
+  `langcode` varchar(12) CHARACTER SET ascii NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL COMMENT 'The ID of the target entity.',
+  `name` varchar(50) DEFAULT NULL,
+  `class_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'The ID of the target entity.',
+  `choice_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'The ID of the target entity.',
+  `status` tinyint(4) NOT NULL,
+  `created` int(11) DEFAULT NULL,
+  `changed` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='The base table for gel_class_choices entities.';
+
+--
+-- Dumping data for table `gel_class_choices`
+--
 
 INSERT INTO `gel_class_choices` (`id`, `uuid`, `langcode`, `user_id`, `name`, `class_id`, `choice_id`, `status`, `created`, `changed`) VALUES
 (1, 'e6571599-9f05-4f55-bcfc-ecc3ad9f0602', 'el', 1, 'record1', 1, 1, 1, 1515490432, 1515490432),
@@ -31,4 +74,6 @@ INSERT INTO `gel_class_choices` (`id`, `uuid`, `langcode`, `user_id`, `name`, `c
 (28, 'cdc4a5c3-76a7-42d9-98bb-9100c845d827', 'el', 1, 'record28', 3, 11, 1, 1515494793, 1515494793),
 (29, '8af1d0d1-c863-4045-8841-554ed310e7ad', 'el', 1, 'record29', 3, 12, 1, 1515494811, 1515494811),
 (30, 'fc604bd2-c237-45ad-88b2-8c85d255c566', 'el', 1, 'record30', 3, 13, 1, 1515494836, 1515494836),
-(31, 'a58d7b17-277f-4b1e-8f21-c725fc326357', 'el', 1, 'record31', 3, 14, 1, 1515494856, 1515494856);
+(31, 'a58d7b17-277f-4b1e-8f21-c725fc326357', 'el', 1, 'record31', 3, 14, 1, 1515494856, 1515494856),
+(32, 'd8e88698-0ab7-4313-93d3-3edeb307e53e', 'el', 1, 'record32', 1, 18, 1, 1525262413, 1525262413),
+(33, 'bb19ae09-6467-4586-9c92-a9f34581e7e2', 'el', 1, 'record33', 4, 18, 1, 1525262517, 1525262517);

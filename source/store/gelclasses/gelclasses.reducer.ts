@@ -26,15 +26,21 @@ export function gelclassesReducer(state: IGelClassRecords = GELCLASSES_INITIAL_S
 
         case GELCLASSES_SAVE_WITHIDS:
         return state.withMutations(function(list) {
-            const indexOfListingToUpdate = list.findIndex(listing => {
-                return listing.get('id') === action.payload.new_selected_choice_id;});
 
-            list.setIn([indexOfListingToUpdate, "selected"], true);
+            if (action.payload.new_selected_choice_id > 0){
 
-            const indexOfListingToUpdate2 = list.findIndex(listing => {
-                return listing.get('id') === action.payload.selected_id;});
+                const indexOfListingToUpdate = list.findIndex(listing => {
+                    return listing.get('id') === action.payload.new_selected_choice_id;});
 
-            list.setIn([indexOfListingToUpdate2, "selected"], false);
+                list.setIn([indexOfListingToUpdate, "selected"], true);
+            }
+            
+            if (action.payload.selected_id > 0){
+                const indexOfListingToUpdate2 = list.findIndex(listing => {
+                    return listing.get('id') === action.payload.selected_id;});
+
+                list.setIn([indexOfListingToUpdate2, "selected"], false);
+            }
         });
 
         case GELCLASSES_RESET:

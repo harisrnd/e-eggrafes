@@ -401,6 +401,9 @@ export class HelperDataService implements OnInit, OnDestroy {
             "lock_application_epal": parseInt(userlogin.lock_application_epal),
             "lock_application_gel": parseInt(userlogin.lock_application_gel),
             "disclaimer_checked": parseInt(userlogin.disclaimer_checked),
+
+            "ws_ident": parseInt(userlogin.ws_ident),
+            "guardian_ident": parseInt(userlogin.guardian_ident),
         });
         return rsa;
 
@@ -704,6 +707,29 @@ export class HelperDataService implements OnInit, OnDestroy {
                 .map(response => response.json());
         }
 
+        /*
+        else if (routepath === "/school/report-capacity/") {
+            console.log("Test..");
+            console.log(`${AppSettings.API_ENDPOINT}` + routepath);
+            return this.http.get(`${AppSettings.API_ENDPOINT}` + routepath , options)
+                .map(response => response.json());
+        }
+        */
+
+    }
+
+    makeEpalReports(routepath)
+    {
+      let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+      this.createAuthorizationHeader(headers);
+      let options = new RequestOptions({ headers: headers });
+
+      if (routepath === "/school/report-capacity/" || routepath === "/school/report-epal-applications/") {
+          return this.http.get(`${AppSettings.API_ENDPOINT}` + routepath , options)
+              .map(response => response.json());
+      }
     }
 
     informUnlocatedStudents(username, userpassword, unallocated, period) {

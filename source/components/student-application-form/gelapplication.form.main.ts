@@ -66,7 +66,7 @@ import {
     private numChildren: BehaviorSubject<number>;
     //private gelUserData$: BehaviorSubject<any>;
     private activeClassId = -1;
-    private wsIdentSub: Subscription;
+    //private wsIdentSub: Subscription;
     private wsEnabled:  BehaviorSubject<number>;
 
     private myDatePickerOptions: IMyDpOptions = {
@@ -180,10 +180,9 @@ import {
             am: ["", [Validators.required]],
         });
 
-        this.wsIdentSub = this.hds.isWS_ident_enabled().subscribe(z => {
-            this.wsEnabled.next(Number(z.res)) ;
-            //console.log(this.wsEnabled.getValue());
-       });
+        //this.wsIdentSub = this.hds.isWS_ident_enabled().subscribe(z => {
+        //    this.wsEnabled.next(Number(z.res)) ;
+        //});
 
     };
 
@@ -222,6 +221,7 @@ import {
                               this.lastSchName.next("");
 
                               if (this.wsEnabled.getValue()===0){
+
                                 this.studentDataGroup.controls["name"].setValue(studentDataField.get("name"));
                                 this.studentDataGroup.controls["studentsurname"].setValue(studentDataField.get("studentsurname"));
                                 this.studentDataGroup.controls["fatherfirstname"].setValue(studentDataField.get("fatherfirstname"));
@@ -321,6 +321,14 @@ import {
          this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(linfo => {
+              //new piece of code
+              if (linfo.size > 0) {
+                  linfo.reduce(({ }, loginInfoObj) => {
+                      this.wsEnabled.next(loginInfoObj.ws_ident);
+                      return loginInfoObj;
+                  }, {});
+                }
+                //end new piece of code
                 this.loginInfo$.next(linfo);
           }, error => { console.log("error selecting loginInfo"); });
 
@@ -342,6 +350,7 @@ import {
         if (this.studentDataFieldsSub) this.studentDataFieldsSub.unsubscribe();
         if (this.datamodeSub) this.datamodeSub.unsubscribe();
         if (this.gelUserDataSub) this.gelUserDataSub.unsubscribe();
+        if (this.loginInfoSub) this.loginInfoSub.unsubscribe();
     }
 
     navigateBack() {
@@ -363,7 +372,7 @@ import {
             this.modalHeader.next("modal-header-danger");
             this.modalTitle.next("Η δήλωση προτίμησης δεν είναι πλήρης");
             if (invalidFlag === 1 || invalidFlag === 2)
-                this.modalText.next("Πρέπει να συμπληρώσετε όλα τα πεδία που συνοδεύονται από (*). Η ημερομηνία γέννησης του μαθητή δεν είναι επιτρεπόμενη για μαθητή ΕΠΑΛ.");
+                this.modalText.next("Πρέπει να συμπληρώσετε όλα τα πεδία που συνοδεύονται από (*). Η ημερομηνία γέννησης του μαθητή δεν είναι επιτρεπόμενη για μαθητή ΓΕΛ.");
             else if (invalidFlag === 3)
                 this.modalText.next("Πρέπει να συμπληρώσετε όλα τα πεδία που συνοδεύονται από (*). Το σχολείο τελευταίας φοίτησης πρέπει να αναζητηθεί και να επιλεχθεί από τα αποτελέσματα της αναζήτησης.");
             else if (invalidFlag === 4)

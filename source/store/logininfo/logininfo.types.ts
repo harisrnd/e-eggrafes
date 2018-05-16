@@ -17,6 +17,8 @@ export interface ILoginInfoObj {
     lock_application_epal: number;
     lock_application_gel: number;
     disclaimer_checked: number;
+    ws_ident: number;
+    guardian_ident: number;
 }
 
 export interface ILoginInfoRecord extends TypedRecord<ILoginInfoRecord>, ILoginInfoObj { };

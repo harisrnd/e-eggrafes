@@ -386,6 +386,73 @@ export class ReportsSchema {
         }
     };
 
+
+    reportEpalCapacity = {
+        actions: false,
+        fileName: "e-ΕΠΑΛ Χωρητικότητα Σχολικής Μονάδας",
+        pager: {
+            display: true,
+            perPage: 15
+        },
+        noDataMessage: "Δεν υπάρχουν δεδομένα που περιέχουν το κείμενο αναζήτησης",
+        columns: {
+            section: {
+                title: "Τάξη/Τομέας/Ειδικότητα",
+                width: "22%",
+                filter: false
+            },
+            capacity: {
+                title: "Χωρητικότητα",
+                width: "15%",
+                filter: false
+            }
+        }
+    };
+
+    reportEpalApplications = {
+        actions: false,
+        fileName: "e-ΕΠΑΛ Δηλώσεις μαθητών Σχολικής Μονάδας",
+        pager: {
+            display: true,
+            perPage: 15
+        },
+        noDataMessage: "Δεν υπάρχουν δεδομένα που περιέχουν το κείμενο αναζήτησης",
+        columns: {
+            section: {
+                title: "Τάξη/Τομέας/Ειδικότητα",
+                width: "22%",
+                filter: true
+            },
+            name: {
+                title: "Όνομα",
+                width: "15%",
+                filter: true
+            },
+            surname: {
+                title: "Επώνυμο",
+                width: "15%",
+                filter: true
+            },
+            address: {
+                title: "Διεύθυνση",
+                width: "15%",
+                filter: true
+            },
+            tel: {
+                title: "Τηλέφωνο",
+                width: "15%",
+                filter: true
+            },
+            confirm: {
+                title: "Επιβεβαίωση",
+                width: "15%",
+                filter: true
+            }
+        }
+    };
+
+
+
     constructor() { }
 
 }

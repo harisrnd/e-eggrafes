@@ -758,17 +758,28 @@ class GelApplicationSubmit extends ControllerBase
               return 1026;
             }
         }
+
         //από Γυμνάσιο
         //Προσοχή! Δεν αντιμετωπίζουμε τα Γυμνάσια με Λυκειακες Τάξεις
         //if ($student["lastschool_unittypeid"] == "3"   && $student["nextclass"] != 1 && $student["nextclass"] != 4)  {
           //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 2 Ή 7");
         //  return 1026;
         //}
+
         //από ΕΠΑΛ
-        if ($student["lastschool_unittypeid"] == "5"   && $student["nextclass"] != 2 && $student["nextclass"] != 6)  {
+        //if ($student["lastschool_unittypeid"] == "5"   && $student["nextclass"] != 2 && $student["nextclass"] != 6
+        //  &&  (!isNight )  )
+        // {
           //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 14 Ή 15");
-          return 1026;
-        }
+        //  return 1026;
+        //}
+
+        //if ($student["lastschool_unittypeid"] == "5"   && $student["nextclass"] != 2 && $student["nextclass"] != 6
+        //  &&  $student["nextclass"] != 4  )
+        // {
+          //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 14 Ή 15");
+        //  return 1026;
+        //}
 
         // check if application exists in eithe gel_student or epal_student entity
         if (/*$student['second_period'] == 1 &&*/ $applicantUser !== null && $appUpdate == false) {

@@ -1,4 +1,46 @@
+-- phpMyAdmin SQL Dump
+-- version 4.5.4.1deb2ubuntu2
+-- http://www.phpmyadmin.net
+--
+-- Φιλοξενητής: localhost
+-- Χρόνος δημιουργίας: 10 Μάη 2018 στις 12:21:50
+-- Έκδοση διακομιστή: 5.7.22-0ubuntu0.16.04.1
+-- Έκδοση PHP: 7.0.28-0ubuntu0.16.04.1
 
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Βάση δεδομένων: `mydrupal`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Δομή πίνακα για τον πίνακα `gel_choices`
+--
+
+CREATE TABLE IF NOT EXISTS `gel_choices` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `uuid` varchar(128) CHARACTER SET ascii NOT NULL,
+  `langcode` varchar(12) CHARACTER SET ascii NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL COMMENT 'The ID of the target entity.',
+  `name` varchar(60) DEFAULT NULL,
+  `choicetype` varchar(50) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL,
+  `created` int(11) DEFAULT NULL,
+  `changed` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='The base table for gel_choices entities.';
+
+--
+-- Άδειασμα δεδομένων του πίνακα `gel_choices`
+--
 
 INSERT INTO `gel_choices` (`id`, `uuid`, `langcode`, `user_id`, `name`, `choicetype`, `status`, `created`, `changed`) VALUES
 (1, '93f9f8a4-bbf9-486e-8d21-07629ac3edf0', 'el', 1, 'Αγγλικά', 'ΞΓ', 1, 1515488381, 1515488381),
@@ -17,4 +59,5 @@ INSERT INTO `gel_choices` (`id`, `uuid`, `langcode`, `user_id`, `name`, `choicet
 (14, 'f7dc6628-f122-44a4-b995-98c39c703280', 'el', 1, 'Αρχές Οργάνωσης και Διοίκησης Υπηρεσιών', 'ΕΠΙΛΟΓΗ', 1, 1515488798, 1515488798),
 (15, '50be4626-45ee-40d7-afee-eebf9e5135bc', 'el', 1, 'Ομάδα Προσανατολισμού Ανθρωπιστικών Σπουδών', 'ΟΠ', 1, 1515488864, 1515488864),
 (16, '95e08266-2d72-4eb7-9f15-2c0c5de2474a', 'el', 1, 'Ομάδα Προσανατολισμού Θετικών Σπουδών', 'ΟΠ', 1, 1515488909, 1515488909),
-(17, 'e3de9dc8-15b5-47f8-a894-b2028e014e4f', 'el', 1, 'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής', 'ΟΠ', 1, 1515488970, 1515489678);
+(17, 'e3de9dc8-15b5-47f8-a894-b2028e014e4f', 'el', 1, 'Ομάδα Προσανατολισμού Σπουδών Οικονομίας και Πληροφορικής', 'ΟΠ', 1, 1515488970, 1515489678),
+(18, '7096e2ba-2aa2-4e95-9c01-8c7a8411676c', 'el', 1, 'Ιταλικά', NULL, 1, 1525262325, 1525943763);

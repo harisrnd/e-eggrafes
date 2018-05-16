@@ -16,10 +16,10 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
         <p align="left"><strong> Νομοθεσία  </strong></p>
         <ul class="list-group">
         <li class="list-group-item isclickable evenout"  >
-            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypourgikh.pdf" target="_blank">Υπουργική Απόφαση - αριθμ. Φ1α/98933/Δ4</a>
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypourgikh.pdf" target="_blank">Υπουργική Απόφαση - αριθμ. 10645/ΓΔ4/23-01-2018</a>
         </li>
         <li class="list-group-item isclickable oddout" >
-            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/egkyklios.pdf" target="_blank">Εγκύκλιος του Υ.Π.Π.Ε.Θ.- αρ.πρωτ. 89047/ΓΔ4/26-05-2017 </a>
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/egkyklios.pdf" target="_blank">Εγκύκλιος του Υ.Π.Π.Ε.Θ.- αρ.πρωτ. Φ1α/73611/Δ4/09-05-2018 </a>
         </li>
         </ul>
 
@@ -60,13 +60,13 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
         <ul class="list-group">
         <div *ngIf="hasvalue  == true">
         <li class="list-group-item isclickable evenout"  >
-            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" 
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;"
             href="../pdfs/files/odigiessxoleiogel.pdf" target="_blank">Οδηγίες προς Διευθυντές ΓΕ.Λ. σχετικά με τα αποτελέσματα των Ηλεκτρονικών Δηλώσεων Προτίμησης</a>
         </li>
         </div>
         <li class="list-group-item isclickable oddout"  >
             <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiesstudentgel.pdf" target="_blank">Οδηγίες ενημέρωσης μαθητών/μαθητριών σχετικά με το αποτέλεσμα της
-Ηλεκτρονικής τους Δήλωσης Προτίμησης
+Ηλεκτρονικής τους Αίτησης Εγγραφής - Δήλωσης Προτίμησης
 για τα ΓΕ.Λ.</a>
         </li>
         </ul>
@@ -78,12 +78,15 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
 
         <div *ngIf="hasvalue == true">
         <li class="list-group-item isclickable evenout"  >
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/MANUAL_epal_sxoleia.pdf" target="_blank">Οδηγίες προς Διευθυντές ΕΠΑ.Λ. σχετικά με τη Δήλωση της Δυναμικής της Σχολικής Μονάδας σε Αίθουσες</a>
+        </li>
+        <li class="list-group-item isclickable evenout"  >
             <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiessxoleio.pdf" target="_blank">Οδηγίες προς Διευθυντές ΕΠΑ.Λ. σχετικά με τα αποτελέσματα των Ηλεκτρονικών Δηλώσεων Προτίμησης</a>
         </li>
         </div>
         <li class="list-group-item isclickable oddout"  >
             <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiesstudent.pdf" target="_blank">Οδηγίες ενημέρωσης μαθητών/μαθητριών σχετικά με το αποτέλεσμα της
-Ηλεκτρονικής τους Δήλωσης Προτίμησης
+Ηλεκτρονικής τους Αίτησης Εγγραφής - Δήλωσης Προτίμησης
 για τα ΕΠΑ.Λ.</a>
         </li>
         </ul>
@@ -135,7 +138,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
 
 
     ngOnInit() {
-      
+
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
             .subscribe(loginInfo => {
@@ -149,7 +152,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
                     if (this.authRole === SCHOOL_ROLE || this.authRole === SCHOOLGEL_ROLE || this.authRole === SCHOOLGYM_ROLE) {
                         console.log(this.authRole,"role");
                         this.hasvalue = true;
-                        
+
                     }
                 }
                 this.loginInfo$.next(loginInfo);
