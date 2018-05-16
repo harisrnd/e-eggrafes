@@ -619,7 +619,7 @@ class ReportsCreator extends ControllerBase
 
                 //εύρεση αριθμού τμημάτων (χωρητικότητα) για κάθε τμήμα της Α' τάξης
                 //$epalSchool->capacity_class_a === "0" ||
-                if (($capacityEnabled === '0' && ( !isset($epalSchool->capacity_class_a)) )  ||  ($capacityEnabled === "1")) {
+                if ( ($capacityEnabled === '0' && ( !isset($epalSchool->capacity_class_a)))  ||  ($capacityEnabled === "1")) {
 					array_push($regionColumn, $epalRegion->name);
 					array_push($adminColumn, $epalAdmin->name);
 					array_push($schoolNameColumn, $epalSchool->name);
@@ -641,7 +641,7 @@ class ReportsCreator extends ControllerBase
                 if ($capacityEnabled === "0") {
                     $sCon->condition( db_or()
 						//->condition('eSchool.capacity_class_sector', 0, '=')
-						->condition('eSchool.capacity_class_sector', null, 'is')  ) ;
+						->condition('eSchool.capacity_class_sector', 0, '=')  ) ;
                 }
                 $sectorsInEpals = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -670,7 +670,7 @@ class ReportsCreator extends ControllerBase
                 if ($capacityEnabled === "0") {
 					$sCon->condition( db_or()
 						//->condition('eSchool.capacity_class_specialty', 0, '=')
-						->condition('eSchool.capacity_class_specialty', null, 'is')  ) ;
+						->condition('eSchool.capacity_class_specialty', 0, '=')  ) ;
                 }
 
                 $specialtiesInEpals = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -700,7 +700,7 @@ class ReportsCreator extends ControllerBase
                 if ($capacityEnabled === "0") {
 					$sCon->condition( db_or()
 						//->condition('eSchool.capacity_class_specialty_d', 0, '=')
-						->condition('eSchool.capacity_class_specialty_d', null, 'is')  ) ;
+						->condition('eSchool.capacity_class_specialty_d', 0, '=')  ) ;
                 }
 
                 $specialtiesInEpals = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -729,7 +729,7 @@ class ReportsCreator extends ControllerBase
 						'name' => $schoolNameColumn[$j],
 						'region' => $regionColumn[$j],
 						'admin' => $adminColumn[$j],
-						'section' => $schoolSectionColumn[$j],
+						'section' => str_replace(",", " ", $schoolSectionColumn[$j]),
 						'capacity' => $capacityColumn[$j],
 					));
                 }

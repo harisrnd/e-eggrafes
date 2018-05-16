@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Φιλοξενητής: localhost
--- Χρόνος δημιουργίας: 08 Μάη 2018 στις 11:53:29
+-- Χρόνος δημιουργίας: 11 Μάη 2018 στις 11:30:04
 -- Έκδοση διακομιστή: 5.7.22-0ubuntu0.16.04.1
 -- Έκδοση PHP: 7.0.28-0ubuntu0.16.04.1
 
@@ -223,7 +223,6 @@ INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (187, 'f0c2daaa-680b-4201-b108-e757bac1bb203', 'el'),
 (188, 'f0c2daaa-680b-4201-b108-e757bac1bb204', 'el'),
 (189, 'f0c2daaa-680b-4201-b108-e757bac1bb205', 'el'),
-(191, 'f0c2daaa-680b-4201-b108-e757bac1bb207', 'el'),
 (192, 'f0c2daaa-680b-4201-b108-e757bac1bb208', 'el'),
 (193, 'f0c2daaa-680b-4201-b108-e757bac1bb209', 'el'),
 (194, 'f0c2daaa-680b-4201-b108-e757bac1bb210', 'el'),
@@ -554,7 +553,6 @@ INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (525, 'f0c2daaa-680b-4201-b108-e757bac1bb541', 'el'),
 (526, 'f0c2daaa-680b-4201-b108-e757bac1bb542', 'el'),
 (527, 'f0c2daaa-680b-4201-b108-e757bac1bb543', 'el'),
-(528, 'f0c2daaa-680b-4201-b108-e757bac1bb544', 'el'),
 (529, 'f0c2daaa-680b-4201-b108-e757bac1bb545', 'el'),
 (530, 'f0c2daaa-680b-4201-b108-e757bac1bb546', 'el'),
 (532, 'f0c2daaa-680b-4201-b108-e757bac1bb548', 'el'),
@@ -999,10 +997,10 @@ INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (984, 'f0c2daaa-680b-4201-b108-e757bac1bb1000', 'el'),
 (985, 'f0c2daaa-680b-4201-b108-e757bac1bb1001', 'el'),
 (986, 'f0c2daaa-680b-4201-b108-e757bac1bb1002', 'el'),
-(987, 'f0c2daaa-680b-4201-b108-e757bac1bb1003', 'el');
-INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
+(987, 'f0c2daaa-680b-4201-b108-e757bac1bb1003', 'el'),
 (988, 'f0c2daaa-680b-4201-b108-e757bac1bb1004', 'el'),
-(989, 'f0c2daaa-680b-4201-b108-e757bac1bb1005', 'el'),
+(989, 'f0c2daaa-680b-4201-b108-e757bac1bb1005', 'el');
+INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (990, 'f0c2daaa-680b-4201-b108-e757bac1bb1006', 'el'),
 (991, 'f0c2daaa-680b-4201-b108-e757bac1bb1007', 'el'),
 (992, 'f0c2daaa-680b-4201-b108-e757bac1bb1008', 'el'),
@@ -1924,10 +1922,10 @@ INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (1933, 'f0c2daaa-680b-4201-b108-e757bac1bb1949', 'el'),
 (1934, 'f0c2daaa-680b-4201-b108-e757bac1bb1950', 'el'),
 (1935, 'f0c2daaa-680b-4201-b108-e757bac1bb1951', 'el'),
-(1936, 'f0c2daaa-680b-4201-b108-e757bac1bb1952', 'el');
-INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
+(1936, 'f0c2daaa-680b-4201-b108-e757bac1bb1952', 'el'),
 (1937, 'f0c2daaa-680b-4201-b108-e757bac1bb1953', 'el'),
-(1938, 'f0c2daaa-680b-4201-b108-e757bac1bb1954', 'el'),
+(1938, 'f0c2daaa-680b-4201-b108-e757bac1bb1954', 'el');
+INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (1939, 'f0c2daaa-680b-4201-b108-e757bac1bb1955', 'el'),
 (1940, 'f0c2daaa-680b-4201-b108-e757bac1bb1956', 'el'),
 (1941, 'f0c2daaa-680b-4201-b108-e757bac1bb1957', 'el'),
@@ -2612,7 +2610,6 @@ INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (3138, '8a1b178a-4ae1-4076-bed9-be21d90a6295', 'el'),
 (3139, '80f64870-bd00-45a3-b353-2bd425228446', 'el'),
 (3140, '092aa1a4-0f49-476e-8718-3fd47ce6b307', 'el'),
-(3141, '318b0e58-3fa0-4ccf-bb76-8969c6b0e7b4', 'el'),
 (3142, '5258352b-2d7f-45e2-ab83-8daccd699323', 'el'),
 (3143, 'd633c3f6-cb5e-4d36-89c1-74ea62f42fee', 'el'),
 (3144, '3bb5fab7-4fda-4dc2-a959-8841054ec704', 'el'),
@@ -2749,4 +2746,7 @@ INSERT INTO `eepal_specialties_in_epal` (`id`, `uuid`, `langcode`) VALUES
 (3279, 'aabc1e12-5d00-47a9-9838-572ed80ce4ce', 'el'),
 (3280, '496b3201-8815-4993-89dd-d816ecf1ca42', 'el'),
 (3282, '9632e648-1f81-4c7d-941c-981e2cf0f06b', 'el'),
-(3283, '6b5113fe-9cb7-4a8f-9c88-aa70abe44968', 'el');
+(3283, '6b5113fe-9cb7-4a8f-9c88-aa70abe44968', 'el'),
+(3284, '6b5113fe-9cb7-4a8f-9c88-aa70abe00000', 'el'),
+(3285, '6b5113fe-9cb7-4a8f-9c88-aa70abe00110', 'el'),
+(3286, '6b5113fe-9cb7-4a8f-9c88-aa70abe32456', 'el');

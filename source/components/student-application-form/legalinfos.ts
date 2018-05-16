@@ -66,7 +66,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
         </div>
         <li class="list-group-item isclickable oddout"  >
             <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiesstudentgel.pdf" target="_blank">Οδηγίες ενημέρωσης μαθητών/μαθητριών σχετικά με το αποτέλεσμα της
-Ηλεκτρονικής τους Δήλωσης Προτίμησης
+Ηλεκτρονικής τους Αίτησης Εγγραφής - Δήλωσης Προτίμησης
 για τα ΓΕ.Λ.</a>
         </li>
         </ul>
@@ -86,7 +86,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
         </div>
         <li class="list-group-item isclickable oddout"  >
             <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/odigiesstudent.pdf" target="_blank">Οδηγίες ενημέρωσης μαθητών/μαθητριών σχετικά με το αποτέλεσμα της
-Ηλεκτρονικής τους Δήλωσης Προτίμησης
+Ηλεκτρονικής τους Αίτησης Εγγραφής - Δήλωσης Προτίμησης
 για τα ΕΠΑ.Λ.</a>
         </li>
         </ul>

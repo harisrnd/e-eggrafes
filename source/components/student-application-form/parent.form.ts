@@ -41,7 +41,7 @@ import { HelperDataService } from "../../services/helper-data-service";
             userMothername: ["", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
             userEmail: ["", [Validators.pattern(VALID_EMAIL_PATTERN), Validators.required]],
             representRole: ["0",  []],
-            userChildren: [0, []],
+            userChildren: [, []],
         });
 
 
@@ -88,8 +88,8 @@ import { HelperDataService } from "../../services/helper-data-service";
             this.formGroup.get("userFathername").setValue(x.userFathername);
             this.formGroup.get("userMothername").setValue(x.userMothername);
             this.formGroup.get("representRole").setValue(Number(x.representRole));
-
-            this.formGroup.get("userChildren").setValue(Number(x.numChildren));
+            if (x.userEmail !== "")
+              this.formGroup.get("userChildren").setValue(Number(x.numChildren));
 
             //this.existentRole = false;
             //this.existentMail = x.userEmail;
@@ -104,7 +104,10 @@ import { HelperDataService } from "../../services/helper-data-service";
             else
               this.representativeRole.next(false);
             //this.representativeRole.next(this.existentRole);
-            if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren) )
+
+            //if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren)   )
+            if (  (Number(x.numAppChildren) + Number(x.numAppSelf) >=  Number(x.numChildren)+1 ) ||
+                  (  (Number(x.numAppChildren) + Number(x.numAppSelf) >=   5)  &&   this.representativeRole.getValue() == false) )
               this.hasRight = new BehaviorSubject(false);
 
         });
@@ -118,10 +121,22 @@ import { HelperDataService } from "../../services/helper-data-service";
     }
 
     saveProfileAndContinue(): void {
+
         if (!this.formGroup.valid) {
             this.modalTitle.next("Αποτυχία αποθήκευσης");
             this.modalText.next("Δεν συμπληρώσατε κάποιο πεδίο");
             this.showModal();
+        }
+        else if ( this.formGroup.controls["userChildren"].enabled && this.formGroup.controls["userChildren"].value == null)  {
+          this.modalTitle.next("Μη αποδεκτός αριθμός παιδιών");
+          this.modalText.next("Καταχωρείστε τον αριθμό παιδιών για τα οποία πρόκειται να κάνετεα αίτηση. ");
+          this.showModal();
+        }
+        else if ( this.formGroup.controls["userChildren"].enabled &&
+          parseInt(this.formGroup.controls["userChildren"].value) > 4 || parseInt(this.formGroup.controls["userChildren"].value) < 0 ) {
+          this.modalTitle.next("Μη αποδεκτός αριθμός παιδιών");
+          this.modalText.next("Μπορείτε να καταχωρήσετε από 0 έως και 4 παιδιά. ");
+          this.showModal();
         }
         else if (!this.hasRight.getValue())  {
             this.modalTitle.next("Μη δικαίωμα νέας αίτησης");
