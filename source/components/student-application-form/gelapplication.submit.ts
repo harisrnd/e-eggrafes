@@ -858,7 +858,7 @@ import { StudentGelCourseChosen } from "../students/student";
             return 2;
         }
         else if($level=="Γ" || $level=="Γ-ΛΥΚ"|| $level=="Γ (ΠΑΛΑΙΑ)"|| $level=="Γ-ΛΥΚ (ΠΑΛΑΙΑ)"){
-            return 3
+            return 3;
         }
         else if($level=="Δ" || $level=="Δ-ΛΥΚ"|| $level=="Δ (ΠΑΛΑΙΑ)"|| $level=="Δ-ΛΥΚ (ΠΑΛΑΙΑ)"){
             return 4;

@@ -129,7 +129,7 @@ import { HelperDataService } from "../../services/helper-data-service";
         }
         else if ( this.formGroup.controls["userChildren"].enabled && this.formGroup.controls["userChildren"].value == null)  {
           this.modalTitle.next("Μη αποδεκτός αριθμός παιδιών");
-          this.modalText.next("Καταχωρείστε τον αριθμό παιδιών για τα οποία πρόκειται να κάνετεα αίτηση. ");
+          this.modalText.next("Συμπληρώστε τον αριθμό παιδιών για τα οποία πρόκειται να κάνετε αίτηση. ");
           this.showModal();
         }
         else if ( this.formGroup.controls["userChildren"].enabled &&
