@@ -68,7 +68,7 @@ class WSConsumer extends ControllerBase
 
     public function getStudentEpalInfo($didactic_year, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
-        $testmode = false;
+        $testmode = true;
         $didactic_year_id=$this->getdidacticyear($didactic_year);
 
         if ($testmode)  {
@@ -76,16 +76,16 @@ class WSConsumer extends ControllerBase
           'message' => 'Επιτυχία',
 
           'data' => array(
-              'id' => '158',
-              'studentId' => 2666023,
+              'id' => '15800',
+              'studentId' => 266345444,
               'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
               'firstname' => 'ΚΩΝΣΤΑΝΤΙΝΟΣ',
               'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
               'custodianFirstName' => '',
               'birthDate' => '1997-01-04T00:00:00',
-              'addressStreet' => 'ΤΕΣΤ',
-              'addressPostCode' => '30100',
-              'addressArea' => 'ΑΓΡΙΝΙΟ',
+              'addressStreet' => 'ΣΚΣ. //Δ Δ&&',
+              'addressPostCode' => '22222',
+              'addressArea' => 'Ν. / ,&^% ΣΜΥΡΝΗ',
               'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
               'levelName' => 'Γ',
               'sectionName' => 'Τεχνικός Μηχανοσυνθέτης Αεροσκαφών'

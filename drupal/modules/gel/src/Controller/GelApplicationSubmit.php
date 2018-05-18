@@ -676,9 +676,9 @@ class GelApplicationSubmit extends ControllerBase
           && preg_match(self::VALID_NAMES_PATTERN, $student["regionarea"]) !== 1) {
             return 1010;
         }
-        if (preg_match(self::VALID_NAMES_PATTERN, $student["regionarea"]) !== 1) {
-            return 1010;
-        }
+        //if (preg_match(self::VALID_ADDRESSTK_PATTERN, $student["regionarea"]) !== 1) {
+        //    return 1010;
+        //}
 
         $classIds = array("1", "2", "3", "4", "5", "6", "7");
         if (!in_array($student["nextclass"], $classIds))  {
