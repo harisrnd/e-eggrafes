@@ -80,7 +80,7 @@ class WSConsumer extends ControllerBase
               'studentId' => 266345444,
               'lastname' => 'ΓΕ',
               'firstname' => 'ΚΩ',
-              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
+              'custodianLastName' =>  'αβγδεέζηήθιίϊΐκλμνξοόπρστυϋφχψωώ',
               'custodianFirstName' => '',
               'birthDate' => '1997-01-04T00:00:00',
               'addressStreet' => 'ΣΚΣ. //Δ Δ&&',
