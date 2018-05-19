@@ -206,6 +206,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     //private guardianIdentSub: Subscription;
     private guardianEnabled: BehaviorSubject<number>;
     private birtdateFormView: BehaviorSubject<string>;
+    private father1: string;
+    private father2:string;
 
     constructor(
         private _hds: HelperDataService,
@@ -514,6 +516,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       aitisiObj[0].lastschool_class = this.levelNametoClass(data.data["levelName"]);
                     }
                     else {
+
+
                       let mTitle = "Αποτυχία Ταυτοποίησης Μαθητή στο Πληροφοριακό Σύστημα myschool";
                       let mText = "Δεν βρέθηκε μαθητής στο Πληροφοριακό Σύστημα του Σχολείου (myschool) με τα στοιχεία που δώσατε. " +
                         "Προσπαθήστε ξανά, αφού πρώτα ελέγξετε την ορθότητα των ακόλουθων στοιχείων: Αριθμός Μητρώου, Σχολείο τελευταίας φοίτησης, Ημερομηνία Γέννησης. " +
@@ -547,6 +551,21 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                     }
 
                     if (this.guardianEnabled.getValue() === 1 && aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
+                    
+                       this.father1 = aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "");
+                       this.father2 = aitisiObj[0].cu_surname.replace(/ |-/g, "");
+
+                      this.father1 = this.father1.toLowerCase();
+                      this.father1= this.RemoveAccents(this.father1);
+                      this.father1 = this.father1.toUpperCase(); 
+
+                      this.father2 = this.father2.toLowerCase();
+                      this.father2= this.RemoveAccents(this.father2);
+                      this.father2 = this.father2.toUpperCase(); 
+                        
+
+                        if (this.father1 !== this.father2)
+                      {
                       let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
                       let mText = "Ο Κηδεμόνας που έχει δηλωθεί στο Πληροφοριακό Σύστημα του Σχολείου έχει ΔΙΑΦΟΡΕΤΙΚΑ στοιχεία από το χρήστη που έχει κάνει είσοδο σε αυτό το σύστημα μέσω των κωδικών του taxisnet. " +
                         "Παρακαλείστε να επικοινωνήσετε με το σχολείο όπου φοιτά τώρα το παιδί για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καταχωρηθεί στο Πληροφοριακό Σύστημα του Σχολείου (myschοol) όπως είναι καταχωρημένο στην εφορία. " +
@@ -560,6 +579,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
                       this.showLoader.next(false);
                       return;
+                      }
                     }
 
                     if (aitisiObj[0].regionaddress === null || aitisiObj[0].regionaddress.replace(/ |-/g, "") === "" ) {
@@ -867,5 +887,15 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
             return -1;
         }
     }
+
+    public RemoveAccents(s) 
+    {
+        var i = 'άέόήίώϊΐύ'.split('');
+        var o = 'αεοηιωιιυ'.split('');
+        var map = {};
+        i.forEach(function(el, idx) {map[el] = o[idx]});
+        return s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
+    }
+
 
 }

@@ -33,6 +33,7 @@ import EpalClassesSelect from "../components/student-application-form/epal.class
 import HelpDesk from "../components/student-application-form/help-desk";
 import Info from "../components/student-application-form/info";
 import LegalInfo from "../components/student-application-form/legalinfos";
+import UsefullDocs from "../components/student-application-form/usefulldocs";
 import ParentForm from "../components/student-application-form/parent.form";
 import RegionSchoolsSelect from "../components/student-application-form/region.schools.select";
 import SchoolsOrderSelect from "../components/student-application-form/schools-order-select";
@@ -92,6 +93,7 @@ export const MainRoutes: Routes = [
     { path: "student-application-form-main", component: StudentApplicationMain, canActivate: [StudentAuthGuard, StudentLockGuard] },
     { path: "intro-statement", component: Disclaimer, canActivate: [StudentAuthGuard, StudentAllLockGuard] },
     { path: "legal-info", component: LegalInfo },
+    { path: "usefull-docs", component: UsefullDocs },
     { path: "epal-class-select", component: EpalClassesSelect, canActivate: [StudentAuthGuard, StudentLockGuard] },
     { path: "sector-fields-select", component: SectorFieldsSelect, canActivate: [StudentAuthGuard, StudentLockGuard] },
     { path: "region-schools-select", component: RegionSchoolsSelect, canActivate: [StudentAuthGuard, StudentLockGuard] },
@@ -187,6 +189,7 @@ export const MainDeclarations = [
     EduadminView,
     HelpDesk,
     LegalInfo,
+    UsefullDocs,
     MergeSchools,
     UndoMergeSchools,
     SmallClassApprovement,
