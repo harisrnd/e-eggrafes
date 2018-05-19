@@ -14,10 +14,33 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Κλείσιμο</button>
+                <!--<button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveAnyway()" >Συμφωνώ</button>-->
             </div>
         </div>
     </div>
 </div>
+
+<div id="childrenSentNotice" (onHidden)="onChildrenHidden()" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header modal-header-danger">
+                <h3 class="modal-title pull-left"><i class="fa fa-ban"></i>&nbsp;&nbsp;{{ modalTitle | async }}</h3>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="hideChildrenModal()">
+          <span aria-hidden="true"><i class="fa fa-times"></i></span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <p>{{ modalText | async }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal" (click)="hideChildrenModal()" >Ακύρωση</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveAnyway()" >Επιβεβαίωση</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div style="min-height: 500px; margin-bottom: 30px;">
     <p style="margin-top: 20px; line-height: 2em;"> <b> Στοιχεία γονέα-κηδεμόνα. Όλα τα πεδία που συνοδεύονται από (*) είναι απαραίτητο να συμπληρωθούν. Στα ονόματα επιτρέπονται μόνο κεφαλαία γράμματα.</b></p>
     <form [formGroup]="formGroup">
@@ -78,7 +101,7 @@
             <input class="form-control" type="number" formControlName="userChildren" style="width:54px" min = "0" max = "4">
           </div>
           <div class="col-md-11">
-            <label for="userChildren">Αριθμός παιδιών που βρίσκονται στην επιμέλειά μου και έχουν δικαίωμα να εγγραφούν σε ΕΠΑΛ ή ΓΕΛ</label>
+            <label for="userChildren">Αριθμός παιδιών που βρίσκονται στην επιμέλειά μου και έχουν δικαίωμα να εγγραφούν ή/και να επανεγγραφούν σε ΕΠΑΛ ή ΓΕΛ </label>
           </div>
         </div>
 

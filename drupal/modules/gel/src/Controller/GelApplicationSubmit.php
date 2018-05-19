@@ -33,7 +33,7 @@ class GelApplicationSubmit extends ControllerBase
     const CERT_LYK = 'Απολυτήριο Λυκείου';
 
     const VALID_NAMES_PATTERN = '/^[A-Za-zΑ-ΩΆΈΉΊΙΎΌΏα-ωάέήίΐύόώ \-]*$/mu';
-    const VALID_UCASE_NAMES_PATTERN = '/^[A-ZΑ-Ω]{3,}[A-ZΑ-Ω \-]*$/mu';
+    const VALID_UCASE_NAMES_PATTERN = '/^[A-ZΑ-Ω]{2,}[A-ZΑ-Ω \-]*$/mu';
     const VALID_ADDRESS_PATTERN = '/^[0-9A-Za-zΑ-ΩΆΈΉΊΎΌΏα-ωάέήίύόώ\/\. \-]*$/mu';
     const VALID_ADDRESSTK_PATTERN = '/^[0-9]{5}$/';
     const VALID_DIGITS_PATTERN = '/^[0-9]*$/';
@@ -676,9 +676,9 @@ class GelApplicationSubmit extends ControllerBase
           && preg_match(self::VALID_NAMES_PATTERN, $student["regionarea"]) !== 1) {
             return 1010;
         }
-        if (preg_match(self::VALID_NAMES_PATTERN, $student["regionarea"]) !== 1) {
-            return 1010;
-        }
+        //if (preg_match(self::VALID_ADDRESSTK_PATTERN, $student["regionarea"]) !== 1) {
+        //    return 1010;
+        //}
 
         $classIds = array("1", "2", "3", "4", "5", "6", "7");
         if (!in_array($student["nextclass"], $classIds))  {

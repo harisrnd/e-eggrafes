@@ -160,7 +160,8 @@ class CurrentUser extends ControllerBase
     public function getApplicantUserData(Request $request)
     {
         //test
-        //$this->logger->warning(\Drupal::service('uuid')->generate() );
+        //for ($k=0;$k<8;$k++)
+        //  $this->logger->warning(\Drupal::service('uuid')->generate() );
 
 
         $authToken = $request->headers->get('PHP_AUTH_USER');

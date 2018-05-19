@@ -65,8 +65,21 @@ import { HelperDataService } from "../../services/helper-data-service";
         this.isModalShown.next(false);
     }
 
+    public showChildrenModal(): void {
+        (<any>$("#childrenSentNotice")).modal("show");
+    }
+
+    public hideChildrenModal(): void {
+        (<any>$("#childrenSentNotice")).modal("hide");
+    }
+
+    public onChildrenHidden(): void {
+        this.isModalShown.next(false);
+    }
+
     ngOnInit() {
         (<any>$("#emailSentNotice")).appendTo("body");
+        (<any>$("#childrenSentNotice")).appendTo("body");
         this.showLoader.next(true);
 
         this.gsisIdentSub = this.hds.isGSIS_ident_enabled().subscribe(z => {
@@ -116,6 +129,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 
     ngOnDestroy() {
         (<any>$("#emailSentNotice")).remove();
+        (<any>$("#childrenSentNotice")).remove();
         if (this.applicantUserDataSub) this.applicantUserDataSub.unsubscribe();
         if (this.gsisIdentSub) this.gsisIdentSub.unsubscribe();
     }
@@ -138,6 +152,15 @@ import { HelperDataService } from "../../services/helper-data-service";
           this.modalText.next("Μπορείτε να καταχωρήσετε από 0 έως και 4 παιδιά. ");
           this.showModal();
         }
+        else if (this.formGroup.controls["userChildren"].enabled) {
+            this.modalTitle.next("Επισήμανση");
+            this.modalText.next("Πατώντας Επιβεβαίωση, ο αριθμός των παιδιών που δηλώνετε οριστικοποιείται. " +
+                "ΔΕΝ θα έχετε το δικαίωμα να τροποποιήσετε τον αριθμό παιδιών στην επόμενη είσοδό σας στην εφαρμογή. " +
+                "Το ίδιο ισχύει για την επιλογή υπευθύνου υποβολής αιτήσεων σε κέντρα κοινωνικής πρόνοιας ή κέντρα φιλοξενίας προσφύγων."
+                );
+            this.showChildrenModal();
+        }
+
         else if (!this.hasRight.getValue())  {
             this.modalTitle.next("Μη δικαίωμα νέας αίτησης");
             this.modalText.next("Έχετε ήδη υποβάλλει το σύνολο των αιτήσεων που δικαιούστε να κάνετε.");
@@ -167,6 +190,24 @@ import { HelperDataService } from "../../services/helper-data-service";
                     console.log(err);
                 });
         }
+    }
+
+    saveAnyway():void  {
+
+      this.showLoader.next(true);
+      //this.hds.saveProfile(this.formGroup.value)
+      this.hds.saveProfile(this.formGroup.getRawValue())
+          .then(res => {
+              //this._prfa.saveProfile(this.formGroup.value);
+              this._prfa.saveProfile(this.formGroup.getRawValue());
+              this.showLoader.next(false);
+              this.router.navigate(["/intro-statement"]);
+          })
+          .catch(err => {
+              this.showLoader.next(false);
+              console.log(err);
+          });
+
     }
 
     toggleRepresentativeRole() {

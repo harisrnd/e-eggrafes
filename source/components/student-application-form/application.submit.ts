@@ -551,35 +551,34 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                     }
 
                     if (this.guardianEnabled.getValue() === 1 && aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
-                    
-                       this.father1 = aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "");
-                       this.father2 = aitisiObj[0].cu_surname.replace(/ |-/g, "");
 
-                      this.father1 = this.father1.toLowerCase();
-                      this.father1= this.RemoveAccents(this.father1);
-                      this.father1 = this.father1.toUpperCase(); 
+                        this.father1 = aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "");
+                        this.father2 = aitisiObj[0].cu_surname.replace(/ |-/g, "");
 
-                      this.father2 = this.father2.toLowerCase();
-                      this.father2= this.RemoveAccents(this.father2);
-                      this.father2 = this.father2.toUpperCase(); 
-                        
+                        this.father1 = this.father1.toLowerCase();
+                        this.father1= this.RemoveAccents(this.father1);
+                        this.father1 = this.father1.toUpperCase();
+
+                        this.father2 = this.father2.toLowerCase();
+                        this.father2= this.RemoveAccents(this.father2);
+                        this.father2 = this.father2.toUpperCase();
 
                         if (this.father1 !== this.father2)
-                      {
-                      let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
-                      let mText = "Ο Κηδεμόνας που έχει δηλωθεί στο Πληροφοριακό Σύστημα του Σχολείου έχει ΔΙΑΦΟΡΕΤΙΚΑ στοιχεία από το χρήστη που έχει κάνει είσοδο σε αυτό το σύστημα μέσω των κωδικών του taxisnet. " +
-                        "Παρακαλείστε να επικοινωνήσετε με το σχολείο όπου φοιτά τώρα το παιδί για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καταχωρηθεί στο Πληροφοριακό Σύστημα του Σχολείου (myschοol) όπως είναι καταχωρημένο στην εφορία. " +
-                        "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
-                      let mHeader = "modal-header-danger";
-                      this.modalTitle.next(mTitle);
-                      this.modalText.next(mText);
-                      this.modalHeader.next(mHeader);
-                      this.showModal();
-                      (<any>$(".loading")).remove();
+                        {
+                          let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
+                          let mText = "Ο Κηδεμόνας που έχει δηλωθεί στο Πληροφοριακό Σύστημα του Σχολείου έχει ΔΙΑΦΟΡΕΤΙΚΑ στοιχεία από το χρήστη που έχει κάνει είσοδο σε αυτό το σύστημα μέσω των κωδικών του taxisnet. " +
+                            "Παρακαλείστε να επικοινωνήσετε με το σχολείο όπου φοιτά τώρα το παιδί για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καταχωρηθεί στο Πληροφοριακό Σύστημα του Σχολείου (myschοol) όπως είναι καταχωρημένο στην εφορία. " +
+                            "Σε περίπτωση που συνεχίσετε να αντιμετωπίζετε προβλήματα επικοινωνήστε με την ομάδα υποστήριξης. ";
+                          let mHeader = "modal-header-danger";
+                          this.modalTitle.next(mTitle);
+                          this.modalText.next(mText);
+                          this.modalHeader.next(mHeader);
+                          this.showModal();
+                          (<any>$(".loading")).remove();
 
-                      this.showLoader.next(false);
-                      return;
-                      }
+                          this.showLoader.next(false);
+                          return;
+                        }
                     }
 
                     if (aitisiObj[0].regionaddress === null || aitisiObj[0].regionaddress.replace(/ |-/g, "") === "" ) {
@@ -888,10 +887,10 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         }
     }
 
-    public RemoveAccents(s) 
+    public RemoveAccents(s)
     {
-        var i = 'άέόήίώϊΐύ'.split('');
-        var o = 'αεοηιωιιυ'.split('');
+        var i = 'άέόήίώϊΐύϋ'.split('');
+        var o = 'αεοηιωιιυυ'.split('');
         var map = {};
         i.forEach(function(el, idx) {map[el] = o[idx]});
         return s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })

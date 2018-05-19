@@ -14,8 +14,8 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
     selector: "usefull-docs",
     template: `
         <p align="left"><strong> Υπεύθυνη Δήλωση  </strong></p>
-        
-    <p align="left"> Η παρακάνω Υπεύθυνη Δήλωση υποβάλλεται :</p>
+
+    <p align="left"> Η παρακάτω Υπεύθυνη Δήλωση υποβάλλεται :</p>
     <ul>
         <li>για τα ΓΕ.Λ. στη διεύθυνση ηλεκτρονικού ταχυδρομείου:  skonstantatos@minedu.gov.gr   ή στο φαξ: 2103443390</li>
 
@@ -56,7 +56,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private loginInfoSub: Subscription;
     private hasvalue: boolean;
-  
+
 
 
     constructor(private router: Router,
@@ -77,7 +77,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
 
 
     ngOnInit() {
-                 
+
 
         this.loginInfoSub = this._ngRedux.select("loginInfo")
             .map(loginInfo => <ILoginInfoRecords>loginInfo)
