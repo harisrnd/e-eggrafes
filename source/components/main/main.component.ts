@@ -15,4 +15,8 @@ export default class MainComponent {
         this.router.navigate(["/legal-info"]);
     }
 
+    navigateeggrafa(){
+    	this.router.navigate(["/usefull-docs"]);	
+    }
+
 }
