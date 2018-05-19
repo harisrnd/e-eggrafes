@@ -90,7 +90,7 @@ class HelpDesk extends ControllerBase {
             $to = 'dialogos_eek@minedu.gov.gr';
         else
             $to = 'egel@minedu.gov.gr';
-        
+
         $params['message'] = '<p>Αποστολέας:'.$email.'</p><p>Όνομα: '.$name.'</p><p>Επώνυμο: '.$surname.'</p><p>Μήνυμα: '.$cont_message .'</p>';
         $langcode = 'el';
         $send = true;
@@ -121,12 +121,14 @@ class HelpDesk extends ControllerBase {
 
         $sCon = $this->connection
             ->select('epal_student', 'eStudent')
-            ->fields('eStudent', array('id'));
+            ->fields('eStudent', array('id'))
+            ->condition('eStudent.delapp', 0, '=');
         $numApplications = $sCon->countQuery()->execute()->fetchField();
 
         $sCon = $this->connection
             ->select('gel_student', 'eStudent')
-            ->fields('eStudent', array('id'));
+            ->fields('eStudent', array('id'))
+            ->condition('eStudent.delapp', 0, '=');
         $numApplications += $sCon->countQuery()->execute()->fetchField();
 
         array_push($list, (object) array('name' => "Αριθμός Αιτήσεων (συνολικά)", 'numStudents' => $numApplications));
