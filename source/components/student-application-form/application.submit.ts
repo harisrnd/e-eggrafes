@@ -558,10 +558,12 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                         this.father1 = this.father1.toLowerCase();
                         this.father1= this.RemoveAccents(this.father1);
                         this.father1 = this.father1.toUpperCase();
+                        this.father1 = this.RemoveLatin(this.father1);
 
                         this.father2 = this.father2.toLowerCase();
                         this.father2= this.RemoveAccents(this.father2);
                         this.father2 = this.father2.toUpperCase();
+                        this.father2 = this.RemoveLatin(this.father2);
 
                         if (this.father1 !== this.father2)
                         {
@@ -891,6 +893,17 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     {
         var i = 'άέόήίώϊΐύϋ'.split('');
         var o = 'αεοηιωιιυυ'.split('');
+        var map = {};
+        i.forEach(function(el, idx) {map[el] = o[idx]});
+        return s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
+    }
+
+
+
+    public RemoveLatin(s)
+    {
+        var i = 'ABEHIKMNOPTXYZ'.split('');
+        var o = 'ΑΒΕΗΙΚΜΝΟΡΤΧΥΖ'.split('');
         var map = {};
         i.forEach(function(el, idx) {map[el] = o[idx]});
         return s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
