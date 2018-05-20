@@ -190,6 +190,11 @@
 }
 
 
+.framecolor {
+    background-color: #b5bcbb;
+}
+
+
 .selectednew {
     background-color: red;
 }
