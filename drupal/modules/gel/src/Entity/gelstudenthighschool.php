@@ -272,6 +272,28 @@ class gelstudenthighschool extends ContentEntityBase implements gelstudenthighsc
       ->setRequired(TRUE);
 
 
+$fields['dide'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('registry_no_dide'))
+      ->setDescription(t(' registry_no της ΔΙΔΕ.'))
+     ->setSettings([
+        'max_length' => 50,
+        'text_processing' => 0,
+      ])
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -4,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -4,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setRequired(TRUE);
+
+
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the Gelstudenthighschool is published.'))

@@ -608,7 +608,7 @@ selectall()
       if (this.pageno ===1) 
         return;  
       this.pageno = this.pageno - 1;
-      this.setActiveRegion(secsel,1,1,0)
+      this.setActiveRegion(secsel,1,0,0)
 
     }
 
