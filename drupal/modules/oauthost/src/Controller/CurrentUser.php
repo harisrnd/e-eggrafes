@@ -160,7 +160,7 @@ class CurrentUser extends ControllerBase
     public function getApplicantUserData(Request $request)
     {
         //test
-        //for ($k=0;$k<8;$k++)
+        //for ($k=0;$k<3;$k++)
         //  $this->logger->warning(\Drupal::service('uuid')->generate() );
 
 

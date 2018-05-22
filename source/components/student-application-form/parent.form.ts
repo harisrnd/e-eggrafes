@@ -26,6 +26,10 @@ import { HelperDataService } from "../../services/helper-data-service";
     private representativeRole: BehaviorSubject<boolean>;
     private gsisIdentSub: Subscription;
 
+    private numAppChildren =  <number>0;
+    private numAppSelf =  <number>0;
+    private representVerified: BehaviorSubject<boolean>;
+
     constructor(private fb: FormBuilder,
         private router: Router,
         private hds: HelperDataService,
@@ -34,6 +38,7 @@ import { HelperDataService } from "../../services/helper-data-service";
         this.isModalShown = new BehaviorSubject(false);
         this.hasRight = new BehaviorSubject(true);
         this.representativeRole = new BehaviorSubject(false);
+        this.representVerified = new BehaviorSubject(false);
         this.formGroup = this.fb.group({
             userName: ["", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
             userSurname: ["", [Validators.pattern(VALID_UCASE_NAMES_PATTERN), Validators.required]],
@@ -87,7 +92,6 @@ import { HelperDataService } from "../../services/helper-data-service";
               this.formGroup.get("userName").disable();
               this.formGroup.get("userSurname").disable();
               this.formGroup.get("userFathername").disable();
-
               //this.formGroup.get("userMothername").disable();
             }
         });
@@ -103,25 +107,34 @@ import { HelperDataService } from "../../services/helper-data-service";
             this.formGroup.get("representRole").setValue(Number(x.representRole));
             if (x.userEmail !== "")
               this.formGroup.get("userChildren").setValue(Number(x.numChildren));
-
-            //this.existentRole = false;
-            //this.existentMail = x.userEmail;
-            //if (this.existentMail !== "") {
+            /*
             if (x.userEmail !== "") {
               this.formGroup.get("representRole").disable();
               this.formGroup.get("userChildren").disable();
             }
+            */
+
             if (Number(x.representRole))
-              //this.existentRole = true;
-                this.representativeRole.next(true);
+              this.representativeRole.next(true);
             else
               this.representativeRole.next(false);
-            //this.representativeRole.next(this.existentRole);
 
+            if (Number(x.verificationCodeVerified)) {
+              this.representVerified.next(true);
+              this.formGroup.get("representRole").disable();
+              this.formGroup.get("userChildren").disable();
+            }
+            else
+              this.representVerified.next(false);
+
+            /*
             //if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren)   )
             if (  (Number(x.numAppChildren) + Number(x.numAppSelf) >=  Number(x.numChildren)+1 ) ||
-                  (  (Number(x.numAppChildren) + Number(x.numAppSelf) >=   5)  &&   this.representativeRole.getValue() == false) )
+                  (  (Number(x.numAppChildren) + Number(x.numAppSelf) >=   4)  &&   this.representativeRole.getValue() == false) )
               this.hasRight = new BehaviorSubject(false);
+            */
+          this.numAppSelf = Number(x.numAppSelf);
+          this.numAppChildren = Number(x.numAppChildren);
 
         });
 
@@ -136,6 +149,13 @@ import { HelperDataService } from "../../services/helper-data-service";
 
     saveProfileAndContinue(): void {
 
+        let numCh = this.formGroup.controls["userChildren"].value;
+        if (  ( (this.numAppChildren + this.numAppSelf) >=  Number(numCh)+1 ) ||
+           (  (this.numAppChildren + this.numAppSelf >=   4)  &&   this.representativeRole.getValue() == false) )
+              this.hasRight.next(false);
+        else
+            this.hasRight.next(true);
+
         if (!this.formGroup.valid) {
             this.modalTitle.next("Αποτυχία αποθήκευσης");
             this.modalText.next("Δεν συμπληρώσατε κάποιο πεδίο");
@@ -146,13 +166,16 @@ import { HelperDataService } from "../../services/helper-data-service";
           this.modalText.next("Συμπληρώστε τον αριθμό παιδιών για τα οποία πρόκειται να κάνετε αίτηση. ");
           this.showModal();
         }
-        else if ( this.formGroup.controls["userChildren"].enabled &&
-          parseInt(this.formGroup.controls["userChildren"].value) > 4 || parseInt(this.formGroup.controls["userChildren"].value) < 0 ) {
+        else if ( this.formGroup.controls["userChildren"].enabled && this.representVerified.getValue() == false &&
+          parseInt(this.formGroup.controls["userChildren"].value) > 3 || parseInt(this.formGroup.controls["userChildren"].value) < 0 ) {
           this.modalTitle.next("Μη αποδεκτός αριθμός παιδιών");
-          this.modalText.next("Μπορείτε να καταχωρήσετε από 0 έως και 4 παιδιά. ");
+          this.modalText.next("Μπορείτε να καταχωρήσετε από 0 έως και 3 παιδιά. ");
           this.showModal();
         }
-        else if (this.formGroup.controls["userChildren"].enabled) {
+
+        //else if (this.formGroup.controls["userChildren"].enabled) {
+        /*
+        else if (this.formGroup.get("userEmail").value == "")  {
             this.modalTitle.next("Επισήμανση");
             this.modalText.next("Πατώντας Επιβεβαίωση, ο αριθμός των παιδιών που δηλώνετε οριστικοποιείται. " +
                 "ΔΕΝ θα έχετε το δικαίωμα να τροποποιήσετε τον αριθμό παιδιών στην επόμενη είσοδό σας στην εφαρμογή. " +
@@ -160,7 +183,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                 );
             this.showChildrenModal();
         }
-
+        */
         else if (!this.hasRight.getValue())  {
             this.modalTitle.next("Μη δικαίωμα νέας αίτησης");
             this.modalText.next("Έχετε ήδη υποβάλλει το σύνολο των αιτήσεων που δικαιούστε να κάνετε.");
