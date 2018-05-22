@@ -409,6 +409,23 @@ export class ReportsSchema {
         }
     };
 
+    reportDideGelDistrib = {
+        actions: false,
+        fileName: "Τοποθετήσεις Μαθητών από ΔΔΕ",
+        pager: {
+            display: true,
+            perPage: 15
+        },
+        noDataMessage: "Δεν υπάρχουν δεδομένα που περιέχουν το κείμενο αναζήτησης",
+        columns: {
+            name: {
+                title: "Id",
+                width: "22%",
+                filter: false
+            }
+        }
+    };
+
     reportEpalApplications = {
         actions: false,
         fileName: "e-ΕΠΑΛ Δηλώσεις μαθητών Σχολικής Μονάδας",
@@ -448,7 +465,13 @@ export class ReportsSchema {
                 width: "15%",
                 filter: true
             }
-        }
+        },
+
+
+
+
+
+
     };
 
 

@@ -428,3 +428,11 @@ epal.school.report-applications:
     _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportEpalApplications'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.dide.report-gel-distrib:
+  path: '/dide/didegel-distrib-report'  
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportDideDistribGel'
+  requirements:
+    _user_is_logged_in: 'TRUE'

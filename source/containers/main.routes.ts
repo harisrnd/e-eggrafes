@@ -71,11 +71,11 @@ import SchoolTypeSelection from "../components/student-application-form/schoolty
 import GelApplicationSubmit from "../components/student-application-form/gelapplication.submit";
 import SchoolTypeSelectionDde from "../components/infoviews/school-type-selection";
 import GelDistribution from "../components/geldistribution/geldistridution";
-//import GelDistributionAuto from "../components/geldistribution/geldistribution-auto";
+import DideGelReports from "../components/geldistribution/didegel-reports";
+import ReportGelDistrib from "../components/geldistribution/report-distrib";
 import EduadminGelView from "../components/infoviews/eduadmingel-view";
 import DirectorViewGym from "../components/director/directorgym-view";
 import SchoolGymAuthGuard from "../guards/schoolgym.auth.guard";
-
 import ReportCapacity from "../components/director/report-capacity";
 import ReportEpalApplications from "../components/director/report-epal-applications";
 
@@ -108,10 +108,8 @@ export const MainRoutes: Routes = [
     { path: "school/director-buttons", component: DirectorButtons, canActivate: [SchoolAuthGuard] },
     { path: "school/director-classcapacity", component: DirectorClassCapacity, canActivate: [SchoolAuthGuard, SchoolCapacityLockedGuard] },
     { path: "school/director-reports", component: DirectorReports, canActivate: [SchoolAuthGuard] },
-
     { path: "school/report-capacity", component: ReportCapacity, canActivate: [SchoolAuthGuard] },
     { path: "school/report-epal-applications", component: ReportEpalApplications, canActivate: [SchoolAuthGuard] },
-
     { path: "ministry/minister-view", component: MinisterView, canActivate: [MinistryAuthGuard] },
     { path: "school/school-type-selection", component: SchoolTypeSelectionDde, canActivate: [EduAdminAuthGuard] },
     { path: "ministry/minister-reports", component: MinisterReports, canActivate: [ReportsAuthGuard] },
@@ -143,7 +141,10 @@ export const MainRoutes: Routes = [
     { path: "school-type-select", component: SchoolTypeSelection, canActivate: [StudentAuthGuard]},
     { path: "gel-application-submit", component: GelApplicationSubmit, canActivate: [StudentAuthGuard, StudentGelLockGuard] },
     { path: "school/gel-distribution", component: GelDistribution, canActivate: [EduAdminAuthGuard] },
-    //{ path: "school/gel-distribution-auto", component: GelDistributionAuto, canActivate: [EduAdminAuthGuard] },
+    { path: "dide/didegel-reports", component: DideGelReports, canActivate: [EduAdminAuthGuard] },
+
+    { path: "dide/didegel-distrib-report", component: ReportGelDistrib, canActivate: [EduAdminAuthGuard] },
+
     { path: "school/eduadmingel-view", component: EduadminGelView, canActivate: [EduAdminAuthGuard] },
     { path: "school/directorgym-view", component: DirectorViewGym, canActivate: [SchoolGymAuthGuard]  },
 
@@ -208,7 +209,8 @@ export const MainDeclarations = [
     GelApplicationSubmit,
     SchoolTypeSelectionDde,
     GelDistribution,
-    //GelDistributionAuto,
+    DideGelReports,
+    ReportGelDistrib,
     DirectorViewGel,
     EduadminGelView,
     DirectorViewGym,
