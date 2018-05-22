@@ -2230,7 +2230,7 @@ class ReportsCreator extends ControllerBase
                          ], Response::HTTP_FORBIDDEN);
           }
           $schoolid = $user->init->value;
-          $this->logger->warning("School Id:" . $schoolid);
+          //$this->logger->warning("School Id:" . $schoolid);
 
           //user role validation
           $roles = $user->getRoles();
@@ -2374,7 +2374,7 @@ class ReportsCreator extends ControllerBase
                  ->condition('eCoursesNames.id', $epalCourse->specialty_id, '=');
               $courseNames = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
               $courseName = reset($courseNames);
-              $this->logger->warning("Test" . $courseName->name );
+              //$this->logger->warning("Test" . $courseName->name );
 
               $sCon = $this->connection
                  ->select('epal_student_class', 'eClass')
@@ -2417,7 +2417,7 @@ class ReportsCreator extends ControllerBase
                  ->condition('eCoursesNames.id', $epalCourse->specialty_id, '=');
               $courseNames = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
               $courseName = reset($courseNames);
-              $this->logger->warning("Test" . $courseName->name );
+              //$this->logger->warning("Test" . $courseName->name );
 
               $sCon = $this->connection
                  ->select('epal_student_class', 'eClass')
@@ -2471,6 +2471,92 @@ class ReportsCreator extends ControllerBase
                  ], Response::HTTP_INTERNAL_SERVER_ERROR);
       }
     }
+
+
+   public function makeReportDideDistribGel(Request $request)
+   {
+      try {
+         if (!$request->isMethod('GET')) {
+              return $this->respondWithStatus([
+                     "message" => t("Method Not Allowed")
+                       ], Response::HTTP_METHOD_NOT_ALLOWED);
+         }
+         //user validation
+         $authToken = $request->headers->get('PHP_AUTH_USER');
+         $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+         $user = reset($users);
+         if (!$user) {
+               return $this->respondWithStatus([
+                      'message' => t("User not found"),
+                        ], Response::HTTP_FORBIDDEN);
+         }
+         $dideid = $user->init->value;
+
+         //user role validation
+         $roles = $user->getRoles();
+         $validRole = false;
+         foreach ($roles as $role) {
+             if ($role === "eduadmin") {
+                 $validRole = true;
+                 break;
+             }
+         }
+         if (!$validRole) {
+               return $this->respondWithStatus([
+                      'message' => t("User Invalid Role"),
+                        ], Response::HTTP_FORBIDDEN);
+         }
+
+         $list = array();
+
+         //βρες τη ΔΔΕ
+         $sCon = $this->connection
+             ->select('eepal_admin_area_field_data', 'eDide')
+             ->fields('eDide', array('id', 'registry_no'))
+             ->condition('eDide.id', $dideid, '=');
+         $adminDides = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+         $adminDide = reset($adminDides);
+
+         $studentIdColumn = array();
+         $studentAMColumn = array();
+         $schoolNameOriginColumn = array();
+         $schoolNameDestination = array();
+
+         $sCon = $this->connection
+            ->select('gelstudenthighschool', 'eClass')
+            ->fields('eClass', array('student_id','school_id'));
+            //->condition('eClass.epal_id', $schoolid, '=')
+            //->condition('eClass.currentclass', 1, '=');
+         $epalStudentsClasses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+         foreach ($epalStudentsClasses as $epalStudentClass) {
+           $this->logger->warning("Id:" . $epalStudentClass->student_id);
+           array_push($studentIdColumn, $epalStudentClass->student_id);
+         }
+
+         //εισαγωγή εγγραφών στο tableschema
+         for ($j = 0; $j < sizeof($studentIdColumn); $j++) {
+                array_push($list, (object) array(
+                          //'name' => $stuentIdColumn[$j],
+                          'name' => '',
+                        ));
+           }
+
+         return $this->respondWithStatus($list, Response::HTTP_OK);
+
+
+       } //end try
+
+       catch (\Exception $e) {
+           $this->logger->warning($e->getMessage());
+           return $this->respondWithStatus([
+                 "message" => t("An unexpected problem occured during makeReportDideDistribGel Method")
+                  ], Response::HTTP_INTERNAL_SERVER_ERROR);
+       }
+
+
+
+   }
+
 
 
 

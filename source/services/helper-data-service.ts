@@ -732,6 +732,20 @@ export class HelperDataService implements OnInit, OnDestroy {
       }
     }
 
+    makeDideReports(routepath)
+    {
+      let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+      this.createAuthorizationHeader(headers);
+      let options = new RequestOptions({ headers: headers });
+
+      if (routepath === "/dide/didegel-distrib-report") {
+          return this.http.get(`${AppSettings.API_ENDPOINT}` + routepath , options)
+              .map(response => response.json());
+      }
+    }
+
     informUnlocatedStudents(username, userpassword, unallocated, period) {
 
         let headers = new Headers({
