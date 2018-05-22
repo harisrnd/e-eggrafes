@@ -2290,8 +2290,6 @@ class ReportsCreator extends ControllerBase
           }
           */
 
-
-
           //α' τρόπος
 
           $sCon = $this->connection
@@ -2317,6 +2315,135 @@ class ReportsCreator extends ControllerBase
               else
                 array_push($confirmColumn, 'ΟΧΙ');
             }
+          }
+
+          //Β' Λυκείου
+          $sCon = $this->connection
+             ->select('eepal_sectors_in_epal_field_data', 'eSectors')
+             ->fields('eSectors', array('sector_id'))
+             ->condition('eSectors.epal_id', $schoolid, '=');
+          $epalSectors = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          foreach ($epalSectors as $epalSector) {
+              //find sector name
+              $sCon = $this->connection
+                 ->select('eepal_sectors_field_data', 'eSectorsNames')
+                 ->fields('eSectorsNames', array('name'))
+                 ->condition('eSectorsNames.id', $epalSector->sector_id, '=');
+              $sectorNames = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+              $sectorName = reset($sectorNames);
+              //$this->logger->warning("Test" . $sectorLogo );
+
+              $sCon = $this->connection
+                 ->select('epal_student_class', 'eClass')
+                 ->fields('eClass', array('student_id','directorconfirm'))
+                 ->condition('eClass.epal_id', $schoolid, '=')
+                 ->condition('eClass.currentclass', 2, '=')
+                 ->condition('eClass.specialization_id', $epalSector->sector_id , '=');
+              $epalStudentsClasses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+              foreach ($epalStudentsClasses as $epalStudentClass) {
+                $sCon = $this->connection
+                   ->select('epal_student', 'eStudent')
+                   ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
+                   ->condition('eStudent.id', $epalStudentClass->student_id, '=');
+                $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                foreach ($epalStudents as $epalStudent) {
+                  array_push($schoolSectionColumn, 'Β\' τάξη / ' . $sectorName->name);
+                  array_push($firstnameColumn, $crypt->decrypt($epalStudent->name));
+                  array_push($surnameColumn, $crypt->decrypt($epalStudent->studentsurname));
+                  array_push($addressColumn, $crypt->decrypt($epalStudent->regionaddress) . ", ΤΚ " . $crypt->decrypt($epalStudent->regiontk) . ", " . $crypt->decrypt($epalStudent->regionarea) );
+                  array_push($telColumn, $crypt->decrypt($epalStudent->telnum));
+                  if ($epalStudentClass->directorconfirm )
+                    array_push($confirmColumn, 'ΝΑΙ');
+                  else
+                    array_push($confirmColumn, 'ΟΧΙ');
+                }
+              }
+          }
+
+          //Γ' Λυκείου
+          $sCon = $this->connection
+             ->select('eepal_specialties_in_epal_field_data', 'eCourses')
+             ->fields('eCourses', array('specialty_id'))
+             ->condition('eCourses.epal_id', $schoolid, '=');
+          $epalCourses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          foreach ($epalCourses as $epalCourse) {
+              //find course  name
+              $sCon = $this->connection
+                 ->select('eepal_specialty_field_data', 'eCoursesNames')
+                 ->fields('eCoursesNames', array('name'))
+                 ->condition('eCoursesNames.id', $epalCourse->specialty_id, '=');
+              $courseNames = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+              $courseName = reset($courseNames);
+              $this->logger->warning("Test" . $courseName->name );
+
+              $sCon = $this->connection
+                 ->select('epal_student_class', 'eClass')
+                 ->fields('eClass', array('student_id','directorconfirm'))
+                 ->condition('eClass.epal_id', $schoolid, '=')
+                 ->condition('eClass.currentclass', 3, '=')
+                 ->condition('eClass.specialization_id', $epalCourse->specialty_id , '=');
+              $epalStudentsClasses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+              foreach ($epalStudentsClasses as $epalStudentClass) {
+                $sCon = $this->connection
+                   ->select('epal_student', 'eStudent')
+                   ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
+                   ->condition('eStudent.id', $epalStudentClass->student_id, '=');
+                $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                foreach ($epalStudents as $epalStudent) {
+                  array_push($schoolSectionColumn, 'Γ\' τάξη / ' . $courseName->name);
+                  array_push($firstnameColumn, $crypt->decrypt($epalStudent->name));
+                  array_push($surnameColumn, $crypt->decrypt($epalStudent->studentsurname));
+                  array_push($addressColumn, $crypt->decrypt($epalStudent->regionaddress) . ", ΤΚ " . $crypt->decrypt($epalStudent->regiontk) . ", " . $crypt->decrypt($epalStudent->regionarea) );
+                  array_push($telColumn, $crypt->decrypt($epalStudent->telnum));
+                  if ($epalStudentClass->directorconfirm )
+                    array_push($confirmColumn, 'ΝΑΙ');
+                  else
+                    array_push($confirmColumn, 'ΟΧΙ');
+                }
+              }
+          }
+
+          //Δ' Λυκείου
+          $sCon = $this->connection
+             ->select('eepal_specialties_in_epal_field_data', 'eCourses')
+             ->fields('eCourses', array('specialty_id'))
+             ->condition('eCourses.epal_id', $schoolid, '=');
+          $epalCourses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          foreach ($epalCourses as $epalCourse) {
+              //find course  name
+              $sCon = $this->connection
+                 ->select('eepal_specialty_field_data', 'eCoursesNames')
+                 ->fields('eCoursesNames', array('name'))
+                 ->condition('eCoursesNames.id', $epalCourse->specialty_id, '=');
+              $courseNames = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+              $courseName = reset($courseNames);
+              $this->logger->warning("Test" . $courseName->name );
+
+              $sCon = $this->connection
+                 ->select('epal_student_class', 'eClass')
+                 ->fields('eClass', array('student_id','directorconfirm'))
+                 ->condition('eClass.epal_id', $schoolid, '=')
+                 ->condition('eClass.currentclass', 4, '=')
+                 ->condition('eClass.specialization_id', $epalCourse->specialty_id , '=');
+              $epalStudentsClasses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+              foreach ($epalStudentsClasses as $epalStudentClass) {
+                $sCon = $this->connection
+                   ->select('epal_student', 'eStudent')
+                   ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
+                   ->condition('eStudent.id', $epalStudentClass->student_id, '=');
+                $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                foreach ($epalStudents as $epalStudent) {
+                  array_push($schoolSectionColumn, 'Δ\' τάξη / ' . $courseName->name);
+                  array_push($firstnameColumn, $crypt->decrypt($epalStudent->name));
+                  array_push($surnameColumn, $crypt->decrypt($epalStudent->studentsurname));
+                  array_push($addressColumn, $crypt->decrypt($epalStudent->regionaddress) . ", ΤΚ " . $crypt->decrypt($epalStudent->regiontk) . ", " . $crypt->decrypt($epalStudent->regionarea) );
+                  array_push($telColumn, $crypt->decrypt($epalStudent->telnum));
+                  if ($epalStudentClass->directorconfirm )
+                    array_push($confirmColumn, 'ΝΑΙ');
+                  else
+                    array_push($confirmColumn, 'ΟΧΙ');
+                }
+              }
           }
 
 
