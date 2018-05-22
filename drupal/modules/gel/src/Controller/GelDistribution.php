@@ -775,6 +775,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type)
                 'student_id' => $value,
                 'school_id' => $schoolid,
                 'taxi' => $nexttaxi,
+                'dide' => $user->init->value,
 
             );
 
