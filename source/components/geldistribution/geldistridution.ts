@@ -42,32 +42,34 @@ import {
 
        <p style="margin-top: 20px; line-height: 2em;"> Στην παρακάτω λίστα βλέπετε τα γυμνάσια της περιοχής ευθύνης σας. Παρακαλώ
        επιλέξτε σχολειο για να τοποθετήσετε τους μαθητές με βάση τη διεύθυνση κατοικίας τους στο αντίστοιχο λύκειο.</p>
-       <div style="font-weight: bold;">
+       
        <li class="list-group-item isclickable" (click)="setActiveclass(1)">
-          <div class="col-md-12"  [class.selectedout]="aclassActive === 1" > Ά Λυκείου  </div>
+          <div class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1" > Ά Λυκείου  </div>
        </li>    
       <div [hidden] ="aclassActive !== 1">   
       <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Επιλέξτε Γυμνάσιο Προέλευσης</b></div>
             <div class="col-md-11 offset-md-1">
                 
-                <select #secsel class="form-control"  
-                        (change)="setActiveRegion(secsel,1,1)">
+                <select #secsel class="form-control" formControlName="secsel" 
+                        (change)="setActiveRegion(secsel,1,1,0)">
                     <option value="0"></option>
                     <option *ngFor="let JuniorHighSchools$  of JuniorHighSchool$ | async; let i=index; let isOdd=odd; let isEven=even" [value]="JuniorHighSchools$.id"> {{JuniorHighSchools$.name}}</option>
                 </select>
                 </div>
            <br>
            <br>
-           <div class="list-group-item selectedout">
-                    <div class="col-md-2" style="   font-weight: bold;" >Επιλογή Όλων 
+           <div [hidden] ="regionActive === -1">   
+           
+           <div class="list-group-item framecolor">
+                    <div class="col-md-2" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων 
                        <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
                     </div>
-                    <div class="col-md-4" style="   font-weight: bold;" >
+                    <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
                       <div>A/A Αίτησης/ Α.Μ. Μαθητή</div> 
                       <div>Διεύθυνση Κατοικίας </div>
                       
                     </div>
-                    <div class="col-md-2 " style="   font-weight: bold;" >Τύπος Σχολείου</div>
+                    <div class="col-md-2 " style="   font-weight: bold; font-size: 0.8em" >Τύπος Σχολείου</div>
                     <div class="col-md-4 " style="font-weight: bold;">
                             Σχολείο Τοποθέτησης
                      </div>
@@ -80,23 +82,23 @@ import {
                    style="margin: 0px 2px 0px 2px;"  [hidden]="calchidden(AllStudents$.idnew)" [class.changecolor]="AllStudents$.oldschool !== false">
 
                     
-                    <div class="col-md-2 " >
+                    <div class="col-md-2 " style = "font-size: 0.8em">
                      <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
                    </div>
 
-                    <div class="col-md-4" style="   font-weight: bold;" >
+                    <div class="col-md-4"  style = "font-size: 0.8em">
 
                       <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div> 
                       <div>{{AllStudents$.regionaddress}}</div>
                       <div>{{AllStudents$.regionarea}} </div>
                       <div>{{AllStudents$.regiontk}}</div>
                     </div>
-                    <div class="col-md-2 " style="   font-weight: bold;" >{{AllStudents$.school_type}}</div>
-                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-4 changecolor" style="font-weight: bold;">
+                    <div class="col-md-2 " style = "font-size: 0.8em" >{{AllStudents$.school_type}}</div>
+                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-4 changecolor" >
                             {{AllStudents$.oldschool}}
                      </div>
 
-                     <div *ngIf="AllStudents$.oldschool !== true" class="col-md-4" style="font-weight: bold;">
+                     <div *ngIf="AllStudents$.oldschool !== true" class="col-md-4" >
                            
                      </div>
                                      
@@ -106,22 +108,37 @@ import {
      
 
                 
-              
-         <div class="container selectedout">
-         <span class="border border-info">
-          <div class="form-group" class="row">
-         
+         <div style="font-weight: bold;">     
+         <div class="container framecolor">
+         <span class="border border-info" >
+          <div class="form-group" class="row" style = "font-weight: bold; font-size: 0.8em">
+           <div class="col-3">
           Βρίσκεστε στη σελίδα:
+          </div>
           <div class="col-1">
            <input #pageno type="text" class="form-control" placeholder=".col-1" formControlName="pageno">
           </div> 
+          <div class="col-1">
            απο  
+           </div>
            <div class="col-1">
            <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage">
            </div> 
+         
+          <div class="col-4">
+           Αριθμός μαθητών ανα σελίδα: 
            </div>
- 
-           
+          <div class="col-2">
+           <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,secsel)">
+                        <option value="5">5</option>
+                        <option value="15">15</option>
+                        <option value="25">25</option>
+                        <option value="100">100</option>
+
+
+            </select>
+            </div>
+           </div>
              <br>
              <nav aria-label="pagination">
               <ul class="pagination justify-content-center">
@@ -138,7 +155,7 @@ import {
          </div>
 
 
-          <div style="width: 100%; color: #000000;">
+          <div style="width: 100%; color: #000000; font-weight: bold;" >
                  <p style="margin-top: 20px; line-height: 2em;"> Αφού έχετε επιλέξει τους μαθητες απο την παραπάνω λίστα, στη συνέχεια επιλέξτε το αντίστοιχο Λύκειο υποδοχής.</p>
                  <label> Λύκειο Υποδοχής </label>
                    <select #highscsel class="form-control" (change)="confirmSchool(highscsel,1)" >
@@ -149,12 +166,12 @@ import {
           </div>
                    <br>
                    <br>
-        
+        </div>
 
       </div>
-       </div>
+  
 
-
+      </div>
 
 
 
@@ -196,6 +213,7 @@ import {
     private pageno = 1;
     private pageNew = 1;
     private tot_pages = 1;
+    private stperpage = 5;
 
 
 
@@ -217,6 +235,8 @@ import {
         this.formGroup = this.fb.group({
             maxpage:[{value: '', disabled: true}, []],
             pageno:[{value: '', disabled: true}, []],
+            secsel:[{value: '', disabled: false}, []],
+            studentperpage:[5],
         });
 
        
@@ -229,7 +249,7 @@ import {
     }
 
     ngOnInit() {
-      console.log(this.aclassActive,"aaaaaaa" );
+      
        this.selall = false;
        this.selections = [];
        console.log(this.selall);
@@ -244,26 +264,29 @@ import {
             });
     }
 
-     setActiveRegion(ind,type, changed) {
+     setActiveRegion(ind,type, changed,changepages) {
        
        if (changed === 1)
        {
          this.pageno = 1;
          this.tot_pages = 0;
+         this.stperpage = 5;
        }
-
 
        ind = ind.value;
        this.selall = false;
        this.selections = [];
-        console.log(this.selall);
-        this.StudentsPerSchool$.next([{}]);
+       this.StudentsPerSchool$.next([{}]);
         if (ind === this.regionActive && ind !== 0 && changed === 1) {
             ind = -1;
-            this.regionActive = ind;
+           this.regionActive = ind;
         }
         else {
-
+            if (changepages === 1)
+            {
+              this.pageno = 1
+              this.tot_pages = 0;
+            }
             this.regionActive = ind;
             this.showLoader.next(true);
 
@@ -276,13 +299,25 @@ import {
                     console.log("first", this.pageno);
                     this.StudentsPerSchool$.next(data);
                     if (this.pageno == 1){
-                    this.tot_pages = data.length %3;
-                    if (data.length%3 >0)
-                        this.tot_pages = (data.length - (data.length%3))/3 +1;
+                      console.log(this.tot_pages,data.length,this.stperpage, "datalength");
+
+                    if (data.length < this.stperpage)
+                    {
+                      console.log(this.tot_pages,this.stperpage,"mesa");
+                      this.tot_pages = 1;
+                    }
                     else
-                      this.tot_pages = data.length /3;
+                    {
+                    this.tot_pages = data.length %this.stperpage
+                    if (data.length%this.stperpage >0)
+                        this.tot_pages = (data.length - (data.length%this.stperpage))/this.stperpage +1;
+                    else
+                      this.tot_pages = data.length /this.stperpage;
+                    }
+
                     if (this.tot_pages == 0)
                         this.tot_pages = 1;
+                     console.log(this.tot_pages,"selides");
                     this.formGroup.get('maxpage').setValue(this.tot_pages);
                      
                    }
@@ -427,7 +462,7 @@ import {
 
 updateCheckedOptions(k,l)
 {
-  console.log(this.aclassActive,"aaaaaaa3" );
+  
   let server = 0;
   server = this.selections.find(x => x === k);
   let index: number = this.selections.indexOf(server);
@@ -475,7 +510,7 @@ let server = 0;
 
 selectall()
 {
-    console.log(this.aclassActive,"aaaaaaa5" );
+    
           this.selall =! this.selall;
              this.showLoader.next(true);
             this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1)
@@ -488,7 +523,7 @@ selectall()
                     
                     this.SelectAllIds = this.StudentsPerSchool$.getValue();
                        for (let i = 0; i < this.SelectAllIds.length; i++) {
-                         if (this.SelectAllIds[i].idnew >= (this.pageNew-1)*3 + 1 && this.SelectAllIds[i].idnew <= this.pageNew*3)
+                         if (this.SelectAllIds[i].idnew >= (this.pageNew-1)*this.stperpage + 1 && this.SelectAllIds[i].idnew <= this.pageNew*this.stperpage)
                             this.selections[i] = this.SelectAllIds[i].id;
                         }
                       }
@@ -523,10 +558,14 @@ selectall()
 
  setActiveclass(ind)
     {
-      console.log(this.aclassActive,"aaaaaaamaster" );
+       
       if (this.aclassActive === ind)
       {
              ind = -1;
+             this.regionActive = -1;
+             this.formGroup.get('secsel').setValue(0);
+             this.stperpage = 5;
+             console.log(this.aclassActive,"apo edw" );
       }
 
       this.aclassActive = ind;
@@ -546,7 +585,7 @@ selectall()
     calchidden(idn)
     {
       
-         if (idn < (this.pageNew-1)*3 + 1 || idn > this.pageNew*3)
+         if (idn < (this.pageNew-1)*this.stperpage + 1 || idn > this.pageNew*this.stperpage)
             return true;
          else
              return false;
@@ -559,7 +598,7 @@ selectall()
        return;  
 
         this.pageno = this.pageno + 1;
-       this.setActiveRegion(secsel,1,0)
+       this.setActiveRegion(secsel,1,0,0)
       
     }
 
@@ -569,9 +608,17 @@ selectall()
       if (this.pageno ===1) 
         return;  
       this.pageno = this.pageno - 1;
-      this.setActiveRegion(secsel,1,0)
+      this.setActiveRegion(secsel,1,1,0)
 
     }
 
+
+changestudentsperpage(newstperpage,secsel)
+{
+  
+  this.stperpage= newstperpage.value ;
+  this.setActiveRegion(secsel,1,0,1);
+  
+}
 
 }
