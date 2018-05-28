@@ -79,7 +79,7 @@ gel.gethighschoolsmart:
   requirements:
     _user_is_logged_in: 'TRUE'
 gel.getstudentsperschool:
-  path: '/gel/getstudentsperschool/{schoolid}/{type}'
+  path: '/gel/getstudentsperschool/{schoolid}/{type}/{addressfilter}/{amfilter}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:
@@ -87,7 +87,7 @@ gel.getstudentsperschool:
   requirements:
     _user_is_logged_in: 'TRUE'
 gel.savehighscoolselection:
-  path: '/gel/saveselection/{studentid}/{schoolid}/{oldschool}/{nextclass}'
+  path: '/gel/saveselection/{studentid}/{schoolid}/{oldschool}/{nextclass}/{undoselection}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:
@@ -150,3 +150,12 @@ gel.confirmstudents:
     _controller: '\Drupal\gel\Controller\GelDistribution::ConfirmStudents'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.initialization:
+  path: '/gel/initialization'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::Initialization'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
