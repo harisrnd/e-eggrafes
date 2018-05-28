@@ -8,7 +8,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
-
+ 
 /**
  * Defines the Gel student entity.
  *
@@ -865,6 +865,25 @@ class GelStudent extends ContentEntityBase implements GelStudentInterface {
           ->setDisplayConfigurable('form', TRUE)
           ->setDisplayConfigurable('view', TRUE);
 
+      $fields['second_period'] = BaseFieldDefinition::create('boolean')
+        ->setLabel(t('Δεύτερη περίοδος αιτήσεων'))
+        ->setDescription(t('Δεύτερη περίοδος αιτήσεων.'))
+        ->setSettings(array(
+          'text_processing' => 0,
+        ))
+        ->setRequired(false)
+        ->setDefaultValue(false)
+        ->setDisplayOptions('view', array(
+          'label' => 'above',
+          'type' => 'boolean',
+          'weight' => -4,
+        ))
+        ->setDisplayOptions('form', array(
+          'type' => 'boolean',
+          'weight' => -4,
+        ))
+        ->setDisplayConfigurable('form', true)
+        ->setDisplayConfigurable('view', true);
 
 
 
