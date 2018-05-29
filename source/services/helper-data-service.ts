@@ -1615,8 +1615,12 @@ getHighSchoolperDide()
 
 }
 
-getStudentsPerSchool(schoolid,type)
+getStudentsPerSchool(schoolid,type,addressfilter, amfilter)
 {
+        if (addressfilter === "")
+            addressfilter = 99999;
+        if (amfilter === "")
+            amfilter = 0;
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
             this.authRole = loginInfoToken.auth_role;
@@ -1626,14 +1630,14 @@ getStudentsPerSchool(schoolid,type)
         });
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
-        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/getstudentsperschool/`+ schoolid +'/'+ type , options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/getstudentsperschool/`+ schoolid +'/'+ type +'/'+ addressfilter +'/'+amfilter, options)
             .map(response => response.json());
 
 
 
 }
 
-saveHighScoolSelection(studentid,oldschool, schoolid, nextclass)
+saveHighScoolSelection(studentid,oldschool, schoolid, nextclass, undosel)
 {
     this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
@@ -1648,7 +1652,7 @@ saveHighScoolSelection(studentid,oldschool, schoolid, nextclass)
         {
             oldschool = 999999;
         }
-        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/saveselection/`+ studentid + '/'+schoolid +'/'+ oldschool + '/'+ nextclass , options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/gel/saveselection/`+ studentid + '/'+schoolid +'/'+ oldschool + '/'+ nextclass + '/' + undosel, options)
             .map(response => response.json());
 
 }
@@ -1769,7 +1773,30 @@ getStudentPerSchoolGel(classId) {
             .map(response => response.json());
     }
 
+Initialazation() {
 
+        this.loginInfo$.getValue().forEach(loginInfoToken => {
+            this.authToken = loginInfoToken.auth_token;
+            this.authRole = loginInfoToken.auth_role;
+        });
+        let headers = new Headers({
+            "Content-Type": "application/json",
+        });
+        this.createAuthorizationHeader(headers);
+        let options = new RequestOptions({ headers: headers });
+
+        return new Promise((resolve, reject) => {
+            this.http.post(`${AppSettings.API_ENDPOINT}/gel/initialization`, {}, options)
+                .map(response => response.json())
+                .subscribe(data => {
+                    resolve(data);
+                },
+                error => {
+                    reject("Error POST");
+                });
+        });
+
+    }
 
 
 }
