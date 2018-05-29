@@ -15,7 +15,7 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
     template: `
         <p align="left"><strong> Υπεύθυνη Δήλωση  </strong></p>
 
-    <p align="left"> Η παρακάτω Υπεύθυνη Δήλωση υποβάλλεται :</p>
+    <p align="left"> Η Υπεύθυνη Δήλωση υποβάλλεται :</p>
     <ul>
         <li>για τα ΓΕ.Λ. στη διεύθυνση ηλεκτρονικού ταχυδρομείου:  skonstantatos@minedu.gov.gr   ή στο φαξ: 2103443390</li>
 
@@ -23,7 +23,16 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
     </ul>
         <ul class="list-group">
         <li class="list-group-item isclickable evenout"  >
-            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/eggrafa.pdf" target="_blank">Υπεύθυνη Δήλωση</a>
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_children.pdf" target="_blank">Υπεύθυνη Δήλωση για αριθμό παιδιών (μορφή .pdf)</a>
+        </li>
+        <li class="list-group-item isclickable evenout"  >
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_children.doc" target="_blank">Υπεύθυνη Δήλωση για αριθμό παιδιών (μορφή .doc)</a>
+        </li>
+        <li class="list-group-item isclickable evenout"  >
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_representative.pdf" target="_blank">Υπεύθυνη Δήλωση για Υπεύθυνο σε κέντρο κοινωνικής πρόνοιας (μορφή .pdf)</a>
+        </li>
+        <li class="list-group-item isclickable evenout"  >
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_representative.doc" target="_blank">Υπεύθυνη Δήλωση για Υπεύθυνο σε κέντρο κοινωνικής πρόνοιας (μορφή .doc)</a>
         </li>
         </ul>
 

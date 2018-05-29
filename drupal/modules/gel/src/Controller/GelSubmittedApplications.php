@@ -285,14 +285,13 @@ class GelSubmittedApplications extends ControllerBase
                     }
                     else {
                        $applicantsAppDelDisabled = $eggrafesConfig->lock_delete->value;
+                       $applicantsViewResultsDisabled = $eggrafesConfig->lock_results->value;
                     }
 
                     $gelStudentClasses = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $object->id()));
-                    //$gelStudentClass = reset($gelStudentClasses);
 
-                    //$this->logger->warning(sizeof($gelStudentClasses));
-
-                    if (sizeof($gelStudentClasses) === 0/*!$gelStudentClass*/ && !$applicantsAppDelDisabled)
+                    //στα ΓΕΛ πάντα θα υπάρχει αποτέλεσμα - είτε η ΔΔΕ τοποθέτησε, είτε δεν τοποθέτησε η ΔΔΕ ενώ έπρεπε, είτε τοποθετήθηκε αυτοδίκαια
+                    if (/*sizeof($gelStudentClasses) === 0 && */!$applicantsAppDelDisabled && $applicantsViewResultsDisabled)
                          $canDelete = 1;
                     else
                          $canDelete = 0;
@@ -391,6 +390,7 @@ class GelSubmittedApplications extends ControllerBase
                                             'birthdate',
                                             'created',
                                             'changed',
+                                            'myschool_promoted',
                                         ))
                                         ->fields('gs_ch',
                                         array('choice_id',
@@ -401,7 +401,8 @@ class GelSubmittedApplications extends ControllerBase
                                               'choicetype'
                                         ))
                                         ->fields('esc',
-                                        array('school_id'
+                                        array('school_id',
+                                              'student_id'
                                         ))
                                         ->fields('eeschfin',
                                         array('id',
@@ -474,15 +475,34 @@ class GelSubmittedApplications extends ControllerBase
                     }
                     unset($crypt);
 
-                    if ($applicantsResultsDisabled === "0") {
+                    $schoolName =  $gelStudent->eeschfin_name;
+                    $schoolAddress = $gelStudent->street_address;
+                    $schoolTel = $gelStudent->phone_number;
+
+                    if ($applicantsResultsDisabled === "0" && $gelStudent->myschool_promoted === "1") {
                       if ($gelStudent->school_id)
+                          //υπάρχει σχολείο στον πίνακα gelstudenthighschool
                           $status = "1";
-                      else
+                      else if ($gelStudent->student_id != null && $gelStudent->school_id == null)
+                          //υπάρχει ο μαθητής αλλά όχι το σχολείο στον πίνακα gelstudenthighschool
+                          $status = "3";
+                      else  {
+                          //ο μαθητής δεν υπάρχει στον πίνακα gelstudenthighschool, άρα πάει αυτοδίκαια στο σχολείο τρέχουσας φοίτησης
                           $status = "4";
+                          $sCon = $this->connection
+                             ->select('gel_school', 'eSchool')
+                             ->fields('eSchool', array('name', 'street_address', 'phone_number'))
+                             ->condition('eSchool.registry_no',   $gelStudent->lastschool_registrynumber , '=');
+                          $schoolNamesDest = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                          $schoolNameDest = reset($schoolNamesDest);
+
+                          $schoolName = $schoolNameDest->name;
+                          $schoolAddress = $schoolNameDest->street_address;
+                          $schoolTel = $schoolNameDest->phone_number;
+                        }
                     }
                     else
                         $status = "0";
-
 
                     $list[] = array(
                             'applicationId' => $gelStudent->id,
@@ -509,9 +529,12 @@ class GelSubmittedApplications extends ControllerBase
                             'birthdate' => substr($gelStudent->birthdate, 8, 2).'/'.substr($gelStudent->birthdate, 5, 2).'/'.substr($gelStudent->birthdate, 0, 4),
                             'changed' => date('d/m/Y H:i', $gelStudent->changed),
                             'gelStudentChoices' => $gelStudentChoices,
-                            'schoolName' => $gelStudent->eeschfin_name,
-                            'schoolAddress' => $gelStudent->street_address,
-                            'schoolTel' => $gelStudent->phone_number,
+                            //'schoolName' => $gelStudent->eeschfin_name,
+                            //'schoolAddress' => $gelStudent->street_address,
+                            //'schoolTel' => $gelStudent->phone_number,
+                            'schoolName' => $schoolName,
+                            'schoolAddress' => $schoolAddress,
+                            'schoolTel' => $schoolTel,
                             'applicantsResultsDisabled' => $applicantsResultsDisabled,
                             'applicantsAppModifyDisabled' => $applicantsAppModifyDisabled,
                             'status' => $status

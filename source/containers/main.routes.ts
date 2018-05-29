@@ -73,6 +73,7 @@ import SchoolTypeSelectionDde from "../components/infoviews/school-type-selectio
 import GelDistribution from "../components/geldistribution/geldistridution";
 import DideGelReports from "../components/geldistribution/didegel-reports";
 import ReportGelDistrib from "../components/geldistribution/report-distrib";
+import ReportGelComplet from "../components/geldistribution/report-complet";
 import EduadminGelView from "../components/infoviews/eduadmingel-view";
 import DirectorViewGym from "../components/director/directorgym-view";
 import SchoolGymAuthGuard from "../guards/schoolgym.auth.guard";
@@ -142,9 +143,8 @@ export const MainRoutes: Routes = [
     { path: "gel-application-submit", component: GelApplicationSubmit, canActivate: [StudentAuthGuard, StudentGelLockGuard] },
     { path: "school/gel-distribution", component: GelDistribution, canActivate: [EduAdminAuthGuard] },
     { path: "dide/didegel-reports", component: DideGelReports, canActivate: [EduAdminAuthGuard] },
-
     { path: "dide/didegel-distrib-report", component: ReportGelDistrib, canActivate: [EduAdminAuthGuard] },
-
+    { path: "dide/didegel-complet-report", component: ReportGelComplet, canActivate: [EduAdminAuthGuard] },
     { path: "school/eduadmingel-view", component: EduadminGelView, canActivate: [EduAdminAuthGuard] },
     { path: "school/directorgym-view", component: DirectorViewGym, canActivate: [SchoolGymAuthGuard]  },
 
@@ -211,6 +211,7 @@ export const MainDeclarations = [
     GelDistribution,
     DideGelReports,
     ReportGelDistrib,
+    ReportGelComplet,
     DirectorViewGel,
     EduadminGelView,
     DirectorViewGym,

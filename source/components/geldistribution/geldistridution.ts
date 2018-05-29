@@ -8,7 +8,7 @@ import {
     FormControl,
     FormArray,
     Validators,
-} from '@angular/forms'; 
+} from '@angular/forms';
 
 
 @Component({
@@ -42,15 +42,15 @@ import {
 
        <p style="margin-top: 20px; line-height: 2em;"> Στην παρακάτω λίστα βλέπετε τα γυμνάσια της περιοχής ευθύνης σας. Παρακαλώ
        επιλέξτε σχολειο για να τοποθετήσετε τους μαθητές με βάση τη διεύθυνση κατοικίας τους στο αντίστοιχο λύκειο.</p>
-       
+
        <li class="list-group-item isclickable" (click)="setActiveclass(1)">
           <div class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1" > Ά Λυκείου  </div>
-       </li>    
-      <div [hidden] ="aclassActive !== 1">   
+       </li>
+      <div [hidden] ="aclassActive !== 1">
       <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Επιλέξτε Γυμνάσιο Προέλευσης</b></div>
             <div class="col-md-11 offset-md-1">
-                
-                <select #secsel class="form-control" formControlName="secsel" 
+
+                <select #secsel class="form-control" formControlName="secsel"
                         (change)="setActiveRegion(secsel,1,1,0)">
                     <option value="0"></option>
                     <option *ngFor="let JuniorHighSchools$  of JuniorHighSchool$ | async; let i=index; let isOdd=odd; let isEven=even" [value]="JuniorHighSchools$.id"> {{JuniorHighSchools$.name}}</option>
@@ -58,16 +58,16 @@ import {
                 </div>
            <br>
            <br>
-           <div [hidden] ="regionActive === -1">   
-           
+           <div [hidden] ="regionActive === -1">
+
            <div class="list-group-item framecolor">
-                    <div class="col-md-2" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων 
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
+                    <div class="col-md-2" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
-                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div> 
+                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
                       <div>Διεύθυνση Κατοικίας </div>
-                      
+
                     </div>
                     <div class="col-md-2 " style="   font-weight: bold; font-size: 0.8em" >Τύπος Σχολείου</div>
                     <div class="col-md-4 " style="font-weight: bold;">
@@ -75,20 +75,20 @@ import {
                      </div>
 
                      </div>
-                 
-                 
+
+
                  <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
                   class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
                    style="margin: 0px 2px 0px 2px;"  [hidden]="calchidden(AllStudents$.idnew)" [class.changecolor]="AllStudents$.oldschool !== false">
 
-                    
+
                     <div class="col-md-2 " style = "font-size: 0.8em">
-                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">
                    </div>
 
                     <div class="col-md-4"  style = "font-size: 0.8em">
 
-                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div> 
+                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div>
                       <div>{{AllStudents$.regionaddress}}</div>
                       <div>{{AllStudents$.regionarea}} </div>
                       <div>{{AllStudents$.regiontk}}</div>
@@ -99,16 +99,16 @@ import {
                      </div>
 
                      <div *ngIf="AllStudents$.oldschool !== true" class="col-md-4" >
-                           
-                     </div>
-                                     
-              
-                 </div>
- 
-     
 
-                
-         <div style="font-weight: bold;">     
+                     </div>
+
+
+                 </div>
+
+
+
+
+         <div style="font-weight: bold;">
          <div class="container framecolor">
          <span class="border border-info" >
           <div class="form-group" class="row" style = "font-weight: bold; font-size: 0.8em">
@@ -117,16 +117,16 @@ import {
           </div>
           <div class="col-1">
            <input #pageno type="text" class="form-control" placeholder=".col-1" formControlName="pageno">
-          </div> 
+          </div>
           <div class="col-1">
-           απο  
+           απο
            </div>
            <div class="col-1">
            <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage">
-           </div> 
-         
+           </div>
+
           <div class="col-4">
-           Αριθμός μαθητών ανα σελίδα: 
+           Αριθμός μαθητών ανα σελίδα:
            </div>
           <div class="col-2">
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,secsel)">
@@ -149,7 +149,7 @@ import {
                   <button class="page-link"  (click) ="nextpage(secsel) ">Επόμενη</button>
                 </li>
               </ul>
-              
+
             </nav>
             </span>
          </div>
@@ -160,7 +160,7 @@ import {
                  <label> Λύκειο Υποδοχής </label>
                    <select #highscsel class="form-control" (change)="confirmSchool(highscsel,1)" >
                         <option value="0"></option>
-                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index"
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
                    </select>
           </div>
@@ -169,18 +169,18 @@ import {
         </div>
 
       </div>
-  
+
 
       </div>
 
 
 
-  
+
 
       </form>
     </div>
 
-  
+
 
    `
 })
@@ -239,20 +239,20 @@ import {
             studentperpage:[5],
         });
 
-       
+
     }
 
-    
+
     ngOnDestroy() {
       (<any>$("#informationfeedback")).remove();
 
     }
 
     ngOnInit() {
-      
+
        this.selall = false;
        this.selections = [];
-       console.log(this.selall);
+       //console.log(this.selall);
         (<any>$("#informationfeedback")).appendTo("body");
         this.JuniorHighSchoolSub = this._hds.getJuniorHighSchoolperDide().subscribe(x => {
             this.JuniorHighSchool$.next(x);
@@ -265,7 +265,7 @@ import {
     }
 
      setActiveRegion(ind,type, changed,changepages) {
-       
+
        if (changed === 1)
        {
          this.pageno = 1;
@@ -290,20 +290,20 @@ import {
             this.regionActive = ind;
             this.showLoader.next(true);
 
-           this.formGroup.get('pageno').setValue(this.pageno); 
-      
-              
+           this.formGroup.get('pageno').setValue(this.pageno);
+
+
                this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type)
 
                 .subscribe(data => {
-                    console.log("first", this.pageno);
+                    //console.log("first", this.pageno);
                     this.StudentsPerSchool$.next(data);
                     if (this.pageno == 1){
-                      console.log(this.tot_pages,data.length,this.stperpage, "datalength");
+                      //console.log(this.tot_pages,data.length,this.stperpage, "datalength");
 
                     if (data.length < this.stperpage)
                     {
-                      console.log(this.tot_pages,this.stperpage,"mesa");
+                      //console.log(this.tot_pages,this.stperpage,"mesa");
                       this.tot_pages = 1;
                     }
                     else
@@ -317,14 +317,14 @@ import {
 
                     if (this.tot_pages == 0)
                         this.tot_pages = 1;
-                     console.log(this.tot_pages,"selides");
+                     //console.log(this.tot_pages,"selides");
                     this.formGroup.get('maxpage').setValue(this.tot_pages);
-                     
+
                    }
                    this.pageNew = this.pageno;
                     if (this.selall === true)
                     {
-                    
+
                     this.SelectAllIds = this.StudentsPerSchool$.getValue();
                        for (let i = 0; i < this.SelectAllIds.length; i++) {
                         this.selections[i] = this.SelectAllIds[i].id;
@@ -346,11 +346,11 @@ import {
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-                    
+
                     this.showLoader.next(false);
                 });
-        
-    
+
+
   }
 }
 
@@ -358,7 +358,7 @@ import {
    {
        let oldschool = 0;
        let schoolid = selection.value;
-       console.log(selection.value, type, "tralala");
+       //console.log(selection.value, type, "tralala");
        if (this.selections.length === 0)
        {
 
@@ -384,7 +384,7 @@ import {
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-                    
+
                     this.showLoader.next(false);
                 });
            this.modalHeader.next("modal-header-danger");
@@ -394,10 +394,10 @@ import {
            this.selall = false;
            this.selections = [];
 
-           
+
        }
         else{
-         console.log(this.selections, oldschool, "aaaaa",schoolid ,"tralala1");
+         //console.log(this.selections, oldschool, "aaaaa",schoolid ,"tralala1");
 
         this.SaveSelectionSub = this._hds.saveHighScoolSelection(this.selections, oldschool, schoolid,type).subscribe(data => {
             this.SaveSelection$.next(data);
@@ -430,10 +430,10 @@ import {
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-                    
+
                     this.showLoader.next(false);
                 });
-               
+
 
 
 
@@ -449,37 +449,37 @@ import {
 
   findselection(ind)
   {
-                  console.log(this.aclassActive,"aaaaaaa2" );
+                  //console.log(this.aclassActive,"aaaaaaa2" );
                   this.HighSchoolSelectionSub = this._hds.getHighSchoolSelection(ind).subscribe(x => {
                   this.HighSchoolSelection$.next(x);
 
                   },
                   error => {
                       this.HighSchoolSelection$.next([{}]);
-                      console.log("No HighSchool");
+                      //console.log("No HighSchool");
                   });
   }
 
 updateCheckedOptions(k,l)
 {
-  
+
   let server = 0;
   server = this.selections.find(x => x === k);
   let index: number = this.selections.indexOf(server);
  if (index === -1 )
  {
   this.selections.push(k);
-  console.log(this.selections,"selections")
+  //console.log(this.selections,"selections")
  }
  else
  {
        this.selections.splice(index, 1);
-      console.log(this.selections,"selections") 
+      //console.log(this.selections,"selections")
  }
 
  }
-  
- 
+
+
 
 findid(id)
 {
@@ -488,11 +488,11 @@ let server = 0;
   let index: number = this.selections.indexOf(server);
   if (index !== -1 && this.selall === true)
   {
-    
+
     return true;
 
   }
-  
+
   return false;
 
 
@@ -510,7 +510,7 @@ let server = 0;
 
 selectall()
 {
-    
+
           this.selall =! this.selall;
              this.showLoader.next(true);
             this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1)
@@ -519,8 +519,8 @@ selectall()
                     this.StudentsPerSchool$.next(data);
                     if (this.selall === true)
                     {
-                     
-                    
+
+
                     this.SelectAllIds = this.StudentsPerSchool$.getValue();
                        for (let i = 0; i < this.SelectAllIds.length; i++) {
                          if (this.SelectAllIds[i].idnew >= (this.pageNew-1)*this.stperpage + 1 && this.SelectAllIds[i].idnew <= this.pageNew*this.stperpage)
@@ -540,17 +540,17 @@ selectall()
                   });
 
 
- 
+
 
                     this.showLoader.next(false);
                 },
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-                    
+
                     this.showLoader.next(false);
                 });
- 
+
 }
 
 
@@ -558,14 +558,14 @@ selectall()
 
  setActiveclass(ind)
     {
-       
+
       if (this.aclassActive === ind)
       {
              ind = -1;
              this.regionActive = -1;
              this.formGroup.get('secsel').setValue(0);
              this.stperpage = 5;
-             console.log(this.aclassActive,"apo edw" );
+             //console.log(this.aclassActive,"apo edw" );
       }
 
       this.aclassActive = ind;
@@ -584,29 +584,29 @@ selectall()
 
     calchidden(idn)
     {
-      
+
          if (idn < (this.pageNew-1)*this.stperpage + 1 || idn > this.pageNew*this.stperpage)
             return true;
          else
              return false;
-      
+
     }
 
     nextpage(secsel)
     {
-      if (this.pageno === this.tot_pages) 
-       return;  
+      if (this.pageno === this.tot_pages)
+       return;
 
         this.pageno = this.pageno + 1;
        this.setActiveRegion(secsel,1,0,0)
-      
+
     }
 
 
     prevpage(secsel)
     {
-      if (this.pageno ===1) 
-        return;  
+      if (this.pageno ===1)
+        return;
       this.pageno = this.pageno - 1;
       this.setActiveRegion(secsel,1,1,0)
 
@@ -615,10 +615,10 @@ selectall()
 
 changestudentsperpage(newstperpage,secsel)
 {
-  
+
   this.stperpage= newstperpage.value ;
   this.setActiveRegion(secsel,1,0,1);
-  
+
 }
 
 }

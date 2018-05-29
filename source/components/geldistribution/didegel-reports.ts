@@ -16,10 +16,13 @@ import { IAppState } from "../../store/store";
     template: `
     <div class="reports-container">
 
-        <h5>Επιλογή Αναφοράς</h5>
+        <h5>Επιλογή Αναφοράς για ΓΕΛ</h5>
 
         <div *ngIf = "userRole == 'dide' ">
             <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(0)"><i class="fa fa-file-text"></i> Τοποθετήσεις Μαθητών</button>
+        </div>
+        <div *ngIf = "userRole == 'dide' ">
+            <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(1)"><i class="fa fa-file-text"></i> Πληρότητα τμημάτων</button>
         </div>
 
     </div>
@@ -69,6 +72,9 @@ import { IAppState } from "../../store/store";
     nav_to_reportpath(repId) {
         if (repId === 0) {
             this.router.navigate(["/dide/didegel-distrib-report"]);
+        }
+        else if (repId === 1) {
+            this.router.navigate(["/dide/didegel-complet-report"]);
         }
     }
 
