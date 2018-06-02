@@ -56,9 +56,11 @@ import { IAppState } from "../../store/store";
             </div>
         <div class="row" style="margin-bottom: 20px;">
         <div class="col-md-6">
+             <!--
             <button type="button" class="btn-primary btn-lg pull-left" (click)="navigateBack()">
                 <i class="fa fa-backward"></i>
             </button>
+            -->
         </div>
             <div class="col-md-6">
                 <button type="button" class="btn-primary btn-lg pull-right isclickable" style="width: 9em;" (click)="saveSelected()">
@@ -159,7 +161,8 @@ import { IAppState } from "../../store/store";
     }
 
     navigateBack() {
-        this.router.navigate(["/intro-statement"]);
+        //this.router.navigate(["/intro-statement"]);
+        this.router.navigate(["/parent-form"]);
     }
 
 

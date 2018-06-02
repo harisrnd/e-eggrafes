@@ -6,8 +6,6 @@ oauthost.log_in_go:
     _access: 'TRUE'
 oauthost.callback_log_in:
   path: /oauth/cb
-  options:
-    no_cache: 'TRUE' 
   defaults:
     _controller: '\Drupal\oauthost\Controller\CBController::loginCB'
   requirements:

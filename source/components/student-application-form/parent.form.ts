@@ -151,7 +151,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 
         let numCh = this.formGroup.controls["userChildren"].value;
         if (  ( (this.numAppChildren + this.numAppSelf) >=  Number(numCh)+1 ) ||
-           (  (this.numAppChildren + this.numAppSelf >=   4)  &&   this.representativeRole.getValue() == false) )
+           (  (this.numAppChildren + this.numAppSelf >=   5)  &&   this.representativeRole.getValue() == false) )
               this.hasRight.next(false);
         else
             this.hasRight.next(true);
@@ -167,9 +167,9 @@ import { HelperDataService } from "../../services/helper-data-service";
           this.showModal();
         }
         else if ( this.formGroup.controls["userChildren"].enabled && this.representVerified.getValue() == false &&
-          parseInt(this.formGroup.controls["userChildren"].value) > 3 || parseInt(this.formGroup.controls["userChildren"].value) < 0 ) {
+          parseInt(this.formGroup.controls["userChildren"].value) > 4 || parseInt(this.formGroup.controls["userChildren"].value) < 0 ) {
           this.modalTitle.next("Μη αποδεκτός αριθμός παιδιών");
-          this.modalText.next("Μπορείτε να καταχωρήσετε από 0 έως και 3 παιδιά. ");
+          this.modalText.next("Μπορείτε να καταχωρήσετε από 0 έως και 4 παιδιά. ");
           this.showModal();
         }
 

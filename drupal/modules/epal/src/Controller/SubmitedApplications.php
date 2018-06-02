@@ -572,11 +572,7 @@ class SubmitedApplications extends ControllerBase
                     }
                     unset($crypt);
 
-                    //if ($epalStudent->finalized === null)  {
-                    //    $status = "0";
-                    //}
-
-                    if ($applicantsResultsDisabled === "0" && $es->myschool_promoted == 1) {
+                    if ($applicantsResultsDisabled === "0" && $es->myschool_promoted === "1") {
                       //To $epalStudent->finalized === null υπονοεί ότι δεν είναι κατανεμημένος αυτός ο μαθητής <-- ΝΑ ΕΛΕΓΧΘΕΙ
                       if ($epalStudent->finalized === "1")
                           $status = "1";

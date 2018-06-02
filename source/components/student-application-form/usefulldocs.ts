@@ -15,15 +15,32 @@ import { BehaviorSubject, Subscription } from "rxjs/Rx";
     template: `
         <p align="left"><strong> Υπεύθυνη Δήλωση  </strong></p>
 
-    <p align="left"> Η παρακάτω Υπεύθυνη Δήλωση υποβάλλεται :</p>
+    <p align="left"> Η Υπεύθυνη Δήλωση υποβάλλεται :</p>
     <ul>
         <li>για τα ΓΕ.Λ. στη διεύθυνση ηλεκτρονικού ταχυδρομείου:  skonstantatos@minedu.gov.gr   ή στο φαξ: 2103443390</li>
 
         <li>για τα ΕΠΑ.Λ. στη διεύθυνση ηλεκτρονικού ταχυδρομείου: depek_merimna@minedu.gov.gr  ή στο φαξ: 2103442217 </li>
     </ul>
+    <strong>Επισήμανση:</strong> δίνεται η δυνατότητα τροποποίησης του αριθμού των παιδιών <strong>έως και τέσσερα (4)</strong> μέσα από την εφαρμογή.
+    <br/><br/>
         <ul class="list-group">
         <li class="list-group-item isclickable evenout"  >
-            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/eggrafa.pdf" target="_blank">Υπεύθυνη Δήλωση</a>
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_children.pdf" target="_blank">Υπεύθυνη Δήλωση για αριθμό παιδιών άνω των 4 (μορφή .pdf)</a>
+        </li>
+        <li class="list-group-item isclickable evenout"  >
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_children.doc" target="_blank">Υπεύθυνη Δήλωση για αριθμό παιδιών άνω των 4 (μορφή .doc)</a>
+        </li>
+        <li class="list-group-item isclickable evenout"  >
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_representative.pdf" target="_blank">Υπεύθυνη Δήλωση για Υπεύθυνο σε κέντρο κοινωνικής πρόνοιας (μορφή .pdf)</a>
+        </li>
+        <li class="list-group-item isclickable evenout"  >
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_representative.doc" target="_blank">Υπεύθυνη Δήλωση για Υπεύθυνο σε κέντρο κοινωνικής πρόνοιας (μορφή .doc)</a>
+        </li>
+        <li class="list-group-item isclickable evenout">
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_director.pdf" target="_blank">Υπεύθυνη Δήλωση για Διευθυντή (μορφή .pdf)</a>
+        </li>
+        <li class="list-group-item isclickable evenout">
+            <a class="col-md-12" style="font-size: 0.8em; font-weight: bold;" href="../pdfs/files/ypdil_director.doc" target="_blank">Υπεύθυνη Δήλωση για Διευθυντή (μορφή .doc)</a>
         </li>
         </ul>
 

@@ -107,7 +107,7 @@ class DirectorView extends ControllerBase
                     $list = array();
                     foreach ($studentPerSchool as $object) {
                         $studentId = $object->student_id->target_id;
-                        $epalStudents = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(array('id' => $studentId));
+                        $epalStudents = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => 1 ));
                         $epalStudent = reset($epalStudents);
                         if ($epalStudents) {
                             $studentIdNew = $epalStudent->id();

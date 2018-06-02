@@ -740,7 +740,7 @@ export class HelperDataService implements OnInit, OnDestroy {
       this.createAuthorizationHeader(headers);
       let options = new RequestOptions({ headers: headers });
 
-      if (routepath === "/dide/didegel-distrib-report") {
+      if (routepath === "/dide/didegel-distrib-report" || routepath === "/dide/didegel-complet-report") {
           return this.http.get(`${AppSettings.API_ENDPOINT}` + routepath , options)
               .map(response => response.json());
       }
