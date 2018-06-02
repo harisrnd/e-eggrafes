@@ -2672,11 +2672,14 @@ $studentAMColumn
         $schoolSectionColumn = array();
         $schoolCountColumn = array();
 
-        //βρες σχολεία που ανήκουν στη ΔΔΕ
+        /*
+        //ΠΟΣΟΙ ΤΟΠΟΘΕΤΗΘΗΚΑΝ ΑΠΟ ΔΔΕ
+        //βρες σχολεία που ανήκουν στη ΔΔΕ και είναι ΓΕΛ
         $sCon = $this->connection
            ->select('gel_school', 'eSchool')
            ->fields('eSchool', array('id', 'registry_no', 'name'))
-           ->condition('eSchool.edu_admin_id', $dideid, '=');
+           ->condition('eSchool.edu_admin_id', $dideid, '=')
+           ->condition('eSchool.unit_type_id', 4, '=');
         $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
         foreach ($gelSchools as $gelSchool) {
@@ -2697,22 +2700,61 @@ $studentAMColumn
            $sCon = $this->connection
               ->select('gelstudenthighschool', 'eClass')
               ->fields('eClass', array('student_id', 'taxi'))
-              ->condition('eClass.school_id', $schoolid, '=')
-              ->condition('eClass.taxi', 'Α', '=');
+              ->condition('eClass.school_id', $schoolid, '=');
+              //->condition('eClass.taxi', 'Α', '=');
 
            //$gelClasses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
            $numAppsClassA = $sCon->countQuery()->execute()->fetchField();
 
            array_push($schoolNameColumn, $schoolNameDest->name);
-           array_push($schoolSectionColumn, "Α' τάξη");
+           array_push($schoolSectionColumn, "");
            array_push($schoolCountColumn, $numAppsClassA);
         }
+        */
 
+        //βρες σχολεία που ανήκουν στη ΔΔΕ
+        $sCon = $this->connection
+           ->select('gel_school', 'eSchool')
+           ->fields('eSchool', array('id', 'registry_no', 'name','unit_type_id','operation_shift'))
+           ->condition('eSchool.edu_admin_id', $dideid, '=');
+        $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
+        foreach ($gelSchools as $gelSchool) {
+           //βρες πλήθος μαθητών που έχουν στην αίτησή τους το σχολείο αυτό ως σχολείο τελευταίας φοίτησης
+           if ($gelSchool->unit_type_id == 3)  {
+               $sCon = $this->connection
+                  ->select('gel_student', 'eClass')
+                  ->fields('eClass', array('student_id'))
+                  ->condition('eClass.lastschool_registrynumber', $gelSchool->registry_no, '=')
+                  ->condition('eClass.nextclass', 3, '=');
+               $numAppsClassA = $sCon->countQuery()->execute()->fetchField();
+               array_push($schoolNameColumn, $gelSchool->name);
+               array_push($schoolSectionColumn, "Γ' Γυμνασίου");
+               array_push($schoolCountColumn, $numAppsClassA);
+            }
+            else if ($gelSchool->unit_type_id == 4)  {
+              if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ") {
+                $startIndex = 4; $endIndex = 7;
+              }
+              else {
+                $startIndex = 1; $endIndex = 3;
+              }
+              for ($k = $startIndex; $k <= $endIndex; $k++ )  {
+                $sCon = $this->connection
+                   ->select('gel_student', 'eClass')
+                   ->fields('eClass', array('student_id'))
+                   ->condition('eClass.lastschool_registrynumber', $gelSchool->registry_no, '=')
+                   ->condition('eClass.nextclass', $k, '=');
+                $numAppsClass = $sCon->countQuery()->execute()->fetchField();
+                array_push($schoolNameColumn, $gelSchool->name);
+                array_push($schoolSectionColumn, $this->retrieveGelClassName($k));
+                array_push($schoolCountColumn, $numAppsClass);
+              }
+             }
+
+         }
 
       //εισαγωγή εγγραφών στο tableschema
-
-
       for ($j = 0; $j < sizeof($schoolNameColumn); $j++) {
              array_push($schemalist, (object) array(
                  'name' => $schoolNameColumn[$j],
@@ -2720,8 +2762,6 @@ $studentAMColumn
                  'stcount' => $schoolCountColumn[$j],
              ));
         }
-
-
 
       return $this->respondWithStatus($schemalist, Response::HTTP_OK);
 
@@ -3018,13 +3058,13 @@ $studentAMColumn
    private function retrieveGelClassName($classId)
    {
      if ($classId == 1 || $classId == 4)
-        return "Α' τάξη";
+        return "Α' Λυκείου";
      else if ($classId == 2 || $classId == 5)
-        return "Β' τάξη";
+        return "Β' Λυκείου";
      else if ($classId == 3 || $classId == 6)
-        return "Γ' τάξη";
+        return "Γ' Λυκείου";
      else if ($classId == 7 )
-         return "Δ' τάξη";
+         return "Δ' Λυκείου";
    }
 
   private function retrieveStudentAddress($address, $tk, $area)  {

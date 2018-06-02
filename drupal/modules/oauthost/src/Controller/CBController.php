@@ -155,6 +155,7 @@ class CBController extends ControllerBase
                 //return new TrustedRedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302);
             //}
             //return new RedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302, []);
+            \Drupal::service('page_cache_kill_switch')->trigger();
 
             return new TrustedRedirectResponse($this->redirect_url . $schoolToken.'&auth_role=student', 302);
 
@@ -182,7 +183,6 @@ class CBController extends ControllerBase
 
         try {
             $taxis_userid = null;
-            $trx = $this->connection->startTransaction();
             $oauth = new OAuth($this->consumer_key, $this->consumer_secret, OAUTH_SIG_METHOD_PLAINTEXT, OAUTH_AUTH_TYPE_URI);
             //$oauth->disableSSLChecks();
             //$oauth->enableDebug();
@@ -198,6 +198,7 @@ class CBController extends ControllerBase
                 return false;
             }
 
+            $trx = $this->connection->startTransaction();
             $currentTime = time();
 
             $hashId = hash("sha256", $taxis_userData['tin']);
@@ -257,6 +258,8 @@ class CBController extends ControllerBase
                       $name_encoded = $crypt->encrypt($unique_id);
 
                       if ($useGSIS === "1") {
+                        //if ($taxis_userData['fathersName'] == null)
+                        //  $taxis_userData['fathersName'] = ' ';
                         $firstname_encoded = $crypt->encrypt($taxis_userData['firstName']);
                         $surname_encoded = $crypt->encrypt($taxis_userData['surname']);
                         $fathername_encoded = $crypt->encrypt($taxis_userData['fathersName']);

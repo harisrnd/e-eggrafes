@@ -171,12 +171,12 @@
                                 </div>
                                 <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 1)" class="nav-item">
                                     <li *ngIf="authRole=='dide'" class="nav-item">
-                                        <a class="nav-link" [routerLink]="['/school/eduadmingel-view']" [routerLinkActive]="['active']"><b>Πληρότητα Σχολείων</b></a>
+                                        <a class="nav-link" [routerLink]="['school/gel-distribution']" [routerLinkActive]="['active']"><b>Τοποθετήσεις Μαθητών</b></a>
                                     </li>
                                 </div>
                                 <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 1)" class="nav-item">
                                     <li *ngIf="authRole=='dide'" class="nav-item">
-                                        <a class="nav-link" [routerLink]="['school/gel-distribution']" [routerLinkActive]="['active']"><b>Τοποθετήσεις Μαθητών</b></a>
+                                        <a class="nav-link" [routerLink]="['/school/eduadmingel-view']"><b>Πληρότητα Σχολείων</b></a>
                                     </li>
                                 </div>
                                 <div *ngIf="(loginInfo$ | async).size > 0 && (schtype == 1)" class="nav-item">

@@ -466,7 +466,7 @@ export class ReportsSchema {
                 filter: false
             },
             section: {
-                title: "Τάξη ΟΠ",
+                title: "Τάξη Προορισμού",
                 width: "18%",
                 filter: false
             },

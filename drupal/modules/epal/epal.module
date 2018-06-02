@@ -38,7 +38,7 @@ function epal_theme() {
 function epal_mail($key, &$message, $params) {
     $options = array(
       'langcode' => $message['langcode'],
-    );
+    ); 
 
     switch ($key) {
       case 'send_verification_code':

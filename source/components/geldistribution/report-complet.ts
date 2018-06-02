@@ -17,7 +17,7 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
 
     <div class="reports-container">
         <div class = "loading" *ngIf="validCreator == 0" ></div>
-        <h5>Πληρότητα τμημάτων</h5>
+        <h5>Αιτήσεις Μαθητών</h5>
         <button type="submit" class="btn btn-alert pull-right"  (click)="navigateBack()" > Επιστροφή</button>
 
         <div *ngIf="validCreator == 1 ">

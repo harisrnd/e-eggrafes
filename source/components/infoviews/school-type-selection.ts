@@ -9,7 +9,7 @@ import { SchoolTypeActions } from "../../actions/schooltype.actions";
 
 
 
-@Component({ 
+@Component({
     selector: "school-type-selection",
     template: `
            <div class="row" style="margin-top: 130px; margin-bottom: 200px;">
@@ -49,7 +49,8 @@ import { SchoolTypeActions } from "../../actions/schooltype.actions";
 
     navigatepdegel() {
         this._sta.saveSchoolTypeSelected(1,"ΓΕΛ");
-        this.router.navigate(["/school/eduadmingel-view"]);
+        //this.router.navigate(["/school/eduadmingel-view"]);
+        this.router.navigate(["/school/gel-distribution"]);
     }
 
 }
