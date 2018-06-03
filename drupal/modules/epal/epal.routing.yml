@@ -436,3 +436,9 @@ epal.dide.report-gel-distrib:
     _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportDideDistribGel'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.encoded:
+  path: '/encode'  
+  defaults:
+    _controller: '\Drupal\epal\Controller\CreateEncodedData::createData'
+  requirements:
+   _access: 'TRUE'
