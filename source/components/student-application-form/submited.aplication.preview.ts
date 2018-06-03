@@ -119,13 +119,13 @@ import { IAppState } from "../../store/store";
                 <div *ngFor="let GelStudentDetails$  of GelSubmittedDetails$ | async" [hidden]="UserData$.id !== applicationGelIdActive" style="margin: 10px 10px 10px 10px;">
 
                       <div *ngIf = "GelStudentDetails$.applicantsResultsDisabled == '0'  && !(showLoader$ | async)" >
-                          <div *ngIf = "GelStudentDetails$.status == '1'" >
+                          <div *ngIf = "GelStudentDetails$.status == '1'|| GelStudentDetails$.status == '4' " >
                               <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
                                   Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{GelStudentDetails$.schoolName}}.
                                   Παρακαλείστε να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
                               </div>
                           </div>
-                          <div *ngIf = "GelStudentDetails$.status == '4' " >
+                          <div *ngIf = "GelStudentDetails$.status == '3' " >
                               <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
                                   Η αίτησή σας είναι σε κατάσταση διεκπεραίωσης από την οικεία Διεύθυνση Δευτεροβάθμιας Εκπαίδευσης.<br><br>
                               </div>

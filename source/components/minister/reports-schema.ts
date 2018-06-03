@@ -418,9 +418,61 @@ export class ReportsSchema {
         },
         noDataMessage: "Δεν υπάρχουν δεδομένα που περιέχουν το κείμενο αναζήτησης",
         columns: {
+            studentid: {
+                title: "Id αίτησης",
+                width: "8%",
+                filter: false
+            },
+            studentam: {
+                title: "ΑΜ μαθητή",
+                width: "8%",
+                filter: false
+            },
+            studentclass: {
+                title: "Τάξη μαθητή",
+                width: "8%",
+                filter: false
+            },
+            studentaddress: {
+                title: "Διεύθυνση κατοικίας",
+                width: "33%",
+                filter: false
+            },
+            schoolorigin: {
+                title: "Σχολείο προέλευσης",
+                width: "33%",
+                filter: false
+            },
+            schooldestination: {
+                title: "Σχολείο τοποθέτησης",
+                width: "33%",
+                filter: false
+            }
+        }
+    };
+
+    reportDideGelComplet = {
+        actions: false,
+        fileName: "Πληρότητα τμημάτων",
+        pager: {
+            display: true,
+            perPage: 15
+        },
+        noDataMessage: "Δεν υπάρχουν δεδομένα που περιέχουν το κείμενο αναζήτησης",
+        columns: {
             name: {
-                title: "Id",
-                width: "22%",
+                title: "Όνομα σχολείου",
+                width: "18%",
+                filter: false
+            },
+            section: {
+                title: "Τάξη Προορισμού",
+                width: "18%",
+                filter: false
+            },
+            stcount: {
+                title: "Πλήθος",
+                width: "10%",
                 filter: false
             }
         }
@@ -466,9 +518,6 @@ export class ReportsSchema {
                 filter: true
             }
         },
-
-
-
 
 
 

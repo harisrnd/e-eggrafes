@@ -898,15 +898,13 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         return s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
     }
 
-
-
     public RemoveLatin(s)
     {
-        var i = 'ABEHIKMNOPTXYZ'.split('');
-        var o = 'ΑΒΕΗΙΚΜΝΟΡΤΧΥΖ'.split('');
-        var map = {};
-        i.forEach(function(el, idx) {map[el] = o[idx]});
-        return s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
+      var i = 'ΑΒΕΗΙΚΜΝΟΡΤΧΥΖ'.split('');
+      var o = 'ABEHIKMNOPTXYZ'.split('');
+      var map = {};
+      i.forEach(function(el, idx) {map[el] = o[idx]});
+      return s.replace(/[^A-Za-z0-9]/g, function(ch) { return map[ch] || ch; })
     }
 
 

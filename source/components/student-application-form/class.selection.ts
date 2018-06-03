@@ -62,9 +62,11 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
 
         <div class="row" style="margin-top: 20px; margin-bottom: 20px;" *ngIf="(gelclasses$ | async).size > 0">
             <div class="col-md-6">
+                <!--
                 <button type="button" class="btn-primary btn-lg pull-left" (click)="navigateBack()">
                     <i class="fa fa-backward"></i>
                 </button>
+                -->
             </div>
             <div class="col-md-6">
                 <button type="button" class="btn-primary btn-lg pull-right isclickable" style="width: 9em;" (click)="saveSelected()">
@@ -160,7 +162,8 @@ import { gelclassesReducer } from "../../store/gelclasses/gelclasses.reducer";
     }
 
     navigateBack() {
-        this.router.navigate(["/school-type-select"]);
+        //this.router.navigate(["/school-type-select"]);
+        this.router.navigate(["/parent-form"]);
     }
 
     public categoryselected(typeId) {
