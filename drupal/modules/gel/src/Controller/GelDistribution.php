@@ -310,27 +310,42 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                          ], Response::HTTP_FORBIDDEN);
                 } elseif ($userRole === 'eduadmin') {
 
-                    $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_registrynumber' => $regno, 'lastschool_unittypeid' => 3, 'lastschool_class' => "3", 'delapp' => '0'));
+            /*    $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('lastschool_registrynumber' => $regno, 'lastschool_unittypeid' => 3, 'lastschool_class' => "3", 'delapp' => '0'));
+*/
+
+            $sCon = $this->connection->select('gel_student', 'gStudent')
+                ->fields('gStudent', array('lastschool_registrynumber','lastschool_unittypeid',  'lastschool_class' , 'delapp','nextclass','name','am','regionarea','regiontk','regionaddress','id'))
+                ->condition('gStudent.lastschool_registrynumber', $regno, '=')
+                ->condition('gStudent.lastschool_unittypeid', 3, '=')
+                ->condition('gStudent.lastschool_class', "3", '=')
+                ->condition(db_or()->condition('nextclass', "1")->condition('nextclass', "4"))
+                ->condition('gStudent.delapp', 0, '=');
+            $studentPerSchool =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+             
                 }
                 if ($studentPerSchool) {
+
                     $list = array();
                     $i = 0;
                     foreach ($studentPerSchool as $object) {
-                      $this->logger ->warning($object ->nextclass->entity->get('id')->value ."nextclass");
-                        if (($object ->nextclass->entity->get('id')->value === "1") || ($object ->nextclass->entity->get('id')->value === "4"))
-                        {
+                                              
                             $crypt = new Crypt();
                             try {
-                                $name_decoded = $object->name->value;
-                                if ($object->am->value != "")
-                                  $am_decoded = $crypt ->decrypt($object->am->value);
+                                $name_decoded = $object->name;
+                                if ($object->am != "")
+                                  $am_decoded = $crypt ->decrypt($object->am);
                                 else
                                   $am_decoded ="Παλιός απόφοιτος";
-                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
-                              
-                                $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
-                                $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
-                                if ($object ->nextclass->entity->get('id')->value === "4")
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress);
+                                if ($object->regiontk !== null)
+                                   $regiontk_decoded = $crypt->decrypt($object->regiontk);
+                                else
+                                    $regiontk_decoded = "";
+                                if ($object->regionarea !== null)
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea);
+                                else
+                                    $regionarea_decoded = null;
+                                if ($object ->nextclass === "4")
                                 {
                                   $school_type = "Αίτηση για Εσπερινό";
                                 }
@@ -354,14 +369,14 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                             $i++;
                             $list[] = array(
                                 'idnew' => $i,
-                                'id' => $object->id(),
+                                'id' => $object->id,
                                 'name' => $name_decoded,
                                 'am' => $am_decoded,
                                 'regionaddress' => $regionaddress_decoded,
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
-                                'oldschool' => $this -> gethighschoolperstudent($object->id()),
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                            }
                            if ($addressfilter !== '99999' && $amfilter !== '0')
@@ -374,14 +389,14 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
-                                'id' => $object->id(),
+                                'id' => $object->id,
                                 'name' => $name_decoded,
                                 'am' => $am_decoded,
                                 'regionaddress' => $regionaddress_decoded,
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
-                                'oldschool' => $this -> gethighschoolperstudent($object->id()),
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
                             }
@@ -397,21 +412,21 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
-                                'id' => $object->id(),
+                                'id' => $object->id,
                                 'name' => $name_decoded,
                                 'am' => $am_decoded,
                                 'regionaddress' => $regionaddress_decoded,
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
-                                'oldschool' => $this -> gethighschoolperstudent($object->id()),
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
                         
 
 
                            }
-                            $this->logger->warning($amfilter.$pos1."aaa");
+                            
                             if ($addressfilter === '99999' && $amfilter !== '0')
                             {
                             
@@ -419,29 +434,23 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                             if  ($pos1 >=0 && $pos1 !== false)
                             {    
-                                $this->logger->warning(strpos( $regionaddress_decoded,$addressfilter)."aaa");
+                              
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
-                                'id' => $object->id(),
+                                'id' => $object->id,
                                 'name' => $name_decoded,
                                 'am' => $am_decoded,
                                 'regionaddress' => $regionaddress_decoded,
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
-                                'oldschool' => $this -> gethighschoolperstudent($object->id()),
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
                         
                            }
 
-
-
-
-
-
-                          }
 
                     }
                     return $this->respondWithStatus($list, Response::HTTP_OK);
@@ -512,8 +521,18 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 else
                                   $am_decoded ="Παλιός απόφοιτος";
                                 $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
-                                $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+
+                                 if ($object->regiontk->value !== null)
+                                   $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                                else
+                                    $regiontk_decoded = "";
+                                if ($object->regionarea->value !== null)
                                 $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                                else
+                                    $regionarea_decoded = null;   
+
+
+                              
                                 if ($object ->nextclass->entity->get('id')->value === "5")
                                 {
                                   $school_type = "Αίτηση για Εσπερινό";
@@ -570,8 +589,14 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 else
                                   $am_decoded ="Παλιός απόφοιτος";
                                 $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
-                                $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                               if ($object->regiontk->value !== null)
+                                   $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                                else
+                                    $regiontk_decoded = "";
+                                if ($object->regionarea->value !== null)
                                 $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                                else
+                                    $regionarea_decoded = null;
                                 if ($object ->nextclass->entity->get('id')->value === "5")
                                 {
                                   $school_type = "Αίτηση για Εσπερινό";
@@ -685,8 +710,14 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 else
                                   $am_decoded ="Παλιός απόφοιτος";
                                 $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
-                                $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                                if ($object->regiontk->value !== null)
+                                   $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                                else
+                                    $regiontk_decoded = "";
+                                if ($object->regionarea->value !== null)
                                 $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                                else
+                                    $regionarea_decoded = null;
                                
                                   $school_type = "Αίτηση για Εσπερινό";
                                 
@@ -739,8 +770,14 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 else
                                   $am_decoded ="Παλιός απόφοιτος";
                                 $regionaddress_decoded = $crypt->decrypt($object->regionaddress->value);
-                                $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                               if ($object->regiontk->value !== null)
+                                   $regiontk_decoded = $crypt->decrypt($object->regiontk->value);
+                                else
+                                    $regiontk_decoded = "";
+                                if ($object->regionarea->value !== null)
                                 $regionarea_decoded = $crypt->decrypt($object->regionarea->value);
+                                else
+                                    $regionarea_decoded = null;
                                 
                                   $school_type = "Αίτηση για Ημερήσιο";
                                 
@@ -2202,7 +2239,7 @@ public function ConfirmStudents(Request $request)
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
-                'student_id' => $value,
+                'student_id' => $school ->id,
                 'school_id' => $school-> registry_no,
                 'taxi' => $school-> nextclass,
                 'dide' => $dide_id,
@@ -2230,6 +2267,63 @@ public function ConfirmStudents(Request $request)
 
 
     }
+
+
+
+  public function Initialized(Request $request)
+    {
+
+             
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if (!$user) {
+            return $this->respondWithStatus([
+                'message' => t("User not found"),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        
+        if (false === in_array('eduadmin', $user->getRoles())) {
+            return $this->respondWithStatus([
+                'message' => t("User Invalid Role"),
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        $dide_id = $user->init->value;
+       
+        try {
+           $student = array();
+           $sCon = $this->connection->select('gelstudenthighschool', 'gStudent');
+            $sCon->fields('gStudent', array('dide'))
+                ->condition('gStudent.dide', $dide_id , '=');
+
+           $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          
+
+          if ($schools)
+              $student = array('answer' => true);
+           else
+              $student = array('answer' => false);
+
+
+        } 
+       
+    catch (\Exception $e) 
+        
+        {
+            
+
+            return $this->respondWithStatus([
+                "error_code" => 5001
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+     return $this->respondWithStatus($student, Response::HTTP_OK);
+
+
+    }
+
 
 
 
