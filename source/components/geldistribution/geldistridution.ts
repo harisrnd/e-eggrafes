@@ -650,8 +650,8 @@ import {
        
        let addressf = this.formGroup.get('addressfilter').value;
        let amf = this.formGroup.get('amfilter').value;
-         
-        console.log(addressf, amf,"changed");
+       this.stperpage = this.formGroup.get('studentperpage').value;
+       
        if (changed === 1)
        {
          this.pageno = 1;
@@ -1024,7 +1024,7 @@ changestudentsperpage(newstperpage,secsel,type)
 {
   
   this.stperpage= newstperpage.value ;
-  this.setActiveRegion(secsel,1,0,1,"","");
+  this.setActiveRegion(secsel,1,0,type,"","");
   
 }
 
