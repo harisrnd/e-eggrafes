@@ -8,7 +8,7 @@ import {
     FormControl,
     FormArray,
     Validators,
-} from '@angular/forms'; 
+} from '@angular/forms';
 
 
 @Component({
@@ -38,22 +38,38 @@ import {
     <div class = "loading" *ngIf="(showLoader | async) === true"></div>
     <div style="min-height: 500px;">
     <form [formGroup]="formGroup">
-    
-     <button type="button" class="btn-primary btn-lg isclickable" style="width: 9em;"  (click)="initialaizattion()">
-         Αρχικοποίηση
-      </button>
-     
-       <p style="margin-top: 20px; line-height: 2em;"> Στην παρακάτω λίστα βλέπετε τα γυμνάσια της περιοχής ευθύνης σας. Παρακαλώ
-       επιλέξτε σχολειο για να τοποθετήσετε τους μαθητές με βάση τη διεύθυνση κατοικίας τους στο αντίστοιχο λύκειο.</p>
-       
+
+
+       <p *ngIf = "(showLoader | async) === false && hasdone === true" style="margin-top: 20px; line-height: 2em;">
+         Επιλέξτε την τάξη για την οποία πρόκειται να τοποθετήσετε μαθητές με βάση τη διεύθυνση κατοικίας τους.
+         Ειδικότερα για την Α' Λυκείου επιλέγοντας το Γυμνάσιο που επιθυμείται, εμφανίζονται ο Α/Α και η διεύθυνση κατοικίας των αιτήσεων των αντίστοιχων μαθητών.
+         Για να τοποθετήσετε τους μαθητές με βάση τη διεύθυνση κατοικίας τους, επιλέξτε μία ή περισσότερες αιτήσεις και την απαιτούμενη Σχολική Μονάδα Τοποθέτησης.
+       </p>
+
+       <button type="button" *ngIf="(showLoader | async) === false && hasdone === false" class="btn-primary btn-lg isclickable" style="width: 9em;"  (click)="initialaizattion()" >
+           Αρχικοποίηση
+        </button>
+
+       <p *ngIf="(showLoader | async) === false && hasdone === false" style="margin-top: 20px; line-height: 2em;"> Είναι η <strong>πρώτη</strong> φορά που εισέρχεστε στην επιλογή Τοποθέτησης Μαθητών.
+          Για να προχωρήσετε, παρακαλώ επιλέξτε <strong>Αρχικοποίηση</strong>.
+          Η λειτουργία της αρχικοποίησης δεν θα σας ξαναζητηθεί την επόμενη φορά που θα εισέλθετε στην επιλογή αυτή.
+       </p>
+
+       <!--
+       <p *ngIf="hasdone === true" style="margin-top: 20px; line-height: 2em;">
+         Επιλέξτε την τάξη για την οποία πρόκειται να τοποθετήσετε μαθητές με βάση τη διεύθυνση κατοικίας τους.
+         Στην παρακάτω λίστα εμφανίζονται τα Γυμνάσια της περιοχής ευθύνης σας. Παρακαλώ
+       επιλέξτε σχολείο για να τοποθετήσετε τους μαθητές με βάση τη διεύθυνση κατοικίας τους στο αντίστοιχο λύκειο.</p>
+       -->
+
        <li class="list-group-item isclickable" (click)="setActiveclass(1)">
-          <div class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1" > Ά Λυκείου  </div>
-       </li>    
-      <div [hidden] ="aclassActive !== 1">   
+          <div *ngIf="hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1" > Α' Λυκείου  </div>
+       </li>
+      <div [hidden] ="aclassActive !== 1">
       <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Επιλέξτε Γυμνάσιο Προέλευσης</b></div>
             <div class="col-md-11 offset-md-1">
-                
-                <select #secsel class="form-control" formControlName="secsel" 
+
+                <select #secsel class="form-control" formControlName="secsel"
                         (change)="setActiveRegion(secsel,1,1,0,addressfilter, amfilter)">
                     <option value="0"></option>
                     <option *ngFor="let JuniorHighSchools$  of JuniorHighSchool$ | async; let i=index; let isOdd=odd; let isEven=even" [value]="JuniorHighSchools$.id"> {{JuniorHighSchools$.name}}</option>
@@ -61,36 +77,36 @@ import {
                 </div>
            <br>
            <br>
-           <div [hidden] ="regionActive === -1">   
+           <div [hidden] ="regionActive === -1">
              <p style="margin-top: 20px; line-height: 2em;"> Σε περίπτωση που θέλετε να εφαρμόσετε φίλτρο στα αποτελέσματα συμπληρώστε το αντιστοιχο πεδίο και πατήστε εφαρμογή</p>
-             <div class="col-md-12" style="font-weight: bold;"> Φίλτρα </div>     
+             <div class="col-md-12" style="font-weight: bold;"> Φίλτρα </div>
             <div class="row form-group">
               <div class="col-4">
               <label for="addressfilter">
                 Διεύθυνση Κατοικίας:
               </label>
-                  <input #addressfilter type= "text" class="form-control" formControlName="addressfilter"> 
+                  <input #addressfilter type= "text" class="form-control" formControlName="addressfilter">
               </div>
-              <div class="col-3">    
+              <div class="col-3">
               <label for="amfilter">
                 ΑΜ Μαθητή:
               </label>
-                  <input #addressfilter type= "text" class="form-control"  formControlName="amfilter"> 
+                  <input #addressfilter type= "text" class="form-control"  formControlName="amfilter">
                </div>
-               <div class="col-2">   
+               <div class="col-2">
                <label>
                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </label> 
+              </label>
                 <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;"  (click)="setActiveRegion(secsel,1,0,0,addressfilter, amfilter)">
-                     Αναζήτηση 
+                     Αναζήτηση
                 </button>
                 </div>
-               <div class="col-3">   
+               <div class="col-3">
               <label>
                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </label> 
+              </label>
                 <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;" (click)="deletefilters(secsel,1)" >
-                     Καθαρισμός φίλτρου 
+                     Καθαρισμός φίλτρου
                 </button>
 
                 </div>
@@ -100,13 +116,13 @@ import {
 
 
            <div class="list-group-item framecolor">
-                    <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων 
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
+                    <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
-                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div> 
+                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
                       <div>Διεύθυνση Κατοικίας </div>
-                      
+
                     </div>
                     <div class="col-md-2 " style="   font-weight: bold; font-size: 0.8em" >Τύπος Σχολείου</div>
                     <div class="col-md-3 " style="font-weight: bold;">
@@ -115,20 +131,20 @@ import {
                     <div class="col-md-2 ">
                     </div>
                  </div>
-                 
-                 
+
+
                  <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
                   class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
                    style="margin: 0px 2px 0px 2px;"  [hidden]="calchidden(AllStudents$.idnew)" [class.changecolor]="AllStudents$.oldschool !== false">
 
-                    
+
                     <div class="col-md-1 " style = "font-size: 0.8em">
-                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">
                    </div>
 
                     <div class="col-md-4"  style = "font-size: 0.8em">
 
-                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div> 
+                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div>
                       <div>{{AllStudents$.regionaddress}}</div>
                       <div>{{AllStudents$.regionarea}} </div>
                       <div>{{AllStudents$.regiontk}}</div>
@@ -139,17 +155,17 @@ import {
                               {{AllStudents$.oldschool}}
                        </div>
 
-                       <div *ngIf="AllStudents$.oldschool !== true" >                        
+                       <div *ngIf="AllStudents$.oldschool !== true" >
                        </div>
                        </div>
                      <div  class="col-md-1"  style="font-size: 0.8em;">
                        <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,1,addressfilter, amfilter)"></i>
                      </div>
-  
+
        </div>
 
-                
-         <div style="font-weight: bold;">     
+
+         <div style="font-weight: bold;">
          <div class="container framecolor">
          <span class="border border-info" >
           <div class="form-group" class="row" style = "font-weight: bold; font-size: 0.8em">
@@ -158,16 +174,16 @@ import {
           </div>
           <div class="col-1">
            <input #pageno type="text" class="form-control" placeholder=".col-1" formControlName="pageno">
-          </div> 
+          </div>
           <div class="col-1">
-           απο  
+           απο
            </div>
            <div class="col-1">
-           <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage">
-           </div> 
-         
+           <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage" style="width:50px">
+           </div>
+
           <div class="col-4">
-           Αριθμός μαθητών ανα σελίδα: 
+           Αριθμός μαθητών ανα σελίδα:
            </div>
           <div class="col-2">
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,secsel,1)">
@@ -190,7 +206,7 @@ import {
                   <button class="page-link"  (click) ="nextpage(secsel,1) ">Επόμενη</button>
                 </li>
               </ul>
-              
+
             </nav>
             </span>
          </div>
@@ -201,7 +217,7 @@ import {
                  <label> Λύκειο Υποδοχής: </label>
                    <select #highscsel1 class="form-control" (change)="confirmSchool(highscsel1,1,addressfilter, amfilter)" >
                         <option value="0"></option>
-                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index"
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
                    </select>
           </div>
@@ -210,7 +226,7 @@ import {
         </div>
 
       </div>
-  
+
 
       </div>
 
@@ -218,43 +234,43 @@ import {
 
 
        <li class="list-group-item isclickable" (click)="setActiveclass(2)">
-          <div class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 2" 
+          <div *ngIf="hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 2"
            (click)="setActiveRegion(0,2,1,0,addressfilter, amfilter)"
-          > Β Λυκείου  </div>
-       </li>    
-      <div [hidden] ="aclassActive !== 2">   
+          > Β' Λυκείου  </div>
+       </li>
+      <div [hidden] ="aclassActive !== 2">
            <br>
            <br>
-           <div [hidden] ="regionActive === -1">   
+           <div [hidden] ="regionActive === -1">
              <p style="margin-top: 20px; line-height: 2em;"> Σε περίπτωση που θέλετε να εφαρμόσετε φίλτρο στα αποτελέσματα συμπληρώστε το αντιστοιχο πεδίο και πατήστε εφαρμογή</p>
-             <div class="col-md-12" style="font-weight: bold;"> Φίλτρα </div>     
+             <div class="col-md-12" style="font-weight: bold;"> Φίλτρα </div>
             <div class="row form-group">
               <div class="col-4">
               <label for="addressfilter">
                 Διεύθυνση Κατοικίας:
               </label>
-                  <input #addressfilter type= "text" class="form-control" formControlName="addressfilter"> 
+                  <input #addressfilter type= "text" class="form-control" formControlName="addressfilter">
               </div>
-              <div class="col-3">    
+              <div class="col-3">
               <label for="amfilter">
                 ΑΜ Μαθητή:
               </label>
-                  <input #addressfilter type= "text" class="form-control"  formControlName="amfilter"> 
+                  <input #addressfilter type= "text" class="form-control"  formControlName="amfilter">
                </div>
-               <div class="col-2">   
+               <div class="col-2">
                <label>
                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </label> 
+              </label>
                 <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;"  (click)="setActiveRegion(0,2,0,0,addressfilter, amfilter)">
-                     Αναζήτηση 
+                     Αναζήτηση
                 </button>
                 </div>
-               <div class="col-3">   
+               <div class="col-3">
               <label>
                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </label> 
+              </label>
                 <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;" (click)="deletefilters(0,2)" >
-                     Καθαρισμός φίλτρου 
+                     Καθαρισμός φίλτρου
                 </button>
 
                 </div>
@@ -264,13 +280,13 @@ import {
 
 
            <div class="list-group-item framecolor">
-                    <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων 
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
+                    <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
-                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div> 
+                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
                       <div>Διεύθυνση Κατοικίας </div>
-                      
+
                     </div>
                     <div class="col-md-2 " style="   font-weight: bold; font-size: 0.8em" >Τύπος Σχολείου</div>
                     <div class="col-md-3 " style="font-weight: bold;">
@@ -279,20 +295,20 @@ import {
                     <div class="col-md-2 ">
                     </div>
                  </div>
-                 
-                 
+
+
                  <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
                   class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
                    style="margin: 0px 2px 0px 2px;"  [hidden]="calchidden(AllStudents$.idnew)" [class.changecolor]="AllStudents$.oldschool !== false">
 
-                    
+
                     <div class="col-md-1 " style = "font-size: 0.8em">
-                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">
                    </div>
 
                     <div class="col-md-4"  style = "font-size: 0.8em">
 
-                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div> 
+                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div>
                       <div>{{AllStudents$.regionaddress}}</div>
                       <div>{{AllStudents$.regionarea}} </div>
                       <div>{{AllStudents$.regiontk}}</div>
@@ -303,17 +319,17 @@ import {
                               {{AllStudents$.oldschool}}
                        </div>
 
-                       <div *ngIf="AllStudents$.oldschool !== true" >                        
+                       <div *ngIf="AllStudents$.oldschool !== true" >
                        </div>
                        </div>
                      <div  class="col-md-1"  style="font-size: 0.8em;">
                        <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,2,addressfilter, amfilter)"></i>
                      </div>
-  
+
        </div>
 
-                
-         <div style="font-weight: bold;">     
+
+         <div style="font-weight: bold;">
          <div class="container framecolor">
          <span class="border border-info" >
           <div class="form-group" class="row" style = "font-weight: bold; font-size: 0.8em">
@@ -322,16 +338,16 @@ import {
           </div>
           <div class="col-1">
            <input #pageno type="text" class="form-control" placeholder=".col-1" formControlName="pageno">
-          </div> 
+          </div>
           <div class="col-1">
-           απο  
+           απο
            </div>
            <div class="col-1">
-           <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage">
-           </div> 
-         
+           <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage" style="width:50px">
+           </div>
+
           <div class="col-4">
-           Αριθμός μαθητών ανα σελίδα: 
+           Αριθμός μαθητών ανα σελίδα:
            </div>
           <div class="col-2">
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,0,2)">
@@ -354,7 +370,7 @@ import {
                   <button class="page-link"  (click) ="nextpage(secsel,2) ">Επόμενη</button>
                 </li>
               </ul>
-              
+
             </nav>
             </span>
          </div>
@@ -365,7 +381,7 @@ import {
                  <label> Λύκειο Υποδοχής </label>
                    <select #highscsel2 class="form-control" (change)="confirmSchool(highscsel2,2,addressfilter, amfilter)" >
                         <option value="0"></option>
-                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index"
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
                    </select>
           </div>
@@ -374,7 +390,7 @@ import {
         </div>
 
       </div>
-  
+
 
       </div>
 
@@ -382,43 +398,43 @@ import {
 
 
  <li class="list-group-item isclickable" (click)="setActiveclass(3)">
-          <div class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 3" 
+          <div *ngIf="hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 3"
            (click)="setActiveRegion(0,3,1,0,addressfilter, amfilter)"
-          > Γ Λυκείου  </div>
-       </li>    
-      <div [hidden] ="aclassActive !== 3">   
+          > Γ' Λυκείου  </div>
+       </li>
+      <div [hidden] ="aclassActive !== 3">
            <br>
            <br>
-           <div [hidden] ="regionActive === -1">   
+           <div [hidden] ="regionActive === -1">
              <p style="margin-top: 20px; line-height: 2em;"> Σε περίπτωση που θέλετε να εφαρμόσετε φίλτρο στα αποτελέσματα συμπληρώστε το αντιστοιχο πεδίο και πατήστε εφαρμογή</p>
-             <div class="col-md-12" style="font-weight: bold;"> Φίλτρα </div>     
+             <div class="col-md-12" style="font-weight: bold;"> Φίλτρα </div>
             <div class="row form-group">
               <div class="col-4">
               <label for="addressfilter">
                 Διεύθυνση Κατοικίας:
               </label>
-                  <input #addressfilter type= "text" class="form-control" formControlName="addressfilter"> 
+                  <input #addressfilter type= "text" class="form-control" formControlName="addressfilter">
               </div>
-              <div class="col-3">    
+              <div class="col-3">
               <label for="amfilter">
                 ΑΜ Μαθητή:
               </label>
-                  <input #addressfilter type= "text" class="form-control"  formControlName="amfilter"> 
+                  <input #addressfilter type= "text" class="form-control"  formControlName="amfilter">
                </div>
-               <div class="col-2">   
+               <div class="col-2">
                <label>
                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </label> 
+              </label>
                 <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;"  (click)="setActiveRegion(0,3,0,0,addressfilter, amfilter)">
-                     Αναζήτηση 
+                     Αναζήτηση
                 </button>
                 </div>
-               <div class="col-3">   
+               <div class="col-3">
               <label>
                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </label> 
+              </label>
                 <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;" (click)="deletefilters(0,3)" >
-                     Καθαρισμός φίλτρου 
+                     Καθαρισμός φίλτρου
                 </button>
 
                 </div>
@@ -428,13 +444,13 @@ import {
 
 
            <div class="list-group-item framecolor">
-                    <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων 
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
+                    <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
-                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div> 
+                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
                       <div>Διεύθυνση Κατοικίας </div>
-                      
+
                     </div>
                     <div class="col-md-2 " style="   font-weight: bold; font-size: 0.8em" >Τύπος Σχολείου</div>
                     <div class="col-md-3 " style="font-weight: bold;">
@@ -443,20 +459,20 @@ import {
                     <div class="col-md-2 ">
                     </div>
                  </div>
-                 
-                 
+
+
                  <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
                   class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
                    style="margin: 0px 2px 0px 2px;"  [hidden]="calchidden(AllStudents$.idnew)" [class.changecolor]="AllStudents$.oldschool !== false">
 
-                    
+
                     <div class="col-md-1 " style = "font-size: 0.8em">
-                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">
                    </div>
 
                     <div class="col-md-4"  style = "font-size: 0.8em">
 
-                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div> 
+                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div>
                       <div>{{AllStudents$.regionaddress}}</div>
                       <div>{{AllStudents$.regionarea}} </div>
                       <div>{{AllStudents$.regiontk}}</div>
@@ -467,17 +483,17 @@ import {
                               {{AllStudents$.oldschool}}
                        </div>
 
-                       <div *ngIf="AllStudents$.oldschool !== true" >                        
+                       <div *ngIf="AllStudents$.oldschool !== true" >
                        </div>
                        </div>
                      <div  class="col-md-1"  style="font-size: 0.8em;">
                        <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,2,addressfilter, amfilter)"></i>
                      </div>
-  
+
        </div>
 
-                
-         <div style="font-weight: bold;">     
+
+         <div style="font-weight: bold;">
          <div class="container framecolor">
          <span class="border border-info" >
           <div class="form-group" class="row" style = "font-weight: bold; font-size: 0.8em">
@@ -486,16 +502,16 @@ import {
           </div>
           <div class="col-1">
            <input #pageno type="text" class="form-control" placeholder=".col-1" formControlName="pageno">
-          </div> 
+          </div>
           <div class="col-1">
-           απο  
+           απο
            </div>
            <div class="col-1">
-           <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage">
-           </div> 
-         
+           <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage" style="width:50px">
+           </div>
+
           <div class="col-4">
-           Αριθμός μαθητών ανα σελίδα: 
+           Αριθμός μαθητών ανα σελίδα:
            </div>
           <div class="col-2">
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,0,3)">
@@ -518,7 +534,7 @@ import {
                   <button class="page-link"  (click) ="nextpage(secsel,3) ">Επόμενη</button>
                 </li>
               </ul>
-              
+
             </nav>
             </span>
          </div>
@@ -529,7 +545,7 @@ import {
                  <label> Λύκειο Υποδοχής </label>
                    <select #highscsel3 class="form-control" (change)="confirmSchool(highscsel3,2,addressfilter, amfilter)" >
                         <option value="0"></option>
-                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index"
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
                    </select>
           </div>
@@ -538,7 +554,7 @@ import {
         </div>
 
       </div>
-  
+
 
       </div>
 
@@ -546,12 +562,12 @@ import {
 
 
 
-  
+
 
       </form>
     </div>
 
-  
+
 
 
    `
@@ -604,7 +620,7 @@ import {
         this.SchoolSelection$ = new BehaviorSubject([{}]);
         this.HighSchoolSelection$ = new BehaviorSubject([{}]);
         this.Initialized$ = new BehaviorSubject([{}]);
-        this.showLoader = new BehaviorSubject(false);
+        this.showLoader = new BehaviorSubject(true);
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
         this.modalHeader = new BehaviorSubject("");
@@ -617,19 +633,19 @@ import {
             amfilter:["",[]],
 
         });
-       
 
-       
+
+
     }
 
-    
+
     ngOnDestroy() {
       (<any>$("#informationfeedback")).remove();
 
     }
 
     ngOnInit() {
-        
+
         this.initialized();
         console.log(this.hasdone,"oninit");
        this.selall = false;
@@ -647,11 +663,11 @@ import {
     }
 
      setActiveRegion(ind,type, changed,changepages, addressfilter, amfilter) {
-       
+
        let addressf = this.formGroup.get('addressfilter').value;
        let amf = this.formGroup.get('amfilter').value;
        this.stperpage = this.formGroup.get('studentperpage').value;
-       
+
        if (changed === 1)
        {
          this.pageno = 1;
@@ -678,8 +694,8 @@ import {
              console.log(type,this.regionActive, "edw2");
             this.showLoader.next(true);
 
-           this.formGroup.get('pageno').setValue(this.pageno); 
-      
+           this.formGroup.get('pageno').setValue(this.pageno);
+
                 console.log(type,this.regionActive, "edw3");
                this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
 
@@ -687,7 +703,7 @@ import {
                     console.log("first", this.pageno);
                     this.StudentsPerSchool$.next(data);
                     if (this.pageno == 1){
-                      
+
 
                     if (data.length < this.stperpage)
                     {
@@ -707,12 +723,12 @@ import {
                         this.tot_pages = 1;
                      console.log(this.tot_pages,"selides");
                     this.formGroup.get('maxpage').setValue(this.tot_pages);
-                     
+
                    }
                    this.pageNew = this.pageno;
                     if (this.selall === true)
                     {
-                    
+
                     this.SelectAllIds = this.StudentsPerSchool$.getValue();
                        for (let i = 0; i < this.SelectAllIds.length; i++) {
                         this.selections[i] = this.SelectAllIds[i].id;
@@ -734,11 +750,11 @@ import {
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-                    
+
                     this.showLoader.next(false);
                 });
-        
-    
+
+
   }
 }
 
@@ -776,7 +792,7 @@ import {
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-                    
+
                     this.showLoader.next(false);
                 });
            this.modalHeader.next("modal-header-danger");
@@ -786,10 +802,10 @@ import {
            this.selall = false;
            this.selections = [];
 
-           
+
        }
         else{
-     
+
 
         this.SaveSelectionSub = this._hds.saveHighScoolSelection(this.selections, oldschool, schoolid,type, 0).subscribe(data => {
             this.SaveSelection$.next(data);
@@ -823,10 +839,10 @@ import {
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-                    
+
                     this.showLoader.next(false);
                 });
-               
+
 
 
 
@@ -855,7 +871,7 @@ import {
 
 updateCheckedOptions(k,l)
 {
-  
+
   let server = 0;
   server = this.selections.find(x => x === k);
   let index: number = this.selections.indexOf(server);
@@ -867,12 +883,12 @@ updateCheckedOptions(k,l)
  else
  {
        this.selections.splice(index, 1);
-      console.log(this.selections,"selections") 
+      console.log(this.selections,"selections")
  }
 
  }
-  
- 
+
+
 
 findid(id)
 {
@@ -881,11 +897,11 @@ let server = 0;
   let index: number = this.selections.indexOf(server);
   if (index !== -1 && this.selall === true)
   {
-    
+
     return true;
 
   }
-  
+
   return false;
 
 
@@ -915,8 +931,8 @@ selectall(addressfilter, amfilter)
                     this.StudentsPerSchool$.next(data);
                     if (this.selall === true)
                     {
-                     
-                    
+
+
                     this.SelectAllIds = this.StudentsPerSchool$.getValue();
                        for (let i = 0; i < this.SelectAllIds.length; i++) {
                          if (this.SelectAllIds[i].idnew >= (this.pageNew-1)*this.stperpage + 1 && this.SelectAllIds[i].idnew <= this.pageNew*this.stperpage)
@@ -936,17 +952,17 @@ selectall(addressfilter, amfilter)
                   });
 
 
- 
+
 
                     this.showLoader.next(false);
                 },
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Getting Students");
-                    
+
                     this.showLoader.next(false);
                 });
- 
+
 }
 
 
@@ -954,24 +970,24 @@ selectall(addressfilter, amfilter)
 
  setActiveclass(ind)
     {
-      
+
         this.initialized();
        if (this.hasdone === false)
         {
                 this.modalHeader.next("modal-header-danger");
-                 this.modalTitle.next("Απαιτείται Αρχικοποίηση.");
-                 this.modalText.next("Αρχικοποιήστε τους μαθητές σας");
+                 this.modalTitle.next("Απαιτείται Αρχικοποίηση");
+                 this.modalText.next("Παρακαλώ αρχικοποιήστε τους μαθητές σας.");
                  this.showModal();
         }
         else
-        {  
+        {
       if (this.aclassActive === ind)
       {
              ind = -1;
              this.regionActive = -1;
              this.formGroup.get('secsel').setValue(0);
              this.stperpage = 5;
-             
+
       }
 
       this.aclassActive = ind;
@@ -991,29 +1007,29 @@ selectall(addressfilter, amfilter)
 
     calchidden(idn)
     {
-      
+
          if (idn < (this.pageNew-1)*this.stperpage + 1 || idn > this.pageNew*this.stperpage)
             return true;
          else
              return false;
-      
+
     }
 
     nextpage(secsel,type)
     {
-      if (this.pageno === this.tot_pages) 
-       return;  
+      if (this.pageno === this.tot_pages)
+       return;
 
         this.pageno = this.pageno + 1;
        this.setActiveRegion(secsel,type,0,0,"","")
-      
+
     }
 
 
     prevpage(secsel,type)
     {
-      if (this.pageno ===1) 
-        return;  
+      if (this.pageno ===1)
+        return;
       this.pageno = this.pageno - 1;
       this.setActiveRegion(secsel,type,0,0,"","")
 
@@ -1022,10 +1038,10 @@ selectall(addressfilter, amfilter)
 
 changestudentsperpage(newstperpage,secsel,type)
 {
-  
+
   this.stperpage= newstperpage.value ;
   this.setActiveRegion(secsel,1,0,type,"","");
-  
+
 }
 
 initialaizattion()
@@ -1037,24 +1053,25 @@ this._hds.Initialazation()
             .then(msg => {
               this.showLoader.next(false);
                  this.hasdone = true;
+                 this.showLoader.next(false);
                  this.modalHeader.next("modal-header-success");
-                 this.modalTitle.next("Αρχικοποίηση.");
-                 this.modalText.next("Έχετε  αρχικοποιήσει σωστά τους μαθητές σας");
+                 this.modalTitle.next("Αρχικοποίηση");
+                 this.modalText.next("Έχετε αρχικοποιήσει σωστά τους μαθητές σας.");
                  this.showModal();
                   console.log(this.hasdone,"initialzation")
 
             })
             .catch(err => {
                 console.log(err);
-                
+
             });
-           
+
  }
  else
  {
            this.modalHeader.next("modal-header-danger");
-           this.modalTitle.next("Αποτυχία Αρχικοποίησης.");
-           this.modalText.next("Έχετε ήδη αρχικοποιήση τους μαθητές σας");
+           this.modalTitle.next("Αποτυχία Αρχικοποίησης");
+           this.modalText.next("Έχετε ήδη αρχικοποιήσει τους μαθητές σας!");
            this.showModal();
  }
 
@@ -1098,7 +1115,7 @@ undosave(nid,type, addressfilter, amfilter)
                 error => {
                     this.StudentsPerSchool$.next([{}]);
                     console.log("Error Undo");
-                    
+
                     this.showLoader.next(false);
                 });
 
@@ -1110,8 +1127,8 @@ undosave(nid,type, addressfilter, amfilter)
 deletefilters(secsel,classid)
 {
   console.log(secsel,"delete filters");
-  this.formGroup.get('addressfilter').setValue(""); 
-  this.formGroup.get('amfilter').setValue(""); 
+  this.formGroup.get('addressfilter').setValue("");
+  this.formGroup.get('amfilter').setValue("");
   this.setActiveRegion(secsel,classid,0,0,"", "")
 }
 
@@ -1127,20 +1144,22 @@ initialized()
                     if (data.answer === true)
                     {
                       this.hasdone = true;
+                      this.showLoader.next(false);
                       console.log("edw");
                     }
                     else
                     {
                       this.hasdone = false;
+                      this.showLoader.next(false);
                       console.log("else");
                     }
-                   
+
                 },
                 error => {
                     this.Initialized$.next([{}]);
-                   
+
                 });
-             console.log(this.hasdone,"initialized");   
+             console.log(this.hasdone,"initialized");
  }
 
 
