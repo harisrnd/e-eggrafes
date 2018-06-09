@@ -1194,7 +1194,7 @@ class ReportsCreator extends ControllerBase
             }
 
             for ($j = 0; $j < sizeof($schoolNameColumn); $j++) {
-               
+
                 array_push($list, (object) array(
                     'name' => $schoolNameColumn[$j],
                     'region' => $regionColumn[$j],
@@ -2473,7 +2473,7 @@ $studentAMColumn
     }
 
 
-   public function makeReportDideDistribGel(Request $request)
+   public function makeReportDideDistribGel_v1(Request $request)
    {
       try {
          if (!$request->isMethod('GET')) {
@@ -2491,7 +2491,7 @@ $studentAMColumn
                         ], Response::HTTP_FORBIDDEN);
          }
          $dideid = $user->init->value;
-         //$this->logger->warning("dide Id:" . $dideid);
+         $this->logger->warning("dide Id:" . $dideid);
 
          //user role validation
          $roles = $user->getRoles();
@@ -2527,7 +2527,7 @@ $studentAMColumn
          $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
          foreach ($gelSchools as $gelSchool) {
            //βρες μαθητές που στην αίτησή τους (gel_student) έχουν ως σχολείο τελευταίας φοίτησης σχολείο της ΔΔΕ
-           //$this->logger->warning("School Id:" . $gelSchool->id);
+           $this->logger->warning("School Id:" . $gelSchool->id);
 
            $sCon = $this->connection
               ->select('gel_student', 'eStudent')
@@ -2535,7 +2535,7 @@ $studentAMColumn
               ->condition('eStudent.lastschool_registrynumber', $gelSchool->registry_no, '=');
            $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
            //$numData = $sCon->countQuery()->execute()->fetchField();
-           //$this->logger->warning("Num Students:" . $numData);
+           $this->logger->warning("Num Students:" . $numData);
            foreach ($gelStudents as $gelStudent) {
              //βρες ποιοι μαθητές τοποθετήθηκαν
              $sCon = $this->connection
@@ -2555,7 +2555,7 @@ $studentAMColumn
                array_push($studentClassColumn, $this->retrieveGelClassName($gelStudent->nextclass));
                array_push($studentAddressColumn, $this->retrieveStudentAddress($gelStudent->regionaddress, $gelStudent->regiontk, $gelStudent->regionarea ));
                array_push($schoolNameOriginColumn, $gelSchool->name);
-               array_push($schoolNameDestinationColumn, "ΑΥΤΟΔΙΚΑΙΑ");
+               array_push($schoolNameDconnectiologgernestinationColumn, "ΑΥΤΟΔΙΚΑΙΑ");
              }
              */
 
@@ -2609,6 +2609,139 @@ $studentAMColumn
                     'studentaddress' => $studentAddressColumn[$j],
                     'schoolorigin' => $schoolNameOriginColumn[$j],
                     'schooldestination' => $schoolNameDestinationColumn[$j],
+                ));
+           }
+
+         return $this->respondWithStatus($list, Response::HTTP_OK);
+
+
+       } //end try
+
+       catch (\Exception $e) {
+           $this->logger->warning($e->getMessage());
+           return $this->respondWithStatus([
+                 "message" => t("An unexpected problem occured during makeReportDideDistribGel Method")
+                  ], Response::HTTP_INTERNAL_SERVER_ERROR);
+       }
+
+
+
+   }
+
+
+
+   public function makeReportDideDistribGel(Request $request)
+   {
+      try {
+         if (!$request->isMethod('GET')) {
+              return $this->respondWithStatus([
+                     "message" => t("Method Not Allowed")
+                       ], Response::HTTP_METHOD_NOT_ALLOWED);
+         }
+         //user validation
+         $authToken = $request->headers->get('PHP_AUTH_USER');
+         $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+         $user = reset($users);
+         if (!$user) {
+               return $this->respondWithStatus([
+                      'message' => t("User not found"),
+                        ], Response::HTTP_FORBIDDEN);
+         }
+         $dideid = $user->init->value;
+         //$this->logger->warning("dide Id:" . $dideid);
+
+         //user role validation
+         $roles = $user->getRoles();
+         $validRole = false;
+         foreach ($roles as $role) {
+             if ($role === "eduadmin") {
+                 $validRole = true;
+                 break;
+             }
+         }
+         if (!$validRole) {
+               return $this->respondWithStatus([
+                      'message' => t("User Invalid Role"),
+                        ], Response::HTTP_FORBIDDEN);
+         }
+
+         $list = array();
+         $crypt = new Crypt();
+
+         //όρισε στήλες εμφάνισης στην αναφορά
+         $studentIdColumn = array();
+         $studentAMColumn = array();
+         $studentClassColumn = array();
+         $studentAddressColumn = array();
+         $schoolNameOriginColumn = array();
+         $schoolNameDestinationColumn = array();
+
+
+         $sCon = $this->connection
+                ->select('gelstudenthighschool', 'eClass')
+                ->fields('eClass', array('student_id', 'school_id','taxi'))
+                ->condition('eClass.dide', $dideid, '=');
+         $gelClasses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+         //$num = sizeof($gelClasses);
+         //$this->logger->warning("Num:" . $num);
+
+         foreach ($gelClasses as $gelClass) {
+                //εύρεση στοιχείων μαθητή (ΑΜ, διεύθυνση κατοικίας)
+                $sCon = $this->connection
+                       ->select('gel_student', 'eStudent')
+                       ->fields('eStudent', array(  'am', 'regionaddress', 'regiontk', 'regionarea', 'lastschool_schoolname'))
+                       ->condition('eStudent.id', $gelClass->student_id, '=');
+                $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                $gelStudent = reset($gelStudents);
+
+               if ($gelClass->student_id != null && $gelClass->school_id == null)  {
+                 if ($gelClass->student_id == "(ΜΟΥΣΙΚΟ ΓΥΜΝΑΣΙΟ - ΜΟΥΣΙΚΟ ΛΥΚΕΙΟ)")
+                     $this->logger->warning("ΜΠΗΚΑ!!!");
+                 array_push($studentIdColumn, $gelClass->student_id);
+                 if ($gelStudent->am != null)
+                     array_push($studentAMColumn, $crypt->decrypt($gelStudent->am));
+                 else
+                     array_push($studentAMColumn, "ΧΩΡΙΣ ΑΜ");
+
+                 //array_push($studentClassColumn, $this->retrieveGelClassName($gelStudent->nextclass));
+                 array_push($studentClassColumn, $this->retrieveGelClassName($gelClass->taxi));
+                 array_push($studentAddressColumn, $this->retrieveStudentAddress($gelStudent->regionaddress, $gelStudent->regiontk, $gelStudent->regionarea ));
+                 array_push($schoolNameOriginColumn, $gelStudent->lastschool_schoolname);
+                 array_push($schoolNameDestinationColumn, "ΜΗ ΤΟΠΟΘΕΤΗΜΕΝΟΣ");
+               }
+               else  {
+                 //βρες όνομα σχολείου τοποθέτησης (προορισμού)
+                 $sCon = $this->connection
+                    ->select('gel_school', 'eSchool')
+                    ->fields('eSchool', array('name'))
+                    ->condition('eSchool.id', $gelClass->school_id, '=');
+                 $schoolNamesDest = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                 $schoolNameDest = reset($schoolNamesDest);
+
+                 array_push($studentIdColumn, $gelClass->student_id);
+                 if ($gelStudent->am != null)
+                    array_push($studentAMColumn, $crypt->decrypt($gelStudent->am));
+                 else
+                    array_push($studentAMColumn, "ΧΩΡΙΣ ΑΜ");
+
+                 //array_push($studentClassColumn, $this->retrieveGelClassName($gelStudent->nextclass));
+                 array_push($studentClassColumn, $this->retrieveGelClassName($gelClass->taxi));
+                 array_push($studentAddressColumn, $this->retrieveStudentAddress($gelStudent->regionaddress, $gelStudent->regiontk, $gelStudent->regionarea ));
+                 array_push($schoolNameOriginColumn, $gelStudent->lastschool_schoolname);
+                 array_push($schoolNameDestinationColumn, $schoolNameDest->name);
+               }
+
+         }
+
+         //εισαγωγή εγγραφών στο tableschema
+         for ($j = 0; $j < sizeof($studentIdColumn); $j++) {
+                array_push($list, (object) array(
+                    'studentid' => $studentIdColumn[$j],
+                    'studentam' => $studentAMColumn[$j],
+                    'studentclass' => $studentClassColumn[$j],
+                    'studentaddress' => $studentAddressColumn[$j],
+                    'schoolorigin' => str_replace("\n", " ", $schoolNameOriginColumn[$j]),
+                    'schooldestination' => str_replace("\n", " ", $schoolNameDestinationColumn[$j]),
                 ));
            }
 
