@@ -1617,6 +1617,7 @@ getHighSchoolperDide()
 
 getStudentsPerSchool(schoolid,type,addressfilter, amfilter)
 {
+        console.log(schoolid,type,"type");
         if (addressfilter === "")
             addressfilter = 99999;
         if (amfilter === "")
