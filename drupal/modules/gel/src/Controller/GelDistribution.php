@@ -2617,6 +2617,7 @@ public function ConfirmStudents(Request $request)
                 ->fields('gSchool', array('id', 'edu_admin_id', 'registry_no'))
                 ->condition(db_or()->condition('gStudent.lastschool_unittypeid', 3 , '=')->condition('gStudent.lastschool_unittypeid', 200 , '='))
                 ->condition('gStudent.lastschool_class', 3 , '=')
+                ->condition('gStudent.delapp', 0, '=')
                 ->condition('gSchool.edu_admin_id', $dide_id , '=');
 
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -2628,7 +2629,6 @@ public function ConfirmStudents(Request $request)
                 'langcode' => 'el',
                 'id' => $school ->id,
                 'student_id' => $school ->id,
-                'school_id' => $school-> registry_no,
                 'taxi' => $school-> nextclass,
                 'dide' => $dide_id,
                 'second_period' =>$school -> second_period,
@@ -2660,7 +2660,6 @@ public function ConfirmStudents(Request $request)
                 'langcode' => 'el',
                 'id' => $school ->id,
                 'student_id' => $school ->id,
-                'school_id' => $school-> registry_no,
                 'taxi' => $school-> nextclass,
                 'dide' => $dide_id,
                 'second_period' =>$school -> second_period,
@@ -2691,7 +2690,6 @@ public function ConfirmStudents(Request $request)
                 'langcode' => 'el',
                 'id' => $school ->id,
                 'student_id' => $school ->id,
-                'school_id' => $school-> registry_no,
                 'taxi' => $school-> nextclass,
                 'dide' => $dide_id,
                 'second_period' =>$school -> second_period,
@@ -2722,7 +2720,6 @@ public function ConfirmStudents(Request $request)
                 'langcode' => 'el',
                 'id' => $school ->id,
                 'student_id' => $school ->id,
-                'school_id' => $school-> registry_no,
                 'taxi' => $school-> nextclass,
                 'dide' => $dide_id,
                 'second_period' =>$school -> second_period,
@@ -2754,7 +2751,6 @@ public function ConfirmStudents(Request $request)
                 'langcode' => 'el',
                 'id' => $school ->id,
                 'student_id' => $school ->id,
-                'school_id' => $school-> registry_no,
                 'taxi' => $school-> nextclass,
                 'dide' => $dide_id,
                 'second_period' =>$school -> second_period,
