@@ -1158,7 +1158,7 @@ class ReportsCreator extends ControllerBase
             $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
             $applications = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
-
+ $this->logger->warning($sCon."epeidon");
 
             $schoolNameColumn = array();
             $regionColumn = array();
@@ -1194,7 +1194,7 @@ class ReportsCreator extends ControllerBase
             }
 
             for ($j = 0; $j < sizeof($schoolNameColumn); $j++) {
-
+               
                 array_push($list, (object) array(
                     'name' => $schoolNameColumn[$j],
                     'region' => $regionColumn[$j],

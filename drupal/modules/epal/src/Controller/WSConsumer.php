@@ -68,7 +68,7 @@ class WSConsumer extends ControllerBase
 
     public function getStudentEpalInfo($didactic_year, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
-        $testmode = false;
+        $testmode = false; 
         $didactic_year_id=$this->getdidacticyear($didactic_year);
 
         if ($testmode)  {

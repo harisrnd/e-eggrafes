@@ -38,10 +38,11 @@ import {
     <div class = "loading" *ngIf="(showLoader | async) === true"></div>
     <div style="min-height: 500px;">
     <form [formGroup]="formGroup">
-     <button type="button"  (click)="initialaizattion()">
+    
+     <button type="button" class="btn-primary btn-lg isclickable" style="width: 9em;"  (click)="initialaizattion()">
          Αρχικοποίηση
       </button>
-
+     
        <p style="margin-top: 20px; line-height: 2em;"> Στην παρακάτω λίστα βλέπετε τα γυμνάσια της περιοχής ευθύνης σας. Παρακαλώ
        επιλέξτε σχολειο για να τοποθετήσετε τους μαθητές με βάση τη διεύθυνση κατοικίας τους στο αντίστοιχο λύκειο.</p>
        
@@ -53,7 +54,7 @@ import {
             <div class="col-md-11 offset-md-1">
                 
                 <select #secsel class="form-control" formControlName="secsel" 
-                        (change)="setActiveRegion(secsel,1,1,0)">
+                        (change)="setActiveRegion(secsel,1,1,0,addressfilter, amfilter)">
                     <option value="0"></option>
                     <option *ngFor="let JuniorHighSchools$  of JuniorHighSchool$ | async; let i=index; let isOdd=odd; let isEven=even" [value]="JuniorHighSchools$.id"> {{JuniorHighSchools$.name}}</option>
                 </select>
@@ -64,7 +65,7 @@ import {
              <p style="margin-top: 20px; line-height: 2em;"> Σε περίπτωση που θέλετε να εφαρμόσετε φίλτρο στα αποτελέσματα συμπληρώστε το αντιστοιχο πεδίο και πατήστε εφαρμογή</p>
              <div class="col-md-12" style="font-weight: bold;"> Φίλτρα </div>     
             <div class="row form-group">
-              <div class="col-5">
+              <div class="col-4">
               <label for="addressfilter">
                 Διεύθυνση Κατοικίας:
               </label>
@@ -76,13 +77,22 @@ import {
               </label>
                   <input #addressfilter type= "text" class="form-control"  formControlName="amfilter"> 
                </div>
-               <div class="col-4">   
+               <div class="col-2">   
                <label>
-                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               </label> 
-                <button type="button" (click)="setActiveRegion(secsel,1,0,0,addressfilter, amfilter)">
-                     Εφαρμογή 
+                <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;"  (click)="setActiveRegion(secsel,1,0,0,addressfilter, amfilter)">
+                     Αναζήτηση 
                 </button>
+                </div>
+               <div class="col-3">   
+              <label>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </label> 
+                <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;" (click)="deletefilters(secsel,1)" >
+                     Καθαρισμός φίλτρου 
+                </button>
+
                 </div>
            </div>
 
@@ -104,7 +114,7 @@ import {
                      </div>
                     <div class="col-md-2 ">
                     </div>
-                     </div>
+                 </div>
                  
                  
                  <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
@@ -124,18 +134,16 @@ import {
                       <div>{{AllStudents$.regiontk}}</div>
                     </div>
                     <div class="col-md-2 " style = "font-size: 0.8em" >{{AllStudents$.school_type}}</div>
-                    <div *ngIf="AllStudents$.oldschool !== false" class="col-md-3 changecolor" >
-                            {{AllStudents$.oldschool}}
-                     </div>
+                    <div class="col-md-3 " style = "font-size: 0.8em" >
+                      <div *ngIf="AllStudents$.oldschool !== false"  class= "changecolor" >
+                              {{AllStudents$.oldschool}}
+                       </div>
 
-                     <div *ngIf="AllStudents$.oldschool !== true" class="col-md-3" >
-                           
-                     </div>
-             
- 
-
-                     <div *ngIf="AllStudents$.oldschool !== false" class="col-md-1"  style="font-size: 0.8em;">
-                       <i class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id)"></i>
+                       <div *ngIf="AllStudents$.oldschool !== true" >                        
+                       </div>
+                       </div>
+                     <div  class="col-md-1"  style="font-size: 0.8em;">
+                       <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,1,addressfilter, amfilter)"></i>
                      </div>
   
        </div>
@@ -162,7 +170,7 @@ import {
            Αριθμός μαθητών ανα σελίδα: 
            </div>
           <div class="col-2">
-           <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,secsel)">
+           <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,secsel,1)">
                         <option value="5">5</option>
                         <option value="15">15</option>
                         <option value="25">25</option>
@@ -176,10 +184,10 @@ import {
              <nav aria-label="pagination">
               <ul class="pagination justify-content-center">
                 <li class="page-item " >
-                  <button class="page-link"  (click)="prevpage(secsel)">Προηγούμενη</button>
+                  <button class="page-link"  (click)="prevpage(secsel,1)">Προηγούμενη</button>
                 </li>
                 <li class="page-item">
-                  <button class="page-link"  (click) ="nextpage(secsel) ">Επόμενη</button>
+                  <button class="page-link"  (click) ="nextpage(secsel,1) ">Επόμενη</button>
                 </li>
               </ul>
               
@@ -190,8 +198,8 @@ import {
 
           <div style="width: 100%; color: #000000; font-weight: bold;" >
                  <p style="margin-top: 20px; line-height: 2em;"> Αφού έχετε επιλέξει τους μαθητες απο την παραπάνω λίστα, στη συνέχεια επιλέξτε το αντίστοιχο Λύκειο υποδοχής.</p>
-                 <label> Λύκειο Υποδοχής </label>
-                   <select #highscsel class="form-control" (change)="confirmSchool(highscsel,1)" >
+                 <label> Λύκειο Υποδοχής: </label>
+                   <select #highscsel1 class="form-control" (change)="confirmSchool(highscsel1,1,addressfilter, amfilter)" >
                         <option value="0"></option>
                         <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
@@ -205,6 +213,336 @@ import {
   
 
       </div>
+
+
+
+
+       <li class="list-group-item isclickable" (click)="setActiveclass(2)">
+          <div class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 2" 
+           (click)="setActiveRegion(0,2,1,0,addressfilter, amfilter)"
+          > Β Λυκείου  </div>
+       </li>    
+      <div [hidden] ="aclassActive !== 2">   
+           <br>
+           <br>
+           <div [hidden] ="regionActive === -1">   
+             <p style="margin-top: 20px; line-height: 2em;"> Σε περίπτωση που θέλετε να εφαρμόσετε φίλτρο στα αποτελέσματα συμπληρώστε το αντιστοιχο πεδίο και πατήστε εφαρμογή</p>
+             <div class="col-md-12" style="font-weight: bold;"> Φίλτρα </div>     
+            <div class="row form-group">
+              <div class="col-4">
+              <label for="addressfilter">
+                Διεύθυνση Κατοικίας:
+              </label>
+                  <input #addressfilter type= "text" class="form-control" formControlName="addressfilter"> 
+              </div>
+              <div class="col-3">    
+              <label for="amfilter">
+                ΑΜ Μαθητή:
+              </label>
+                  <input #addressfilter type= "text" class="form-control"  formControlName="amfilter"> 
+               </div>
+               <div class="col-2">   
+               <label>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </label> 
+                <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;"  (click)="setActiveRegion(0,2,0,0,addressfilter, amfilter)">
+                     Αναζήτηση 
+                </button>
+                </div>
+               <div class="col-3">   
+              <label>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </label> 
+                <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;" (click)="deletefilters(0,2)" >
+                     Καθαρισμός φίλτρου 
+                </button>
+
+                </div>
+           </div>
+
+
+
+
+           <div class="list-group-item framecolor">
+                    <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων 
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
+                    </div>
+                    <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
+                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div> 
+                      <div>Διεύθυνση Κατοικίας </div>
+                      
+                    </div>
+                    <div class="col-md-2 " style="   font-weight: bold; font-size: 0.8em" >Τύπος Σχολείου</div>
+                    <div class="col-md-3 " style="font-weight: bold;">
+                            Σχολείο Τοποθέτησης
+                     </div>
+                    <div class="col-md-2 ">
+                    </div>
+                 </div>
+                 
+                 
+                 <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
+                  class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
+                   style="margin: 0px 2px 0px 2px;"  [hidden]="calchidden(AllStudents$.idnew)" [class.changecolor]="AllStudents$.oldschool !== false">
+
+                    
+                    <div class="col-md-1 " style = "font-size: 0.8em">
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                   </div>
+
+                    <div class="col-md-4"  style = "font-size: 0.8em">
+
+                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div> 
+                      <div>{{AllStudents$.regionaddress}}</div>
+                      <div>{{AllStudents$.regionarea}} </div>
+                      <div>{{AllStudents$.regiontk}}</div>
+                    </div>
+                    <div class="col-md-2 " style = "font-size: 0.8em" >{{AllStudents$.school_type}}</div>
+                    <div class="col-md-3 " style = "font-size: 0.8em" >
+                      <div *ngIf="AllStudents$.oldschool !== false"  class= "changecolor" >
+                              {{AllStudents$.oldschool}}
+                       </div>
+
+                       <div *ngIf="AllStudents$.oldschool !== true" >                        
+                       </div>
+                       </div>
+                     <div  class="col-md-1"  style="font-size: 0.8em;">
+                       <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,2,addressfilter, amfilter)"></i>
+                     </div>
+  
+       </div>
+
+                
+         <div style="font-weight: bold;">     
+         <div class="container framecolor">
+         <span class="border border-info" >
+          <div class="form-group" class="row" style = "font-weight: bold; font-size: 0.8em">
+           <div class="col-3">
+          Βρίσκεστε στη σελίδα:
+          </div>
+          <div class="col-1">
+           <input #pageno type="text" class="form-control" placeholder=".col-1" formControlName="pageno">
+          </div> 
+          <div class="col-1">
+           απο  
+           </div>
+           <div class="col-1">
+           <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage">
+           </div> 
+         
+          <div class="col-4">
+           Αριθμός μαθητών ανα σελίδα: 
+           </div>
+          <div class="col-2">
+           <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,0,2)">
+                        <option value="5">5</option>
+                        <option value="15">15</option>
+                        <option value="25">25</option>
+                        <option value="100">100</option>
+
+
+            </select>
+            </div>
+           </div>
+             <br>
+             <nav aria-label="pagination">
+              <ul class="pagination justify-content-center">
+                <li class="page-item " >
+                  <button class="page-link"  (click)="prevpage(secsel,2)">Προηγούμενη</button>
+                </li>
+                <li class="page-item">
+                  <button class="page-link"  (click) ="nextpage(secsel,2) ">Επόμενη</button>
+                </li>
+              </ul>
+              
+            </nav>
+            </span>
+         </div>
+
+
+          <div style="width: 100%; color: #000000; font-weight: bold;" >
+                 <p style="margin-top: 20px; line-height: 2em;"> Αφού έχετε επιλέξει τους μαθητες απο την παραπάνω λίστα, στη συνέχεια επιλέξτε το αντίστοιχο Λύκειο υποδοχής.</p>
+                 <label> Λύκειο Υποδοχής </label>
+                   <select #highscsel2 class="form-control" (change)="confirmSchool(highscsel2,2,addressfilter, amfilter)" >
+                        <option value="0"></option>
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
+                   </select>
+          </div>
+                   <br>
+                   <br>
+        </div>
+
+      </div>
+  
+
+      </div>
+
+
+
+
+ <li class="list-group-item isclickable" (click)="setActiveclass(3)">
+          <div class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 3" 
+           (click)="setActiveRegion(0,3,1,0,addressfilter, amfilter)"
+          > Γ Λυκείου  </div>
+       </li>    
+      <div [hidden] ="aclassActive !== 3">   
+           <br>
+           <br>
+           <div [hidden] ="regionActive === -1">   
+             <p style="margin-top: 20px; line-height: 2em;"> Σε περίπτωση που θέλετε να εφαρμόσετε φίλτρο στα αποτελέσματα συμπληρώστε το αντιστοιχο πεδίο και πατήστε εφαρμογή</p>
+             <div class="col-md-12" style="font-weight: bold;"> Φίλτρα </div>     
+            <div class="row form-group">
+              <div class="col-4">
+              <label for="addressfilter">
+                Διεύθυνση Κατοικίας:
+              </label>
+                  <input #addressfilter type= "text" class="form-control" formControlName="addressfilter"> 
+              </div>
+              <div class="col-3">    
+              <label for="amfilter">
+                ΑΜ Μαθητή:
+              </label>
+                  <input #addressfilter type= "text" class="form-control"  formControlName="amfilter"> 
+               </div>
+               <div class="col-2">   
+               <label>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </label> 
+                <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;"  (click)="setActiveRegion(0,3,0,0,addressfilter, amfilter)">
+                     Αναζήτηση 
+                </button>
+                </div>
+               <div class="col-3">   
+              <label>
+                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </label> 
+                <button type="button" class="btn-primary btn-sm  isclickable" style="width: 9em;" (click)="deletefilters(0,3)" >
+                     Καθαρισμός φίλτρου 
+                </button>
+
+                </div>
+           </div>
+
+
+
+
+           <div class="list-group-item framecolor">
+                    <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων 
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">                               
+                    </div>
+                    <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
+                      <div>A/A Αίτησης/ Α.Μ. Μαθητή</div> 
+                      <div>Διεύθυνση Κατοικίας </div>
+                      
+                    </div>
+                    <div class="col-md-2 " style="   font-weight: bold; font-size: 0.8em" >Τύπος Σχολείου</div>
+                    <div class="col-md-3 " style="font-weight: bold;">
+                            Σχολείο Τοποθέτησης
+                     </div>
+                    <div class="col-md-2 ">
+                    </div>
+                 </div>
+                 
+                 
+                 <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
+                  class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
+                   style="margin: 0px 2px 0px 2px;"  [hidden]="calchidden(AllStudents$.idnew)" [class.changecolor]="AllStudents$.oldschool !== false">
+
+                    
+                    <div class="col-md-1 " style = "font-size: 0.8em">
+                     <input #cb type="checkbox" [checked]="findid(AllStudents$.id)" (change)="updateCheckedOptions(AllStudents$.id, l)">                               
+                   </div>
+
+                    <div class="col-md-4"  style = "font-size: 0.8em">
+
+                      <div>{{AllStudents$.id}}/{{AllStudents$.am}}</div> 
+                      <div>{{AllStudents$.regionaddress}}</div>
+                      <div>{{AllStudents$.regionarea}} </div>
+                      <div>{{AllStudents$.regiontk}}</div>
+                    </div>
+                    <div class="col-md-2 " style = "font-size: 0.8em" >{{AllStudents$.school_type}}</div>
+                    <div class="col-md-3 " style = "font-size: 0.8em" >
+                      <div *ngIf="AllStudents$.oldschool !== false"  class= "changecolor" >
+                              {{AllStudents$.oldschool}}
+                       </div>
+
+                       <div *ngIf="AllStudents$.oldschool !== true" >                        
+                       </div>
+                       </div>
+                     <div  class="col-md-1"  style="font-size: 0.8em;">
+                       <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,2,addressfilter, amfilter)"></i>
+                     </div>
+  
+       </div>
+
+                
+         <div style="font-weight: bold;">     
+         <div class="container framecolor">
+         <span class="border border-info" >
+          <div class="form-group" class="row" style = "font-weight: bold; font-size: 0.8em">
+           <div class="col-3">
+          Βρίσκεστε στη σελίδα:
+          </div>
+          <div class="col-1">
+           <input #pageno type="text" class="form-control" placeholder=".col-1" formControlName="pageno">
+          </div> 
+          <div class="col-1">
+           απο  
+           </div>
+           <div class="col-1">
+           <input #maxpage type="text" class="form-control" placeholder=".col-1" formControlName="maxpage">
+           </div> 
+         
+          <div class="col-4">
+           Αριθμός μαθητών ανα σελίδα: 
+           </div>
+          <div class="col-2">
+           <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,0,3)">
+                        <option value="5">5</option>
+                        <option value="15">15</option>
+                        <option value="25">25</option>
+                        <option value="100">100</option>
+
+
+            </select>
+            </div>
+           </div>
+             <br>
+             <nav aria-label="pagination">
+              <ul class="pagination justify-content-center">
+                <li class="page-item " >
+                  <button class="page-link"  (click)="prevpage(secsel,3)">Προηγούμενη</button>
+                </li>
+                <li class="page-item">
+                  <button class="page-link"  (click) ="nextpage(secsel,3) ">Επόμενη</button>
+                </li>
+              </ul>
+              
+            </nav>
+            </span>
+         </div>
+
+
+          <div style="width: 100%; color: #000000; font-weight: bold;" >
+                 <p style="margin-top: 20px; line-height: 2em;"> Αφού έχετε επιλέξει τους μαθητες απο την παραπάνω λίστα, στη συνέχεια επιλέξτε το αντίστοιχο Λύκειο υποδοχής.</p>
+                 <label> Λύκειο Υποδοχής </label>
+                   <select #highscsel3 class="form-control" (change)="confirmSchool(highscsel3,2,addressfilter, amfilter)" >
+                        <option value="0"></option>
+                        <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index" 
+                        [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
+                   </select>
+          </div>
+                   <br>
+                   <br>
+        </div>
+
+      </div>
+  
+
+      </div>
+
+
 
 
 
@@ -233,6 +571,8 @@ import {
     private SchoolSelectionSub: Subscription;
     private HighSchoolSelection$: BehaviorSubject<any>;
     private HighSchoolSelectionSub: Subscription;
+    private Initialized$: BehaviorSubject<any>;
+    private InitializedSub: Subscription;
     private idx = <number>-1;
     private selections: Array<any> = [];
     private showLoader: BehaviorSubject<boolean>;
@@ -248,6 +588,7 @@ import {
     private pageNew = 1;
     private tot_pages = 1;
     private stperpage = 5;
+    private hasdone = false;
 
 
 
@@ -262,6 +603,7 @@ import {
         this.SaveSelection$ = new BehaviorSubject([{}]);
         this.SchoolSelection$ = new BehaviorSubject([{}]);
         this.HighSchoolSelection$ = new BehaviorSubject([{}]);
+        this.Initialized$ = new BehaviorSubject([{}]);
         this.showLoader = new BehaviorSubject(false);
         this.modalTitle = new BehaviorSubject("");
         this.modalText = new BehaviorSubject("");
@@ -275,6 +617,7 @@ import {
             amfilter:["",[]],
 
         });
+       
 
        
     }
@@ -286,7 +629,9 @@ import {
     }
 
     ngOnInit() {
-      
+        
+        this.initialized();
+        console.log(this.hasdone,"oninit");
        this.selall = false;
        this.selections = [];
        console.log(this.selall);
@@ -313,14 +658,15 @@ import {
          this.tot_pages = 0;
          this.stperpage = 5;
        }
-
-       ind = ind.value;
+       if (ind !== 0)
+         ind = ind.value;
        this.selall = false;
        this.selections = [];
        this.StudentsPerSchool$.next([{}]);
         if (ind === this.regionActive && ind !== 0 && changed === 1) {
             ind = -1;
            this.regionActive = ind;
+           console.log(type,this.regionActive, "edw1");
         }
         else {
             if (changepages === 1)
@@ -329,18 +675,19 @@ import {
               this.tot_pages = 0;
             }
             this.regionActive = ind;
+             console.log(type,this.regionActive, "edw2");
             this.showLoader.next(true);
 
            this.formGroup.get('pageno').setValue(this.pageno); 
       
-              
+                console.log(type,this.regionActive, "edw3");
                this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
 
                 .subscribe(data => {
                     console.log("first", this.pageno);
                     this.StudentsPerSchool$.next(data);
                     if (this.pageno == 1){
-                      console.log(this.tot_pages,data.length,this.stperpage, "datalength");
+                      
 
                     if (data.length < this.stperpage)
                     {
@@ -397,14 +744,18 @@ import {
 
    confirmSchool( selection,type,addressfilter, amfilter)
    {
+       let addressf = this.formGroup.get('addressfilter').value;
+       let amf = this.formGroup.get('amfilter').value;
+
        let oldschool = 0;
        let schoolid = selection.value;
-       console.log(selection.value, type, "tralala");
+       if (type === 2)
+           this.regionActive = 0;
        if (this.selections.length === 0)
        {
 
            schoolid = 0;
-           this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressfilter, amfilter)
+           this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -438,7 +789,7 @@ import {
            
        }
         else{
-         console.log(this.selections, oldschool, "aaaaa",schoolid ,"tralala1");
+     
 
         this.SaveSelectionSub = this._hds.saveHighScoolSelection(this.selections, oldschool, schoolid,type, 0).subscribe(data => {
             this.SaveSelection$.next(data);
@@ -448,7 +799,8 @@ import {
             this.modalHeader.next("modal-header-success");
             this.modalTitle.next("Αποθηκεύτηκαν.");
             this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressfilter, amfilter)
+           this.showModal();
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -551,10 +903,13 @@ let server = 0;
 
 selectall(addressfilter, amfilter)
 {
-    
+       let addressf = this.formGroup.get('addressfilter').value;
+       let amf = this.formGroup.get('amfilter').value;
+
+          console.log(addressfilter,amfilter,"selectall");
           this.selall =! this.selall;
            this.showLoader.next(true);
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1,addressfilter, amfilter)
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1,addressf, amf)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -599,17 +954,28 @@ selectall(addressfilter, amfilter)
 
  setActiveclass(ind)
     {
-       
+      
+        this.initialized();
+       if (this.hasdone === false)
+        {
+                this.modalHeader.next("modal-header-danger");
+                 this.modalTitle.next("Απαιτείται Αρχικοποίηση.");
+                 this.modalText.next("Αρχικοποιήστε τους μαθητές σας");
+                 this.showModal();
+        }
+        else
+        {  
       if (this.aclassActive === ind)
       {
              ind = -1;
              this.regionActive = -1;
              this.formGroup.get('secsel').setValue(0);
              this.stperpage = 5;
-             console.log(this.aclassActive,"apo edw" );
+             
       }
 
       this.aclassActive = ind;
+    }
       }
 
 
@@ -633,28 +999,28 @@ selectall(addressfilter, amfilter)
       
     }
 
-    nextpage(secsel)
+    nextpage(secsel,type)
     {
       if (this.pageno === this.tot_pages) 
        return;  
 
         this.pageno = this.pageno + 1;
-       this.setActiveRegion(secsel,1,0,0,"","")
+       this.setActiveRegion(secsel,type,0,0,"","")
       
     }
 
 
-    prevpage(secsel)
+    prevpage(secsel,type)
     {
       if (this.pageno ===1) 
         return;  
       this.pageno = this.pageno - 1;
-      this.setActiveRegion(secsel,1,0,0,"","")
+      this.setActiveRegion(secsel,type,0,0,"","")
 
     }
 
 
-changestudentsperpage(newstperpage,secsel)
+changestudentsperpage(newstperpage,secsel,type)
 {
   
   this.stperpage= newstperpage.value ;
@@ -664,20 +1030,42 @@ changestudentsperpage(newstperpage,secsel)
 
 initialaizattion()
 {
-
+if (this.hasdone === false)
+ {
+   this.showLoader.next(true);
 this._hds.Initialazation()
             .then(msg => {
-                
+              this.showLoader.next(false);
+                 this.hasdone = true;
+                 this.modalHeader.next("modal-header-success");
+                 this.modalTitle.next("Αρχικοποίηση.");
+                 this.modalText.next("Έχετε  αρχικοποιήσει σωστά τους μαθητές σας");
+                 this.showModal();
+                  console.log(this.hasdone,"initialzation")
+
             })
             .catch(err => {
                 console.log(err);
                 
             });
+           
+ }
+ else
+ {
+           this.modalHeader.next("modal-header-danger");
+           this.modalTitle.next("Αποτυχία Αρχικοποίησης.");
+           this.modalText.next("Έχετε ήδη αρχικοποιήση τους μαθητές σας");
+           this.showModal();
+ }
 
 }
 
-undosave(nid,addressfilter, amfilter)
+undosave(nid,type, addressfilter, amfilter)
 {
+    let addressf = this.formGroup.get('addressfilter').value;
+    let amf = this.formGroup.get('amfilter').value;
+    if (type == 2)
+       this.regionActive = 0;
  this.SaveSelectionSub = this._hds.saveHighScoolSelection(nid, 0, 0,1, 1).subscribe(data => {
             this.SaveSelection$.next(data);
             this.showLoader.next(false);
@@ -686,7 +1074,8 @@ undosave(nid,addressfilter, amfilter)
             this.modalHeader.next("modal-header-success");
             this.modalTitle.next("Έγινε αναίρεση τοποθέτησης .");
             this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1,addressfilter, amfilter)
+            this.showModal();
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1,addressf, amf)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -718,11 +1107,41 @@ undosave(nid,addressfilter, amfilter)
 }
 
 
-datafiltering()
+deletefilters(secsel,classid)
 {
-
+  console.log(secsel,"delete filters");
+  this.formGroup.get('addressfilter').setValue(""); 
+  this.formGroup.get('amfilter').setValue(""); 
+  this.setActiveRegion(secsel,classid,0,0,"", "")
 }
 
+
+initialized()
+{
+
+
+      this.InitializedSub = this._hds.findIfInitialized()
+
+                .subscribe(data => {
+                    this.Initialized$.next(data);
+                    if (data.answer === true)
+                    {
+                      this.hasdone = true;
+                      console.log("edw");
+                    }
+                    else
+                    {
+                      this.hasdone = false;
+                      console.log("else");
+                    }
+                   
+                },
+                error => {
+                    this.Initialized$.next([{}]);
+                   
+                });
+             console.log(this.hasdone,"initialized");   
+ }
 
 
 }
