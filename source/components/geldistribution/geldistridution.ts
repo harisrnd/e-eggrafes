@@ -191,9 +191,10 @@ import {
            </div>
           <div class="col-2">
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,secsel,1)">
-                        <option value="5">5</option>
-                        <option value="15">15</option>
-                        <option value="25">25</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                         <option value="50">50</option>
                         <option value="100">100</option>
 
 
@@ -355,10 +356,12 @@ import {
            </div>
           <div class="col-2">
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,0,2)">
-                        <option value="5">5</option>
-                        <option value="15">15</option>
-                        <option value="25">25</option>
+                         <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                         <option value="50">50</option>
                         <option value="100">100</option>
+
 
 
             </select>
@@ -519,10 +522,12 @@ import {
            </div>
           <div class="col-2">
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,0,3)">
-                        <option value="5">5</option>
-                        <option value="15">15</option>
-                        <option value="25">25</option>
+                         <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                         <option value="50">50</option>
                         <option value="100">100</option>
+
 
 
             </select>
@@ -607,7 +612,7 @@ import {
     private pageno = 1;
     private pageNew = 1;
     private tot_pages = 1;
-    private stperpage = 5;
+    private stperpage = 10;
     private hasdone = false;
 
 
@@ -632,7 +637,7 @@ import {
             maxpage:[{value: '', disabled: true}, []],
             pageno:[{value: '', disabled: true}, []],
             secsel:[{value: '', disabled: false}, []],
-            studentperpage:[5],
+            studentperpage:[10],
             addressfilter:["",[]],
             amfilter:["",[]],
 
@@ -651,10 +656,9 @@ import {
     ngOnInit() {
 
         this.initialized();
-        console.log(this.hasdone,"oninit");
+       
        this.selall = false;
        this.selections = [];
-       console.log(this.selall);
         (<any>$("#informationfeedback")).appendTo("body");
        this.getSchools();
     }
@@ -669,7 +673,7 @@ import {
        {
          this.pageno = 1;
          this.tot_pages = 0;
-         this.stperpage = 5;
+         this.stperpage = 10;
        }
        if (ind !== 0)
          ind = ind.value;
@@ -679,8 +683,7 @@ import {
         if (ind === this.regionActive && ind !== 0 && changed === 1) {
             ind = -1;
            this.regionActive = ind;
-           console.log(type,this.regionActive, "edw1");
-        }
+          }
         else {
             if (changepages === 1)
             {
@@ -688,23 +691,22 @@ import {
               this.tot_pages = 0;
             }
             this.regionActive = ind;
-             console.log(type,this.regionActive, "edw2");
-            this.showLoader.next(true);
+             this.showLoader.next(true);
 
            this.formGroup.get('pageno').setValue(this.pageno);
 
-                console.log(type,this.regionActive, "edw3");
+                
                this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
 
                 .subscribe(data => {
-                    console.log("first", this.pageno);
+                   
                     this.StudentsPerSchool$.next(data);
                     if (this.pageno == 1){
 
 
                     if (data.length < this.stperpage)
                     {
-                      console.log(this.tot_pages,this.stperpage,"mesa");
+                     
                       this.tot_pages = 1;
                     }
                     else
@@ -718,7 +720,7 @@ import {
 
                     if (this.tot_pages == 0)
                         this.tot_pages = 1;
-                     console.log(this.tot_pages,"selides");
+                     
                     this.formGroup.get('maxpage').setValue(this.tot_pages);
 
                    }
@@ -855,7 +857,7 @@ import {
 
   findselection(ind)
   {
-                  console.log(this.aclassActive,"aaaaaaa2" );
+                  
                   this.HighSchoolSelectionSub = this._hds.getHighSchoolSelection(ind).subscribe(x => {
                   this.HighSchoolSelection$.next(x);
 
@@ -875,12 +877,12 @@ updateCheckedOptions(k,l)
  if (index === -1 )
  {
   this.selections.push(k);
-  console.log(this.selections,"selections")
+
  }
  else
  {
        this.selections.splice(index, 1);
-      console.log(this.selections,"selections")
+      
  }
 
  }
@@ -919,7 +921,7 @@ selectall(type,addressfilter, amfilter)
        let addressf = this.formGroup.get('addressfilter').value;
        let amf = this.formGroup.get('amfilter').value;
 
-          console.log(addressfilter,amfilter,"selectall");
+        
           this.selall =! this.selall;
            this.showLoader.next(true);
             this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
@@ -983,7 +985,7 @@ selectall(type,addressfilter, amfilter)
              ind = -1;
              this.regionActive = -1;
              this.formGroup.get('secsel').setValue(0);
-             this.stperpage = 5;
+             this.stperpage = 10;
              
 
       }
@@ -1125,7 +1127,7 @@ undosave(nid,type, addressfilter, amfilter)
 
 deletefilters(secsel,classid)
 {
-  console.log(secsel,"delete filters");
+
   this.formGroup.get('addressfilter').setValue("");
   this.formGroup.get('amfilter').setValue("");
   this.setActiveRegion(secsel,classid,0,0,"", "")
@@ -1144,13 +1146,13 @@ initialized()
                     {
                       this.hasdone = true;
                       this.showLoader.next(false);
-                      console.log("edw");
+                     
                     }
                     else
                     {
                       this.hasdone = false;
                       this.showLoader.next(false);
-                      console.log("else");
+                     
                     }
 
                 },
@@ -1158,7 +1160,7 @@ initialized()
                     this.Initialized$.next([{}]);
 
                 });
-             console.log(this.hasdone,"initialized");
+            
  }
 
 getSchools()
