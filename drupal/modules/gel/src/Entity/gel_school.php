@@ -606,6 +606,28 @@ class gel_school extends ContentEntityBase implements gel_schoolInterface {
           ->setDisplayConfigurable('form', true)
           ->setDisplayConfigurable('view', true);
 
+
+
+          $fields['extra_unitid'] = BaseFieldDefinition::create('integer')
+        ->setLabel(t('Id τύπου σχολείου'))
+        ->setDescription(t('Δώσε το Id τύπου σχολείου.'))
+            ->setSettings(array(
+              'max_length' => 2,
+              'text_processing' => 0,
+            ))
+        ->setRequired(true)
+            ->setDisplayOptions('view', array(
+              'label' => 'above',
+              'type' => 'integer',
+              'weight' => -4,
+            ))
+        ->setDisplayOptions('form', array(
+              'type' => 'integer',
+              'weight' => -4,
+            ))
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayConfigurable('view', TRUE);
+
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the Gel_school is published.'))
