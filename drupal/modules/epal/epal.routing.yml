@@ -444,4 +444,9 @@ epal.dide.report-gel-complet:
     _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportDideCompletGel'
   requirements:
     _user_is_logged_in: 'TRUE'
-
+epal.encoded_data:
+  path: '/epal/encodeddata'
+  defaults:
+    _controller: '\Drupal\epal\Controller\CreateEncodedData::createData'
+  requirements:
+    _access: 'TRUE'
