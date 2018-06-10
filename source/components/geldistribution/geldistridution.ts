@@ -42,7 +42,7 @@ import {
 
        <p *ngIf = "(showLoader | async) === false && hasdone === true" style="margin-top: 20px; line-height: 2em;">
          Επιλέξτε την τάξη για την οποία πρόκειται να τοποθετήσετε μαθητές με βάση τη διεύθυνση κατοικίας τους.
-         Ειδικότερα για την Α' Λυκείου επιλέγοντας το Γυμνάσιο που επιθυμείται, εμφανίζονται ο Α/Α και η διεύθυνση κατοικίας των αιτήσεων των αντίστοιχων μαθητών.
+         Ειδικότερα για την Α' Λυκείου επιλέγοντας το Γυμνάσιο που επιθυμείτε, εμφανίζονται ο Α/Α και η διεύθυνση κατοικίας των αιτήσεων των αντίστοιχων μαθητών.
          Για να τοποθετήσετε τους μαθητές με βάση τη διεύθυνση κατοικίας τους, επιλέξτε μία ή περισσότερες αιτήσεις και την απαιτούμενη Σχολική Μονάδα Τοποθέτησης.
        </p>
 
@@ -63,13 +63,9 @@ import {
        -->
 
        <li class="list-group-item isclickable" (click)="setActiveclass(1)">
-          <div *ngIf="hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1" 
-
-          (click)="setActiveRegion(0,1,1,0,addressfilter, amfilter)"  > Α' Λυκείου  
-          
-          </div>
+          <div *ngIf="hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1" > Α' Λυκείου  </div>
        </li>
-      <div [hidden] ="aclassActive !== 1 ">
+      <div [hidden] ="aclassActive !== 1">
       <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Επιλέξτε Γυμνάσιο Προέλευσης</b></div>
             <div class="col-md-11 offset-md-1">
 
@@ -121,7 +117,7 @@ import {
 
            <div class="list-group-item framecolor">
                     <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall(1)">
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
                       <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
@@ -191,10 +187,9 @@ import {
            </div>
           <div class="col-2">    
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,secsel,1)">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                         <option value="50">50</option>
+                        <option value="5">5</option>
+                        <option value="15">15</option>
+                        <option value="25">25</option>
                         <option value="100">100</option>
 
 
@@ -286,7 +281,7 @@ import {
 
            <div class="list-group-item framecolor">
                     <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall(2)">
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
                       <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
@@ -356,12 +351,10 @@ import {
            </div>
           <div class="col-2">
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,0,2)">
-                         <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                         <option value="50">50</option>
+                        <option value="5">5</option>
+                        <option value="15">15</option>
+                        <option value="25">25</option>
                         <option value="100">100</option>
-
 
 
             </select>
@@ -452,7 +445,7 @@ import {
 
            <div class="list-group-item framecolor">
                     <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall(3)">
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
                       <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
@@ -494,7 +487,7 @@ import {
                        </div>
                        </div>
                      <div  class="col-md-1"  style="font-size: 0.8em;">
-                       <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,3,addressfilter, amfilter)"></i>
+                       <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,2,addressfilter, amfilter)"></i>
                      </div>
 
        </div>
@@ -522,12 +515,10 @@ import {
            </div>
           <div class="col-2">
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,0,3)">
-                         <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                         <option value="50">50</option>
+                        <option value="5">5</option>
+                        <option value="15">15</option>
+                        <option value="25">25</option>
                         <option value="100">100</option>
-
 
 
             </select>
@@ -552,7 +543,7 @@ import {
           <div style="width: 100%; color: #000000; font-weight: bold;" >
                  <p style="margin-top: 20px; line-height: 2em;"> Αφού έχετε επιλέξει τους μαθητες απο την παραπάνω λίστα, στη συνέχεια επιλέξτε το αντίστοιχο Λύκειο υποδοχής.</p>
                  <label> Λύκειο Υποδοχής </label>
-                   <select #highscsel3 class="form-control" (change)="confirmSchool(highscsel3,3,addressfilter, amfilter)" >
+                   <select #highscsel3 class="form-control" (change)="confirmSchool(highscsel3,2,addressfilter, amfilter)" >
                         <option value="0"></option>
                         <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index"
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
@@ -612,7 +603,7 @@ import {
     private pageno = 1;
     private pageNew = 1;
     private tot_pages = 1;
-    private stperpage = 10;
+    private stperpage = 5;
     private hasdone = false;
 
 
@@ -637,7 +628,7 @@ import {
             maxpage:[{value: '', disabled: true}, []],
             pageno:[{value: '', disabled: true}, []],
             secsel:[{value: '', disabled: false}, []],
-            studentperpage:[10],
+            studentperpage:[5],
             addressfilter:["",[]],
             amfilter:["",[]],
 
@@ -656,11 +647,19 @@ import {
     ngOnInit() {
 
         this.initialized();
-       
+        //console.log(this.hasdone,"oninit");
        this.selall = false;
        this.selections = [];
+       //console.log(this.selall);
         (<any>$("#informationfeedback")).appendTo("body");
-       this.getSchools();
+        this.JuniorHighSchoolSub = this._hds.getJuniorHighSchoolperDide().subscribe(x => {
+            this.JuniorHighSchool$.next(x);
+
+        },
+            error => {
+                this.JuniorHighSchool$.next([{}]);
+                console.log("Error Getting Junior High School");
+            });
     }
 
      setActiveRegion(ind,type, changed,changepages, addressfilter, amfilter) {
@@ -673,7 +672,7 @@ import {
        {
          this.pageno = 1;
          this.tot_pages = 0;
-         this.stperpage = 10;
+         this.stperpage = 5;
        }
        if (ind !== 0)
          ind = ind.value;
@@ -683,7 +682,8 @@ import {
         if (ind === this.regionActive && ind !== 0 && changed === 1) {
             ind = -1;
            this.regionActive = ind;
-          }
+           //console.log(type,this.regionActive, "edw1");
+        }
         else {
             if (changepages === 1)
             {
@@ -691,22 +691,23 @@ import {
               this.tot_pages = 0;
             }
             this.regionActive = ind;
-             this.showLoader.next(true);
+             //console.log(type,this.regionActive, "edw2");
+            this.showLoader.next(true);
 
            this.formGroup.get('pageno').setValue(this.pageno);
 
-                
+                //console.log(type,this.regionActive, "edw3");
                this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
 
                 .subscribe(data => {
-                   
+                    //console.log("first", this.pageno);
                     this.StudentsPerSchool$.next(data);
                     if (this.pageno == 1){
 
 
                     if (data.length < this.stperpage)
                     {
-                     
+                      //console.log(this.tot_pages,this.stperpage,"mesa");
                       this.tot_pages = 1;
                     }
                     else
@@ -720,7 +721,7 @@ import {
 
                     if (this.tot_pages == 0)
                         this.tot_pages = 1;
-                     
+                     //console.log(this.tot_pages,"selides");
                     this.formGroup.get('maxpage').setValue(this.tot_pages);
 
                    }
@@ -857,14 +858,14 @@ import {
 
   findselection(ind)
   {
-                  
+                  //console.log(this.aclassActive,"aaaaaaa2" );
                   this.HighSchoolSelectionSub = this._hds.getHighSchoolSelection(ind).subscribe(x => {
                   this.HighSchoolSelection$.next(x);
 
                   },
                   error => {
                       this.HighSchoolSelection$.next([{}]);
-                      console.log("No HighSchool");
+                      //console.log("No HighSchool");
                   });
   }
 
@@ -877,12 +878,12 @@ updateCheckedOptions(k,l)
  if (index === -1 )
  {
   this.selections.push(k);
-
+  //console.log(this.selections,"selections")
  }
  else
  {
        this.selections.splice(index, 1);
-      
+      //console.log(this.selections,"selections")
  }
 
  }
@@ -916,15 +917,15 @@ let server = 0;
   return false;*/
 }
 
-selectall(type,addressfilter, amfilter)
+selectall(addressfilter, amfilter)
 {
        let addressf = this.formGroup.get('addressfilter').value;
        let amf = this.formGroup.get('amfilter').value;
 
-        
+          //console.log(addressfilter,amfilter,"selectall");
           this.selall =! this.selall;
            this.showLoader.next(true);
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1,addressf, amf)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -985,12 +986,10 @@ selectall(type,addressfilter, amfilter)
              ind = -1;
              this.regionActive = -1;
              this.formGroup.get('secsel').setValue(0);
-             this.stperpage = 10;
-             
+             this.stperpage = 5;
 
       }
-      if (ind == 1)
-                this.formGroup.get('secsel').setValue("0");
+
       this.aclassActive = ind;
     }
       }
@@ -1059,7 +1058,7 @@ this._hds.Initialazation()
                  this.modalTitle.next("Αρχικοποίηση");
                  this.modalText.next("Έχετε αρχικοποιήσει σωστά τους μαθητές σας.");
                  this.showModal();
-                  console.log(this.hasdone,"initialzation")
+                  //console.log(this.hasdone,"initialzation")
 
             })
             .catch(err => {
@@ -1084,7 +1083,7 @@ undosave(nid,type, addressfilter, amfilter)
     let amf = this.formGroup.get('amfilter').value;
     if (type == 2)
        this.regionActive = 0;
-   this.SaveSelectionSub = this._hds.saveHighScoolSelection(nid, 0, 0,1, 1).subscribe(data => {
+ this.SaveSelectionSub = this._hds.saveHighScoolSelection(nid, 0, 0,1, 1).subscribe(data => {
             this.SaveSelection$.next(data);
             this.showLoader.next(false);
             this.selections = [];
@@ -1093,7 +1092,7 @@ undosave(nid,type, addressfilter, amfilter)
             this.modalTitle.next("Έγινε αναίρεση τοποθέτησης .");
             this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
             this.showModal();
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1,addressf, amf)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -1115,7 +1114,7 @@ undosave(nid,type, addressfilter, amfilter)
                 },
                 error => {
                     this.StudentsPerSchool$.next([{}]);
-                    console.log("Error Undo");
+                    //console.log("Error Undo");
 
                     this.showLoader.next(false);
                 });
@@ -1127,7 +1126,7 @@ undosave(nid,type, addressfilter, amfilter)
 
 deletefilters(secsel,classid)
 {
-
+  //console.log(secsel,"delete filters");
   this.formGroup.get('addressfilter').setValue("");
   this.formGroup.get('amfilter').setValue("");
   this.setActiveRegion(secsel,classid,0,0,"", "")
@@ -1146,13 +1145,13 @@ initialized()
                     {
                       this.hasdone = true;
                       this.showLoader.next(false);
-                     
+                      //console.log("edw");
                     }
                     else
                     {
                       this.hasdone = false;
                       this.showLoader.next(false);
-                     
+                      //console.log("else");
                     }
 
                 },
@@ -1160,19 +1159,8 @@ initialized()
                     this.Initialized$.next([{}]);
 
                 });
-            
+             //console.log(this.hasdone,"initialized");
  }
 
-getSchools()
-{
- this.JuniorHighSchoolSub = this._hds.getJuniorHighSchoolperDide().subscribe(x => {
-            this.JuniorHighSchool$.next(x);
-
-        },
-            error => {
-                this.JuniorHighSchool$.next([{}]);
-                console.log("Error Getting Junior High School");
-            });
-}
 
 }
