@@ -63,9 +63,13 @@ import {
        -->
 
        <li class="list-group-item isclickable" (click)="setActiveclass(1)">
-          <div *ngIf="hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1" > Α' Λυκείου  </div>
+          <div *ngIf="hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1" 
+
+          (click)="setActiveRegion(0,1,1,0,addressfilter, amfilter)"  > Α' Λυκείου  
+          
+          </div>
        </li>
-      <div [hidden] ="aclassActive !== 1">
+      <div [hidden] ="aclassActive !== 1 ">
       <div class="row" style="margin-top: 20px; line-height: 2em;" > <b> Επιλέξτε Γυμνάσιο Προέλευσης</b></div>
             <div class="col-md-11 offset-md-1">
 
@@ -117,7 +121,7 @@ import {
 
            <div class="list-group-item framecolor">
                     <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall(1)">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
                       <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
@@ -281,7 +285,7 @@ import {
 
            <div class="list-group-item framecolor">
                     <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall(2)">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
                       <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
@@ -445,7 +449,7 @@ import {
 
            <div class="list-group-item framecolor">
                     <div class="col-md-1" style="   font-weight: bold; font-size: 0.8em" >Επιλογή Όλων
-                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall()">
+                       <input #so type="checkbox" [checked]="selall ===  true" (change)="selectall(3)">
                     </div>
                     <div class="col-md-4" style="   font-weight: bold; font-size: 0.8em" >
                       <div>A/A Αίτησης/ Α.Μ. Μαθητή</div>
@@ -487,7 +491,7 @@ import {
                        </div>
                        </div>
                      <div  class="col-md-1"  style="font-size: 0.8em;">
-                       <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,2,addressfilter, amfilter)"></i>
+                       <i *ngIf="AllStudents$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosave(AllStudents$.id,3,addressfilter, amfilter)"></i>
                      </div>
 
        </div>
@@ -543,7 +547,7 @@ import {
           <div style="width: 100%; color: #000000; font-weight: bold;" >
                  <p style="margin-top: 20px; line-height: 2em;"> Αφού έχετε επιλέξει τους μαθητες απο την παραπάνω λίστα, στη συνέχεια επιλέξτε το αντίστοιχο Λύκειο υποδοχής.</p>
                  <label> Λύκειο Υποδοχής </label>
-                   <select #highscsel3 class="form-control" (change)="confirmSchool(highscsel3,2,addressfilter, amfilter)" >
+                   <select #highscsel3 class="form-control" (change)="confirmSchool(highscsel3,3,addressfilter, amfilter)" >
                         <option value="0"></option>
                         <option *ngFor="let HighSchools$  of HighSchool$ | async; let i=index"
                         [value] = "HighSchools$.id"> {{HighSchools$.name}} </option>
@@ -652,14 +656,7 @@ import {
        this.selections = [];
        console.log(this.selall);
         (<any>$("#informationfeedback")).appendTo("body");
-        this.JuniorHighSchoolSub = this._hds.getJuniorHighSchoolperDide().subscribe(x => {
-            this.JuniorHighSchool$.next(x);
-
-        },
-            error => {
-                this.JuniorHighSchool$.next([{}]);
-                console.log("Error Getting Junior High School");
-            });
+       this.getSchools();
     }
 
      setActiveRegion(ind,type, changed,changepages, addressfilter, amfilter) {
@@ -917,7 +914,7 @@ let server = 0;
   return false;*/
 }
 
-selectall(addressfilter, amfilter)
+selectall(type,addressfilter, amfilter)
 {
        let addressf = this.formGroup.get('addressfilter').value;
        let amf = this.formGroup.get('amfilter').value;
@@ -925,7 +922,7 @@ selectall(addressfilter, amfilter)
           console.log(addressfilter,amfilter,"selectall");
           this.selall =! this.selall;
            this.showLoader.next(true);
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1,addressf, amf)
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -987,9 +984,11 @@ selectall(addressfilter, amfilter)
              this.regionActive = -1;
              this.formGroup.get('secsel').setValue(0);
              this.stperpage = 5;
+             
 
       }
-
+      if (ind == 1)
+                this.formGroup.get('secsel').setValue("0");
       this.aclassActive = ind;
     }
       }
@@ -1083,7 +1082,7 @@ undosave(nid,type, addressfilter, amfilter)
     let amf = this.formGroup.get('amfilter').value;
     if (type == 2)
        this.regionActive = 0;
- this.SaveSelectionSub = this._hds.saveHighScoolSelection(nid, 0, 0,1, 1).subscribe(data => {
+   this.SaveSelectionSub = this._hds.saveHighScoolSelection(nid, 0, 0,1, 1).subscribe(data => {
             this.SaveSelection$.next(data);
             this.showLoader.next(false);
             this.selections = [];
@@ -1092,7 +1091,7 @@ undosave(nid,type, addressfilter, amfilter)
             this.modalTitle.next("Έγινε αναίρεση τοποθέτησης .");
             this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
             this.showModal();
-            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,1,addressf, amf)
+            this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
 
                 .subscribe(data => {
                     this.StudentsPerSchool$.next(data);
@@ -1162,5 +1161,16 @@ initialized()
              console.log(this.hasdone,"initialized");
  }
 
+getSchools()
+{
+ this.JuniorHighSchoolSub = this._hds.getJuniorHighSchoolperDide().subscribe(x => {
+            this.JuniorHighSchool$.next(x);
+
+        },
+            error => {
+                this.JuniorHighSchool$.next([{}]);
+                console.log("Error Getting Junior High School");
+            });
+}
 
 }
