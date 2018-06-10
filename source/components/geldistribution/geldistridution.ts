@@ -189,7 +189,7 @@ import {
           <div class="col-4">
            Αριθμός μαθητών ανα σελίδα:
            </div>
-          <div class="col-2">
+          <div class="col-2">    
            <select #studentperpage class="form-control"  formControlName="studentperpage" (change)= "changestudentsperpage(studentperpage,secsel,1)">
                         <option value="10">10</option>
                         <option value="20">20</option>
