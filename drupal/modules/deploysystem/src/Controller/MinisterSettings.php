@@ -292,6 +292,7 @@ public function retrieveSettingsGel(Request $request) {
 						], Response::HTTP_FORBIDDEN);
 		 }
 		 else {
+			 	$distribDisabled = $eggrafesConfig->lock_distrib->getString();
 				$capacityDisabled = $eggrafesConfig->lock_school_capacity->getString();
 				$directorViewDisabled = $eggrafesConfig->lock_school_students_view->getString();
 				$applicantsLoginDisabled = $eggrafesConfig->lock_application->getString();
@@ -308,7 +309,7 @@ public function retrieveSettingsGel(Request $request) {
 		 $config_storage->resetCache();
 
 		return $this->respondWithStatus([
-				//'message' => t("post successful"),
+				'distribDisabled' => $distribDisabled,
 				'capacityDisabled' => $capacityDisabled,
 				'directorViewDisabled' => $directorViewDisabled,
 				'applicantsLoginDisabled' => $applicantsLoginDisabled,
@@ -337,7 +338,7 @@ public function retrieveSettingsGel(Request $request) {
 }
 
 
-public function storeSettingsGel(Request $request, $capacityDisabled, $directorViewDisabled, $applicantsLoginDisabled, $applicantsAppModifyDisabled,
+public function storeSettingsGel(Request $request, $distr, $capac, $directorViewDisabled, $applicantsLoginDisabled, $applicantsAppModifyDisabled,
 	$applicantsAppDeleteDisabled, $applicantsResultsDisabled, $secondPeriodEnabled,
 	$dateStart, $smallClass, $ws, $gsis, $guardian ) {
 
@@ -382,8 +383,8 @@ public function storeSettingsGel(Request $request, $capacityDisabled, $directorV
 							], Response::HTTP_FORBIDDEN);
 			 }
 			 else {
-
-						$eggrafesConfig->set('lock_school_capacity', $capacityDisabled);
+				 		$eggrafesConfig->set('lock_distrib', $distr);
+						$eggrafesConfig->set('lock_school_capacity', $capac);
 						$eggrafesConfig->set('lock_school_students_view', $directorViewDisabled);
 						$eggrafesConfig->set('lock_application', $applicantsLoginDisabled);
 						$eggrafesConfig->set('lock_modify', $applicantsAppModifyDisabled);
@@ -417,8 +418,8 @@ public function storeSettingsGel(Request $request, $capacityDisabled, $directorV
 
 
 			return $this->respondWithStatus([
-					//'message' => t("post successful"),
-					'capacityDisabled' => $capacityDisabled,
+					'distibDisabled' => $distr,
+					'capacityDisabled' => $capac,
 					'directorViewDisabled' => $directorViewDisabled,
 					'applicantsLoginDisabled' => $applicantsLoginDisabled,
 					'applicantsAppModifyDisabled' => $applicantsAppModifyDisabled,

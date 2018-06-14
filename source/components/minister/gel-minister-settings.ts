@@ -42,6 +42,17 @@ import { IAppState } from "../../store/store";
 
         <form novalidate [formGroup]="formGroup"  #form>
           <h5> >Ρυθμίσεις <br><br></h5>
+
+          <div class="row">
+            <div class="col-md-1 ">
+              <input type="checkbox" [checked]="distribDisabled"  formControlName="distribDisabled"
+              (click)="toggleDistribFilter()" >
+            </div>
+            <div class="col-md-9">
+              <label for="distribDisabled">Απενεργοποίηση δυνατότητας τοποθέτησης μαθητών από ΔΔΕ</label>
+            </div>
+          </div>
+          <br>
           <div class="row">
             <div class="col-md-1 ">
               <input type="checkbox" [checked]="capacityDisabled"  formControlName="capacityDisabled"
@@ -201,6 +212,7 @@ import { IAppState } from "../../store/store";
     private OffLineCalculationSub: Subscription;
     private loginInfoSub: Subscription;
     private settingsSub: Subscription;
+    private distribDisabled: boolean;
     private capacityDisabled: boolean;
     private directorViewDisabled: boolean;
     private applicantsLoginDisabled: boolean;
@@ -232,6 +244,7 @@ import { IAppState } from "../../store/store";
         private router: Router) {
 
         this.formGroup = this.fb.group({
+            distribDisabled: ["", []],
             capacityDisabled: ["", []],
             directorViewDisabled: ["", []],
             applicantsLoginDisabled: ["", []],
@@ -310,6 +323,7 @@ import { IAppState } from "../../store/store";
         this.settingsSub = this._hds.retrieveAdminSettings("gel", this.minedu_userName, this.minedu_userPassword).subscribe(data => {
             this.settings$.next(data);
 
+            this.distribDisabled = Boolean(Number(this.settings$.value["distribDisabled"]));
             this.capacityDisabled = Boolean(Number(this.settings$.value["capacityDisabled"]));
             this.directorViewDisabled = Boolean(Number(this.settings$.value["directorViewDisabled"]));
             this.applicantsLoginDisabled = Boolean(Number(this.settings$.value["applicantsLoginDisabled"]));
@@ -349,7 +363,7 @@ import { IAppState } from "../../store/store";
         else
             this.dateStartBPeriod = "0-0-0000";
 
-        this.settingsSub = this._hds.storeAdminSettings("gel", this.minedu_userName, this.minedu_userPassword,
+        this.settingsSub = this._hds.storeAdminSettings("gel", this.minedu_userName, this.minedu_userPassword, this.distribDisabled,
             this.capacityDisabled, this.directorViewDisabled, this.applicantsLoginDisabled,
             this.applicantsAppModifyDisabled, this.applicantsAppDeleteDisabled, this.applicantsResultsDisabled,
             this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved,
@@ -375,6 +389,9 @@ import { IAppState } from "../../store/store";
             });
     }
 
+    toggleDistribFilter() {
+        this.distribDisabled = !this.distribDisabled;
+    }
     toggleCapacityFilter() {
         this.capacityDisabled = !this.capacityDisabled;
     }

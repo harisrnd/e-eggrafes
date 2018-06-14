@@ -193,6 +193,26 @@ class EggrafesConfig extends ContentEntityBase implements EggrafesConfigInterfac
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+      $fields['lock_distrib'] = BaseFieldDefinition::create('boolean')
+            ->setLabel(t('Απενεργοποίηση δυνατότητας τοποθετήσεων μαθητών από τις ΔΔΕ'))
+            ->setDescription(t('Απενεργοποίηση δυνατότητας τοποθετήσεων μαθητών από τις ΔΔΕ.'))
+            ->setSettings(array(
+              'text_processing' => 0,
+            ))
+            ->setRequired(FALSE)
+            ->setDefaultValue(TRUE)
+            ->setDisplayOptions('view', array(
+              'label' => 'above',
+              'type' => 'boolean',
+              'weight' => -4,
+            ))
+            ->setDisplayOptions('form', array(
+              'type' => 'boolean',
+              'weight' => -4,
+            ))
+            ->setDisplayConfigurable('form', TRUE)
+            ->setDisplayConfigurable('view', TRUE);
+
     $fields['lock_school_capacity'] = BaseFieldDefinition::create('boolean')
           ->setLabel(t('Απενεργοποίηση δυνατότητας τροποποίησης χωρητικότητας από τους Διευθυντές σχολείων'))
           ->setDescription(t('Απενεργοποίηση δυνατότητας τροποποίησης χωρητικότητας από τους Διευθυντές σχολείων.'))

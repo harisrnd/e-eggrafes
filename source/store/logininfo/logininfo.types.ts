@@ -11,6 +11,7 @@ export interface ILoginInfoObj {
     cu_email: string;
     minedu_username: string;
     minedu_userpassword: string;
+    lock_distrib: number;
     lock_capacity: number;
     lock_students_epal: number;
     lock_students_gel: number;

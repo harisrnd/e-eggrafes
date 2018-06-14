@@ -444,3 +444,11 @@ epal.dide.report-gel-complet:
     _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportDideCompletGel'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.svc.transition-bperiod:
+  path: '/epal/transition-bperiod'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\WSConsumer::transitionToBPeriod'
+  requirements:
+    _user_is_logged_in: 'TRUE'

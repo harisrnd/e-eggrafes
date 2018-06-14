@@ -23,7 +23,7 @@ deploysystem.ministry.retrievesettings.gel:
   requirements:
     _user_is_logged_in: 'TRUE'
 deploysystem.ministry.storesettings.gel:
-  path: '/ministry/store-settings-gel/{capacityDisabled}/{directorViewDisabled}/{applicantsLoginDisabled}/{applicantsAppModifyDisabled}/{applicantsAppDeleteDisabled}/{applicantsResultsDisabled}/{secondPeriodEnabled}/{dateStart}/{smallClass}/{ws}/{gsis}/{guardian}'
+  path: '/ministry/store-settings-gel/{distr}/{capac}/{directorViewDisabled}/{applicantsLoginDisabled}/{applicantsAppModifyDisabled}/{applicantsAppDeleteDisabled}/{applicantsResultsDisabled}/{secondPeriodEnabled}/{dateStart}/{smallClass}/{ws}/{gsis}/{guardian}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:

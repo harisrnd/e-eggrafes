@@ -22,7 +22,7 @@ import { IAppState } from "../../store/store";
             <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(0)"><i class="fa fa-file-text"></i> Τοποθετήσεις Μαθητών</button>
         </div>
         <div *ngIf = "userRole == 'dide' ">
-            <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(1)"><i class="fa fa-file-text"></i> Αιτήσεις Μαθητών</button>
+            <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(1)"><i class="fa fa-file-text"></i> Πληρότητα Σχολείων</button>
         </div>
 
     </div>
