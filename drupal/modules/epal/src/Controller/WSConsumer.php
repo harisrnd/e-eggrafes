@@ -18,9 +18,9 @@ class WSConsumer extends ControllerBase
     protected $logger;
     protected $client;
     protected $settings;
+    protected $connection;
 
-
-    public function __construct(EntityTypeManagerInterface $entityTypeManager, LoggerChannelFactoryInterface $loggerChannel)
+    public function __construct(EntityTypeManagerInterface $entityTypeManager, LoggerChannelFactoryInterface $loggerChannel, Connection $connection)
     {
         $config = $this->config('epal.settings');
         foreach (['ws_endpoint', 'ws_username', 'ws_password', 'verbose', 'NO_SAFE_CURL'] as $setting) {
@@ -30,12 +30,14 @@ class WSConsumer extends ControllerBase
         $this->entityTypeManager = $entityTypeManager;
         $this->logger = $loggerChannel->get('epal-school');
         $this->client = new Client($this->settings, $this->logger);
+        $this->connection = $connection;
+
     }
 
     public static function create(ContainerInterface $container)
     {
         return new static(
-            $container->get('entity_type.manager'), $container->get('logger.factory')
+            $container->get('entity_type.manager'), $container->get('logger.factory'),   $container->get('database')
         );
     }
 
@@ -68,7 +70,7 @@ class WSConsumer extends ControllerBase
 
     public function getStudentEpalInfo($didactic_year, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
     {
-        $testmode = false; 
+        $testmode = false;
         $didactic_year_id=$this->getdidacticyear($didactic_year);
 
         if ($testmode)  {
@@ -142,6 +144,78 @@ class WSConsumer extends ControllerBase
                 'data' => $result
             ]))
             ->setStatusCode(Response::HTTP_OK);
+    }
+
+    public function transitionToBPeriod() {
+
+      //μετάπτωση όλων των αιτήσεων για ΕΠΑΛ που οι μαθητές δεν προάχθηκαν σε δεύτερη περίοδο
+      $sCon = $this->connection
+  			 ->select('epal_student', 'eStudent')
+  			 ->fields('eStudent', array('id', 'myschool_promoted', 'lastschool_unittypeid'))
+  			 ->condition('eStudent.delapp', 0, '=');
+  		$epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+      $cnt_epal = 0;
+  		foreach ($epalStudents as $epalStudent)  {
+      if ( ($epalStudent->myschool_promoted == "6" || $epalStudent->myschool_promoted == "7")
+            && $epalStudent->lastschool_unittypeid != 3
+        )
+    {
+          try {
+              $query = $this->connection->update('epal_student');
+              $query->fields(['second_period' => "1"]);
+              $query->condition('id', $epalStudent->id);
+              $query->execute();
+              ++$cnt_epal;
+
+              //διαγραφή ενδεχόμενου αποτελέσματος σε πίνακα αποτελεσμάτων ΕΠΑΛ
+              $this->connection->delete('epal_student_class')
+                  ->condition('student_id', $epalStudent->id, '=')
+                  ->execute();
+
+
+          } catch (\Exception $e) {
+              $this->logger->error($e->getMessage());
+              //return self::ERROR_DB;
+          }
+        }
+      }
+
+      //μετάπτωση όλων των αιτήσεων για ΓΕΛ που οι μαθητές δεν προάχθηκαν σε δεύτερη περίοδο
+      $sCon = $this->connection
+         ->select('gel_student', 'eStudent')
+         ->fields('eStudent', array('id', 'myschool_promoted'))
+         ->condition('eStudent.delapp', 0, '=');
+      $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+      $cnt_gel = 0;
+      foreach ($gelStudents as $gelStudent)  {
+      if ( $gelStudent->myschool_promoted == "6" || $gelStudent->myschool_promoted == "7")  {
+          try {
+              $query = $this->connection->update('gel_student');
+              $query->fields(['second_period' => "1"]);
+              $query->condition('id', $gelStudent->id);
+              $query->execute();
+              ++$cnt_gel;
+
+              //διαγραφή ενδεχόμενου αποτελέσματος σε πίνακα αποτελεσμάτων ΓΕΛ (gelstudenthighschool)
+              $this->connection->delete('gelstudenthighschool')
+                  ->condition('student_id', $gelStudent->id, '=')
+                  ->execute();
+
+          } catch (\Exception $e) {
+              $this->logger->error($e->getMessage());
+          }
+        }
+      }
+
+
+
+
+      return (new JsonResponse([
+              'num_epal' => $cnt_epal,
+              'num_gel' => $cnt_gel,
+            ]))
+            ->setStatusCode(Response::HTTP_OK);
+
     }
 
     /*

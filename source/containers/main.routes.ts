@@ -41,6 +41,7 @@ import SectorCoursesSelect from "../components/student-application-form/sector.c
 import SectorFieldsSelect from "../components/student-application-form/sector.fields.select";
 import SubmitedPreview from "../components/student-application-form/submited.aplication.preview";
 import EduAdminAuthGuard from "../guards/eduadmin.auth.guard";
+import EduDistribAuthGuard from "../guards/edudistrib.auth.guard";
 import MinistryAuthGuard from "../guards/ministry.auth.guard";
 import DidepdeAuthGuard from "../guards/dideandpde.auth.guard";
 import RegionEduAuthGuard from "../guards/regionedu.auth.guard";
@@ -141,7 +142,7 @@ export const MainRoutes: Routes = [
     { path: "gelstudent-application-form-main", component: GelStudentApplicationMain, canActivate: [StudentAuthGuard, StudentGelLockGuard] },
     { path: "school-type-select", component: SchoolTypeSelection, canActivate: [StudentAuthGuard]},
     { path: "gel-application-submit", component: GelApplicationSubmit, canActivate: [StudentAuthGuard, StudentGelLockGuard] },
-    { path: "school/gel-distribution", component: GelDistribution, canActivate: [EduAdminAuthGuard] },
+    { path: "school/gel-distribution", component: GelDistribution, canActivate: [EduDistribAuthGuard] },
     { path: "dide/didegel-reports", component: DideGelReports, canActivate: [EduAdminAuthGuard] },
     { path: "dide/didegel-distrib-report", component: ReportGelDistrib, canActivate: [EduAdminAuthGuard] },
     { path: "dide/didegel-complet-report", component: ReportGelComplet, canActivate: [EduAdminAuthGuard] },

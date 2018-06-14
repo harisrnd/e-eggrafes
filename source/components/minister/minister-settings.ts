@@ -370,7 +370,7 @@ import { IAppState } from "../../store/store";
             this.dateStartBPeriod = "0-0-0000";
 
 
-        this.settingsSub = this._hds.storeAdminSettings("epal", this.minedu_userName, this.minedu_userPassword,
+        this.settingsSub = this._hds.storeAdminSettings("epal", this.minedu_userName, this.minedu_userPassword, null,
             this.capacityDisabled, this.directorViewDisabled, this.applicantsLoginDisabled,
             this.applicantsAppModifyDisabled, this.applicantsAppDeleteDisabled, this.applicantsResultsDisabled,
             this.secondPeriodEnabled, this.dateStartBPeriod, this.smallClassApproved,

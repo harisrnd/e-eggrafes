@@ -67,7 +67,14 @@ import { IAppState } from "../../store/store";
     <div>
         <div class="col-md-6">
           <button type="submit" class="btn btn-lg btn-block"  *ngIf="(loginInfo$ | async).size !== 0"  (click)="updatePromotionNow()" >
-              Εημέρωση Προαγωγής / Απόλυσης<span class="glyphicon glyphicon-menu-right"></span>
+              Ενημέρωση Προαγωγής / Απόλυσης<span class="glyphicon glyphicon-menu-right"></span>
+          </button>
+        </div>
+        <br>
+
+        <div class="col-md-6">
+          <button type="submit" class="btn btn-lg btn-block"  *ngIf="(loginInfo$ | async).size !== 0"  (click)="goToSecondPeriod()" >
+              Μετάπτωση Αιτήσεων σε Β' περίδο<span class="glyphicon glyphicon-menu-right"></span>
           </button>
         </div>
         <br>
@@ -177,6 +184,47 @@ import { IAppState } from "../../store/store";
 
                     let mTitle = "Αποτυχία Eνημέρωσης Προαγωγής Μαθητή.";
                     let mText = "Αποτυχία κλήσης του web service προαγωγής / απόλυσης μαθητή. " +
+                      "Προσπαθήστε ξανά. Σε περίπτωση που το πρόβλημα επιμείνει, παρακαλώ επικοινωνήστε με την ομάδα υποστήριξης.";
+                    let mHeader = "modal-header-danger";
+                    this.modalTitle.next(mTitle);
+                    this.modalText.next(mText);
+                    this.modalHeader.next(mHeader);
+                    this.showModal("#promotionNotice");
+                    (<any>$(".loading")).remove();
+
+                    this.showLoader.next(false);
+                    return;
+                });
+
+        }
+
+    //}
+
+
+    goToSecondPeriod() {
+
+                this.showLoader.next(true);
+
+                let id = 0;
+
+                this.ServiceStudentCertifSub = this._hds.transitionToBPeriod(this.minedu_userName, this.minedu_userPassword)
+                .subscribe(data => {
+                      let mTitle = "Επιτυχία Μετάπτωσης";
+                      let mText = "H μετάπτωση αιτήσεων σε Β' περίοδο έγινε με επιτυχία.";
+                      let mHeader = "modal-header-success";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal("#promotionNotice");
+                      (<any>$(".loading")).remove();
+
+                      this.showLoader.next(false);
+                },
+                error => {
+                    console.log("Error Getting goToSecondPeriod from Web Service");
+
+                    let mTitle = "Αποτυχία Μετάπτωσης.";
+                    let mText = "Αποτυχία μετάπτωσης. " +
                       "Προσπαθήστε ξανά. Σε περίπτωση που το πρόβλημα επιμείνει, παρακαλώ επικοινωνήστε με την ομάδα υποστήριξης.";
                     let mHeader = "modal-header-danger";
                     this.modalTitle.next(mTitle);
