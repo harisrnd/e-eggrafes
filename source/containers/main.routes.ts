@@ -5,6 +5,7 @@ import DirectorView from "../components/director/director-view";
 import DirectorViewGel from "../components/director/directorgel-view";
 import DirectorButtons from "../components/director/director.buttons";
 import DirectorReports from "../components/director/director-reports";
+import DirectorGelReports from "../components/director/directorgel-reports";
 import Home from "../components/home";
 import EduadminView from "../components/infoviews/eduadmin-view";
 import MergeSchools from "../components/mergeschools/mergeschools";
@@ -51,6 +52,7 @@ import SchoolGelAuthGuard from "../guards/schoolgel.auth.guard";
 import SchoolCapacityLockedGuard from "../guards/school.capacity.locked.guard";
 import SchoolStudentsLockedGuard from "../guards/school.students.locked.guard";
 import SchoolGelStudentsLockedGuard from "../guards/school.gel.students.locked.guard";
+import SchoolGymStudentsLockedGuard from "../guards/school.gym.students.locked.guard";
 import StudentAuthGuard from "../guards/student.auth.guard";
 import StudentLockGuard from "../guards/student.lock.guard";
 import StudentGelLockGuard from "../guards/student.gel.lock.guard";
@@ -80,7 +82,7 @@ import DirectorViewGym from "../components/director/directorgym-view";
 import SchoolGymAuthGuard from "../guards/schoolgym.auth.guard";
 import ReportCapacity from "../components/director/report-capacity";
 import ReportEpalApplications from "../components/director/report-epal-applications";
-
+import ReportGelApplications from "../components/director/report-gel-applications";
 
 
 export const MainRoutes: Routes = [
@@ -107,9 +109,13 @@ export const MainRoutes: Routes = [
     { path: "post-submit", component: AfterSubmit, canActivate: [StudentAuthGuard, StudentLockGuard] },
     { path: "school/director-view", component: DirectorView, canActivate: [SchoolAuthGuard, SchoolStudentsLockedGuard] },
     { path: "school/directorgel-view", component: DirectorViewGel, canActivate: [SchoolGelAuthGuard, SchoolGelStudentsLockedGuard] },
+
+    { path: "school/directorgel-reports", component: DirectorGelReports, canActivate: [SchoolGelAuthGuard, SchoolGelStudentsLockedGuard] },
+    { path: "school/report-gel-applications", component: ReportGelApplications, canActivate: [SchoolGelAuthGuard, SchoolGelStudentsLockedGuard] },
+
     { path: "school/director-buttons", component: DirectorButtons, canActivate: [SchoolAuthGuard] },
     { path: "school/director-classcapacity", component: DirectorClassCapacity, canActivate: [SchoolAuthGuard, SchoolCapacityLockedGuard] },
-    { path: "school/director-reports", component: DirectorReports, canActivate: [SchoolAuthGuard] },
+    { path: "school/director-reports", component: DirectorReports, canActivate: [SchoolAuthGuard, SchoolStudentsLockedGuard] },
     { path: "school/report-capacity", component: ReportCapacity, canActivate: [SchoolAuthGuard] },
     { path: "school/report-epal-applications", component: ReportEpalApplications, canActivate: [SchoolAuthGuard] },
     { path: "ministry/minister-view", component: MinisterView, canActivate: [MinistryAuthGuard] },
@@ -147,7 +153,7 @@ export const MainRoutes: Routes = [
     { path: "dide/didegel-distrib-report", component: ReportGelDistrib, canActivate: [EduAdminAuthGuard] },
     { path: "dide/didegel-complet-report", component: ReportGelComplet, canActivate: [EduAdminAuthGuard] },
     { path: "school/eduadmingel-view", component: EduadminGelView, canActivate: [EduAdminAuthGuard] },
-    { path: "school/directorgym-view", component: DirectorViewGym, canActivate: [SchoolGymAuthGuard]  },
+    { path: "school/directorgym-view", component: DirectorViewGym, canActivate: [SchoolGymAuthGuard, SchoolGymStudentsLockedGuard]  }, //SchoolGelStudentsLockedGuard
 
 ];
 
@@ -173,6 +179,7 @@ export const MainDeclarations = [
     DirectorView,
     DirectorClassCapacity,
     DirectorReports,
+    DirectorGelReports,
     MinisterView,
     MinisterReports,
     ReportAllStat,
@@ -181,6 +188,7 @@ export const MainDeclarations = [
     ReportNoCapacity,
     ReportCapacity,
     ReportEpalApplications,
+    ReportGelApplications,
     InformStudents,
     UpdatePromotion,
     MinisterSettings,

@@ -151,13 +151,16 @@ class WSConsumer extends ControllerBase
       //μετάπτωση όλων των αιτήσεων για ΕΠΑΛ που οι μαθητές δεν προάχθηκαν σε δεύτερη περίοδο
       $sCon = $this->connection
   			 ->select('epal_student', 'eStudent')
-  			 ->fields('eStudent', array('id', 'myschool_promoted', 'lastschool_unittypeid'))
+  			 ->fields('eStudent', array('id', 'myschool_promoted', 'lastschool_unittypeid','myschool_currentlevelname'))
   			 ->condition('eStudent.delapp', 0, '=');
   		$epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
       $cnt_epal = 0;
   		foreach ($epalStudents as $epalStudent)  {
       if ( ($epalStudent->myschool_promoted == "6" || $epalStudent->myschool_promoted == "7")
-            && $epalStudent->lastschool_unittypeid != 3
+                  //μετάπτωση σε Β' περίοδο όσων απορρίφθηκαν, εκτός των αιτήσεων Γυμνασίου
+            && (  ($epalStudent->lastschool_unittypeid != 3)  ||
+                  //εξαίρεση: ΓΥΜ ΜΕ ΛΤ
+                  ($epalStudent->lastschool_unittypeid == 3 && $epalStudent->myschool_currentlevelname != "Γ")  )
         )
     {
           try {

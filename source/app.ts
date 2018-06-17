@@ -35,6 +35,7 @@ import SchoolGelAuthGuard from "./guards/schoolgel.auth.guard";
 import SchoolCapacityLockedGuard from "./guards/school.capacity.locked.guard";
 import SchoolStudentsLockedGuard from "./guards/school.students.locked.guard";
 import SchoolGelStudentsLockedGuard from "./guards/school.gel.students.locked.guard";
+import SchoolGymStudentsLockedGuard from "./guards/school.gym.students.locked.guard";
 import StudentAuthGuard from "./guards/student.auth.guard";
 import StudentLockGuard from "./guards/student.lock.guard";
 import StudentGelLockGuard from "./guards/student.gel.lock.guard";
@@ -88,6 +89,7 @@ class MyLocalization extends NgLocalization {
         SchoolGelAuthGuard,
         SchoolStudentsLockedGuard,
         SchoolGelStudentsLockedGuard,
+        SchoolGymStudentsLockedGuard,
         SchoolCapacityLockedGuard,
         StudentAuthGuard,
         StudentLockGuard,

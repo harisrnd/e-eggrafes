@@ -733,6 +733,20 @@ export class HelperDataService implements OnInit, OnDestroy {
       }
     }
 
+    makeGelReports(routepath)
+    {
+      let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+      this.createAuthorizationHeader(headers);
+      let options = new RequestOptions({ headers: headers });
+
+      if (routepath === "/school/report-capacity/" || routepath === "/school/report-gel-applications/") {
+          return this.http.get(`${AppSettings.API_ENDPOINT}` + routepath , options)
+              .map(response => response.json());
+      }
+    }
+
     makeDideReports(routepath)
     {
       let headers = new Headers({
