@@ -21,14 +21,6 @@
                                         <a class="nav-link" [routerLink]="['/school/director-view']" [routerLinkActive]="['active']"><b>Δηλώσεις Μαθητών</b></a>
                                     </li>
                                 </div>
-                                <!--
-                                //ΓΙΑ ΔΗΛΩΣΕΙΣ ΜΑΘΗΤΩΝ ΣΕ ΓΕΛ
-                                <div *ngIf="(loginInfo$ | async).size > 0 && !(lockStudentsGel | async)" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
-                                    <li *ngIf="authRole=='director'" class="nav-item">
-                                        <a class="nav-link" [routerLink]="['/school/director-gel-view']" [routerLinkActive]="['active']"><b>Δηλώσεις Μαθητών στο ΓΕΛ</b></a>
-                                    </li>
-                                </div>
-                                -->
                                 <div *ngIf="(loginInfo$ | async).size > 0 && !(lockCapacity | async)" class="nav-item" [ngClass]="{active: path=='submited-preview'}">
                                     <li *ngIf="authRole=='director'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/director-classcapacity']" [routerLinkActive]="['active']"><b>Δυναμική Τμημάτων</b></a>
@@ -48,6 +40,12 @@
                                 <div *ngIf="(loginInfo$ | async).size > 0 " class="nav-item" >
                                     <li *ngIf="authRole=='director_gel'" class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/directorgel-view']" [routerLinkActive]="['active']"><b>Δηλώσεις Μαθητών</b></a>
+                                    </li>
+                                </div>
+
+                                <div *ngIf="(loginInfo$ | async).size > 0 " class="nav-item" >
+                                    <li *ngIf="authRole=='director_gel'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/school/directorgel-reports']" [routerLinkActive]="['active']"><b>Αναφορές</b></a>
                                     </li>
                                 </div>
 
