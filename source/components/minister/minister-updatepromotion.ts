@@ -67,7 +67,7 @@ import { IAppState } from "../../store/store";
     <div>
         <div class="col-md-6">
           <button type="submit" class="btn btn-lg btn-block"  *ngIf="(loginInfo$ | async).size !== 0"  (click)="updatePromotionNow()" >
-              Εημέρωση Προαγωγής / Απόλυσης<span class="glyphicon glyphicon-menu-right"></span>
+              Ενημέρωση Προαγωγής / Απόλυσης<span class="glyphicon glyphicon-menu-right"></span>
           </button>
         </div>
         <br>
@@ -164,7 +164,7 @@ import { IAppState } from "../../store/store";
 
                 let id = 0;
 
-                this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion(this.minedu_userName, this.minedu_userPassword)
+                this.ServiceStudentCertifSub = this._hds.getServiceAllStudentPromotion(this.minedu_userName, this.minedu_userPassword)
                 .subscribe(data => {
                     //if (data.data!=null)  {
                       //let test = data.data["studentId"];

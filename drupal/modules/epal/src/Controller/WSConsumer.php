@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\epal\Client;
+use Drupal\Core\Database\Database;
+
 
 class WSConsumer extends ControllerBase
 {
@@ -18,9 +20,11 @@ class WSConsumer extends ControllerBase
     protected $logger;
     protected $client;
     protected $settings;
+    protected $connection;
 
 
-    public function __construct(EntityTypeManagerInterface $entityTypeManager, LoggerChannelFactoryInterface $loggerChannel)
+
+    public function __construct(EntityTypeManagerInterface $entityTypeManager, LoggerChannelFactoryInterface $loggerChannel,Connection $connection)
     {
         $config = $this->config('epal.settings');
         foreach (['ws_endpoint', 'ws_username', 'ws_password', 'verbose', 'NO_SAFE_CURL'] as $setting) {
@@ -30,12 +34,14 @@ class WSConsumer extends ControllerBase
         $this->entityTypeManager = $entityTypeManager;
         $this->logger = $loggerChannel->get('epal-school');
         $this->client = new Client($this->settings, $this->logger);
+        $connection = Database::getConnection();
+        $this->connection = $connection;
     }
 
     public static function create(ContainerInterface $container)
     {
         return new static(
-            $container->get('entity_type.manager'), $container->get('logger.factory')
+            $container->get('entity_type.manager'), $container->get('logger.factory'), $container->get('database')
         );
     }
 
@@ -119,13 +125,138 @@ class WSConsumer extends ControllerBase
     }
 
 
-    public function getStudentEpalPromotion()
+    public function getAllStudentEpalPromotion()
+    {
+        
+        $count=1;
+
+            $sCon = \Drupal::database()->select('gel_student', 'gel_app');
+            $sCon->fields('gel_app', array('myschool_id','lastschool_schoolyear'));
+            $sCon->condition('gel_app.lastschool_schoolyear','2012-2013', '>');
+            $sCon->condition('gel_app.lastschool_schoolyear','2017-2018', '<');
+            $sCon->condition('gel_app.myschool_id',NULL, 'IS NOT');
+            $sCon->condition('gel_app.delapp',0, '=');
+            $students_promotions = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+            foreach ($students_promotions as $student) {
+                
+                try {
+                    $didactic_year_id=$this->getdidacticyear($student->lastschool_schoolyear);
+                    $result = $this->client->getStudentEpalPromotion($didactic_year_id, $student->myschool_id);
+
+                } catch (\Exception $e) {
+                    //return (new JsonResponse(['message' => $e->getMessage()]))
+                    //    ->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code);
+                    $code = $e->getCode() == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code;
+                    $this->logger->warning($count.",".$student->myschool_id.",".$e->getMessage().", ".$code);
+                    $result=NULL;
+                }
+
+                if ($result==NULL){
+                    $this->logger->warning($count.",".$student->myschool_id.", null response");
+
+                }
+                else{
+
+                    $promotion=json_decode($result);
+                    if ($promotion==NULL){
+                        $this->logger->warning($count.",".$student->myschool_id.", null response");
+                    }
+
+                    $transaction = $this->connection->startTransaction();
+                    try {
+                      $this->connection->update('gel_student')
+                                  ->condition('myschool_id', $student->myschool_id, '=')
+                                  ->condition('delapp', 0, '=')
+                                  ->fields(['myschool_promoted'=>$promotion])
+                                  ->execute();
+                    } catch (\Exception $e) {
+
+                        $transaction->rollback();
+                        $this->logger->warning("Update school_promoted:: ".$count.",".$student->myschool_id.",".$e->getMessage());
+        
+                        //    return $this->respondWithStatus([
+                        //        "error_code" => 5001
+                        //    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        // return (new JsonResponse(['message' => $e->getMessage()]))
+                        // ->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code);
+                    }
+                }
+
+                $count++;
+            }
+            $this->logger->warning("telos gel....=".$count);
+       
+       
+            $count=1;
+
+            $sCon = \Drupal::database()->select('epal_student', 'epal_app');
+            $sCon->fields('epal_app', array('myschool_id','lastschool_schoolyear'));
+            $sCon->condition('epal_app.lastschool_schoolyear','2012-2013', '>');
+            $sCon->condition('epal_app.lastschool_schoolyear','2017-2018', '<');
+            $sCon->condition('epal_app.myschool_id',NULL, 'IS NOT');
+            $sCon->condition('epal_app.delapp',0, '=');
+            $students_promotions = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+            foreach ($students_promotions as $student) {
+                
+                try {
+                    $didactic_year_id=$this->getdidacticyear($student->lastschool_schoolyear);
+                    $result = $this->client->getStudentEpalPromotion($didactic_year_id, $student->myschool_id);
+
+                } catch (\Exception $e) {
+                    //return (new JsonResponse(['message' => $e->getMessage()]))
+                    //    ->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code);
+                    $code = $e->getCode() == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code;
+                    $this->logger->warning($count.",".$student->myschool_id.",".$e->getMessage().", ".$code);
+                    $result=NULL;
+                }
+
+                if ($result==NULL){
+                    $this->logger->warning($count.",".$student->myschool_id.", null response");
+
+                }
+                else{
+
+                    $promotion=json_decode($result);
+                    if ($promotion==NULL){
+                        $this->logger->warning($count.",".$student->myschool_id.", null response");
+                    }
+
+                    $transaction = $this->connection->startTransaction();
+                    try {
+                      $this->connection->update('epal_student')
+                                  ->condition('myschool_id', $student->myschool_id, '=')
+                                  ->condition('delapp', 0, '=')
+                                  ->fields(['myschool_promoted'=>$promotion])
+                                  ->execute();
+                    } catch (\Exception $e) {
+
+                        $transaction->rollback();
+                        $this->logger->warning("Update school_promoted:: ".$count.",".$student->myschool_id.",".$e->getMessage());
+        
+                        //    return $this->respondWithStatus([
+                        //        "error_code" => 5001
+                        //    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+                        // return (new JsonResponse(['message' => $e->getMessage()]))
+                        // ->setStatusCode(($code = $e->getCode()) == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code);
+                    }
+                }
+
+                $count++;
+            }
+            $this->logger->warning("telos epal....=".$count);
+
+        return (new JsonResponse([
+                'message' => 'Επιτυχία'
+            ]))
+            ->setStatusCode(Response::HTTP_OK);
+    }
+
+    public function getStudentEpalPromotion($id)
     {
         $ts_start = microtime(true);
-
-        //get Ids
-        $id = 0;
-        //...
 
         try {
             $result = $this->client->getStudentEpalPromotion($id);
@@ -144,37 +275,6 @@ class WSConsumer extends ControllerBase
             ->setStatusCode(Response::HTTP_OK);
     }
 
-    /*
-    public function testgetStudentEpalInfo($didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no)
-    {
-          $obj = array(
-          'message' => 'Επιτυχία',
-
-          'data' => array(
-              'id' => '158',
-              'studentId' => 2666027,
-              'lastname' => 'ΓΕΩΡΓΟΥΛΑΣ',
-              'firstname' => 'ΚΩΝΣΤΑΝΤΙΣτοιχείαΝΟΣ',
-              'custodianLastName' =>  'ΚΑΤΣΑΟΥΝΟΣ',
-              //'custodianLastName' =>  preg_replace('/\s+/', '', ' ΚΑΤΣ ΑΟΥΝΟΣ '),
-              //'custodianLastName' =>  preg_replace('/[-\s]/', '', ' ΚΑΤΣ - ΑΟΥΝΟΣ '),
-              'custodianFirstName' => '',
-              'birthDate' => '1997-01-04T00:00:00',
-              'addressStreet' => 'ΕΛΛΗΣ 8',
-              'addressPostCode' => '30100',
-              'addressArea' => 'ΑΓΡΙΝΙΟ',
-              'unitTypeDescription' => 'Ημερήσιο ΕΠΑΛ',
-              'levelName' => 'Γ',
-              'sectionName' => 'Τεχνικός Μηχανοσυνθέτης Αεροσκαφών'
-        )
-          //'data' => "null"
-    );
-
-    return (new JsonResponse($obj))
-        ->setStatusCode(Response::HTTP_OK);
-
-    }
-    */
 
     /*
     public function getStudentEpalCertification($id)
