@@ -574,9 +574,43 @@ export class ReportsSchema {
                 filter: true
             }
         },
+    };
 
-
-
+    reportGymDirector = {
+        actions: false,
+        fileName: "e-eggrafes Κατανομή μαθητών Σχολικής Μονάδας",
+        pager: {
+            display: true,
+            perPage: 15
+        },
+        noDataMessage: "Δεν υπάρχουν δεδομένα",
+        columns: {
+            section: {
+                title: "Α.Μ.",
+                width: "5%",
+                filter: true
+            },
+            name: {
+                title: "Όνομα",
+                width: "25%",
+                filter: true
+            },
+            surname: {
+                title: "Επώνυμο",
+                width: "25%",
+                filter: true
+            },
+            address: {
+                title: "Διεύθυνση",
+                width: "20%",
+                filter: true
+            },
+            tel: {
+                title: "Λύκειο Προορισμού",
+                width: "25%",
+                filter: true
+            }
+        },
     };
 
 
