@@ -1106,7 +1106,7 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     }
 
-    
+    /*
     getServiceStudentPromotion(id) {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
@@ -1121,7 +1121,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-promotion/` + rpath, options)
             .map(response => response.json());
     }
-    
+    */
 
     createPdfServerSide(headerid, status) {
 
