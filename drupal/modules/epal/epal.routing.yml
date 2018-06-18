@@ -396,8 +396,16 @@ epal.svc.getstudentinfo:
     _controller: '\Drupal\epal\Controller\WSConsumer::getStudentEpalInfo'
   requirements:
     _user_is_logged_in: 'TRUE'
-epal.svc.getstudentpromotion:
-  path: '/epal/get-student-promotion'
+epal.svc.getallstudentpromotion:
+  path: '/epal/get-all-student-promotion'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\WSConsumer::getAllStudentEpalPromotion'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.svc.getstudentpromotion:  
+  path: '/epal/get-student-promotion/{id}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:

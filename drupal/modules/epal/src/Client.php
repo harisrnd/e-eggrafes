@@ -144,7 +144,7 @@ class Client
      * @return boolean|null
      * @throws \Exception Σε περίπτωση οποιουδήποτε λάθους
      */
-    public function getStudentEpalPromotionOrCertification($endpoint_base_url, $id)
+    public function getStudentEpalPromotionOrCertification($endpoint_base_url, $didactic_year_id,$id)
     {
 
         if (mb_strlen($id) == 0) {
@@ -161,14 +161,14 @@ class Client
             'User-Agent: OSTEAM Client/v1.1 osteam'
         ];
 
-        $endpoint = $endpoint_base_url."/".intval($id);
+        $endpoint = $endpoint_base_url."/".intval($didactic_year_id)."/".$id;
 
         $result = $this->get($endpoint, [], $headers); // data as path params...
         try {
             $crypt = new Crypt();
             $val = 'call:' . print_r($endpoint, true) . ':rcv:' . print_r($result, true);
             $val_enc = $crypt->encrypt($val);
-            $this->log(__METHOD__ . $val_enc, 'info');
+            //$this->log(__METHOD__ . $val_enc, 'info');
         } catch (\Exception $e) {
             $this->log(__METHOD__ . " cannot log encrypted", 'info');
         }
@@ -243,10 +243,10 @@ class Client
         return $this->getStudentEpalInfoNew($this->_settings['ws_endpoint_studentepalInfo'], $didactic_year_id, $lastname, $firstname, $father_firstname, $mother_firstname, $birthdate, $registry_no, $registration_no);
     }
 
-    public function getStudentEpalPromotion($id)
+    public function getStudentEpalPromotion($didactic_year_id,$id)
     {
-        $this->log(__METHOD__);
-        return $this->getStudentEpalPromotionOrCertification($this->_settings['ws_endpoint_studentepalpromotion'], $id);
+        //$this->log(__METHOD__);
+        return $this->getStudentEpalPromotionOrCertification($this->_settings['ws_endpoint_studentepalpromotion'],$didactic_year_id,$id);
     }
 
     protected function setCommonCurlOptions($ch, $uri, $headers)
@@ -332,7 +332,12 @@ class Client
 
         if (curl_errno($ch)) {
             $this->log(__METHOD__ . " Error calling {$uri}. Curl error: " . curl_error($ch) . " Curl info: " . var_export(curl_getinfo($ch), true), "error");
-            throw new Exception("Λάθος κατά την κλήση της υπηρεσίας.");
+            //throw new Exception("Λάθος κατά την κλήση της υπηρεσίας.");
+            return [
+                'success' => false,
+                'http_status' => $http_code,
+                'response' => $result
+            ];
         }
         if (intval(($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) / 100) != 2) {
             return [

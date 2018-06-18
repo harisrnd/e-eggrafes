@@ -1078,7 +1078,7 @@ export class HelperDataService implements OnInit, OnDestroy {
     */
 
 
-    getServiceStudentPromotion(username, userpassword) {
+    getServiceAllStudentPromotion(username, userpassword) {
 
       let headers = new Headers({
           "Content-Type": "application/json",
@@ -1087,7 +1087,7 @@ export class HelperDataService implements OnInit, OnDestroy {
       this.createMinistryAuthorizationHeader(headers, username, userpassword);
       let options = new RequestOptions({ headers: headers });
 
-      return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-promotion/` , options)
+      return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-all-student-promotion/` , options)
           .map(response => response.json());
 
     }
@@ -1118,10 +1118,10 @@ export class HelperDataService implements OnInit, OnDestroy {
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         let rpath = [id].join("/");
-        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-certification/` + rpath, options)
+        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-promotion/` + rpath, options)
             .map(response => response.json());
     }
-    */
+    
 
     createPdfServerSide(headerid, status) {
 
@@ -1842,6 +1842,21 @@ findIfInitialized()
         let options = new RequestOptions({ headers: headers });
         return this.http.get(`${AppSettings.API_ENDPOINT}/gel/findIfInitialized`,  options)
             .map(response => response.json());
+}
+
+makeGymReport()
+{
+    this.loginInfo$.getValue().forEach(loginInfoToken => {
+        this.authToken = loginInfoToken.auth_token;
+        this.authRole = loginInfoToken.auth_role;
+    });
+    let headers = new Headers({
+        "Content-Type": "application/json",
+    });
+    this.createAuthorizationHeader(headers);
+    let options = new RequestOptions({ headers: headers });
+    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/findstudentsperschoolgym/`, options)
+        .map(response => response.json());
 }
 
 
