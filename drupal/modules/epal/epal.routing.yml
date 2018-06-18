@@ -460,3 +460,9 @@ epal.svc.transition-bperiod:
     _controller: '\Drupal\epal\Controller\WSConsumer::transitionToBPeriod'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.encoded_data:
+  path: '/epal/encodeddata'
+  defaults:
+    _controller: '\Drupal\epal\Controller\CreateEncodedData::createData'
+  requirements:
+    _access: 'TRUE'
