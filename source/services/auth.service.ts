@@ -226,6 +226,32 @@ export class AuthService {
     }
 
 
+    isDistribLocked(role) {
+        return new Promise<boolean>((resolve, reject) => {
+            this._ngRedux.select("loginInfo")
+                .map(loginInfo => <ILoginInfoRecords>loginInfo)
+                .subscribe(loginInfo => {
+                    if (loginInfo.size > 0) {
+                        loginInfo.reduce(({}, loginInfoObj) => {
+                            if ((loginInfoObj.lock_distrib && loginInfoObj.lock_distrib === 1 && loginInfoObj.auth_role === role)) {
+                                resolve(true);
+                            }
+                            else {
+                                resolve(false);
+                            }
+                            return loginInfoObj;
+                        }, {});
+                    } else
+                        resolve(false);
+                },
+                error => {
+                    console.log("Error Getting Auth Data");
+                    reject("Error Getting Auth Data");
+                });
+        });
+    }
+
+
 
      isLoggedInDoubleRole(role1, role2) {
         return new Promise<boolean>((resolve, reject) => {

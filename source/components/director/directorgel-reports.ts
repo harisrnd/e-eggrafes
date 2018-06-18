@@ -5,24 +5,21 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, Subscription } from "rxjs/Rx";
 
 import { API_ENDPOINT } from "../../app.settings";
-import { DIDE_ROLE } from "../../constants";
+import { SCHOOLGEL_ROLE } from "../../constants";
 import { HelperDataService } from "../../services/helper-data-service";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
 import { IAppState } from "../../store/store";
 
 @Component({
-    selector: "didegel-reports",
+    selector: "directorgel-reports",
     template: `
     <div class="reports-container">
 
-        <h5>Επιλογή Αναφοράς για ΓΕΛ</h5>
+        <h5>Επιλογή Αναφοράς</h5>
 
-        <div *ngIf = "userRole == 'dide' ">
-            <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(0)"><i class="fa fa-file-text"></i> Τοποθετήσεις Μαθητών</button>
-        </div>
-        <div *ngIf = "userRole == 'dide' ">
-            <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(1)"><i class="fa fa-file-text"></i> Πληρότητα Σχολείων</button>
+        <div *ngIf = "userRole == 'director_gel' ">
+            <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(0)"><i class="fa fa-file-text"></i> Δηλώσεις Μαθητών</button>
         </div>
 
     </div>
@@ -30,7 +27,7 @@ import { IAppState } from "../../store/store";
    `
 })
 
-@Injectable() export default class DideGelReports implements OnInit, OnDestroy {
+@Injectable() export default class DirectorGelReports implements OnInit, OnDestroy {
 
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private loginInfoSub: Subscription;
@@ -53,7 +50,7 @@ import { IAppState } from "../../store/store";
             .subscribe(loginInfo => {
                 if (loginInfo.size > 0) {
                     loginInfo.reduce(({}, loginInfoObj) => {
-                        if (loginInfoObj.auth_role === DIDE_ROLE ) {
+                        if (loginInfoObj.auth_role === SCHOOLGEL_ROLE ) {
                             this.userRole = loginInfoObj.auth_role;
                         }
                         return loginInfoObj;
@@ -71,10 +68,7 @@ import { IAppState } from "../../store/store";
 
     nav_to_reportpath(repId) {
         if (repId === 0) {
-            this.router.navigate(["/dide/didegel-distrib-report"]);
-        }
-        else if (repId === 1) {
-            this.router.navigate(["/dide/didegel-complet-report"]);
+            this.router.navigate(["/school/report-gel-applications"]);
         }
     }
 

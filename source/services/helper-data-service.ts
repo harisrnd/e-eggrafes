@@ -395,6 +395,7 @@ export class HelperDataService implements OnInit, OnDestroy {
             "cu_email": userlogin.cu_email,
             "minedu_username": userlogin.minedu_username,
             "minedu_userpassword": userlogin.minedu_userpassword,
+            "lock_distrib": parseInt(userlogin.lock_distrib),
             "lock_capacity": parseInt(userlogin.lock_capacity),
             "lock_students_epal": parseInt(userlogin.lock_students_epal),
             "lock_students_gel": parseInt(userlogin.lock_students_gel),
@@ -732,6 +733,20 @@ export class HelperDataService implements OnInit, OnDestroy {
       }
     }
 
+    makeGelReports(routepath)
+    {
+      let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+      this.createAuthorizationHeader(headers);
+      let options = new RequestOptions({ headers: headers });
+
+      if (routepath === "/school/report-capacity/" || routepath === "/school/report-gel-applications/") {
+          return this.http.get(`${AppSettings.API_ENDPOINT}` + routepath , options)
+              .map(response => response.json());
+      }
+    }
+
     makeDideReports(routepath)
     {
       let headers = new Headers({
@@ -887,7 +902,7 @@ export class HelperDataService implements OnInit, OnDestroy {
               .map(response => response.json());
     }
 
-    storeAdminSettings(schooltype, username, userpassword, capac, dirview, applogin, appmodify, appdelete,
+    storeAdminSettings(schooltype, username, userpassword, distrib, capac, dirview, applogin, appmodify, appdelete,
                     appresults, secondperiod, datestart, smallClassApproved, wsIdentEnabled, gsisIdentEnabled, guardianIdentEnabled) {
 
         let headers = new Headers({
@@ -898,7 +913,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         let options = new RequestOptions({ headers: headers });
 
         if (schooltype === "gel")
-            return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings-gel/` +
+            return this.http.get(`${AppSettings.API_ENDPOINT}/ministry/store-settings-gel/` + Number(distrib) +  "/" +
                 Number(capac) + "/" + Number(dirview) + "/" + Number(applogin) + "/" + Number(appmodify) + "/" +
                 Number(appdelete) + "/" + Number(appresults) + "/" + Number(secondperiod) + "/" + datestart + "/" +
                 Number(smallClassApproved) +  "/"  + Number(wsIdentEnabled) +  "/"  + Number(gsisIdentEnabled) +  "/"  + Number(guardianIdentEnabled) , options)
@@ -1077,7 +1092,21 @@ export class HelperDataService implements OnInit, OnDestroy {
 
     }
 
-    
+    transitionToBPeriod(username, userpassword) {
+
+      let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+
+      this.createMinistryAuthorizationHeader(headers, username, userpassword);
+      let options = new RequestOptions({ headers: headers });
+
+      return this.http.get(`${AppSettings.API_ENDPOINT}/epal/transition-bperiod/` , options)
+          .map(response => response.json());
+
+    }
+
+    /*
     getServiceStudentPromotion(id) {
         this.loginInfo$.getValue().forEach(loginInfoToken => {
             this.authToken = loginInfoToken.auth_token;
@@ -1812,7 +1841,7 @@ findIfInitialized()
         this.createAuthorizationHeader(headers);
         let options = new RequestOptions({ headers: headers });
         return this.http.get(`${AppSettings.API_ENDPOINT}/gel/findIfInitialized`,  options)
-            .map(response => response.json());   
+            .map(response => response.json());
 }
 
 makeGymReport()

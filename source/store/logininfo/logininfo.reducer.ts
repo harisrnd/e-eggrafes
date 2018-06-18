@@ -22,6 +22,7 @@ export function loginInfoReducer(state: ILoginInfoRecords = LOGININFO_INITIAL_ST
                     cu_email: loginInfo.cu_email,
                     minedu_username: loginInfo.minedu_username,
                     minedu_userpassword: loginInfo.minedu_userpassword,
+                    lock_distrib: loginInfo.lock_distrib,
                     lock_capacity: loginInfo.lock_capacity,
                     lock_students_epal: loginInfo.lock_students_epal,
                     lock_students_gel: loginInfo.lock_students_gel,
@@ -30,7 +31,7 @@ export function loginInfoReducer(state: ILoginInfoRecords = LOGININFO_INITIAL_ST
                     disclaimer_checked: loginInfo.disclaimer_checked,
                     ws_ident: loginInfo.ws_ident,
                     guardian_ident: loginInfo.guardian_ident
-                  
+
                 }));
         });
 

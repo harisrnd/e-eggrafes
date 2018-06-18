@@ -12,12 +12,12 @@ import { CsvCreator } from "../minister/csv-creator";
 import { ReportsSchema, TableColumn } from "../minister/reports-schema";
 
 @Component({
-    selector: "report-gel-complet",
+    selector: "report-gel-applications",
     template: `
 
     <div class="reports-container">
         <div class = "loading" *ngIf="validCreator == 0" ></div>
-        <h5>Αιτήσεις Μαθητών</h5>
+        <h5>Δηλώσεις μαθητών Σχολικής Μονάδας</h5>
         <button type="submit" class="btn btn-alert pull-right"  (click)="navigateBack()" > Επιστροφή</button>
 
         <div *ngIf="validCreator == 1 ">
@@ -32,7 +32,7 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
    `
 })
 
-@Injectable() export default class ReportGelComplet implements OnInit, OnDestroy {
+@Injectable() export default class ReportGelApplications implements OnInit, OnDestroy {
 
     private generalReport$: BehaviorSubject<any>;
     private generalReportSub: Subscription;
@@ -49,6 +49,7 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
     private csvObj = new CsvCreator();
 
     constructor(
+        //private _ngRedux: NgRedux<IAppState>,
         private _hds: HelperDataService,
         private activatedRoute: ActivatedRoute,
         private router: Router) {
@@ -58,7 +59,9 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
     }
 
     ngOnInit() {
+
         this.createReport();
+
     }
 
     ngOnDestroy() {
@@ -67,12 +70,11 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
     }
 
     createReport() {
-        console.log("Testing..");
         this.validCreator = 0;
-        let route = "/dide/didegel-complet-report";
-        this.settings = this.reportSchema.reportDideGelComplet;
+        let route = "/school/report-gel-applications/";
+        this.settings = this.reportSchema.reportGelApplications;
 
-        this.generalReportSub = this._hds.makeDideReports(route).subscribe(data => {
+        this.generalReportSub = this._hds.makeGelReports(route).subscribe(data => {
             this.generalReport$.next(data);
             this.data = data;
             this.validCreator = 1;
@@ -88,12 +90,14 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
             error => {
                 this.generalReport$.next([{}]);
                 this.validCreator = -1;
+                console.log("Error Getting ReportGelApplications");
             });
+
     }
 
 
     navigateBack() {
-        this.router.navigate(["/dide/didegel-reports"]);
+        this.router.navigate(["/school/directorgel-reports"]);
     }
 
     //onSearch(query: string = "") {

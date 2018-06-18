@@ -25,8 +25,8 @@ import MainComponent from "./components/main/main.component";
 import NavbarComponent from "./components/navbar/navbar.component";
 import Main from "./containers/main";
 import EduAdminAuthGuard from "./guards/eduadmin.auth.guard";
+import EduDistribAuthGuard from "./guards/edudistrib.auth.guard";
 import DidepdeAuthGuard from "./guards/dideandpde.auth.guard";
-
 import MinistryAuthGuard from "./guards/ministry.auth.guard";
 import RegionEduAuthGuard from "./guards/regionedu.auth.guard";
 import ReportsAuthGuard from "./guards/reports.auth.guard";
@@ -35,6 +35,7 @@ import SchoolGelAuthGuard from "./guards/schoolgel.auth.guard";
 import SchoolCapacityLockedGuard from "./guards/school.capacity.locked.guard";
 import SchoolStudentsLockedGuard from "./guards/school.students.locked.guard";
 import SchoolGelStudentsLockedGuard from "./guards/school.gel.students.locked.guard";
+import SchoolGymStudentsLockedGuard from "./guards/school.gym.students.locked.guard";
 import StudentAuthGuard from "./guards/student.auth.guard";
 import StudentLockGuard from "./guards/student.lock.guard";
 import StudentGelLockGuard from "./guards/student.gel.lock.guard";
@@ -88,6 +89,7 @@ class MyLocalization extends NgLocalization {
         SchoolGelAuthGuard,
         SchoolStudentsLockedGuard,
         SchoolGelStudentsLockedGuard,
+        SchoolGymStudentsLockedGuard,
         SchoolCapacityLockedGuard,
         StudentAuthGuard,
         StudentLockGuard,
@@ -95,6 +97,7 @@ class MyLocalization extends NgLocalization {
         StudentAllLockGuard,
         RegionEduAuthGuard,
         EduAdminAuthGuard,
+        EduDistribAuthGuard,
         DidepdeAuthGuard,
         MinistryAuthGuard,
         ReportsAuthGuard,
