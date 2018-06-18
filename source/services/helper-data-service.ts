@@ -1121,7 +1121,7 @@ export class HelperDataService implements OnInit, OnDestroy {
         return this.http.get(`${AppSettings.API_ENDPOINT}/epal/get-student-promotion/` + rpath, options)
             .map(response => response.json());
     }
-    
+    */
 
     createPdfServerSide(headerid, status) {
 
