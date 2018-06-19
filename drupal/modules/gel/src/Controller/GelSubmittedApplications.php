@@ -356,6 +356,7 @@ class GelSubmittedApplications extends ControllerBase
             else {
                $applicantsResultsDisabled = $eggrafesConfig->lock_results->value;
                $applicantsAppModifyDisabled = $eggrafesConfig->lock_modify->value;
+               $dateStartInt = strtotime($eggrafesConfig->date_start_b_period->value);
             }
 
             $status = "-1";
@@ -390,6 +391,7 @@ class GelSubmittedApplications extends ControllerBase
                                             'birthdate',
                                             'created',
                                             'changed',
+                                            'second_period',
                                             'myschool_promoted',
                                         ))
                                         ->fields('gs_ch',
@@ -479,14 +481,24 @@ class GelSubmittedApplications extends ControllerBase
                     $schoolAddress = $gelStudent->street_address;
                     $schoolTel = $gelStudent->phone_number;
 
-                    if ($applicantsResultsDisabled === "0" && $gelStudent->myschool_promoted === "1") {
-                      if ($gelStudent->school_id)
+                    $this->logger->warning("Trace.." .  $gelStudent->myschool_promoted . "  " . $gelStudent->second_period . "  " . $gelStudent->changed . " "  . $dateStartInt);
+
+                    if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "1" || $gelStudent->myschool_promoted === "2")) {
+
+                      //new piece of code
+                      //  περιττό (?), στη Β' περίοδο οι αιτήσεις λογικά δεν έχουν ενημερωμένο το myschool_promoted ?
+                      if ($gelStudent->second_period === "1" && $gelStudent->changed >= $dateStartInt)
+                        //η αίτηση είναι της β' περιόδου με ημερομηνία μεταγενέστερη της ημερομηνίας έναρξης β' περιόδου
+                        $status = "2";
+                      // end new piece of code
+
+                      else if ($gelStudent->school_id)
                           //υπάρχει σχολείο στον πίνακα gelstudenthighschool
                           $status = "1";
                       else if ($gelStudent->student_id != null && $gelStudent->school_id == null)
                           //υπάρχει ο μαθητής αλλά όχι το σχολείο στον πίνακα gelstudenthighschool
                           $status = "3";
-                      else  {
+                      else if  ($gelStudent->student_id == null)  {
                           //ο μαθητής δεν υπάρχει στον πίνακα gelstudenthighschool, άρα πάει αυτοδίκαια στο σχολείο τρέχουσας φοίτησης
                           $status = "4";
                           $sCon = $this->connection

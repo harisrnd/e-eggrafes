@@ -25,8 +25,8 @@ import MainComponent from "./components/main/main.component";
 import NavbarComponent from "./components/navbar/navbar.component";
 import Main from "./containers/main";
 import EduAdminAuthGuard from "./guards/eduadmin.auth.guard";
+import EduDistribAuthGuard from "./guards/edudistrib.auth.guard";
 import DidepdeAuthGuard from "./guards/dideandpde.auth.guard";
-
 import MinistryAuthGuard from "./guards/ministry.auth.guard";
 import RegionEduAuthGuard from "./guards/regionedu.auth.guard";
 import ReportsAuthGuard from "./guards/reports.auth.guard";
@@ -95,6 +95,7 @@ class MyLocalization extends NgLocalization {
         StudentAllLockGuard,
         RegionEduAuthGuard,
         EduAdminAuthGuard,
+        EduDistribAuthGuard,
         DidepdeAuthGuard,
         MinistryAuthGuard,
         ReportsAuthGuard,

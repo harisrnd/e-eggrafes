@@ -2648,7 +2648,6 @@ $studentAMColumn
                         ], Response::HTTP_FORBIDDEN);
          }
          $dideid = $user->init->value;
-         //$this->logger->warning("dide Id:" . $dideid);
 
          //user role validation
          $roles = $user->getRoles();
@@ -2682,34 +2681,30 @@ $studentAMColumn
                 ->fields('eClass', array('student_id', 'school_id','taxi'))
                 ->condition('eClass.dide', $dideid, '=');
          $gelClasses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-         //$num = sizeof($gelClasses);
-         //$this->logger->warning("Num:" . $num);
 
          foreach ($gelClasses as $gelClass) {
                 //εύρεση στοιχείων μαθητή (ΑΜ, διεύθυνση κατοικίας)
                 $sCon = $this->connection
                        ->select('gel_student', 'eStudent')
-                       ->fields('eStudent', array(  'am', 'regionaddress', 'regiontk', 'regionarea', 'lastschool_schoolname'))
+                       ->fields('eStudent', array(  'am', 'regionaddress', 'regiontk', 'regionarea', 'lastschool_schoolname', 'nextclass'))
                        ->condition('eStudent.id', $gelClass->student_id, '=');
                 $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 $gelStudent = reset($gelStudents);
 
-               if ($gelClass->student_id != null && $gelClass->school_id == null)  {
-                 if ($gelClass->student_id == "(ΜΟΥΣΙΚΟ ΓΥΜΝΑΣΙΟ - ΜΟΥΣΙΚΟ ΛΥΚΕΙΟ)")
-                     $this->logger->warning("ΜΠΗΚΑ!!!");
+               if ($gelClass->student_id != null && $gelClass->student_id != 0 && $gelClass->school_id == null)  {
                  array_push($studentIdColumn, $gelClass->student_id);
                  if ($gelStudent->am != null)
                      array_push($studentAMColumn, $crypt->decrypt($gelStudent->am));
                  else
                      array_push($studentAMColumn, "ΧΩΡΙΣ ΑΜ");
 
-                 //array_push($studentClassColumn, $this->retrieveGelClassName($gelStudent->nextclass));
-                 array_push($studentClassColumn, $this->retrieveGelClassName($gelClass->taxi));
+                 array_push($studentClassColumn, $this->retrieveGelClassName($gelStudent->nextclass));
+                 //array_push($studentClassColumn, $this->retrieveGelClassName($gelClass->taxi));
                  array_push($studentAddressColumn, $this->retrieveStudentAddress($gelStudent->regionaddress, $gelStudent->regiontk, $gelStudent->regionarea ));
                  array_push($schoolNameOriginColumn, $gelStudent->lastschool_schoolname);
                  array_push($schoolNameDestinationColumn, "ΜΗ ΤΟΠΟΘΕΤΗΜΕΝΟΣ");
                }
-               else  {
+               else if ($gelClass->student_id != 0) {
                  //βρες όνομα σχολείου τοποθέτησης (προορισμού)
                  $sCon = $this->connection
                     ->select('gel_school', 'eSchool')
@@ -2724,8 +2719,8 @@ $studentAMColumn
                  else
                     array_push($studentAMColumn, "ΧΩΡΙΣ ΑΜ");
 
-                 //array_push($studentClassColumn, $this->retrieveGelClassName($gelStudent->nextclass));
-                 array_push($studentClassColumn, $this->retrieveGelClassName($gelClass->taxi));
+                 array_push($studentClassColumn, $this->retrieveGelClassName($gelStudent->nextclass));
+                 //array_push($studentClassColumn, $this->retrieveGelClassName($gelClass->taxi));
                  array_push($studentAddressColumn, $this->retrieveStudentAddress($gelStudent->regionaddress, $gelStudent->regiontk, $gelStudent->regionarea ));
                  array_push($schoolNameOriginColumn, $gelStudent->lastschool_schoolname);
                  array_push($schoolNameDestinationColumn, $schoolNameDest->name);
@@ -2735,13 +2730,18 @@ $studentAMColumn
 
          //εισαγωγή εγγραφών στο tableschema
          for ($j = 0; $j < sizeof($studentIdColumn); $j++) {
+                $strAddr = preg_replace("/,/", " ", $studentAddressColumn[$j]);
+                //$strAddr = preg_replace("/(/", " ", $strAddr);
+
                 array_push($list, (object) array(
                     'studentid' => $studentIdColumn[$j],
                     'studentam' => $studentAMColumn[$j],
                     'studentclass' => $studentClassColumn[$j],
-                    'studentaddress' => $studentAddressColumn[$j],
-                    'schoolorigin' => str_replace("\n", " ", $schoolNameOriginColumn[$j]),
-                    'schooldestination' => str_replace("\n", " ", $schoolNameDestinationColumn[$j]),
+                    'studentaddress' => preg_replace("/,/", " ", $studentAddressColumn[$j]),
+                    //'schoolorigin' => str_replace("\n", " ", $schoolNameOriginColumn[$j]),
+                    'schoolorigin' => $strAddr,
+                    'schoolorigin' => preg_replace("/\n/", " ", $schoolNameOriginColumn[$j]),
+                    'schooldestination' => preg_replace("/\n/", " ", $schoolNameDestinationColumn[$j]),
                 ));
            }
 
@@ -2805,46 +2805,6 @@ $studentAMColumn
         $schoolSectionColumn = array();
         $schoolCountColumn = array();
 
-        /*
-        //ΠΟΣΟΙ ΤΟΠΟΘΕΤΗΘΗΚΑΝ ΑΠΟ ΔΔΕ
-        //βρες σχολεία που ανήκουν στη ΔΔΕ και είναι ΓΕΛ
-        $sCon = $this->connection
-           ->select('gel_school', 'eSchool')
-           ->fields('eSchool', array('id', 'registry_no', 'name'))
-           ->condition('eSchool.edu_admin_id', $dideid, '=')
-           ->condition('eSchool.unit_type_id', 4, '=');
-        $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-
-        foreach ($gelSchools as $gelSchool) {
-           //$this->logger->warning("Trace me..");
-           //$this->logger->warning($gelSchool->id);
-           $schoolid = $gelSchool->id;
-
-           //βρες όνομα σχολείου
-           $sCon = $this->connection
-              ->select('gel_school', 'eSchool')
-              ->fields('eSchool', array('name'))
-              ->condition('eSchool.id', $schoolid , '=');
-           $schoolNamesDest = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-           $schoolNameDest = reset($schoolNamesDest);
-
-           //βρες πλήθος μαθητών για την Α' τάξη
-           //βρες πλήθος μαθητών στον gelstudenthighschool
-           $sCon = $this->connection
-              ->select('gelstudenthighschool', 'eClass')
-              ->fields('eClass', array('student_id', 'taxi'))
-              ->condition('eClass.school_id', $schoolid, '=');
-              //->condition('eClass.taxi', 'Α', '=');
-
-           //$gelClasses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-           $numAppsClassA = $sCon->countQuery()->execute()->fetchField();
-
-           array_push($schoolNameColumn, $schoolNameDest->name);
-           array_push($schoolSectionColumn, "");
-           array_push($schoolCountColumn, $numAppsClassA);
-        }
-        */
-
         //βρες σχολεία που ανήκουν στη ΔΔΕ
         $sCon = $this->connection
            ->select('gel_school', 'eSchool')
@@ -2853,24 +2813,34 @@ $studentAMColumn
         $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
         foreach ($gelSchools as $gelSchool) {
-           //βρες πλήθος μαθητών που έχουν στην αίτησή τους το σχολείο αυτό ως σχολείο τελευταίας φοίτησης
-           if ($gelSchool->unit_type_id == 3)  {
-               $sCon = $this->connection
-                  ->select('gel_student', 'eClass')
-                  ->fields('eClass', array('student_id'))
-                  ->condition('eClass.lastschool_registrynumber', $gelSchool->registry_no, '=')
-                  ->condition('eClass.nextclass', 3, '=');
-               $numAppsClassA = $sCon->countQuery()->execute()->fetchField();
-               array_push($schoolNameColumn, $gelSchool->name);
-               array_push($schoolSectionColumn, "Γ' Γυμνασίου");
-               array_push($schoolCountColumn, $numAppsClassA);
-            }
-            else if ($gelSchool->unit_type_id == 4)  {
+
+            if ($gelSchool->unit_type_id == 4)  {
+
+              //βρες πλήθος μαθητών στον gelstudenthighschool
+              $classNames = array("Α", "Β", "Γ", "Δ");
+              $classLogos = array("Α' Λυκείου (τοποθέτηση)", "Β' Λυκείου (τοποθέτηση)", "Γ' Λυκείου (τοποθέτηση)", "Δ' Λυκείου (τοποθέτηση)");
+              for ($l=0; $l<4;$l++)  {
+                $sCon = $this->connection
+                   ->select('gelstudenthighschool', 'eClass')
+                   ->fields('eClass', array('id'))
+                   ->condition('eClass.school_id', $gelSchool->id, '=')
+                   ->condition('eClass.dide', $dideid, '=')
+                   ->condition('eClass.taxi', $classNames[$l] , '=')
+                  ->condition('eClass.student_id', 0 , '>');
+                $numClass = $sCon->countQuery()->execute()->fetchField();
+                if ( ($l == 0) || ($l != 0 && $numClass != 0) )  {
+                  array_push($schoolNameColumn, $gelSchool->name);
+                  array_push($schoolSectionColumn, $classLogos[$l]);
+                  array_push($schoolCountColumn, $numClass);
+                }
+              }
+
+              //βρες τους αυτοδίκαια
               if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ") {
-                $startIndex = 4; $endIndex = 7;
+                $startIndex = 5; $endIndex = 7;
               }
               else {
-                $startIndex = 1; $endIndex = 3;
+                $startIndex = 2; $endIndex = 3;
               }
               for ($k = $startIndex; $k <= $endIndex; $k++ )  {
                 $sCon = $this->connection
@@ -2880,9 +2850,10 @@ $studentAMColumn
                    ->condition('eClass.nextclass', $k, '=');
                 $numAppsClass = $sCon->countQuery()->execute()->fetchField();
                 array_push($schoolNameColumn, $gelSchool->name);
-                array_push($schoolSectionColumn, $this->retrieveGelClassName($k));
+                array_push($schoolSectionColumn, $this->retrieveGelClassName($k) . " (αυτοδίκαια)");
                 array_push($schoolCountColumn, $numAppsClass);
               }
+
              }
 
          }
@@ -2914,278 +2885,6 @@ $studentAMColumn
 
    }
 
-/*
-   public function makeReportDideCompletGel_v1(Request $request)
-   {
-     try {
-        if (!$request->isMethod('GET')) {
-             return $this->respondWithStatus([
-                    "message" => t("Method Not Allowed")
-                      ], Response::HTTP_METHOD_NOT_ALLOWED);
-        }
-        //user validation
-        $authToken = $request->headers->get('PHP_AUTH_USER');
-        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
-        $user = reset($users);
-        if (!$user) {
-              return $this->respondWithStatus([
-                     'message' => t("User not found"),
-                       ], Response::HTTP_FORBIDDEN);
-        }
-        $dideid = $user->init->value;
-
-        //user role validation
-        $roles = $user->getRoles();
-        $validRole = false;
-        foreach ($roles as $role) {
-            if ($role === "eduadmin") {
-                $validRole = true;
-                break;
-            }
-        }
-        if (!$validRole) {
-              return $this->respondWithStatus([
-                     'message' => t("User Invalid Role"),
-                       ], Response::HTTP_FORBIDDEN);
-        }
-
-        $schemalist = array();
-        $crypt = new Crypt();
-
-        //όρισε στήλες εμφάνισης στην αναφορά
-        $schoolNameColumn = array();
-        $schoolSectionColumn = array();
-        $sectionCountColumn = array();
-
-        //βρες σχολεία που ανήκουν στη ΔΔΕ
-        $sCon = $this->connection
-           ->select('gel_school', 'eSchool')
-           ->fields('eSchool', array('id', 'registry_no', 'name'))
-           ->condition('eSchool.edu_admin_id', $dideid, '=');
-        $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-
-        foreach ($gelSchools as $gelSchool) {
-           $schoolid = $gelSchool->id;
-
-            //aspasia's code
-            $list = array();
-            $CoursesA = $this->entityTypeManager->getStorage('gel_school')
-                ->loadByProperties(array('id' => $schoolid));
-            $CourseA = reset($CoursesA);
-            if ($CourseA) {
-                $reg_num = $CourseA->get('registry_no')->value;
-                $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
-                    ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Α'));
-
-                    $list[] = array(
-                        'id' => '1',
-                        'name' => 'Α Λυκείου',
-                        'size' => sizeof($studentPerSchool),
-                        'categ' => $categ,
-                        'classes' => 1,
-
-                    );
-                    array_push($schoolNameColumn, 'Α Λυκείου');
-                    array_push($schoolSectionColumn, $categ);
-                    array_push($schoolCountColumn, sizeof($studentPerSchool));
-
-
-                 $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
-                    ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => 2));
-
-                    $list[] = array(
-                        'id' => '2',
-                        'name' => 'Β Λυκείου',
-                        'size' => sizeof($studentPerSchool),
-                        'categ' => $categ,
-                        'classes' => 1,
-                    );
-                    array_push($schoolNameColumn, 'Β Λυκείου');
-                    array_push($schoolSectionColumn, $categ);
-                    array_push($schoolCountColumn, sizeof($studentPerSchool));
-
-                $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
-                    ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => 3));
-
-                    $list[] = array(
-                        'id' => '3',
-                        'name' => 'Γ Λυκείου',
-                        'size' => sizeof($studentPerSchool),
-                        'categ' => $categ,
-                        'classes' => 1,
-                    );
-                    array_push($schoolNameColumn, 'Γ Λυκείου');
-                    array_push($schoolSectionColumn, $categ);
-                    array_push($schoolCountColumn, sizeof($studentPerSchool));
-
-
-
-                if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
-                {
-                  $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
-                    ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => 4));
-
-                    $list[] = array(
-                        'id' => '4',
-                        'name' => 'Δ Λυκείου',
-                        'size' => sizeof($studentPerSchool),
-                        'categ' => $categ,
-                        'classes' => 1,
-                    );
-                    array_push($schoolNameColumn, 'Γ Λυκείου');
-                    array_push($schoolSectionColumn, $categ);
-                    array_push($schoolCountColumn, sizeof($studentPerSchool));
-
-                }
-
-                $taxi = "Α";
-                $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
-                foreach ($selectionPerSchool as $object) {
-
-                  $choicenew = $object -> id();
-
-                  $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
-                  $sCon->leftJoin('gelstudenthighschool', 'gSchool',
-                              'gSchool.student_id = gClassChoice.student_id');
-                   $sCon->fields('gSchool', array( 'taxi', 'school_id'))
-                        ->fields('gClassChoice', array('choice_id'))
-                     ->condition('gClassChoice.choice_id', $choicenew)
-                     ->condition('gSchool.taxi', $taxi )
-                     ->condition('gSchool.school_id', $schoolid)
-                     ->groupBy('gClassChoice.choice_id')
-                     ->groupBy('gSchool.taxi')
-                     ->groupBy('gSchool.school_id')
-                     ;
-                $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
-                $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                foreach ($results as $key ) {
-                          $list[] = array(
-                                'id' => 'ΕΠ',
-                                'name' => 'Α Λυκείου-'.$object -> name ->value,
-                                'size' => $key->student_count,
-                                'categ' => $categ,
-                                'classes' => 1,
-
-                            );
-                            array_push($schoolNameColumn, 'Γ Λυκείου');
-                            array_push($schoolSectionColumn, $categ);
-                            array_push($schoolCountColumn, sizeof($studentPerSchool));
-                          }
-
-                    }
-
-
-                $taxi = 2;
-                $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
-                foreach ($selectionPerSchool as $object) {
-
-                  $choicenew = $object -> id();
-
-                  $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
-                  $sCon->leftJoin('gel_student', 'gSchool',
-                   'gSchool.id = gClassChoice.student_id');
-                   $sCon->fields('gSchool', array( 'nextclass', 'lastschool_registrynumber  '))
-                        ->fields('gClassChoice', array('choice_id'))
-                     ->condition('gClassChoice.choice_id', $choicenew)
-                     ->condition('gSchool.nextclass', $taxi )
-                     ->condition('gSchool.lastschool_registrynumber ', $reg_num)
-                     ->groupBy('gClassChoice.choice_id')
-                     ->groupBy('gSchool.nextclass')
-                     ->groupBy('gSchool.lastschool_registrynumber ')
-                     ;
-                $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
-                $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                foreach ($results as $key ) {
-                          $list[] = array(
-                                'name' => 'B Λυκείου-'.$object -> name ->value,
-                                'size' => $key->student_count,
-                                'categ' => $categ,
-                                'classes' => 2,
-                            );
-                            array_push($schoolNameColumn, 'Γ Λυκείου');
-                            array_push($schoolSectionColumn, $categ);
-                            array_push($schoolCountColumn, sizeof($studentPerSchool));
-                            }
-
-                    }
-
-              $taxi = 3;
-              $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
-              foreach ($selectionPerSchool as $object) {
-
-                $choicenew = $object -> id();
-
-                $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
-                $sCon->leftJoin('gel_student', 'gSchool',
-                 'gSchool.id = gClassChoice.student_id');
-                 $sCon->fields('gSchool', array( 'nextclass', 'lastschool_registrynumber  '))
-                      ->fields('gClassChoice', array('choice_id'))
-                   ->condition('gClassChoice.choice_id', $choicenew)
-                   ->condition('gSchool.nextclass', $taxi )
-                   ->condition('gSchool.lastschool_registrynumber ', $reg_num)
-                   ->groupBy('gClassChoice.choice_id')
-                   ->groupBy('gSchool.nextclass')
-                   ->groupBy('gSchool.lastschool_registrynumber ')
-                   ;
-              $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
-              $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-              foreach ($results as $key ) {
-                        $list[] = array(
-                              'name' => 'Γ Λυκείου-'.$object -> name ->value,
-                              'size' => $key->student_count,
-                              'categ' => $categ,
-                              'classes' => 3,
-                          );
-                          array_push($schoolNameColumn, 'Γ Λυκείου');
-                          array_push($schoolSectionColumn, $categ);
-                          array_push($schoolCountColumn, sizeof($studentPerSchool));
-                          }
-
-                  }
-
-            //}
-
-
-            if ($CourseA) {
-                return $this->respondWithStatus($list, Response::HTTP_OK);
-            } else {
-                return $this->respondWithStatus([
-                    'message' => t('No courses found!'),
-                ], Response::HTTP_FORBIDDEN);
-            }
-
-
-
-
-
-
-        }
-      }
-
-
-      //εισαγωγή εγγραφών στο tableschema
-      for ($j = 0; $j < sizeof($studentIdColumn); $j++) {
-             array_push($schemalist, (object) array(
-                 'name' => $schoolNameColumn[$j],
-                 'section' => $schoolSectionColumn[$j],
-                 'stcount' => $schoolCountColumn[$j],
-             ));
-        }
-
-      return $this->respondWithStatus($schemalist, Response::HTTP_OK);
-
-      } //end try
-
-      catch (\Exception $e) {
-          $this->logger->warning($e->getMessage());
-          return $this->respondWithStatus([
-                "message" => t("An unexpected problem occured during makeReportDideDistribGel Method")
-                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
-      }
-
-   }
-
-   */
 
 
    private function retrieveGelClassName($classId)

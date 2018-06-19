@@ -93,7 +93,7 @@ import { ReportsSchema, TableColumn } from "../minister/reports-schema";
 
 
     navigateBack() {
-        this.router.navigate(["/school/director-reports"]);
+        this.router.navigate(["/dide/didegel-reports"]);
     }
 
     //onSearch(query: string = "") {
