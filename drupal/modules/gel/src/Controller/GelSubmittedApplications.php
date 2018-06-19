@@ -290,8 +290,12 @@ class GelSubmittedApplications extends ControllerBase
 
                     $gelStudentClasses = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $object->id()));
 
-                    //στα ΓΕΛ πάντα θα υπάρχει αποτέλεσμα - είτε η ΔΔΕ τοποθέτησε, είτε δεν τοποθέτησε η ΔΔΕ ενώ έπρεπε, είτε τοποθετήθηκε αυτοδίκαια
-                    if (/*sizeof($gelStudentClasses) === 0 && */!$applicantsAppDelDisabled && $applicantsViewResultsDisabled)
+                    //$this->logger->warning("Trace.." . $eggrafesConfig->activate_second_period->value . "  " .  $object->second_period->value );
+
+                    //στα ΓΕΛ πάντα θα υπάρχει αποτέλεσμα - είτε η ΔΔΕ τοποθέτησε, είτε δεν τοποθέτησε η ΔΔΕ ενώ έπρεπε,
+                    //είτε τοποθετήθηκε αυτοδίκαια
+                    if (!$applicantsAppDelDisabled /*&& $applicantsViewResultsDisabled */
+                          && $eggrafesConfig->activate_second_period->value == $object->second_period->value)
                          $canDelete = 1;
                     else
                          $canDelete = 0;
@@ -343,6 +347,7 @@ class GelSubmittedApplications extends ControllerBase
         $authToken = $request->headers->get('PHP_AUTH_USER');
         $gelUsers = $this->entityTypeManager->getStorage('applicant_users')->loadByProperties(array('authtoken' => $authToken));
         $gelUser = reset($gelUsers);
+
         if ($gelUser) {
 
             $config_storage = $this->entityTypeManager->getStorage('eggrafes_config');
@@ -481,7 +486,17 @@ class GelSubmittedApplications extends ControllerBase
                     $schoolAddress = $gelStudent->street_address;
                     $schoolTel = $gelStudent->phone_number;
 
-                    $this->logger->warning("Trace.." .  $gelStudent->myschool_promoted . "  " . $gelStudent->second_period . "  " . $gelStudent->changed . " "  . $dateStartInt);
+                    //$this->logger->warning("Trace.." .  $gelStudent->myschool_promoted . "  " . $gelStudent->second_period . "  " . $gelStudent->changed . " "  . $dateStartInt);
+
+                    //new piece of code concerning to enable / disable edit functionality
+                    //$this->logger->warning("Trace2.." .  $gelStudent->changed . "  " . $dateStartInt );
+                    $canedit = '0';
+                    if (  $applicantsAppModifyDisabled == "0"
+                        && $eggrafesConfig->activate_second_period->value == $gelStudent->second_period
+                        && $gelStudent->changed >= $dateStartInt
+                      )
+                      $canedit = '1';
+                    //end new piece
 
                     if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "1" || $gelStudent->myschool_promoted === "2")) {
 
@@ -497,6 +512,9 @@ class GelSubmittedApplications extends ControllerBase
                           $status = "1";
                       else if ($gelStudent->student_id != null && $gelStudent->school_id == null)
                           //υπάρχει ο μαθητής αλλά όχι το σχολείο στον πίνακα gelstudenthighschool
+                          $status = "3";
+                      else if ($gelStudent->lastschool_unittypeid == 40)
+                          //ειδικές περιπτώσεις: μαθητές από ΣΔΕ / σχολεία εξωτερικού
                           $status = "3";
                       else if  ($gelStudent->student_id == null)  {
                           //ο μαθητής δεν υπάρχει στον πίνακα gelstudenthighschool, άρα πάει αυτοδίκαια στο σχολείο τρέχουσας φοίτησης
@@ -549,7 +567,8 @@ class GelSubmittedApplications extends ControllerBase
                             'schoolTel' => $schoolTel,
                             'applicantsResultsDisabled' => $applicantsResultsDisabled,
                             'applicantsAppModifyDisabled' => $applicantsAppModifyDisabled,
-                            'status' => $status
+                            'status' => $status,
+                            'canedit' => $canedit
                         );
 
                 return $this->respondWithStatus(
