@@ -80,6 +80,8 @@ import { HelperDataService } from "../../services/helper-data-service";
                     <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click) ="setActiveStudent(j)" >{{StudentDetails$.studentsurname}}</div>
                     <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click) ="setActiveStudent(j)">{{StudentDetails$.name}}</div>
 
+                      <div class="col-md-2" *ngIf = "StudentDetails$.lock_delete === '0'"  style="font-size: 1.5em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteApplication(StudentDetails$.id, CoursesPerSchools$.class, CoursesPerSchools$.newsector, CoursesPerSchools$.newspecialit)"></i></div>
+
 
                     <div [hidden]="StudentActive !== j" class="col-md-2 pull-right" style="color: black;" > <span aria-hidden="true"><button type="button" class="btn-primary btn-sm pull-right" (click) ="setActiveStudentnew(j)">Κλείσιμο</button></span>  </div>
 
@@ -418,7 +420,7 @@ import { HelperDataService } from "../../services/helper-data-service";
             this.StudentInfo$.next(std);
             this.showLoader.next(false);
             this.showModal("#checksaved");
-        }, 
+        },
             error => {
                 this.SavedStudents$.next([{}]);
                 console.log("Error saving Students");

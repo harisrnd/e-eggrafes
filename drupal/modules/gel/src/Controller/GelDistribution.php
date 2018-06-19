@@ -1964,7 +1964,8 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 //'birthdate' => substr($gelStudent->birthdate->value, 8, 10) . '/' . substr($gelStudent->birthdate->value, 6, 8) . '/' . substr($gelStudent->birthdate->value, 0, 4),
                                 'birthdate' => date("d-m-Y", strtotime($gelStudent->birthdate->value)),
                                 'checkstatus' => $gelStudent -> directorconfirm ->value,
-                                'lock_delete' => $lock_delete,
+                                //'lock_delete' => $lock_delete,
+                                'lock_delete' => "0",
                                 'created' => date('d/m/Y H:i', $gelStudent -> created ->value),
                                 'choices' => $choices
 
@@ -2061,7 +2062,8 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 //'birthdate' => substr($object->birthdate , 8, 10) . '/' . substr($object->birthdate , 6, 8) . '/' . substr($object->birthdate , 0, 4),
                                 'birthdate' => date("d-m-Y", strtotime($object->birthdate )),
                                 'checkstatus' => $object -> directorconfirm  ,
-                                'lock_delete' => $lock_delete,
+                                //'lock_delete' => $lock_delete,
+                                'lock_delete' => "0",
                                 'created' => date('d/m/Y H:i', $object -> created  ),
                                 'choices' => $choices
 

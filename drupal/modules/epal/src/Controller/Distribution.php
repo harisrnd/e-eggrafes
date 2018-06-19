@@ -518,6 +518,7 @@ class Distribution extends ControllerBase
                 $this->connection->delete('epal_student_class')
                     ->condition('student_id', $clear_ids, 'IN')
                     ->execute();
+
             } catch (\Exception $e) {
                 $this->logger->error($e->getMessage());
                 return self::ERROR_DB;

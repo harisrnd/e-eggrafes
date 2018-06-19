@@ -572,6 +572,8 @@ class SubmitedApplications extends ControllerBase
                     }
                     unset($crypt);
 
+                    //$this->logger->warning("Trace2.." .  $applicantsResultsDisabled . "  " . $es->myschool_promoted );
+
                     if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted === "1" || $es->myschool_promoted === "2") ) {
                       //To $epalStudent->finalized === null υπονοεί ότι δεν είναι κατανεμημένος αυτός ο μαθητής <-- ΝΑ ΕΛΕΓΧΘΕΙ
 
