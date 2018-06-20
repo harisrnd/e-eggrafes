@@ -585,30 +585,25 @@ export class ReportsSchema {
         },
         noDataMessage: "Δεν υπάρχουν δεδομένα",
         columns: {
-            section: {
+            am: {
                 title: "Α.Μ.",
                 width: "5%",
-                filter: true
+                filter: false
+            },
+            studentsurname: {
+                title: "Επώνυμο",
+                width: "30%",
+                filter: false
             },
             name: {
                 title: "Όνομα",
                 width: "25%",
-                filter: true
+                filter: false
             },
-            surname: {
-                title: "Επώνυμο",
-                width: "25%",
-                filter: true
-            },
-            address: {
-                title: "Διεύθυνση",
-                width: "20%",
-                filter: true
-            },
-            tel: {
+            gel: {
                 title: "Λύκειο Προορισμού",
-                width: "25%",
-                filter: true
+                width: "40%",
+                filter: false
             }
         },
     };
