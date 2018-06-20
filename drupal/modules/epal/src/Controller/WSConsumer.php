@@ -125,7 +125,7 @@ class WSConsumer extends ControllerBase
 
     public function getAllStudentEpalPromotion()
     {
-        
+
         $count=1;
 
             $sCon = \Drupal::database()->select('gel_student', 'gel_app');
@@ -137,7 +137,7 @@ class WSConsumer extends ControllerBase
             $students_promotions = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
             foreach ($students_promotions as $student) {
-                
+
                 try {
                     $didactic_year_id=$this->getdidacticyear($student->lastschool_schoolyear);
                     $result = $this->client->getStudentEpalPromotion($didactic_year_id, $student->myschool_id);
@@ -172,7 +172,7 @@ class WSConsumer extends ControllerBase
 
                         $transaction->rollback();
                         $this->logger->warning("Update school_promoted:: ".$count.",".$student->myschool_id.",".$e->getMessage());
-        
+
                         //    return $this->respondWithStatus([
                         //        "error_code" => 5001
                         //    ], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -184,8 +184,8 @@ class WSConsumer extends ControllerBase
                 $count++;
             }
             $this->logger->warning("telos gel....=".$count);
-       
-       
+
+
             $count=1;
 
             $sCon = \Drupal::database()->select('epal_student', 'epal_app');
@@ -197,7 +197,7 @@ class WSConsumer extends ControllerBase
             $students_promotions = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
             foreach ($students_promotions as $student) {
-                
+
                 try {
                     $didactic_year_id=$this->getdidacticyear($student->lastschool_schoolyear);
                     $result = $this->client->getStudentEpalPromotion($didactic_year_id, $student->myschool_id);
@@ -232,7 +232,7 @@ class WSConsumer extends ControllerBase
 
                         $transaction->rollback();
                         $this->logger->warning("Update school_promoted:: ".$count.",".$student->myschool_id.",".$e->getMessage());
-        
+
                         //    return $this->respondWithStatus([
                         //        "error_code" => 5001
                         //    ], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -275,7 +275,7 @@ class WSConsumer extends ControllerBase
 
     public function transitionToBPeriod() {
 
-      //μετάπτωση όλων των αιτήσεων για ΕΠΑΛ που οι μαθητές δεν προάχθηκαν σε δεύτερη περίοδο
+      //μετάπτωση σε δεύτερη περίοδο όλων των αιτήσεων για ΕΠΑΛ που οι μαθητές δεν προάχθηκαν
       $sCon = $this->connection
   			 ->select('epal_student', 'eStudent')
   			 ->fields('eStudent', array('id', 'myschool_promoted', 'lastschool_unittypeid','myschool_currentlevelname'))
@@ -289,7 +289,7 @@ class WSConsumer extends ControllerBase
                   //εξαίρεση: ΓΥΜ ΜΕ ΛΤ
                   ($epalStudent->lastschool_unittypeid == 3 && $epalStudent->myschool_currentlevelname != "Γ")  )
         )
-    {
+      {
           try {
               $query = $this->connection->update('epal_student');
               $query->fields(['second_period' => "1"]);
@@ -310,7 +310,7 @@ class WSConsumer extends ControllerBase
         }
       }
 
-      //μετάπτωση όλων των αιτήσεων για ΓΕΛ που οι μαθητές δεν προάχθηκαν σε δεύτερη περίοδο
+      //μετάπτωση σε δεύτερη περίοδο όλων των αιτήσεων για ΓΕΛ που οι μαθητές δεν προάχθηκαν
       $sCon = $this->connection
          ->select('gel_student', 'eStudent')
          ->fields('eStudent', array('id', 'myschool_promoted'))
@@ -337,12 +337,32 @@ class WSConsumer extends ControllerBase
         }
       }
 
-
+      //μετάπτωση σε δεύτερη περίοδο όλων των αιτήσεων για ΓΕΛ που οι μαθητές βρίσκονται
+      //στον πίνακα αποτελεσμάτων ΓΕΛ (gelstudenthighschool), αλλά δεν τοποθετήθηκαν
+      $sCon = $this->connection
+         ->select('gelstudenthighschool', 'eStudent')
+         ->fields('eStudent', array('student_id', 'school_id'));
+      $gelClasses = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+      $cnt_schempty = 0;
+      foreach ($gelClasses as $gelClass)  {
+      if ( $gelClass->school_id == null)  {
+          try {
+              $query = $this->connection->update('gel_student');
+              $query->fields(['second_period' => "1"]);
+              $query->condition('id', $gelClass->student_id);
+              $query->execute();
+              ++$cnt_schempty;
+          } catch (\Exception $e) {
+              $this->logger->error($e->getMessage());
+          }
+        }
+      }
 
 
       return (new JsonResponse([
               'num_epal' => $cnt_epal,
               'num_gel' => $cnt_gel,
+              'num_sch_empty' => $cnt_schempty,
             ]))
             ->setStatusCode(Response::HTTP_OK);
 

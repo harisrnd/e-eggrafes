@@ -273,7 +273,8 @@ import { IAppState } from "../../store/store";
 
                     <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
                         <div class="col-md-12">
-                            <div *ngIf = "(GelStudentDetails$.status == '0' || GelStudentDetails$.status == '4') && GelStudentDetails$.applicantsAppModifyDisabled == '0'" >
+                            <!--<div *ngIf = "(GelStudentDetails$.status == '0' || GelStudentDetails$.status == '4') && GelStudentDetails$.applicantsAppModifyDisabled == '0'" >-->
+                            <div *ngIf = "(GelStudentDetails$.canedit == '1') " >
                                 <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 10em;" (click)="editGelApplication()">
                                     <span style="font-size: 0.9em; font-weight: bold;">Επεξεργασία&nbsp;&nbsp;&nbsp;</span>
                                 </button>
