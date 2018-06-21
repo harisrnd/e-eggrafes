@@ -442,7 +442,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 
         this.hideConfirmModal();
         this.showLoader.next(true);
-        this._hds.deleteApplicationforDirector(this.applicationId).then(data => {
+        this._hds.deleteApplicationforDirectorGel(this.applicationId).then(data => {
             this.StudentInfoSub.unsubscribe();
             this.CoursesPerSchoolSub.unsubscribe();
             this.showLoader.next(false);

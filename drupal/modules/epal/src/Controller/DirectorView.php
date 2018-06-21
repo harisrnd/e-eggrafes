@@ -171,7 +171,7 @@ class DirectorView extends ControllerBase
                                 'regionarea' => $regionarea_decoded,
                                 //'graduation_year' => $epalStudent->graduation_year->value,
                                 'telnum' => $telnum_decoded,
-                                'relationtostudent' => $relationtostudent_decoded,
+                                //'relationtostudent' => $relationtostudent_decoded,
                                 //'birthdate' => substr($epalStudent->birthdate->value, 8, 10) . '/' . substr($epalStudent->birthdate->value, 6, 8) . '/' . substr($epalStudent->birthdate->value, 0, 4),
                                 'birthdate' => date("d-m-Y", strtotime($epalStudent->birthdate->value)),
                                 'checkstatus' => $checkstudentstatus -> directorconfirm ->value,
