@@ -12,7 +12,7 @@ export function datamodeReducer(state: IDataModeRecords = DATAMODE_INITIAL_STATE
             let newDataMode = Array<IDataModeRecord>();
             newDataMode.push(recordify<IDataMode, IDataModeRecord>({
                 /*edit: action.payload.dataMode.edit, edit_class: action.payload.dataMode.edit_class,*/
-                app_update: action.payload.dataMode.app_update, appid: action.payload.dataMode.appid,
+                app_update: action.payload.dataMode.app_update, appid: action.payload.dataMode.appid, apptype: action.payload.dataMode.apptype,
                 /*studentfirstname: action.payload.dataMode.studentfirstname,
                 studentsurname: action.payload.dataMode.studentsurname, fatherfirstname: action.payload.dataMode.fatherfirstname,
                 motherfirstname: action.payload.dataMode.motherfirstname, studentbirthdate: action.payload.dataMode.studentbirthdate,

@@ -298,9 +298,11 @@ class WSConsumer extends ControllerBase
               ++$cnt_epal;
 
               //διαγραφή ενδεχόμενου αποτελέσματος σε πίνακα αποτελεσμάτων ΕΠΑΛ
+              /*
               $this->connection->delete('epal_student_class')
                   ->condition('student_id', $epalStudent->id, '=')
                   ->execute();
+              */
 
 
           } catch (\Exception $e) {
@@ -327,9 +329,11 @@ class WSConsumer extends ControllerBase
               ++$cnt_gel;
 
               //διαγραφή ενδεχόμενου αποτελέσματος σε πίνακα αποτελεσμάτων ΓΕΛ (gelstudenthighschool)
+              /*
               $this->connection->delete('gelstudenthighschool')
                   ->condition('student_id', $gelStudent->id, '=')
                   ->execute();
+              */
 
           } catch (\Exception $e) {
               $this->logger->error($e->getMessage());
