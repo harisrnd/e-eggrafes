@@ -122,12 +122,24 @@ import { IAppState } from "../../store/store";
                           <div *ngIf = "GelStudentDetails$.status == '1'|| GelStudentDetails$.status == '4' " >
                               <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
                                   Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{GelStudentDetails$.schoolName}}.
-                                  Παρακαλείστε να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
+                                  Παρακαλείστε να προσέλθετε στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
                               </div>
                           </div>
                           <div *ngIf = "GelStudentDetails$.status == '3' " >
                               <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
                                   Η αίτησή σας είναι σε κατάσταση διεκπεραίωσης από την οικεία Διεύθυνση Δευτεροβάθμιας Εκπαίδευσης.<br><br>
+                              </div>
+                          </div>
+                          <div *ngIf = "GelStudentDetails$.status == '5' " >
+                              <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
+                                  Δεν ήταν δυνατή η τοποθέτησή σας σε σχολείο λόγω του αποτελέσματος φοίτησης.
+                                  Μπορείτε να προχωρήσετε σε τροποποίηση της αίτησης στη Β’ περίοδο αιτήσεων.<br><br>
+                              </div>
+                          </div>
+                          <div *ngIf = "GelStudentDetails$.status == '6' " >
+                              <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
+                                  Δεν ήταν δυνατή η τοποθέτησή σας σε σχολείο λόγω του τρέχοντος αποτελέσματος προαγωγής.
+                                  Σε περίπτωση προαγωγής σας τις αμέσως επόμενες ημέρες θα τοποθετηθείτε σε σχολείο χωρίς καμία δική σας περαιτέρω ενέργεια.<br><br>
                               </div>
                           </div>
                       </div>
@@ -326,6 +338,18 @@ import { IAppState } from "../../store/store";
                             Η αίτησή σας δεν ικανοποιήθηκε. Μπορείτε να κάνετε νέα αίτηση στην επόμενη περίοδο δηλώσεων προτίμησης.<br><br>
                             </div>
                         </div>
+                        <div *ngIf = "StudentDetails$.status == '5' " >
+                            <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
+                            Δεν ήταν δυνατή η τοποθέτησή σας σε σχολείο λόγω του αποτελέσματος φοίτησης.
+                            Μπορείτε να προχωρήσετε σε τροποποίηση της αίτησης στη Β’ περίοδο αιτήσεων.<br><br>
+                            </div>
+                        </div>
+                        <div *ngIf = "StudentDetails$.status == '6' " >
+                            <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
+                            Δεν ήταν δυνατή η τοποθέτησή σας σε σχολείο λόγω του τρέχοντος αποτελέσματος προαγωγής.
+                            Σε περίπτωση προαγωγής σας τις αμέσως επόμενες ημέρες θα τοποθετηθείτε σε σχολείο χωρίς καμία δική σας περαιτέρω ενέργεια.<br><br>
+                            </div>
+                        </div>
                     </div>
 
 
@@ -446,7 +470,7 @@ import { IAppState } from "../../store/store";
                           ενεργοποίηση Τροποποίησης Αίτησης όταν: δεν υπάρχει αποτέλεσμα κατανομής για αυτήν την αίτηση
                           ΚΑΙ επιτρέπεται η τροποποίηση αιτήσεων
                           -->
-                            <div *ngIf = "(StudentDetails$.status == '3' || StudentDetails$.status == '4' || StudentDetails$.status == '0') && StudentDetails$.applicantsAppModifyDisabled == '0'" >
+                            <div *ngIf = "(StudentDetails$.status == '3' || StudentDetails$.status == '4' || StudentDetails$.status == '5' || StudentDetails$.status == '0') && StudentDetails$.applicantsAppModifyDisabled == '0'" >
                                 <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 10em;" (click)="editEpalApplication()">
                                     <span style="font-size: 0.9em; font-weight: bold;">Επεξεργασία&nbsp;&nbsp;&nbsp;</span>
                                 </button>
@@ -787,16 +811,24 @@ import { IAppState } from "../../store/store";
 
     editEpalApplication() {
 
+      this._cfa.saveDataModeSelected({
+          app_update: true, appid: this.EpalSubmittedDetails$.getValue()[0].applicationId, apptype: "epal",
+          sector_id: this.EpalSubmittedDetails$.getValue()[0].currentsector_id, course_id: this.EpalSubmittedDetails$.getValue()[0].currentcourse_id,
+          epal_choice: this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen, currentclass: this.EpalSubmittedDetails$.getValue()[0].currentclass
+        });
+
       this.router.navigate(["/epal-class-select"]);
     }
 
     createStoreWithEpalAppData()  {
 
+        /*
         this._cfa.saveDataModeSelected({
-            app_update: true, appid: this.EpalSubmittedDetails$.getValue()[0].applicationId,
+            app_update: true, appid: this.EpalSubmittedDetails$.getValue()[0].applicationId, apptype: "epal",
             sector_id: this.EpalSubmittedDetails$.getValue()[0].currentsector_id, course_id: this.EpalSubmittedDetails$.getValue()[0].currentcourse_id,
             epal_choice: this.EpalSubmittedDetails$.getValue()[0].epalSchoolsChosen, currentclass: this.EpalSubmittedDetails$.getValue()[0].currentclass
           });
+        */
 
         let birthdate = this.EpalSubmittedDetails$.getValue()[0].birthdate;
         let birthparts = birthdate.split("/",3);
@@ -876,7 +908,8 @@ import { IAppState } from "../../store/store";
 
 
     editGelApplication()  {
-           this.router.navigate(["/gel-class-select"]);
+        this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId, apptype: "gel"});
+        this.router.navigate(["/gel-class-select"]);
     }
 
     createStoreWithGelAppData()  {
@@ -904,7 +937,7 @@ import { IAppState } from "../../store/store";
                   day: Number(birthparts[0])}}
             }]);
 
-        this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId});
+        //this._cfa.saveDataModeSelected({app_update: true, appid: this.GelSubmittedDetails$.getValue()[0].applicationId, apptype: "gel"});
         this._sta.saveSchoolTypeSelected(1, "ΓΕΛ");
 
         this.showLoader$.next(true);

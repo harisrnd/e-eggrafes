@@ -53,7 +53,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     <div style="min-height: 500px;">
     <form>
        <p style="margin-top: 20px; line-height: 2em;"> H παρακάτω λίστα εμφανίζει τις αιτήσεις των μαθητών που κατανεμήθηκαν στο σχολείο σας.
-         Παρακαλούμε επιβεβαιώσετε με Ναι ή Όχι την αίτηση του κάθε μαθητή. </p>
+         Παρακαλούμε να επιβεβαιώσετε με Ναι ή Όχι την αίτηση του κάθε μαθητή. </p>
          <!--<p style="margin-top: 20px; line-height: 2em;"> Παρακαλούμε επιβεβαιώσετε με Ναι ή Όχι την αίτηση του κάθε μαθητή.  </p>-->
 
       <div class="row">

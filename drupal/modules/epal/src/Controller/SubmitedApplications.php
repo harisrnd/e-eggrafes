@@ -575,8 +575,6 @@ class SubmitedApplications extends ControllerBase
                     //$this->logger->warning("Trace2.." .  $applicantsResultsDisabled . "  " . $es->myschool_promoted );
 
                     if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted === "1" || $es->myschool_promoted === "2") ) {
-                      //To $epalStudent->finalized === null υπονοεί ότι δεν είναι κατανεμημένος αυτός ο μαθητής <-- ΝΑ ΕΛΕΓΧΘΕΙ
-
                       if ($epalStudent->finalized === "1")
                           $status = "1";
                       else if ($epalStudent->finalized === "0")
@@ -588,6 +586,11 @@ class SubmitedApplications extends ControllerBase
                                $epalStudent->changed >= $dateStartInt)
                           $status = "4";
                     }
+                    else if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted === "6" || $es->myschool_promoted === "7") )
+                        $status = "5";
+                    else if ($applicantsResultsDisabled === "0" && $es->myschool_promoted != "1" && $es->myschool_promoted != "2"
+                             && $es->myschool_promoted != "6" && $es->myschool_promoted != "7")
+                        $status = "6";
                     else
                         $status = "0";
 

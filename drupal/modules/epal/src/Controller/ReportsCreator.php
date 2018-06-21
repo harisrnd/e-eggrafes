@@ -2803,6 +2803,7 @@ class ReportsCreator extends ControllerBase
                        ], Response::HTTP_FORBIDDEN);
         }
         $dideid = $user->init->value;
+        //$dideid = 37;
 
         //user role validation
         $roles = $user->getRoles();

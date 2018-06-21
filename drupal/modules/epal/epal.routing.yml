@@ -404,7 +404,7 @@ epal.svc.getallstudentpromotion:
     _controller: '\Drupal\epal\Controller\WSConsumer::getAllStudentEpalPromotion'
   requirements:
     _user_is_logged_in: 'TRUE'
-epal.svc.getstudentpromotion:  
+epal.svc.getstudentpromotion:
   path: '/epal/get-student-promotion/{id}'
   options:
     _auth: [ 'basic_auth' ]
@@ -468,9 +468,3 @@ epal.svc.transition-bperiod:
     _controller: '\Drupal\epal\Controller\WSConsumer::transitionToBPeriod'
   requirements:
     _user_is_logged_in: 'TRUE'
-epal.encoded_data:
-  path: '/epal/encodeddata'
-  defaults:
-    _controller: '\Drupal\epal\Controller\CreateEncodedData::createData'
-  requirements:
-    _access: 'TRUE'

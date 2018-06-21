@@ -1855,7 +1855,7 @@ makeGymReport()
     });
     this.createAuthorizationHeader(headers);
     let options = new RequestOptions({ headers: headers });
-    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/findstudentsperschoolgym/`, options)
+    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/findstudentsperschoolgym`, options)
         .map(response => response.json());
 }
 
