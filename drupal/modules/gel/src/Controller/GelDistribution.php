@@ -2109,6 +2109,7 @@ public function getSchoolGel(Request $request)
         $user = reset($users);
         if ($user) {
             $selectionId = $user->init->value;
+            //$selectionId = 37;
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
@@ -2180,6 +2181,7 @@ public function getSchoolGel(Request $request)
         $user = reset($users);
         if ($user) {
             $newid = $user->init->value;
+            //$newid = 37;
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
@@ -2458,7 +2460,7 @@ public function getSchoolGel(Request $request)
 
 public function FindStudentsPerSchoolGym(Request $request)
 {
-    try{  
+    try{
 
     $authToken = $request->headers->get('PHP_AUTH_USER');
     $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
@@ -2511,9 +2513,9 @@ public function FindStudentsPerSchoolGym(Request $request)
                     $assignedEpals = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(['student_id'=> $studentId]);
                     if (sizeof($assignedEpals)>0){
                         $assignedEpal= reset($assignedEpals);
-                        $asignedschool=$assignedEpal->epal_id->entity->get('name')->value;   
-    
-    
+                        $asignedschool=$assignedEpal->epal_id->entity->get('name')->value;
+
+
                         $crypt = new Crypt();
                         try {
                             if (!empty($epalStudent->am->value)){
@@ -2538,9 +2540,9 @@ public function FindStudentsPerSchoolGym(Request $request)
                         ));
                     }
 
-                }                
+                }
             }
-             
+
 
 
             if ($studentPerSchool_gel) {
@@ -2558,8 +2560,8 @@ public function FindStudentsPerSchoolGym(Request $request)
 
 
                     if ($assignedGel['school_id'] !=null){
-                            
-                        $asignedschool=$assignedGel['name'];  
+
+                        $asignedschool=$assignedGel['name'];
 
                         $crypt = new Crypt();
                             try {
@@ -2578,7 +2580,7 @@ public function FindStudentsPerSchoolGym(Request $request)
                                 "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
-        
+
                             array_push($list, (object) array(
                                 'am' => $am_decoded,
                                 'name' => $name_decoded,
@@ -2588,12 +2590,12 @@ public function FindStudentsPerSchoolGym(Request $request)
                             ));
                     }
 
-                    
-                }   
+
+                }
             }
         }
 
-        
+
 
     }
     return $this->respondWithStatus($list, Response::HTTP_OK);

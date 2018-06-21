@@ -13,7 +13,7 @@ import { HelperDataService } from "../../services/helper-data-service";
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header modal-header-danger">
-              <h3 class="modal-title pull-left"><i class="fa fa-close"></i>&nbsp;&nbsp;Διαγραφή Δήλωσης Προτίμησης ΕΠΑΛ</h3>
+              <h3 class="modal-title pull-left"><i class="fa fa-close"></i>&nbsp;&nbsp;Διαγραφή Δήλωσης Προτίμησης ΓΕΛ</h3>
             <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
               <span aria-hidden="true"><i class="fa fa-times"></i></span>
             </button>
@@ -52,7 +52,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     <div style="min-height: 500px;">
     <form>
        <p style="margin-top: 20px; line-height: 2em;">H παρακάτω λίστα εμφανίζει τις αιτήσεις των μαθητών που τοποθετήθηκαν στο σχολείο σας.
-         Παρακαλούμε επιβεβαιώσετε με Ναι ή Όχι την αίτηση του κάθε μαθητή. </p>
+         Παρακαλούμε να επιβεβαιώσετε με Ναι ή Όχι την αίτηση του κάθε μαθητή. </p>
       <!--<p style="margin-top: 20px; line-height: 2em;">Παρακαλούμε επιβεβαιώσετε με Ναι ή Όχι την αίτηση του κάθε μαθητή.  </p>-->
 
       <div class="row">

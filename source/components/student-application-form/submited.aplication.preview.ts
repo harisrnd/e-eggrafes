@@ -122,7 +122,7 @@ import { IAppState } from "../../store/store";
                           <div *ngIf = "GelStudentDetails$.status == '1'|| GelStudentDetails$.status == '4' " >
                               <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
                                   Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{GelStudentDetails$.schoolName}}.
-                                  Παρακαλείστε να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
+                                  Παρακαλείστε να προσέλθετε στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
                               </div>
                           </div>
                           <div *ngIf = "GelStudentDetails$.status == '3' " >

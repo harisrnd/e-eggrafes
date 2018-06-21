@@ -415,7 +415,8 @@ class GelSubmittedApplications extends ControllerBase
                                         array('id',
                                                 'name',
                                                 'street_address',
-                                                'phone_number'
+                                                'phone_number',
+                                                'extra_unitid'
                                         ));
 
             $esQuery->addJoin('left outer', 'gel_student_choices', 'gs_ch', 'gs.id=gs_ch.student_id');
@@ -506,7 +507,6 @@ class GelSubmittedApplications extends ControllerBase
                         //η αίτηση είναι της β' περιόδου με ημερομηνία μεταγενέστερη της ημερομηνίας έναρξης β' περιόδου
                         $status = "2";
                       // end new piece of code
-
                       else if ($gelStudent->school_id)
                           //υπάρχει σχολείο στον πίνακα gelstudenthighschool
                           $status = "1";
@@ -521,7 +521,7 @@ class GelSubmittedApplications extends ControllerBase
                           $status = "4";
                           $sCon = $this->connection
                              ->select('gel_school', 'eSchool')
-                             ->fields('eSchool', array('name', 'street_address', 'phone_number'))
+                             ->fields('eSchool', array('name', 'street_address', 'phone_number', 'unit_type_id', 'extra_unitid'))
                              ->condition('eSchool.registry_no',   $gelStudent->lastschool_registrynumber , '=');
                           $schoolNamesDest = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                           $schoolNameDest = reset($schoolNamesDest);
@@ -529,10 +529,21 @@ class GelSubmittedApplications extends ControllerBase
                           $schoolName = $schoolNameDest->name;
                           $schoolAddress = $schoolNameDest->street_address;
                           $schoolTel = $schoolNameDest->phone_number;
+
+                          //new piece of code
+                          //$this->logger->warning("Trace " . $schoolNameDest->unit_type_id . "  " . $schoolNameDest->extra_unitid  );
+                          if ( $schoolNameDest->unit_type_id == 3 && $schoolNameDest->extra_unitid != 200)
+                            //δεν είναι δυνατό να εμφανιστεί αυτοδίκαια σχολείο τύπου Γυμνασίου, με εξαίρεση τα Γυμνάσια με ΛΤ
+                            //αυτός ο έλεγχος γεράφεται σε περίπτωση που κάποια ειδική περίπτωση δεν έχει προβλεφθεί
+                              $status = "3";
+                          //end
                         }
                     }
+                    else if ($applicantsResultsDisabled === "0" && $gelStudent->myschool_promoted != "1" && $gelStudent->myschool_promoted != "2")
+                        $status = "3";
                     else
                         $status = "0";
+
 
                     $list[] = array(
                             'applicationId' => $gelStudent->id,
