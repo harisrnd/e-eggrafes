@@ -539,8 +539,11 @@ class GelSubmittedApplications extends ControllerBase
                           //end
                         }
                     }
+                    else if ($applicantsResultsDisabled === "0" && $gelStudent->myschool_promoted != "1" && $gelStudent->myschool_promoted != "2")
+                        $status = "3";
                     else
                         $status = "0";
+
 
                     $list[] = array(
                             'applicationId' => $gelStudent->id,
