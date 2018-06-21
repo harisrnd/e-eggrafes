@@ -58,11 +58,12 @@ class CreateEncodedData extends ControllerBase {
 
 		$crypt = new Crypt();
 
-
+		/*
 		print_r("decodedname:  " . "<br>");
-		$name_encoded = $crypt->decrypt("def502009bb6ce170c285cd5d0c2ca11c74a5dfaf15a418562156fc9dfe1cab79ffeee4c9e11af2ba598913b6b5066eeef74c19a2a54c8c17a2caa8fca068fd35960594c5e7bd3299ce2fb1e32453c223e3bcd056a01c8917b33baa0c582");
+		$name_encoded = $crypt->encrypt("6059");
 		print_r("Decrypted:  " . $name_encoded);
 		print_r("<br>");
+		*/
 
 
 		//ΕΠΑΛ
@@ -135,8 +136,8 @@ class CreateEncodedData extends ControllerBase {
 				print_r("\r");
 			}
 		}
-*/
 
+		*/
 
 
 
@@ -171,6 +172,34 @@ class CreateEncodedData extends ControllerBase {
 
 		}
 		*/
+
+
+
+		//για ΔΔΕ ΑΧΑΙΑΣ!
+		
+		$sCon = $this->connection
+			 ->select('gel_school', 'eSchool')
+			 ->fields('eSchool', array('registry_no', 'name'))
+			 ->condition('eSchool.edu_admin_id', 17, '=');
+		$epalSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+		foreach ($epalSchools as $epalSchool)  {
+
+				$sCon = $this->connection
+					 ->select('epal_student', 'eStudent')
+					 ->fields('eStudent', array('id', 'am'))
+					 ->condition('eStudent.delapp', 0, '=')
+					 ->condition('eStudent.lastschool_registrynumber',$epalSchool->registry_no , '=');
+				$epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+				foreach ($epalStudents as $epalStudent)  {
+					if ($epalStudent->am != null)  {
+						print_r("Am," . $crypt->decrypt($epalStudent->am) .   ",reg_no,"  . strval($epalSchool->registry_no) . ", schName,"  . $epalSchool->name );
+						print_r("<br/>");
+					}
+				}
+
+			}
 
 
 
