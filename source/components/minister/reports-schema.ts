@@ -487,9 +487,65 @@ export class ReportsSchema {
         },
         noDataMessage: "Δεν υπάρχουν δεδομένα που περιέχουν το κείμενο αναζήτησης",
         columns: {
+            id: {
+                title: "Id αίτησης",
+                width: "12%",
+                filter: true
+            },
             section: {
                 title: "Τάξη/Τομέας/Ειδικότητα",
-                width: "22%",
+                width: "20%",
+                filter: true
+            },
+            name: {
+                title: "Όνομα",
+                width: "15%",
+                filter: true
+            },
+            surname: {
+                title: "Επώνυμο",
+                width: "15%",
+                filter: true
+            },
+            address: {
+                title: "Διεύθυνση",
+                width: "15%",
+                filter: true
+            },
+            tel: {
+                title: "Τηλέφωνο",
+                width: "12%",
+                filter: true
+            },
+            confirm: {
+                title: "Επιβεβαίωση",
+                width: "12%",
+                filter: true
+            }
+        },
+
+
+
+    };
+
+
+    reportGelApplications = {
+        actions: false,
+        fileName: "e-ΓΕΛ Δηλώσεις μαθητών Σχολικής Μονάδας",
+        pager: {
+            display: true,
+            perPage: 15
+        },
+        noDataMessage: "Δεν υπάρχουν δεδομένα που περιέχουν το κείμενο αναζήτησης",
+        columns: {
+            id: {
+                title: "Id αίτησης",
+                width: "12%",
+                filter: true
+            },
+            section: {
+                title: "Τάξη",
+                width: "15%",
                 filter: true
             },
             name: {
@@ -518,9 +574,43 @@ export class ReportsSchema {
                 filter: true
             }
         },
+    };
 
-
-
+    reportGymDirector = {
+        actions: false,
+        fileName: "e-eggrafes Κατανομή μαθητών Σχολικής Μονάδας",
+        pager: {
+            display: true,
+            perPage: 15
+        },
+        noDataMessage: "Δεν υπάρχουν δεδομένα",
+        columns: {
+            section: {
+                title: "Α.Μ.",
+                width: "5%",
+                filter: true
+            },
+            name: {
+                title: "Όνομα",
+                width: "25%",
+                filter: true
+            },
+            surname: {
+                title: "Επώνυμο",
+                width: "25%",
+                filter: true
+            },
+            address: {
+                title: "Διεύθυνση",
+                width: "20%",
+                filter: true
+            },
+            tel: {
+                title: "Λύκειο Προορισμού",
+                width: "25%",
+                filter: true
+            }
+        },
     };
 
 

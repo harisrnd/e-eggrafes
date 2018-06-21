@@ -171,7 +171,7 @@ import { IAppState } from "../../store/store";
 
                 let id = 0;
 
-                this.ServiceStudentCertifSub = this._hds.getServiceStudentPromotion(this.minedu_userName, this.minedu_userPassword)
+                this.ServiceStudentCertifSub = this._hds.getServiceAllStudentPromotion(this.minedu_userName, this.minedu_userPassword)
                 .subscribe(data => {
                     //if (data.data!=null)  {
                       //let test = data.data["studentId"];

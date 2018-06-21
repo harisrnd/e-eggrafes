@@ -1708,7 +1708,8 @@ public function FindCoursesPerSchoolGel(Request $request)
                         'globalindex' => $i,
                         'size' => sizeof($studentPerSchool),
                        );
-                     $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Β' ));
+
+                $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Β' ));
 
 
                 $sCon = $this->connection->select('gel_student', 'gStudent');
@@ -1755,7 +1756,7 @@ public function FindCoursesPerSchoolGel(Request $request)
                      $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Δ' ));
 
 
-                     $sCon = $this->connection->select('gel_student', 'gStudent');
+                    $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
@@ -1866,7 +1867,8 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                   ->fields('gSchool', array('id','registry_no'))
                   ->condition('gSchool.id', $gelId , '=')                  
                   ->condition('gStudent.nextclass', $classId , '=')
-                  ->condition('gStudent.delapp', '0' , '=');
+                  ->condition('gStudent.delapp', '0' , '=')
+                    ->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
                 $existingstudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 }
 
@@ -1876,22 +1878,31 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                 }
                 if ($studentPerSchool || $existingstudents) {
                     $list = array();
+
                     foreach ($studentPerSchool as $object) {
                         $studentId = $object->student_id->target_id;
-                        $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId));
+                                $this->logger->warning($studentId."Aaaaa1");
+                        $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => 6));
                         $gelStudent = reset($gelStudents);
-                        if ($gelStudents) {
+                        if (!$gelStudent) {
+                                   $this->logger->warning($studentId."step1");
+                            $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => '7'));
+                        $gelStudent = reset($gelStudents);
+                        }
+                         if ($gelStudent) {
+                             $this->logger->warning($studentId."step2");
                             $studentIdNew = $gelStudent->id();
                             $choices = "";
                             $studentchoices = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id' => $studentId));
 
                             foreach ($studentchoices as $object) {
-
+                                    $this->logger->warning($studentId."choices");
                                     $choices = $choices."  ".($object -> choice_id ->entity->get('name')->value)."/" ;
                                 }
 
                             $crypt = new Crypt();
                             try {
+                                $this->logger->warning($studentId."step3");
                                 if ($gelStudent->name->value !== null)
                                 {
                                     $name_decoded = $crypt->decrypt($gelStudent->name->value);
@@ -1946,7 +1957,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
-
+                            $this->logger->warning($studentId."step4");
                             $list[] = array(
                                 'id' => $gelStudent->id(),
                                 'name' => $name_decoded,
@@ -1966,7 +1977,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 'regionarea' => $regionarea_decoded,
                                 //'graduation_year' => $gelStudent->graduation_year->value,
                                 'telnum' => $telnum_decoded,
-                                'relationtostudent' => $relationtostudent_decoded,
+                                //'relationtostudent' => $relationtostudent_decoded,
                                 //'birthdate' => substr($gelStudent->birthdate->value, 8, 10) . '/' . substr($gelStudent->birthdate->value, 6, 8) . '/' . substr($gelStudent->birthdate->value, 0, 4),
                                 'birthdate' => date("d-m-Y", strtotime($gelStudent->birthdate->value)),
                                 'checkstatus' => $gelStudent -> directorconfirm ->value,
@@ -1975,6 +1986,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 'choices' => $choices
 
                             );
+                        
                         }
                     }
 
@@ -1983,7 +1995,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                    
 
                         $studentId = $object->id ;
-                        $this->logger->warning($studentId."Aaaaa");
+                
                         $gelStudents = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $studentId));
                         $gelStudent = reset($gelStudents);
                         if (!$gelStudents) {
@@ -2063,7 +2075,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 'regionarea' => $regionarea_decoded,
                                 //'graduation_year' => $object->graduation_year ,
                                 'telnum' => $telnum_decoded,
-                                'relationtostudent' => $relationtostudent_decoded,
+                                //'relationtostudent' => $relationtostudent_decoded,
                                 //'birthdate' => substr($object->birthdate , 8, 10) . '/' . substr($object->birthdate , 6, 8) . '/' . substr($object->birthdate , 0, 4),
                                 'birthdate' => date("d-m-Y", strtotime($object->birthdate )),
                                 'checkstatus' => $object -> directorconfirm  ,
@@ -2074,11 +2086,6 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                             );
                         }
                     }
-
-
-
-
-
 
 
 
@@ -3316,6 +3323,109 @@ public function ConfirmStudents(Request $request)
 
 
     }
+
+public function deleteApplicationFromDirector(Request $request)
+{
+        if (!$request->isMethod('POST')) {
+            return $this->respondWithStatus([
+                    "error_code" => 2001
+                ], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
+        $authToken = $request->headers->get('PHP_AUTH_USER');
+
+        $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+        $user = reset($users);
+        if ($user) {
+            $epalId = $user->init->value;
+            //$epalCode = $user->cu_name->value;
+            $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $epalId));
+            $school = reset($schools);
+            if (!$school) {
+                $this->logger->warning('no access to this school='.$user->id());
+                return $this->respondWithStatus([
+                    "message" => "No access to this school"
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            $userRoles = $user->getRoles();
+            $userRole = '';
+            foreach ($userRoles as $tmpRole) {
+                if ($tmpRole === 'gel') {
+                    $userRole = $tmpRole;
+                }
+            }
+            if ($userRole === '') {
+                return $this->respondWithStatus([
+                         'error_code' => 4003,
+                     ], Response::HTTP_FORBIDDEN);
+            } elseif ($userRole === 'gel') {
+
+            $content = $request->getContent();
+
+            $applicationId = 0;
+            if (!empty($content)) {
+                $postArr = json_decode($content, TRUE);
+                $applicationId = $postArr['applicationId'];
+            }
+            else {
+                return $this->respondWithStatus([
+                        "error_code" => 5002
+                    ], Response::HTTP_BAD_REQUEST);
+            }
+
+
+        $transaction = $this->connection->startTransaction();
+        try {
+           
+           
+
+
+            $epalStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array( 'id' => $applicationId));
+            $epalStudent = reset($epalStudents);
+
+            if ($epalStudent) {
+                $epalStudentClasses = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('id' => $applicationId));
+                $epalStudentClass = reset($epalStudentClasses);
+
+                if ($epalStudentClass)  {
+                  if ($epalStudentClass->directorconfirm->value === "1")  {
+                    return $this->respondWithStatus([
+                            "error_code" => -1
+                        ], Response::HTTP_FORBIDDEN);
+                  }
+                }
+
+                $epalStudent->set('delapp', 1);
+                $timestamp = strtotime(date("Y-m-d"));
+                $epalStudent->set('delapp_changed', $timestamp);
+                $epalStudent->set('delapp_role', 'director');
+                $epalStudent->set('delapp_gelid', $epalId);
+                $epalStudent->save();
+
+                $delQuery = $this->connection->delete('gelstudenthighschool');
+                $delQuery->condition('student_id', $applicationId);
+                $delQuery->execute();
+
+                return $this->respondWithStatus([
+                  'error_code' => 0,
+              ], Response::HTTP_OK);
+
+            } else {
+                return $this->respondWithStatus([
+                'message' => t('Gel student not found'),
+            ], Response::HTTP_FORBIDDEN);
+            }
+        } catch (\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            $transaction->rollback();
+
+            return $this->respondWithStatus([
+                'error_code' => 5001,
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+}
 
 
 

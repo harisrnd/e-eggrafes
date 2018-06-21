@@ -166,3 +166,11 @@ gel.findifinitialized:
     _controller: '\Drupal\gel\Controller\GelDistribution::Initialized'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.deleteFromDirector:
+  path: '/gel/deleteFromDirector'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::deleteApplicationFromDirector'
+  requirements:
+    _user_is_logged_in: 'TRUE'

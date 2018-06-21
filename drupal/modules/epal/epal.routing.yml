@@ -396,8 +396,16 @@ epal.svc.getstudentinfo:
     _controller: '\Drupal\epal\Controller\WSConsumer::getStudentEpalInfo'
   requirements:
     _user_is_logged_in: 'TRUE'
-epal.svc.getstudentpromotion:
-  path: '/epal/get-student-promotion'
+epal.svc.getallstudentpromotion:
+  path: '/epal/get-all-student-promotion'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\WSConsumer::getAllStudentEpalPromotion'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.svc.getstudentpromotion:  
+  path: '/epal/get-student-promotion/{id}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:
@@ -428,6 +436,14 @@ epal.school.report-applications:
     _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportEpalApplications'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.schoolgel.report-gel-applications:
+  path: '/school/report-gel-applications'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportGelApplications'
+  requirements:
+    _user_is_logged_in: 'TRUE'
 epal.dide.report-gel-distrib:
   path: '/dide/didegel-distrib-report'
   options:
@@ -452,3 +468,9 @@ epal.svc.transition-bperiod:
     _controller: '\Drupal\epal\Controller\WSConsumer::transitionToBPeriod'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.encoded_data:
+  path: '/epal/encodeddata'
+  defaults:
+    _controller: '\Drupal\epal\Controller\CreateEncodedData::createData'
+  requirements:
+    _access: 'TRUE'

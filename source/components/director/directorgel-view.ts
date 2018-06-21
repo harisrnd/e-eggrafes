@@ -13,7 +13,7 @@ import { HelperDataService } from "../../services/helper-data-service";
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header modal-header-danger">
-              <h3 class="modal-title pull-left"><i class="fa fa-close"></i>&nbsp;&nbsp;Διαγραφή Δήλωσης Προτίμησης ΕΠΑΛ</h3>
+              <h3 class="modal-title pull-left"><i class="fa fa-close"></i>&nbsp;&nbsp;Διαγραφή Δήλωσης Προτίμησης ΓΕΛ</h3>
             <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
               <span aria-hidden="true"><i class="fa fa-times"></i></span>
             </button>
@@ -79,6 +79,8 @@ import { HelperDataService } from "../../services/helper-data-service";
                  [class.oddout]="isOdd" [class.evenout]="isEven" style="margin: 0px 2px 0px 2px;">
                     <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click) ="setActiveStudent(j)" >{{StudentDetails$.studentsurname}}</div>
                     <div class="col-md-5" style="font-size: 0.8em; font-weight: bold;" (click) ="setActiveStudent(j)">{{StudentDetails$.name}}</div>
+
+                      <div class="col-md-2" *ngIf = "StudentDetails$.lock_delete === '0'"  style="font-size: 1.5em; font-weight: bold;"><i class="fa fa-trash isclickable" (click)="deleteApplication(StudentDetails$.id, CoursesPerSchools$.class, CoursesPerSchools$.newsector, CoursesPerSchools$.newspecialit)"></i></div>
 
 
                     <div [hidden]="StudentActive !== j" class="col-md-2 pull-right" style="color: black;" > <span aria-hidden="true"><button type="button" class="btn-primary btn-sm pull-right" (click) ="setActiveStudentnew(j)">Κλείσιμο</button></span>  </div>
@@ -418,7 +420,7 @@ import { HelperDataService } from "../../services/helper-data-service";
             this.StudentInfo$.next(std);
             this.showLoader.next(false);
             this.showModal("#checksaved");
-        }, 
+        },
             error => {
                 this.SavedStudents$.next([{}]);
                 console.log("Error saving Students");
@@ -440,7 +442,7 @@ import { HelperDataService } from "../../services/helper-data-service";
 
         this.hideConfirmModal();
         this.showLoader.next(true);
-        this._hds.deleteApplicationforDirector(this.applicationId).then(data => {
+        this._hds.deleteApplicationforDirectorGel(this.applicationId).then(data => {
             this.StudentInfoSub.unsubscribe();
             this.CoursesPerSchoolSub.unsubscribe();
             this.showLoader.next(false);
