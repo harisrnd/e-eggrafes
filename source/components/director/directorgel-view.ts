@@ -56,7 +56,7 @@ import { HelperDataService } from "../../services/helper-data-service";
       <!--<p style="margin-top: 20px; line-height: 2em;">Παρακαλούμε επιβεβαιώσετε με Ναι ή Όχι την αίτηση του κάθε μαθητή.  </p>-->
 
       <div class="row">
-         <div class="col-md-10" style="font-weight: bold;"> Τα τμήματα του σχολείου σας.</div>
+         <div class="col-md-10" style="font-weight: bold;"> Οι τάξεις του σχολείου σας.</div>
          <div class="col-md-2" style="font-weight: bold;"> <span class="pull-right" style="text-align: right; padding-right: 2px;">Αριθμός Μαθητών</span></div>
       </div>
       <div *ngFor="let CoursesPerSchools$  of CoursesPerSchool$ | async; let i=index; let isOdd=odd; let isEven=even" >
