@@ -542,8 +542,10 @@ class GelSubmittedApplications extends ControllerBase
                     else if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "6" || $gelStudent->myschool_promoted === "7") )
                         $status = "5";
                     else if ($applicantsResultsDisabled === "0" && $gelStudent->myschool_promoted != "1" && $gelStudent->myschool_promoted != "2"
-                             && $gelStudent->myschool_promoted != "6" && $gelStudent->myschool_promoted != "7")
+                             && $gelStudent->myschool_promoted != "6" && $gelStudent->myschool_promoted != "7" && $gelStudent->myschool_promoted != "0")
                         $status = "6";
+                    else if ($applicantsResultsDisabled === "0" && $gelStudent->myschool_promoted === "0" )
+                        $status = "7";
                     else
                         $status = "0";
 

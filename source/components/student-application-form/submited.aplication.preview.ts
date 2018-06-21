@@ -142,6 +142,12 @@ import { IAppState } from "../../store/store";
                                   Σε περίπτωση προαγωγής σας τις αμέσως επόμενες ημέρες θα τοποθετηθείτε σε σχολείο χωρίς καμία δική σας περαιτέρω ενέργεια.<br><br>
                               </div>
                           </div>
+                          <div *ngIf = "GelStudentDetails$.status == '7' " >
+                              <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
+                                  Το αποτέλεσμα της προαγωγής σας δεν έχει καταχωρισθεί στo πληροφοριακό σύστημα του σχολείου (myschool).
+                                  Παρακαλώ επικοινωνήστε με τον διευθυντή του σχολείου σας.<br><br>
+                              </div>
+                          </div>
                       </div>
 
 
@@ -350,6 +356,12 @@ import { IAppState } from "../../store/store";
                             Σε περίπτωση προαγωγής σας τις αμέσως επόμενες ημέρες θα τοποθετηθείτε σε σχολείο χωρίς καμία δική σας περαιτέρω ενέργεια.<br><br>
                             </div>
                         </div>
+                        <div *ngIf = "StudentDetails$.status == '7' " >
+                            <div class="col-md-12" style="font-size: 1.0em; color: #a52a2a; font-weight: bold;">
+                            Το αποτέλεσμα της προαγωγής σας δεν έχει καταχωρισθεί στο πληροφοριακό σύστημα του σχολείου (myschool).
+                            Παρακαλώ επικοινωνήστε με τον διευθυντή του σχολείου σας.<br><br>
+                            </div>
+                        </div>
                     </div>
 
 
@@ -470,7 +482,7 @@ import { IAppState } from "../../store/store";
                           ενεργοποίηση Τροποποίησης Αίτησης όταν: δεν υπάρχει αποτέλεσμα κατανομής για αυτήν την αίτηση
                           ΚΑΙ επιτρέπεται η τροποποίηση αιτήσεων
                           -->
-                            <div *ngIf = "(StudentDetails$.status == '3' || StudentDetails$.status == '4' || StudentDetails$.status == '5' || StudentDetails$.status == '0') && StudentDetails$.applicantsAppModifyDisabled == '0'" >
+                            <div *ngIf = "(StudentDetails$.status == '3' || StudentDetails$.status == '4' || StudentDetails$.status == '0') && StudentDetails$.applicantsAppModifyDisabled == '0'" >
                                 <button type="button" class="btn-primary btn-lg pull-left isclickable" style="width: 10em;" (click)="editEpalApplication()">
                                     <span style="font-size: 0.9em; font-weight: bold;">Επεξεργασία&nbsp;&nbsp;&nbsp;</span>
                                 </button>

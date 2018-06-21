@@ -589,8 +589,10 @@ class SubmitedApplications extends ControllerBase
                     else if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted === "6" || $es->myschool_promoted === "7") )
                         $status = "5";
                     else if ($applicantsResultsDisabled === "0" && $es->myschool_promoted != "1" && $es->myschool_promoted != "2"
-                             && $es->myschool_promoted != "6" && $es->myschool_promoted != "7")
+                             && $es->myschool_promoted != "6" && $es->myschool_promoted != "7" && $es->myschool_promoted != "0")
                         $status = "6";
+                    else if ($applicantsResultsDisabled === "0" && $es->myschool_promoted === "0" )
+                        $status = "7";
                     else
                         $status = "0";
 
