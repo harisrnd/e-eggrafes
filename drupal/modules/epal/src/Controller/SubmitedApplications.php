@@ -586,8 +586,11 @@ class SubmitedApplications extends ControllerBase
                                $epalStudent->changed >= $dateStartInt)
                           $status = "4";
                     }
-                    else if ($applicantsResultsDisabled === "0" && $es->myschool_promoted != "1" && $es->myschool_promoted != "2")
-                        $status = "2";
+                    else if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted === "6" || $es->myschool_promoted === "7") )
+                        $status = "5";
+                    else if ($applicantsResultsDisabled === "0" && $es->myschool_promoted != "1" && $es->myschool_promoted != "2"
+                             && $es->myschool_promoted != "6" && $es->myschool_promoted != "7")
+                        $status = "6";
                     else
                         $status = "0";
 
