@@ -107,21 +107,32 @@ class DirectorView extends ControllerBase
                     $list = array();
                     foreach ($studentPerSchool as $object) {
                         $studentId = $object->student_id->target_id;
-                        $epalStudents = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => 1 ));
+                        
+
+                           $sCon = $this->connection->select('epal_student', 'eStudent');
+               
+                $sCon->fields('eStudent', array('id','myschool_promoted','lastschool_registrynumber','currentclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear', 'created' ))
+                 
+                  ->condition('eStudent.id', $studentId , '=')                  
+                      
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
                         $epalStudent = reset($epalStudents);
                         if ($epalStudents) {
-                            $studentIdNew = $epalStudent->id();
+                            $studentIdNew = $epalStudent->id;
                             $checkstatus = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('student_id' => $studentIdNew));
                             $checkstudentstatus = reset($checkstatus);
                             $sectorName = '';
                             $courseName = '';
-                            if ($epalStudent->currentclass->value === '2') {
+                            if ($epalStudent->currentclass === '2') {
                                 $sectors = $this->entityTypeManager->getStorage('epal_student_sector_field')->loadByProperties(array('student_id' => $studentIdNew));
                                 $sector = reset($sectors);
                                 if ($sector) {
                                     $sectorName = $this->entityTypeManager->getStorage('eepal_sectors')->load($sector->sectorfield_id->target_id)->name->value;
                                 }
-                            } elseif ($epalStudent->currentclass->value === '3' || $epalStudent->currentclass->value === '4') {
+                            } elseif ($epalStudent->currentclass === '3' || $epalStudent->currentclass === '4') {
                                 $courses = $this->entityTypeManager->getStorage('epal_student_course_field')->loadByProperties(array('student_id' => $studentIdNew));
                                 $course = reset($courses);
                                 if ($course) {
@@ -131,18 +142,22 @@ class DirectorView extends ControllerBase
 
                             $crypt = new Crypt();
                             try {
-                                $name_decoded = $crypt->decrypt($epalStudent->name->value);
-                                $studentsurname_decoded = $crypt->decrypt($epalStudent->studentsurname->value);
-                                $fatherfirstname_decoded = $crypt->decrypt($epalStudent->fatherfirstname->value);
-                                $motherfirstname_decoded = $crypt->decrypt($epalStudent->motherfirstname->value);
-                                $regionaddress_decoded = $crypt->decrypt($epalStudent->regionaddress->value);
-                                $regiontk_decoded = $crypt->decrypt($epalStudent->regiontk->value);
-                                $regionarea_decoded = $crypt->decrypt($epalStudent->regionarea->value);
-                                $telnum_decoded = $crypt->decrypt($epalStudent->telnum->value);
-                                $guardian_name_decoded = $crypt->decrypt($epalStudent->guardian_name->value);
-                                $guardian_surname_decoded = $crypt->decrypt($epalStudent->guardian_surname->value);
-                                $guardian_fathername_decoded = $crypt->decrypt($epalStudent->guardian_fathername->value);
-                                $guardian_mothername_decoded = $crypt->decrypt($epalStudent->guardian_mothername->value);
+                                $name_decoded = $crypt->decrypt($epalStudent->name);
+                                $studentsurname_decoded = $crypt->decrypt($epalStudent->studentsurname);
+                                $fatherfirstname_decoded = $crypt->decrypt($epalStudent->fatherfirstname);
+                                $motherfirstname_decoded = $crypt->decrypt($epalStudent->motherfirstname);
+                                $regionaddress_decoded = $crypt->decrypt($epalStudent->regionaddress);
+                                  if ($epalStudent->regiontk != null)
+                                  $regiontk_decoded = $crypt->decrypt($epalStudent->regiontk);
+                                if ($epalStudent->regionarea != null)
+                                  $regionarea_decoded = $crypt->decrypt($epalStudent->regionarea);
+
+
+                                $telnum_decoded = $crypt->decrypt($epalStudent->telnum);
+                                $guardian_name_decoded = $crypt->decrypt($epalStudent->guardian_name);
+                                $guardian_surname_decoded = $crypt->decrypt($epalStudent->guardian_surname);
+                                $guardian_fathername_decoded = $crypt->decrypt($epalStudent->guardian_fathername);
+                                $guardian_mothername_decoded = $crypt->decrypt($epalStudent->guardian_mothername);
                             } catch (\Exception $e) {
                                 $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
                                 return $this->respondWithStatus([
@@ -151,7 +166,7 @@ class DirectorView extends ControllerBase
                             }
 
                             $list[] = array(
-                                'id' => $epalStudent->id(),
+                                'id' => $epalStudent->id,
                                 'name' => $name_decoded,
                                 'studentsurname' => $studentsurname_decoded,
                                 'fatherfirstname' => $fatherfirstname_decoded,
@@ -160,10 +175,10 @@ class DirectorView extends ControllerBase
                                 'guardian_surname' => $guardian_surname_decoded,
                                 'guardian_fathername' => $guardian_fathername_decoded,
                                 'guardian_mothername' => $guardian_mothername_decoded,
-                                'lastschool_schoolname' => $epalStudent->lastschool_schoolname->value,
-                                'lastschool_schoolyear' => $epalStudent->lastschool_schoolyear->value,
-                                'lastschool_class' => $epalStudent->lastschool_class->value,
-                                'currentclass' =>$epalStudent -> currentclass ->value,
+                                'lastschool_schoolname' => $epalStudent->lastschool_schoolname,
+                                'lastschool_schoolyear' => $epalStudent->lastschool_schoolyear,
+                                'lastschool_class' => $epalStudent->lastschool_class,
+                                'currentclass' =>$epalStudent -> currentclass ,
                                 'currentsector' =>$sectorName,
                                 'currentcourse' =>$courseName,
                                 'regionaddress' => $regionaddress_decoded,
@@ -173,10 +188,10 @@ class DirectorView extends ControllerBase
                                 'telnum' => $telnum_decoded,
                                 //'relationtostudent' => $relationtostudent_decoded,
                                 //'birthdate' => substr($epalStudent->birthdate->value, 8, 10) . '/' . substr($epalStudent->birthdate->value, 6, 8) . '/' . substr($epalStudent->birthdate->value, 0, 4),
-                                'birthdate' => date("d-m-Y", strtotime($epalStudent->birthdate->value)),
-                                'checkstatus' => $checkstudentstatus -> directorconfirm ->value,
+                                'birthdate' => date("d-m-Y", strtotime($epalStudent->birthdate)),
+                                'checkstatus' => $checkstudentstatus -> directorconfirm ,
                                 'lock_delete' => $lock_delete,
-                                'created' => date('d/m/Y H:i', $epalStudent -> created ->value),
+                                'created' => date('d/m/Y H:i', $epalStudent -> created ),
 
                             );
                         }
@@ -871,7 +886,22 @@ class DirectorView extends ControllerBase
                     if ($limitdown) {
                         $limit = $limitdown->limit_down->value;
                     }
-                    $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1));
+                    
+
+
+                    $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', -1 , '=') 
+                  ->condition('eSchool.currentclass', 1 , '=') 
+                  ->condition('eStudent.delapp', 0 , '=')           
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
 
                     $list[] = array(
                         'class' => 1,
@@ -895,7 +925,22 @@ class DirectorView extends ControllerBase
 
                     foreach ($CourseB as $object) {
                         $sectorid = $object->sector_id->entity->id();
-                        $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $sectorid, 'currentclass' => 2));
+
+
+                      
+                $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted','delapp'))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', $sectorid , '=') 
+                  ->condition('eSchool.currentclass', 2 , '=')   
+                  ->condition('eStudent.delapp', 0 , '=')                 
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
                         $list[] = array(
                             'class' => 2,
                             'newsector' => $object->sector_id->entity->id(),
@@ -919,7 +964,23 @@ class DirectorView extends ControllerBase
                     }
                     foreach ($CourseC as $object) {
                         $specialityid = $object->specialty_id->entity->id();
-                        $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $specialityid, 'currentclass' => 3));
+
+
+              
+
+                         $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', $specialityid , '=') 
+                  ->condition('eSchool.currentclass', 3 , '=')  
+                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
                         $list[] = array(
                             'class' => 3,
                             'newsector' => 0,
@@ -941,7 +1002,20 @@ class DirectorView extends ControllerBase
                     }
                     foreach ($CourseC as $object) {
                         $specialityid = $object->specialty_id->entity->id();
-                        $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $specialityid, 'currentclass' => 4));
+                       
+
+                         $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', $specialityid , '=') 
+                  ->condition('eSchool.currentclass', 4 , '=')   
+                  ->condition('eStudent.delapp', 0 , '=')                 
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
                         $list[] = array(
                                 'class' => 4,
                                 'newsector' => 0,
