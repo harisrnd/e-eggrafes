@@ -190,7 +190,7 @@ class PDFCreator extends ControllerBase {
 
 		$this->pdf->SetFont($this->fontLight, '', 11);
 		//if ($this->applicantsResultsDisabled === "1")
-		if ($status === "0" || $status === "4")
+		if ($status === "0" || $status === "2" || $status === "3" || $status === "5" || $status === "6" || $status === "7")
 			$this->pdf->MultiCell(0, 8, $this->prepareString('(Αρχική)'), 0, 'R');
 		else
 			$this->pdf->MultiCell(0, 8, $this->prepareString('(Οριστική)'), 0, 'R');

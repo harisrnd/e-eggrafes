@@ -216,6 +216,7 @@ import { StudentGelCourseChosen } from "../students/student";
     private hasright: number;
     private app_update: BehaviorSubject<boolean>;
     private appId: BehaviorSubject<string>;
+    private apptype: BehaviorSubject<string>;
     //private wsIdentSub: Subscription;
     private wsEnabled: BehaviorSubject<number>;
     private limitSchoolYear: string;
@@ -252,6 +253,7 @@ import { StudentGelCourseChosen } from "../students/student";
         this.showLoader = new BehaviorSubject(false);
         this.app_update = new BehaviorSubject(false);
         this.appId = new BehaviorSubject("");
+        this.apptype = new BehaviorSubject("gel");
         this.orientationSelected = new BehaviorSubject(-1);
         this.classSelected = new BehaviorSubject(-1);
         this.wsEnabled = new BehaviorSubject(-1);
@@ -311,6 +313,7 @@ import { StudentGelCourseChosen } from "../students/student";
                             if (datamode.get("app_update") === true) {
                                 this.app_update.next(true);
                                 this.appId.next(datamode.get("appid"));
+                                this.apptype.next(datamode.get("apptype"));
                             }
                             return datamode;
                         }, {});
@@ -422,6 +425,24 @@ import { StudentGelCourseChosen } from "../students/student";
 
         if (this.gelstudentDataFields$.getValue().size === 0 || this.gelclasses$.getValue().size === 0 || this.loginInfo$.getValue().size === 0)
             return;
+
+        //not allowed to edit application targeted to other school type (gel)
+        if (this.app_update.getValue() && this.apptype.getValue() != "gel")
+        {
+          console.log("Error: trying to edit application in different schooltype.");
+          let mTitle = "Αποτυχία τροποποίησης αίτησης";
+          let mText = "Δεν έχετε δικαίωμα να τροποποιήσετε αίτηση για άλλο τύπο σχολείου. " +
+                      "Παρακαλώ σε περίπτωση που θέλετε να κάνετε Νέα Αίτηση, πατήστε την επιλογή 'Νέα' που βρίσκετε πάνω αριστερά στην οθόνη της εφαρμογής.";
+          let mHeader = "modal-header-danger";
+          this.modalTitle.next(mTitle);
+          this.modalText.next(mText);
+          this.modalHeader.next(mHeader);
+          this.showModal();
+          (<any>$(".loading")).remove();
+          this.showLoader.next(false);
+          return;
+        }
+
 
         let aitisiObj: Array<any> = [];
         let std = this.gelstudentDataFields$.getValue().get(0);
