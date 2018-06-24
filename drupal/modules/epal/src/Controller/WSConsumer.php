@@ -275,6 +275,11 @@ class WSConsumer extends ControllerBase
 
     public function transitionToBPeriod() {
 
+      return (new JsonResponse([
+              'message' => "no code",
+            ]))
+            ->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+
       //μετάπτωση σε δεύτερη περίοδο όλων των αιτήσεων για ΕΠΑΛ που οι μαθητές δεν προάχθηκαν
       $sCon = $this->connection
   			 ->select('epal_student', 'eStudent')
