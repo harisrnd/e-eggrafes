@@ -2548,19 +2548,16 @@ class ReportsCreator extends ControllerBase
               $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
               foreach ($gelStudents as $gelStudent)  {
                 array_push($idColumn, $gelStudent->id);
-                /*
-                if ($gelStudent->nextclass != 1 && $gelStudent->nextclass != 4 && $gelStudent->nextclass != 5)  {
-                    $sCon = $this->connection
+                $sCon = $this->connection
                        ->select('gel_student_choices', 'eChoices')
                        ->fields('eChoices', array('choice_id'))
                        ->condition('eChoices.student_id', $gelStudent->id , '=')
                        ->condition('eChoices.choice_id', 15 , '>=')
                        ->condition('eChoices.choice_id', 17 , '<=');
-                    $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                    $stChoice = reset($stChoices);
-                    array_push($opColumn, $stChoice->choice_id);
-                }
-                */
+                $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                $stChoice = reset($stChoices);
+                //να αλλαχθεί σε ανάκτηση του ονόματος της ΟΠ από τη βάση με INNER JOIN
+                array_push($opColumn, $this->retrieveOPName($stChoice->choice_id));
                 array_push($classColumn, $classLogos[$l]);
                 array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
                 array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
@@ -2615,24 +2612,18 @@ class ReportsCreator extends ControllerBase
             foreach ($gelStudents as $gelStudent)  {
 
               if (!in_array($gelStudent->id, $hgids))  {
-
                 array_push($idColumn, $gelStudent->id);
-
-                //if ($gelStudent->nextclass != '1' && $gelStudent->nextclass != '4' && $gelStudent->nextclass != '5')  {
-                /*
-                    $sCon = $this->connection
+                $sCon = $this->connection
                        ->select('gel_student_choices', 'eChoices')
                        ->fields('eChoices', array('choice_id'))
                        ->condition('eChoices.student_id', $gelStudent->id , '=')
                        ->condition('eChoices.choice_id', 15 , '>=')
                        ->condition('eChoices.choice_id', 17 , '<=');
-                    $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                    $stChoice = reset($stChoices);
-                    array_push($opColumn, $stChoice->choice_id);
-                    */
-                //}
-
-
+                $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                $stChoice = reset($stChoices);
+                //να αλλαχθεί σε ανάκτηση του ονόματος της ΟΠ από τη βάση με INNER JOIN
+                array_push($opColumn, $this->retrieveOPName($stChoice->choice_id));
+                //$this->logger->warning("Trace..  " . $gelStudent->id . "  " . $stChoice->choice_id);
                 array_push($classColumn, $this->retrieveGelClassName($k) . " (αυτοδίκαια) ");
                 array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
                 array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
@@ -3018,6 +3009,18 @@ class ReportsCreator extends ControllerBase
       }
       return $fullAddress;
   }
+
+  private function retrieveOPName($opid)  {
+    if ($opid == 15)
+      return "Ανθρωπιστικών Σπουδών";
+    else if ($opid == 16)
+      return "Θετικών Σπουδών";
+    else if ($opid == 17)
+      return "Σπουδών Οικονομίας και Πληροφορικής";
+    else
+      return "";
+  }
+
 
 
 
