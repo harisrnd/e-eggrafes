@@ -1686,15 +1686,16 @@ public function FindCoursesPerSchoolGel(Request $request)
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if ($tmpRole === 'gel') {
+                
+                if ($tmpRole == 'gel' ||$tmpRole == 'gymlt') {
                     $userRole = $tmpRole;
                 }
             }
             if ($userRole === '') {
                 return $this->respondWithStatus([
-                             'error_code' => 4003,
+                             'error_code' => 4003111,
                          ], Response::HTTP_FORBIDDEN);
-            } elseif ($userRole === 'gel') {
+            } elseif ($userRole == 'gel' || $tmpRole == 'gymlt') {
                 $categ = $school->metathesis_region->value;
                 $list = array();
 
@@ -1708,8 +1709,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
+
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Α' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1727,8 +1730,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
+
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Β' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1740,7 +1745,8 @@ public function FindCoursesPerSchoolGel(Request $request)
                   ->fields('gSchool', array('id','registry_no'))
                   ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '2' , '=')
-                  ->condition('gStudent.delapp', '0' , '=')
+        ->condition('gStudent.delapp', '0' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                 $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1759,8 +1765,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
+
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Γ' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1792,8 +1800,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
+
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Δ' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1827,8 +1837,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
+
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Α' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1846,8 +1858,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
+
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Β' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1857,9 +1871,11 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
+
                   ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '5' , '=')
                   ->condition('gStudent.delapp', '0' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                 $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1878,8 +1894,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
+
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Γ' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1890,7 +1908,9 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
+
                   ->condition('gSchool.id', $schoolid , '=')
+
                   ->condition('gStudent.nextclass', '6' , '=')
                   ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
@@ -1911,8 +1931,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
+
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Δ' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1922,10 +1944,12 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
+
                   ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '7' , '=')
                   ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
 
                 $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -2012,7 +2036,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                 $userRoles = $user->getRoles();
                 $userRole = '';
                 foreach ($userRoles as $tmpRole) {
-                    if ($tmpRole === 'gel') {
+                    if ($tmpRole === 'gel' || $tmpRole === 'gymlt') {
                         $userRole = $tmpRole;
                     }
                 }
@@ -2020,7 +2044,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                     return $this->respondWithStatus([
                              'error_code' => 4003,
                          ], Response::HTTP_FORBIDDEN);
-                } elseif ($userRole === 'gel') {
+                } elseif ($userRole === 'gel'||$tmpRole === 'gymlt') {
 
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $gelId, 'taxi' => $classIdNew));
 
@@ -2050,11 +2074,13 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
                     foreach ($studentPerSchool as $object) {
                         $studentId = $object->student_id->target_id;
+
                                 //$this->logger->warning($studentId."Aaaaa1");
                         $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => '2'));
                         $gelStudent = reset($gelStudents);
                         if (!$gelStudent) {
                                    //$this->logger->warning($studentId."step1");
+
                             $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => '1'));
                         $gelStudent = reset($gelStudents);
                         }
@@ -2660,7 +2686,7 @@ public function FindStudentsPerSchoolGym(Request $request)
         foreach ($userRoles as $tmpRole) {
             //$this->logger->warning('tmpRole='.$tmpRole);
 
-            if ($tmpRole === 'gym') {
+            if ($tmpRole === 'gym' || $tmpRole === 'gymlt') {
                 $userRole = $tmpRole;
             }
         }
@@ -2668,7 +2694,7 @@ public function FindStudentsPerSchoolGym(Request $request)
             return $this->respondWithStatus([
                      'error_code' => "school registry_no value",
                  ], Response::HTTP_FORBIDDEN);
-        } elseif ($userRole === 'gym') {
+        } elseif ($userRole === 'gym' || $tmpRole === 'gymlt') {
 
             $studentPerSchool_gel = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(['lastschool_registrynumber'=> "".$school->registry_no->value, 'delapp'=>0,'myschool_promoted'=>2]);
             $studentPerSchool_epal = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(['lastschool_registrynumber'=> "".$school->registry_no->value, 'delapp'=>0, 'myschool_promoted'=>2]);
@@ -2937,7 +2963,7 @@ public function ConfirmStudents(Request $request)
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if ($tmpRole === 'gel') {
+                if ($tmpRole === 'gel' || $tmpRole === 'gymlt') {
                     $userRole = $tmpRole;
                 }
             }
@@ -3392,7 +3418,7 @@ public function deleteApplicationFromDirector(Request $request)
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if ($tmpRole === 'gel') {
+                if ($tmpRole === 'gel' || $tmpRole === 'gymlt') {
                     $userRole = $tmpRole;
                 }
             }
@@ -3400,7 +3426,7 @@ public function deleteApplicationFromDirector(Request $request)
                 return $this->respondWithStatus([
                          'error_code' => 4003,
                      ], Response::HTTP_FORBIDDEN);
-            } elseif ($userRole === 'gel') {
+            } elseif ($userRole === 'gel' || $tmpRole === 'gymlt') {
 
             $content = $request->getContent();
 
