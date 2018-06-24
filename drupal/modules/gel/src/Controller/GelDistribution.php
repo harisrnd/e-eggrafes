@@ -1713,8 +1713,8 @@ public function FindCoursesPerSchoolGel(Request $request)
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Α' , '=')
 
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
-
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))
+                  ->condition('gStudent.delapp', '0' , '=');
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
 
@@ -1733,7 +1733,7 @@ public function FindCoursesPerSchoolGel(Request $request)
 
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Β' , '=')
-
+                  ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1745,7 +1745,7 @@ public function FindCoursesPerSchoolGel(Request $request)
                   ->fields('gSchool', array('id','registry_no'))
                   ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '2' , '=')
-        ->condition('gStudent.delapp', '0' , '=')
+                    ->condition('gStudent.delapp', '0' , '=')
 
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
@@ -1768,7 +1768,7 @@ public function FindCoursesPerSchoolGel(Request $request)
 
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Γ' , '=')
-
+                  ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1800,7 +1800,7 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
-
+                  ->condition('gStudent.delapp', '0' , '=')
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Δ' , '=')
 
@@ -1840,7 +1840,7 @@ public function FindCoursesPerSchoolGel(Request $request)
 
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Α' , '=')
-
+                  ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1861,7 +1861,7 @@ public function FindCoursesPerSchoolGel(Request $request)
 
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Β' , '=')
-
+                  ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1897,7 +1897,7 @@ public function FindCoursesPerSchoolGel(Request $request)
 
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Γ' , '=')
-
+                  ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1934,7 +1934,7 @@ public function FindCoursesPerSchoolGel(Request $request)
 
                   ->condition('gSchool.school_id', $schoolid , '=')
                   ->condition('gSchool.taxi', 'Δ' , '=')
-
+                  ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1944,7 +1944,7 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
-
+                  ->condition('gStudent.delapp', '0' , '=')
                   ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '7' , '=')
                   ->condition('gStudent.delapp', '0' , '=')
@@ -2451,229 +2451,280 @@ public function getSchoolGel(Request $request)
                 ->loadByProperties(array('id' => $schoolid));
             $CourseA = reset($CoursesA);
             if ($CourseA) {
-                $reg_num = $CourseA->get('registry_no')->value;
+               
 
-                $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
-                    ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Α'));
-
-
-                    $list[] = array(
-                        'id' => '1',
-                        'name' => 'Α Λυκείου',
-                        'size' => sizeof($studentPerSchool),
-                        'categ' => $categ,
-                        'classes' => 1,
-
-                    );
-
-                if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
-                  $taxi = 5;
-                        else
-                     $taxi = 2;
-                 $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
-                    ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => $taxi,'delapp' => '0'));
-                 $studentPerSchoolNew = $this->entityTypeManager->getStorage('gelstudenthighschool')
-                    ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Β'));
-
-
-
-                    $list[] = array(
-                        'id' => '2-5',
-                        'name' => 'Β Λυκείου',
-                        'size' => sizeof($studentPerSchool)+ sizeof($studentPerSchoolNew),
-                        'categ' => $categ,
-                        'classes' => 1,
-
-                    );
-
-
-                if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
-                    $taxi = 6;
-                        else
-                     $taxi = 3;
-                $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
-                    ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => $taxi,delapp => '0'));
-                $studentPerSchoolNew = $this->entityTypeManager->getStorage('gelstudenthighschool')
-                    ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Γ'));
-
-                    $list[] = array(
-                        'id' => '3-6',
-                        'name' => 'Γ Λυκείου',
-                        'size' => sizeof($studentPerSchool)+ sizeof($studentPerSchoolNew),
-                        'categ' => $categ,
-                        'classes' => 1,
-
-                    );
-
-
-                if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
+                if ( $operation_shift == 'ΗΜΕΡΗΣΙΟ')
                 {
-                  $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
-                    ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => 7));
+                $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
+                  ->fields('gSchool', array('id','school_id','taxi'))
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Α' , '=')
+
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))
+                  ->condition('gStudent.delapp', '0' , '=');
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
 
 
                     $list[] = array(
-                        'id' => '4',
-                        'name' => 'Δ Λυκείου',
+                        'class' => 1,
+                        'name' => 'Ά Λυκείου',
+                        'globalindex' => $i,
                         'size' => sizeof($studentPerSchool),
-                        'categ' => $categ,
-                        'classes' => 1,
+                       );
 
-                    );
+                $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
+                  ->fields('gSchool', array('id','school_id','taxi'))
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Β' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+                $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+                  ->condition('gSchool.id', $schoolid , '=')
+                  ->condition('gStudent.nextclass', '2' , '=')
+                    ->condition('gStudent.delapp', '0' , '=')
+
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+                    $list[] = array(
+                        'class' => 2,
+                        'name' => 'Β Λυκείου',
+                        'globalindex' => $i,
+                        'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
+                        'sizenew' => sizeof($existingstudentPerSchool),
+                       );
+
+
+
+                      $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
+                  ->fields('gSchool', array('id','school_id','taxi'))
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Γ' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+
+                     $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+                  ->condition('gSchool.id', $schoolid , '=')
+                  ->condition('gStudent.nextclass', '3' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+
+
+                    $list[] = array(
+                        'class' => 3,
+                        'name' => 'Γ Λυκείου',
+                        'globalindex' => $i,
+                        'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
+                       );
+                    if ($operation_shift != 'ΗΜΕΡΗΣΙΟ'){
+
+                     $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
+                  ->fields('gSchool', array('id','school_id','taxi'))
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Δ' , '=')
+
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+                    $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+                  ->condition('gSchool.id', $schoolid , '=')
+                  ->condition('gStudent.nextclass', '4' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+
+                    $list[] = array(
+                        'class' => 4,
+                        'name' => 'Δ Λυκείου',
+                        'globalindex' => $i,
+                        'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
+                       );
+                    }
 
                 }
-
-        $taxi = "Α";
-        $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
-        foreach ($selectionPerSchool as $object) {
-
-          $choicenew = $object -> id();
-
-          $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
-          $sCon->leftJoin('gelstudenthighschool', 'gSchool',
-    'gSchool.student_id = gClassChoice.student_id');
-           $sCon->fields('gSchool', array( 'taxi', 'school_id'))
-                ->fields('gClassChoice', array('choice_id'))
-             ->condition('gClassChoice.choice_id', $choicenew)
-             ->condition('gSchool.taxi', $taxi )
-             ->condition('gSchool.school_id', $schoolid)
-             ->groupBy('gClassChoice.choice_id')
-             ->groupBy('gSchool.taxi')
-             ->groupBy('gSchool.school_id')
-             ;
-        $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
-        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-        foreach ($results as $key ) {
-                  $list[] = array(
-                        'id' => 'ΕΠ',
-                        'name' => 'Α Λυκείου-'.$object -> name ->value,
-                        'size' => $key->student_count,
-                        'categ' => $categ,
-                        'classes' => 1,
-
-                    );
-                    }
-
-            }
-
-        if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
-                  $taxi = 5;
-         else
-                     $taxi = 2;
-        $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
-        foreach ($selectionPerSchool as $object) {
-
-          $choicenew = $object -> id();
-
-          $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
-          $sCon->leftJoin('gel_student', 'gSchool',
-           'gSchool.id = gClassChoice.student_id');
-           $sCon->fields('gSchool', array( 'nextclass', 'lastschool_registrynumber  '))
-                ->fields('gClassChoice', array('choice_id'))
-             ->condition('gClassChoice.choice_id', $choicenew)
-             ->condition('gSchool.nextclass', $taxi )
-             ->condition('gSchool.lastschool_registrynumber ', $reg_num)
-             -> condition('gSchool.delapp','0')
-             ->groupBy('gClassChoice.choice_id')
-             ->groupBy('gSchool.nextclass')
-             ->groupBy('gSchool.lastschool_registrynumber ')
-             ;
-        $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
-        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-        foreach ($results as $key ) {
-                  $list[] = array(
-                        'name' => 'B Λυκείου-'.$object -> name ->value,
-                        'size' => $key->student_count,
-                        'categ' => $categ,
-                        'classes' => 2-5,
-
-                    );
-                    }
-
-            }
-
-        if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
-                  $taxi = 6;
-        else
-                     $taxi = 3;
-        $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
-        foreach ($selectionPerSchool as $object) {
-
-          $choicenew = $object -> id();
-
-          $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
-          $sCon->leftJoin('gel_student', 'gSchool',
-           'gSchool.id = gClassChoice.student_id');
-           $sCon->fields('gSchool', array( 'nextclass', 'lastschool_registrynumber  '))
-                ->fields('gClassChoice', array('choice_id'))
-             ->condition('gClassChoice.choice_id', $choicenew)
-             ->condition('gSchool.nextclass', $taxi )
-             ->condition('gSchool.lastschool_registrynumber ', $reg_num)
-             -> condition('gSchool.delapp','0')
-             ->groupBy('gClassChoice.choice_id')
-             ->groupBy('gSchool.nextclass')
-             ->groupBy('gSchool.lastschool_registrynumber ')
-             ;
-        $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
-        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-        foreach ($results as $key ) {
-                  $list[] = array(
-
-                        'name' => 'Γ Λυκείου-'.$object -> name ->value,
-                        'size' => $key->student_count,
-                        'categ' => $categ,
-                        'classes' => 3,
-
-                    );
-                    }
-
-            }
-
-
-
-            }
-
-
-        if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
+                else
                 {
-            $taxi = 7;
-        $selectionPerSchool = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array());
-        foreach ($selectionPerSchool as $object) {
+                $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
+                  ->fields('gSchool', array('id','school_id','taxi'))
 
-          $choicenew = $object -> id();
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Α' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
-          $sCon = $this->connection->select('gel_student_choices', 'gClassChoice');
-          $sCon->leftJoin('gel_student', 'gSchool',
-           'gSchool.id = gClassChoice.student_id');
-           $sCon->fields('gSchool', array( 'nextclass', 'lastschool_registrynumber  '))
-                ->fields('gClassChoice', array('choice_id'))
-             ->condition('gClassChoice.choice_id', $choicenew)
-             ->condition('gSchool.nextclass', $taxi )
-             ->condition('gSchool.lastschool_registrynumber ', $reg_num)
-             -> condition('gSchool.delapp','0')
-             ->groupBy('gClassChoice.choice_id')
-             ->groupBy('gSchool.nextclass')
-             ->groupBy('gSchool.lastschool_registrynumber ')
-             ;
-        $sCon->addExpression('count(gClassChoice.student_id)', 'student_count');
-        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-        foreach ($results as $key ) {
-                  $list[] = array(
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
-                        'name' => 'Δ Λυκείου-'.$object -> name ->value,
-                        'size' => $key->student_count,
-                        'categ' => $categ,
-                        'classes' => 3,
 
-                    );
+
+                    $list[] = array(
+                        'class' => 4,
+                        'name' => 'Ά Λυκείου ',
+                        'globalindex' => $i,
+                        'size' => sizeof($studentPerSchool),
+                       );
+
+                $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
+                  ->fields('gSchool', array('id','school_id','taxi'))
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Β' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+                $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+
+                  ->condition('gSchool.id', $schoolid , '=')
+                  ->condition('gStudent.nextclass', '5' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+                    $list[] = array(
+                        'class' => 5,
+                        'name' => 'Β Λυκείου ',
+                        'globalindex' => $i,
+                        'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
+                        'sizenew' => sizeof($existingstudentPerSchool),
+                       );
+
+
+
+                      $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
+                  ->fields('gSchool', array('id','school_id','taxi'))
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Γ' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+
+                     $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+
+                  ->condition('gSchool.id', $schoolid , '=')
+
+                  ->condition('gStudent.nextclass', '6' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+
+
+                    $list[] = array(
+                        'class' => 6,
+                        'name' => 'Γ Λυκείου',
+                        'globalindex' => $i,
+                        'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
+                       );
+                    if ($operation_shift != 'ΗΜΕΡΗΣΙΟ'){
+
+                     $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
+                  ->fields('gSchool', array('id','school_id','taxi'))
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Δ' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+                    $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
+                  ->fields('gSchool', array('id','registry_no'))
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition('gSchool.id', $schoolid , '=')
+                  ->condition('gStudent.nextclass', '7' , '=')
+                  ->condition('gStudent.delapp', '0' , '=')
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+
+                $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+
+                    $list[] = array(
+                        'class' => 7,
+                        'name' => 'Δ Λυκείου',
+                        'globalindex' => $i,
+                        'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
+                       );
                     }
 
 
+                
 
 
+                }
+                ++$i;
+
+
+
+
+          
             }
-          }
 
             if ($CourseA) {
                 return $this->respondWithStatus($list, Response::HTTP_OK);
