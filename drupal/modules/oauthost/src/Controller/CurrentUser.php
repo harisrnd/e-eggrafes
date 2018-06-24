@@ -71,7 +71,7 @@ class CurrentUser extends ControllerBase
 
         $userRoles = $user->getRoles();
         foreach ($userRoles as $userRole) {
-            if (($userRole === 'epal') ||($userRole === 'gel') || ($userRole === 'regioneduadmin') || ($userRole === 'eduadmin') || ($userRole === 'gym')) {
+            if (($userRole === 'epal') ||($userRole === 'gel') || ($userRole === 'regioneduadmin') || ($userRole === 'eduadmin') || ($userRole === 'gym') || ($userRole === 'gymlt')) {
                 return $this->respondWithStatus([
                         'cu_name' => $user->mail->value,
                         'cu_surname' => '',
@@ -162,7 +162,7 @@ class CurrentUser extends ControllerBase
     public function getApplicantUserData(Request $request)
     {
         //test
-        //for ($k=0;$k<2;$k++)
+        //for ($k=0;$k<14;$k++)
         //  $this->logger->warning(\Drupal::service('uuid')->generate() );
 
         $authToken = $request->headers->get('PHP_AUTH_USER');

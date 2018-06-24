@@ -78,7 +78,7 @@ class GelDistribution extends ControllerBase
                 $sCon = $this->connection->select('gel_school', 'eSchool')
                               ->fields('eSchool', array('id', 'name', 'unit_type_id','edu_admin_id'))
                               ->condition('eSchool.edu_admin_id', $selectionId , '=')
-                            
+
                               ->condition('eSchool.unit_type_id', 3 , '=');
                  $sCon -> orderBy('eSchool.name', 'ASC');
                  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -87,12 +87,12 @@ class GelDistribution extends ControllerBase
                  $sCon = $this->connection->select('gel_school', 'eSchool')
                               ->fields('eSchool', array('id', 'name', 'unit_type_id','edu_admin_id'))
                               ->condition('eSchool.edu_admin_id', $selectionId , '=')
-                              
+
                               ->condition('eSchool.unit_type_id', 3 , '=');
                  $sCon -> orderBy('eSchool.name', 'ASC');
                  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                
-            } 
+
+            }
 
 
 
@@ -131,7 +131,7 @@ class GelDistribution extends ControllerBase
 
 public function getHighSchoolperDide(Request $request)
     {
-        
+
         $authToken = $request->headers->get('PHP_AUTH_USER');
 
         $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
@@ -158,7 +158,7 @@ public function getHighSchoolperDide(Request $request)
                               ->condition('eSchool.edu_admin_id', $selectionId , '=')
                               ->condition(db_or()->condition('eSchool.unit_type_id', 4 , '=') ->condition('eSchool.extra_unitid',200,'='));
                  $sCon -> orderBy('eSchool.name', 'ASC');
-                 
+
                  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
             } elseif ($userRole === 'eduadmin') {
                   $sCon = $this->connection->select('gel_school', 'eSchool')
@@ -166,7 +166,7 @@ public function getHighSchoolperDide(Request $request)
                    ->condition('eSchool.edu_admin_id', $selectionId , '=')
                     ->condition(db_or()->condition('eSchool.unit_type_id', 4 , '=')->condition('eSchool.extra_unitid',200,'='));
                  $sCon -> orderBy('eSchool.name', 'ASC');
-                 $this->logger->error($sCon."test");
+                 //$this->logger->error($sCon."test");
                  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
             } else {
                 $schools = [];
@@ -281,7 +281,7 @@ public function getHighSchoolperDide(Request $request)
 
 public function getStudentsPerSchool(Request $request, $schoolid, $type,$addressfilter,$amfilter)
     {
-        
+
 
         if ($type === '1')
         {
@@ -327,14 +327,14 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                 ->condition('gStudent.delapp', 0, '=');
                 $sCon -> orderBy('gStudent.second_period', 'DESC');
             $studentPerSchool =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-             
+
                 }
                 if ($studentPerSchool) {
 
                     $list = array();
                     $i = 0;
                     foreach ($studentPerSchool as $object) {
-                                              
+
                             $crypt = new Crypt();
                             try {
                                 $name_decoded = $object->name;
@@ -367,8 +367,8 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
 
-                            
-                            
+
+
 
             if ($addressfilter === '99999' && $amfilter === '0')
                             {
@@ -390,8 +390,8 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                             $pos = strpos($regionaddress_decoded,$addressfilter);
                             $pos1 = strpos($am_decoded,$amfilter);
                             if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -406,15 +406,15 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                             );
                             }
                             }
-                           
+
 
                             if ($addressfilter !== '99999' && $amfilter === '0')
                             {
                             $pos = strpos($regionaddress_decoded,$addressfilter);
-                          
+
                             if  ($pos >=0 && $pos !== false )
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -428,19 +428,19 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
 
 
                            }
-                            
+
                             if ($addressfilter === '99999' && $amfilter !== '0')
                             {
-                            
+
                             $pos1 = strpos($am_decoded,$amfilter);
 
                             if  ($pos1 >=0 && $pos1 !== false)
-                            {    
-                              
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -454,7 +454,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
                            }
 
 
@@ -500,7 +500,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                     return $this->respondWithStatus([
                              'error_code' => 4003,
                          ], Response::HTTP_FORBIDDEN);
-                } elseif ($userRole === 'eduadmin') 
+                } elseif ($userRole === 'eduadmin')
                 {
 
 
@@ -525,7 +525,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
             $studentPerSchool =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
-            
+
 
                 $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
@@ -539,7 +539,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                 $sCon -> orderBy('gStudent.second_period', 'DESC');
             $studentPerSchoolfromesp =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
-$this->logger->warning($sCon."fromesp");
+//$this->logger->warning($sCon."fromesp");
 
                $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
@@ -553,19 +553,19 @@ $this->logger->warning($sCon."fromesp");
                 ->condition('gStudent.delapp', 0, '=');
                 $sCon -> orderBy('gStudent.second_period', 'DESC');
             $studentPerSchoolfromidiwt =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-               $this->logger->warning($sCon."fromidiwt");
-              
+               //$this->logger->warning($sCon."fromidiwt");
+
                 }
-                if ($studentPerSchool) 
+                if ($studentPerSchool)
                 {
 
                     $list = array();
                     $i = 0;
                     foreach ($studentPerSchool as $object) {
-                          
+
                             $schoolIdNew = $object->lastschool_registrynumber;
 
-                                         
+
 
 
                             $crypt = new Crypt();
@@ -600,8 +600,8 @@ $this->logger->warning($sCon."fromesp");
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
 
-                            
-                            
+
+
 
             if ($addressfilter === '99999' && $amfilter === '0')
                             {
@@ -623,8 +623,8 @@ $this->logger->warning($sCon."fromesp");
                             $pos = strpos($regionaddress_decoded,$addressfilter);
                             $pos1 = strpos($am_decoded,$amfilter);
                             if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
-                            {    
-                                
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -639,15 +639,15 @@ $this->logger->warning($sCon."fromesp");
                             );
                             }
                             }
-                           
+
 
                             if ($addressfilter !== '99999' && $amfilter === '0')
                             {
                             $pos = strpos($regionaddress_decoded,$addressfilter);
-                          
+
                             if  ($pos >=0 && $pos !== false )
-                            {    
-                               
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -661,19 +661,19 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
 
 
                            }
-                            
+
                             if ($addressfilter === '99999' && $amfilter !== '0')
                             {
-                            
+
                             $pos1 = strpos($am_decoded,$amfilter);
 
                             if  ($pos1 >=0 && $pos1 !== false)
-                            {    
-                              
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -687,24 +687,24 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
                            }
-                        
+
 
                     }
-                   
+
                 }
 
 
-                if ($studentPerSchoolfromidiwt) 
+                if ($studentPerSchoolfromidiwt)
                 {
 
                     $i = 0;
                     foreach ($studentPerSchoolfromidiwt as $object) {
-                          
+
                             $schoolIdNew = $object->lastschool_registrynumber;
 
-                                         
+
 
 
                             $crypt = new Crypt();
@@ -739,8 +739,8 @@ $this->logger->warning($sCon."fromesp");
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
 
-                            
-                            
+
+
 
             if ($addressfilter === '99999' && $amfilter === '0')
                             {
@@ -762,8 +762,8 @@ $this->logger->warning($sCon."fromesp");
                             $pos = strpos($regionaddress_decoded,$addressfilter);
                             $pos1 = strpos($am_decoded,$amfilter);
                             if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
-                            {    
-                                
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -778,15 +778,15 @@ $this->logger->warning($sCon."fromesp");
                             );
                             }
                             }
-                           
+
 
                             if ($addressfilter !== '99999' && $amfilter === '0')
                             {
                             $pos = strpos($regionaddress_decoded,$addressfilter);
-                          
+
                             if  ($pos >=0 && $pos !== false )
-                            {    
-                               
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -800,19 +800,19 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
 
 
                            }
-                            
+
                             if ($addressfilter === '99999' && $amfilter !== '0')
                             {
-                            
+
                             $pos1 = strpos($am_decoded,$amfilter);
 
                             if  ($pos1 >=0 && $pos1 !== false)
-                            {    
-                              
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -826,24 +826,24 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
                            }
-                        
+
 
                     }
-                   
+
                 }
 
 
-                if ($studentPerSchoolfromesp) 
+                if ($studentPerSchoolfromesp)
                 {
 
-                   
+
                     foreach ($studentPerSchoolfromesp as $object) {
 
                             $schoolIdNew = $object->lastschool_registrynumber;
-                            
-                           
+
+
 
                             $crypt = new Crypt();
                             try {
@@ -860,9 +860,9 @@ $this->logger->warning($sCon."fromesp");
                                 if ($object->regionarea !== null)
                                 $regionarea_decoded = $crypt->decrypt($object->regionarea);
                                 else
-                               
+
                                   $school_type = "Αίτηση για Ημερήσιο";
-                               
+
 
                             } catch (\Exception $e) {
                                 $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
@@ -871,8 +871,8 @@ $this->logger->warning($sCon."fromesp");
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
 
-                            
-                            
+
+
 
             if ($addressfilter === '99999' && $amfilter === '0')
                             {
@@ -894,8 +894,8 @@ $this->logger->warning($sCon."fromesp");
                             $pos = strpos($regionaddress_decoded,$addressfilter);
                             $pos1 = strpos($am_decoded,$amfilter);
                             if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -910,15 +910,15 @@ $this->logger->warning($sCon."fromesp");
                             );
                             }
                             }
-                           
+
 
                             if ($addressfilter !== '99999' && $amfilter === '0')
                             {
                             $pos = strpos($regionaddress_decoded,$addressfilter);
-                          
+
                             if  ($pos >=0 && $pos !== false )
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -932,19 +932,19 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
 
 
                            }
-                            
+
                             if ($addressfilter === '99999' && $amfilter !== '0')
                             {
-                            
+
                             $pos1 = strpos($am_decoded,$amfilter);
 
                             if  ($pos1 >=0 && $pos1 !== false)
-                            {    
-                              
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -958,12 +958,12 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
-                           
+
+
                         }
 
                     }
-                   
+
                 }
 
 
@@ -997,9 +997,9 @@ $this->logger->warning($sCon."fromesp");
         else
         {
 
-            
-             $this->logger->warning("mphke");
-            
+
+             //$this->logger->warning("mphke");
+
 
 
 
@@ -1022,7 +1022,7 @@ $this->logger->warning($sCon."fromesp");
                     return $this->respondWithStatus([
                              'error_code' => 4003,
                          ], Response::HTTP_FORBIDDEN);
-                } elseif ($userRole === 'eduadmin') 
+                } elseif ($userRole === 'eduadmin')
                 {
 
 
@@ -1041,8 +1041,8 @@ $this->logger->warning($sCon."fromesp");
                 $sCon -> orderBy('gStudent.second_period', 'DESC');
                 $studentPerSchooltoesp =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
-          
-                 
+
+
                $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
@@ -1054,7 +1054,7 @@ $this->logger->warning($sCon."fromesp");
                 ->condition('gStudent.delapp', 0, '=');
                 $sCon -> orderBy('gStudent.second_period', 'DESC');
                 $studentPerSchoolfromesp =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-            
+
 
 
             $sCon = $this->connection->select('gel_student', 'gStudent');
@@ -1072,16 +1072,16 @@ $this->logger->warning($sCon."fromesp");
                 }
 
 
-                if ($studentPerSchoolfromidiwt) 
+                if ($studentPerSchoolfromidiwt)
                 {
-                   
+
                     $list = array();
                     $i = 0;
                     foreach ($studentPerSchooltoesp as $object) {
 
                             $schoolIdNew = $object->lastschool_registrynumber;
 
-                                
+
 
                             $crypt = new Crypt();
                             try {
@@ -1115,12 +1115,12 @@ $this->logger->warning($sCon."fromesp");
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
 
-                            
-                            
+
+
 
             if ($addressfilter === '99999' && $amfilter === '0')
                             {
-                                $this->logger->warning("ok....");
+                                //$this->logger->warning("ok....");
                             $i++;
                             $list[] = array(
                                 'idnew' => $i,
@@ -1139,8 +1139,8 @@ $this->logger->warning($sCon."fromesp");
                             $pos = strpos($regionaddress_decoded,$addressfilter);
                             $pos1 = strpos($am_decoded,$amfilter);
                             if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -1155,15 +1155,15 @@ $this->logger->warning($sCon."fromesp");
                             );
                             }
                             }
-                           
+
 
                             if ($addressfilter !== '99999' && $amfilter === '0')
                             {
                             $pos = strpos($regionaddress_decoded,$addressfilter);
-                          
+
                             if  ($pos >=0 && $pos !== false )
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -1177,19 +1177,19 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
 
 
                            }
-                            
+
                             if ($addressfilter === '99999' && $amfilter !== '0')
                             {
-                            
+
                             $pos1 = strpos($am_decoded,$amfilter);
 
                             if  ($pos1 >=0 && $pos1 !== false)
-                            {    
-                              
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -1203,24 +1203,24 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
                            }
-                        
+
 
                     }
-                   
+
                 }
 
-                if ($studentPerSchoolfromidiwt) 
+                if ($studentPerSchoolfromidiwt)
                 {
-                    
+
                     $list = array();
                     $i = 0;
                     foreach ($studentPerSchoolfromidiwt as $object) {
 
                             $schoolIdNew = $object->lastschool_registrynumber;
 
-                                
+
 
                             $crypt = new Crypt();
                             try {
@@ -1254,12 +1254,12 @@ $this->logger->warning($sCon."fromesp");
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
 
-                            
-                            
+
+
 
             if ($addressfilter === '99999' && $amfilter === '0')
                             {
-                                $this->logger->warning("ok....");
+                                //$this->logger->warning("ok....");
                             $i++;
                             $list[] = array(
                                 'idnew' => $i,
@@ -1278,8 +1278,8 @@ $this->logger->warning($sCon."fromesp");
                             $pos = strpos($regionaddress_decoded,$addressfilter);
                             $pos1 = strpos($am_decoded,$amfilter);
                             if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -1294,15 +1294,15 @@ $this->logger->warning($sCon."fromesp");
                             );
                             }
                             }
-                           
+
 
                             if ($addressfilter !== '99999' && $amfilter === '0')
                             {
                             $pos = strpos($regionaddress_decoded,$addressfilter);
-                          
+
                             if  ($pos >=0 && $pos !== false )
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -1316,19 +1316,19 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
 
 
                            }
-                            
+
                             if ($addressfilter === '99999' && $amfilter !== '0')
                             {
-                            
+
                             $pos1 = strpos($am_decoded,$amfilter);
 
                             if  ($pos1 >=0 && $pos1 !== false)
-                            {    
-                              
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -1342,23 +1342,23 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
                            }
-                        
+
 
                     }
-                   
+
                 }
 
-                if ($studentPerSchoolfromesp) 
+                if ($studentPerSchoolfromesp)
                 {
 
-                   
+
                     foreach ($studentPerSchoolfromesp as $object) {
 
                             $schoolIdNew = $object->lastschool_registrynumber;
 
-                                            
+
 
 
                             $crypt = new Crypt();
@@ -1387,8 +1387,8 @@ $this->logger->warning($sCon."fromesp");
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
 
-                            
-                            
+
+
 
             if ($addressfilter === '99999' && $amfilter === '0')
                             {
@@ -1410,8 +1410,8 @@ $this->logger->warning($sCon."fromesp");
                             $pos = strpos($regionaddress_decoded,$addressfilter);
                             $pos1 = strpos($am_decoded,$amfilter);
                             if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -1426,15 +1426,15 @@ $this->logger->warning($sCon."fromesp");
                             );
                             }
                             }
-                           
+
 
                             if ($addressfilter !== '99999' && $amfilter === '0')
                             {
                             $pos = strpos($regionaddress_decoded,$addressfilter);
-                          
+
                             if  ($pos >=0 && $pos !== false )
-                            {    
-                                 
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -1448,19 +1448,19 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
+
 
 
                            }
-                            
+
                             if ($addressfilter === '99999' && $amfilter !== '0')
                             {
-                            
+
                             $pos1 = strpos($am_decoded,$amfilter);
 
                             if  ($pos1 >=0 && $pos1 !== false)
-                            {    
-                              
+                            {
+
                                 $i++;
                                 $list[] = array(
                                 'idnew' => $i,
@@ -1474,12 +1474,12 @@ $this->logger->warning($sCon."fromesp");
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
-                        
-                           
+
+
                         }
 
                     }
-                   
+
                 }
 
 
@@ -1510,7 +1510,7 @@ $this->logger->warning($sCon."fromesp");
 
         }
         return $this->respondWithStatus($list, Response::HTTP_OK);
-    
+
     }
 
  public function SaveHighSchoolSelection(Request $request, $studentid, $schoolid, $oldschool, $nextclass, $undoselection)
@@ -1568,7 +1568,7 @@ $this->logger->warning($sCon."fromesp");
             $this->connection->delete('gelstudenthighschool')
                             ->condition('id', $value, '=')
                             ->execute();
-           
+
             if ($nextclass === '1')
                 $nexttaxi = 'Α';
             elseif ($nextclass === '2')
@@ -1586,10 +1586,10 @@ $this->logger->warning($sCon."fromesp");
 
             if (intval($undoselection) === 1)
             {
-                 $this->logger->warning("mphkeedv");
+                 //$this->logger->warning("mphkeedv");
                 $schoolid = NULL;
                 $nexttaxi = NULL;
-              
+
 
             }
 
@@ -1686,21 +1686,22 @@ public function FindCoursesPerSchoolGel(Request $request)
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if ($tmpRole === 'gel') {
+                
+                if ($tmpRole == 'gel' ||$tmpRole == 'gymlt') {
                     $userRole = $tmpRole;
                 }
             }
             if ($userRole === '') {
                 return $this->respondWithStatus([
-                             'error_code' => 4003,
+                             'error_code' => 4003111,
                          ], Response::HTTP_FORBIDDEN);
-            } elseif ($userRole === 'gel') {
+            } elseif ($userRole == 'gel' || $tmpRole == 'gymlt') {
                 $categ = $school->metathesis_region->value;
                 $list = array();
 
                 $Courses = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $schoolid));
                 if ($Courses) {
-                
+
 
                 if ( $operation_shift == 'ΗΜΕΡΗΣΙΟ')
                 {
@@ -1708,8 +1709,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
-                  ->condition('gSchool.school_id', $schoolid , '=')                  
-                  ->condition('gSchool.taxi', 'Α' , '=')              
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Α' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1727,8 +1730,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
-                  ->condition('gSchool.school_id', $schoolid , '=')                  
-                  ->condition('gSchool.taxi', 'Β' , '=')              
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Β' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1738,9 +1743,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
-                  ->condition('gSchool.id', $schoolid , '=')                  
+                  ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '2' , '=')
-                  ->condition('gStudent.delapp', '0' , '=') 
+        ->condition('gStudent.delapp', '0' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                 $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1759,8 +1765,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
-                  ->condition('gSchool.school_id', $schoolid , '=')                  
-                  ->condition('gSchool.taxi', 'Γ' , '=')              
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Γ' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1771,7 +1779,7 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
-                  ->condition('gSchool.id', $schoolid , '=')                  
+                  ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '3' , '=')
                   ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
@@ -1792,8 +1800,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
-                  ->condition('gSchool.school_id', $schoolid , '=')                  
-                  ->condition('gSchool.taxi', 'Δ' , '=')              
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Δ' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1803,11 +1813,11 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
-                  ->condition('gSchool.id', $schoolid , '=')                  
+                  ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '4' , '=')
                   ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
-               
+
                 $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
 
@@ -1827,8 +1837,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
-                  ->condition('gSchool.school_id', $schoolid , '=')                  
-                  ->condition('gSchool.taxi', 'Α' , '=')              
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Α' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1846,8 +1858,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
-                  ->condition('gSchool.school_id', $schoolid , '=')                  
-                  ->condition('gSchool.taxi', 'Β' , '=')              
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Β' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1857,9 +1871,11 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
-                  ->condition('gSchool.id', $schoolid , '=')                  
+
+                  ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '5' , '=')
-                  ->condition('gStudent.delapp', '0' , '=') 
+                  ->condition('gStudent.delapp', '0' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                 $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1878,8 +1894,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
-                  ->condition('gSchool.school_id', $schoolid , '=')                  
-                  ->condition('gSchool.taxi', 'Γ' , '=')              
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Γ' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1890,7 +1908,9 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
-                  ->condition('gSchool.id', $schoolid , '=')                  
+
+                  ->condition('gSchool.id', $schoolid , '=')
+
                   ->condition('gStudent.nextclass', '6' , '=')
                   ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
@@ -1911,8 +1931,10 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
-                  ->condition('gSchool.school_id', $schoolid , '=')                  
-                  ->condition('gSchool.taxi', 'Δ' , '=')              
+
+                  ->condition('gSchool.school_id', $schoolid , '=')
+                  ->condition('gSchool.taxi', 'Δ' , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1922,11 +1944,13 @@ public function FindCoursesPerSchoolGel(Request $request)
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
-                  ->condition('gSchool.id', $schoolid , '=')                  
+
+                  ->condition('gSchool.id', $schoolid , '=')
                   ->condition('gStudent.nextclass', '7' , '=')
                   ->condition('gStudent.delapp', '0' , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
-               
+
+
                 $existingstudentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
 
@@ -1999,7 +2023,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
             $user = reset($users);
             if ($user) {
                 $gelId = $user->init->value;
-                $this->logger->warning($gelId."kvdikos sxoleiou".$classId);
+                //$this->logger->warning($gelId."kvdikos sxoleiou".$classId);
                 $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gelId));
                 $school = reset($schools);
                 if (!$school) {
@@ -2012,7 +2036,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                 $userRoles = $user->getRoles();
                 $userRole = '';
                 foreach ($userRoles as $tmpRole) {
-                    if ($tmpRole === 'gel') {
+                    if ($tmpRole === 'gel' || $tmpRole === 'gymlt') {
                         $userRole = $tmpRole;
                     }
                 }
@@ -2020,28 +2044,28 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                     return $this->respondWithStatus([
                              'error_code' => 4003,
                          ], Response::HTTP_FORBIDDEN);
-                } elseif ($userRole === 'gel') {
+                } elseif ($userRole === 'gel'||$tmpRole === 'gymlt') {
 
-                $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $gelId, 'taxi' => $classIdNew)); 
-             
+                $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $gelId, 'taxi' => $classIdNew));
+
                 if ($classIdNew === "Α")
                 {
                     $existingstudents =array();
                 }
                 else
-                {    
+                {
                 $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                   ->fields('gSchool', array('id','registry_no'))
-                  ->condition('gSchool.id', $gelId , '=')                  
+                  ->condition('gSchool.id', $gelId , '=')
                   ->condition('gStudent.nextclass', $classId , '=')
                   ->condition('gStudent.delapp', '0' , '=')
                 ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
                 $existingstudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 }
 
-                 $this->logger->warning($sCon."existingstudents");
+                 //$this->logger->warning($sCon."existingstudents");
 
 
                 }
@@ -2050,32 +2074,34 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
                     foreach ($studentPerSchool as $object) {
                         $studentId = $object->student_id->target_id;
-                                $this->logger->warning($studentId."Aaaaa1");
+
+                                //$this->logger->warning($studentId."Aaaaa1");
                         $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => '2'));
                         $gelStudent = reset($gelStudents);
                         if (!$gelStudent) {
-                                   $this->logger->warning($studentId."step1");
+                                   //$this->logger->warning($studentId."step1");
+
                             $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => '1'));
                         $gelStudent = reset($gelStudents);
                         }
                          if ($gelStudent) {
-                             $this->logger->warning($studentId."step2");
+                             //$this->logger->warning($studentId."step2");
                             $studentIdNew = $gelStudent->id();
                             $choices = "";
                             $studentchoices = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id' => $studentId));
 
                             foreach ($studentchoices as $object) {
-                                    $this->logger->warning($studentId."choices");
+                                    //$this->logger->warning($studentId."choices");
                                     $choices = $choices."  ".($object -> choice_id ->entity->get('name')->value)."/" ;
                                 }
 
                             $crypt = new Crypt();
                             try {
-                                $this->logger->warning($studentId."step3");
+                                //$this->logger->warning($studentId."step3");
                                 if ($gelStudent->name->value !== null)
                                 {
                                     $name_decoded = $crypt->decrypt($gelStudent->name->value);
-                                }   
+                                }
                                 if ($gelStudent->studentsurname->value !== null)
                                 {
                                 $studentsurname_decoded = $crypt->decrypt($gelStudent->studentsurname->value);
@@ -2126,7 +2152,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
                                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
                             }
-                            $this->logger->warning($studentId."step4");
+                            //$this->logger->warning($studentId."step4");
                             $list[] = array(
                                 'id' => $gelStudent->id(),
                                 'name' => $name_decoded,
@@ -2155,16 +2181,16 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 'choices' => $choices
 
                             );
-                        
+
                         }
                     }
 
 
                     foreach ($existingstudents as $object) {
-                   
+
 
                         $studentId = $object->id ;
-                
+
                         $gelStudents = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('student_id' => $studentId));
                         $gelStudent = reset($gelStudents);
                         if (!$gelStudents) {
@@ -2196,17 +2222,17 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 $motherfirstname_decoded = $crypt->decrypt($object->motherfirstname );
                                 } if ($object->regionaddress!== null) {
                                 $regionaddress_decoded = $crypt->decrypt($object->regionaddress );
-                                } if ($object->regiontk!== null) 
+                                } if ($object->regiontk!== null)
                                 {
                                 $regiontk_decoded = $crypt->decrypt($object->regiontk );
-                                } 
-                                if ($object->regionarea!== null) 
+                                }
+                                if ($object->regionarea!== null)
                                 {
                                 $regionarea_decoded = $crypt->decrypt($object->regionarea );
-                                } 
+                                }
                                 if ($object->telnum!== null) {
                                 $telnum_decoded = $crypt->decrypt($object->telnum );
-                                } if ($object->guardian_name!== null) 
+                                } if ($object->guardian_name!== null)
                                 {
                                 $guardian_name_decoded = $crypt->decrypt($object->guardian_name );
                                 }
@@ -2318,8 +2344,8 @@ public function getSchoolGel(Request $request)
                               ->condition(db_or()->condition('eSchool.unit_type_id', 4 , '=') ->condition('eSchool.extra_unitid',200,'='));
                  $sCon -> orderBy('eSchool.name', 'ASC');
                  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                
-            } 
+
+            }
 
 
 
@@ -2385,7 +2411,7 @@ public function getSchoolGel(Request $request)
             if ($SchoolCat) {
                 $categ = $SchoolCat->metathesis_region->value;
                 $operation_shift = $SchoolCat->operation_shift->value;
-              
+
             } else {
                 return $this->respondWithStatus([
                     'message' => t('No school located'),
@@ -2402,17 +2428,17 @@ public function getSchoolGel(Request $request)
 
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Α'));
-               
-               
+
+
                     $list[] = array(
                         'id' => '1',
                         'name' => 'Α Λυκείου',
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
-                
+
                 if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
                   $taxi = 5;
                         else
@@ -2421,19 +2447,19 @@ public function getSchoolGel(Request $request)
                     ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => $taxi,'delapp' => '0'));
                  $studentPerSchoolNew = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Β'));
-               
-                
-                
+
+
+
                     $list[] = array(
                         'id' => '2-5',
                         'name' => 'Β Λυκείου',
                         'size' => sizeof($studentPerSchool)+ sizeof($studentPerSchoolNew),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
-                  
-               
+
+
                 if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
                     $taxi = 6;
                         else
@@ -2442,33 +2468,33 @@ public function getSchoolGel(Request $request)
                     ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => $taxi,delapp => '0'));
                 $studentPerSchoolNew = $this->entityTypeManager->getStorage('gelstudenthighschool')
                     ->loadByProperties(array('school_id' => $schoolid, 'taxi' => 'Γ'));
-               
+
                     $list[] = array(
                         'id' => '3-6',
                         'name' => 'Γ Λυκείου',
                         'size' => sizeof($studentPerSchool)+ sizeof($studentPerSchoolNew),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
-                
+
 
                 if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
                 {
                   $studentPerSchool = $this->entityTypeManager->getStorage('gel_student')
                     ->loadByProperties(array('lastschool_registrynumber' => $reg_num, 'nextclass' => 7));
-                     
-               
-               
+
+
+
                     $list[] = array(
                         'id' => '4',
                         'name' => 'Δ Λυκείου',
                         'size' => sizeof($studentPerSchool),
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
-                
+
                 }
 
         $taxi = "Α";
@@ -2498,12 +2524,12 @@ public function getSchoolGel(Request $request)
                         'size' => $key->student_count,
                         'categ' => $categ,
                         'classes' => 1,
-                        
+
                     );
                     }
-                    
-            }       
-                   
+
+            }
+
         if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
                   $taxi = 5;
          else
@@ -2534,12 +2560,12 @@ public function getSchoolGel(Request $request)
                         'size' => $key->student_count,
                         'categ' => $categ,
                         'classes' => 2-5,
-                        
+
                     );
                     }
-                    
-            }       
-                   
+
+            }
+
         if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
                   $taxi = 6;
         else
@@ -2566,16 +2592,16 @@ public function getSchoolGel(Request $request)
         $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
         foreach ($results as $key ) {
                   $list[] = array(
-                      
+
                         'name' => 'Γ Λυκείου-'.$object -> name ->value,
                         'size' => $key->student_count,
                         'categ' => $categ,
                         'classes' => 3,
-                        
+
                     );
                     }
-                    
-            }       
+
+            }
 
 
 
@@ -2607,15 +2633,15 @@ public function getSchoolGel(Request $request)
         $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
         foreach ($results as $key ) {
                   $list[] = array(
-                      
+
                         'name' => 'Δ Λυκείου-'.$object -> name ->value,
                         'size' => $key->student_count,
                         'categ' => $categ,
                         'classes' => 3,
-                        
+
                     );
                     }
-             
+
 
 
 
@@ -2658,9 +2684,9 @@ public function FindStudentsPerSchoolGym(Request $request)
         $userRoles = $user->getRoles();
         $userRole = '';
         foreach ($userRoles as $tmpRole) {
-            $this->logger->warning('tmpRole='.$tmpRole);
+            //$this->logger->warning('tmpRole='.$tmpRole);
 
-            if ($tmpRole === 'gym') {
+            if ($tmpRole === 'gym' || $tmpRole === 'gymlt') {
                 $userRole = $tmpRole;
             }
         }
@@ -2668,7 +2694,7 @@ public function FindStudentsPerSchoolGym(Request $request)
             return $this->respondWithStatus([
                      'error_code' => "school registry_no value",
                  ], Response::HTTP_FORBIDDEN);
-        } elseif ($userRole === 'gym') {
+        } elseif ($userRole === 'gym' || $tmpRole === 'gymlt') {
 
             $studentPerSchool_gel = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(['lastschool_registrynumber'=> "".$school->registry_no->value, 'delapp'=>0,'myschool_promoted'=>2]);
             $studentPerSchool_epal = $this->entityTypeManager->getStorage('epal_student')->loadByProperties(['lastschool_registrynumber'=> "".$school->registry_no->value, 'delapp'=>0, 'myschool_promoted'=>2]);
@@ -2937,7 +2963,7 @@ public function ConfirmStudents(Request $request)
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if ($tmpRole === 'gel') {
+                if ($tmpRole === 'gel' || $tmpRole === 'gymlt') {
                     $userRole = $tmpRole;
                 }
             }
@@ -2990,7 +3016,7 @@ public function ConfirmStudents(Request $request)
             ], Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
-     
+
         $authToken = $request->headers->get('PHP_AUTH_USER');
         $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
         $user = reset($users);
@@ -3000,7 +3026,7 @@ public function ConfirmStudents(Request $request)
             ], Response::HTTP_FORBIDDEN);
         }
 
-        
+
         if (false === in_array('eduadmin', $user->getRoles())) {
             return $this->respondWithStatus([
                 'message' => t("User Invalid Role"),
@@ -3022,11 +3048,11 @@ public function ConfirmStudents(Request $request)
              $second_period = $eggrafesConfig -> activate_second_period -> value ;
         }
 
-        $this->logger->warning("3".$second_period."aaaa" );
+        //$this->logger->warning("3".$second_period."aaaa" );
        $transaction = $this->connection->startTransaction();
-      
+
         try {
-          
+
             //initialazation A class
            $sCon = $this->connection->select('gel_student', 'gStudent');
            $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
@@ -3040,12 +3066,12 @@ public function ConfirmStudents(Request $request)
 
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
-          $this->logger->warning("4".$schools->second_period);
+          //$this->logger->warning("4".$schools->second_period);
 
            foreach ($schools as $school) {
             if (($schools->second_period == $second_period && $second_period == 1) || ($second_period == 0))
             {
-                $this->logger->warning("4".$schools->second_period."edw");
+                //$this->logger->warning("4".$schools->second_period."edw");
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -3071,10 +3097,10 @@ public function ConfirmStudents(Request $request)
                 ->condition('gStudent.delapp', 0, '=')
                 ->condition('gSchool.edu_admin_id', $dide_id , '=');
 
-                $this->logger->warning("5");
+                //$this->logger->warning("5");
 
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-          
+
            $student = array();
            foreach ($schools as $school) {
              if (($schools->second_period == 1 && $second_period == 1) || ($second_period == 0))
@@ -3098,7 +3124,7 @@ public function ConfirmStudents(Request $request)
            $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
             $sCon->fields('gStudent', array('id', 'lastschool_registrynumber','lastschool_unittypeid','lastschool_class','nextclass','second_period'))
                 ->fields('gSchool', array('id', 'edu_admin_id', 'registry_no','extra_unitid'))
-              
+
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
                 ->condition('gStudent.nextclass', "2",'=')
                 ->condition('gStudent.delapp', 0, '=')
@@ -3106,7 +3132,7 @@ public function ConfirmStudents(Request $request)
                 ->condition('gSchool.extra_unitid',400,'=');
 
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-          $this->logger->warning("6");
+          //$this->logger->warning("6");
 
            foreach ($schools as $school) {
              if (($schools->second_period == $second_period && $second_period == 1) || ($second_period == 0))
@@ -3132,16 +3158,16 @@ public function ConfirmStudents(Request $request)
            $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
             $sCon->fields('gStudent', array('id', 'lastschool_registrynumber','lastschool_unittypeid','lastschool_class','nextclass','second_period'))
                 ->fields('gSchool', array('id', 'edu_admin_id', 'registry_no','extra_unitid'))
-              
+
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
                 ->condition('gStudent.lastschool_class', "1",'=')
                 ->condition('gStudent.nextclass', "2",'=')
                 ->condition('gStudent.delapp', 0, '=')
                 ->condition('gSchool.edu_admin_id', $dide_id , '=')
                 ->condition('gSchool.extra_unitid',300,'=');
-                $this->logger->warning("6");
+                //$this->logger->warning("6");
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-          
+
 
            foreach ($schools as $school) {
             if (($schools->second_period == $second_period && $second_period == 1) || ($second_period == 0))
@@ -3175,7 +3201,7 @@ public function ConfirmStudents(Request $request)
                 ->condition('gSchool.extra_unitid',400,'=');
 
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-          $this->logger->warning("7");
+          //$this->logger->warning("7");
 
            foreach ($schools as $school) {
            if (($schools->second_period == $second_period && $second_period == 1) || ($second_period == 0))
@@ -3208,9 +3234,9 @@ public function ConfirmStudents(Request $request)
                 ->condition('gSchool.edu_admin_id', $dide_id , '=')
                  ->condition('gSchool.extra_unitid',400,'=');
 
-        $this->logger->warning("8");
+        //$this->logger->warning("8");
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-          
+
 
            foreach ($schools as $school) {
             if (($schools->second_period == $second_period && $second_period == 1) || ($second_period == 0))
@@ -3223,14 +3249,14 @@ public function ConfirmStudents(Request $request)
                 'dide' => $dide_id,
                 'second_period' =>$school -> second_period,
             );
-            
+
             $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
         }
         }
 
-    $this->logger->warning("9prin");
+    //$this->logger->warning("9prin");
                $student = array();
              //initialazation C class from idiwt
          $sCon = $this->connection->select('gel_student', 'gStudent');
@@ -3244,7 +3270,7 @@ public function ConfirmStudents(Request $request)
                 ->condition('gSchool.extra_unitid',300,'=');
 
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-          $this->logger->warning("9");
+          //$this->logger->warning("9");
 
            foreach ($schools as $school) {
             if (($schools->second_period == $second_period && $second_period == 1) || ($second_period == 0))
@@ -3264,10 +3290,10 @@ public function ConfirmStudents(Request $request)
 
         }
 
-         
-    }   
-    catch (\Exception $e) 
-        
+
+    }
+    catch (\Exception $e)
+
         {
              $this->logger->warning($e->getMessage());
             $transaction->rollback();
@@ -3288,7 +3314,7 @@ public function ConfirmStudents(Request $request)
   public function Initialized(Request $request)
     {
 
-             
+
         $authToken = $request->headers->get('PHP_AUTH_USER');
         $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
         $user = reset($users);
@@ -3298,7 +3324,7 @@ public function ConfirmStudents(Request $request)
             ], Response::HTTP_FORBIDDEN);
         }
 
-        
+
         if (false === in_array('eduadmin', $user->getRoles())) {
             return $this->respondWithStatus([
                 'message' => t("User Invalid Role"),
@@ -3319,8 +3345,8 @@ public function ConfirmStudents(Request $request)
              $second_period = $eggrafesConfig -> activate_second_period -> value ;
         }
 
-        $this->logger->warning($second_period."second");
-       
+        //$this->logger->warning($second_period."second");
+
         try {
              if ($second_period == 0)
              {
@@ -3329,7 +3355,7 @@ public function ConfirmStudents(Request $request)
            $sCon = $this->connection->select('gelstudenthighschool', 'gStudent');
             $sCon->fields('gStudent', array('dide','second_period'))
                 ->condition('gStudent.dide', $dide_id , '=')
-                ->condition('gStudent.second_period', $second_period , 'IS');    
+                ->condition('gStudent.second_period', $second_period , 'IS');
             }
             else
             {
@@ -3337,11 +3363,11 @@ public function ConfirmStudents(Request $request)
            $sCon = $this->connection->select('gelstudenthighschool', 'gStudent');
             $sCon->fields('gStudent', array('dide','second_period'))
                 ->condition('gStudent.dide', $dide_id , '=')
-                ->condition('gStudent.second_period', $second_period , '=');    
+                ->condition('gStudent.second_period', $second_period , '=');
             }
-          $this->logger->warning($sCon."second");
+          //$this->logger->warning($sCon."second");
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-          
+
 
           if ($schools)
               $student = array('answer' => true);
@@ -3349,19 +3375,19 @@ public function ConfirmStudents(Request $request)
               $student = array('answer' => false);
 
           return $this->respondWithStatus($student, Response::HTTP_OK);
-        } 
-       
-    catch (\Exception $e) 
-        
+        }
+
+    catch (\Exception $e)
+
         {
-           
+
 
             return $this->respondWithStatus([
                 "error_code" => 5001
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-     
+
 
 
     }
@@ -3392,7 +3418,7 @@ public function deleteApplicationFromDirector(Request $request)
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if ($tmpRole === 'gel') {
+                if ($tmpRole === 'gel' || $tmpRole === 'gymlt') {
                     $userRole = $tmpRole;
                 }
             }
@@ -3400,7 +3426,7 @@ public function deleteApplicationFromDirector(Request $request)
                 return $this->respondWithStatus([
                          'error_code' => 4003,
                      ], Response::HTTP_FORBIDDEN);
-            } elseif ($userRole === 'gel') {
+            } elseif ($userRole === 'gel' || $tmpRole === 'gymlt') {
 
             $content = $request->getContent();
 
@@ -3418,8 +3444,8 @@ public function deleteApplicationFromDirector(Request $request)
 
         $transaction = $this->connection->startTransaction();
         try {
-           
-           
+
+
 
 
             $epalStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array( 'id' => $applicationId));
@@ -3477,9 +3503,3 @@ public function deleteApplicationFromDirector(Request $request)
 
 
 }
-
-
-
-
-
-

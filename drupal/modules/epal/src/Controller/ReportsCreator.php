@@ -2273,7 +2273,8 @@ class ReportsCreator extends ControllerBase
                ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
                ->condition('eStudent.id', $epalStudentClass->student_id, '=')
                ->condition('eStudent.delapp', 0 , '=')
-               ->condition('eStudent.myschool_promoted', 2 , '<=');
+               ->condition('eStudent.myschool_promoted', 2 , '<=')
+               ->condition('eStudent.myschool_promoted', 1 , '>=');
             $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
             foreach ($epalStudents as $epalStudent) {
               array_push($idColumn, $epalStudentClass->student_id);
@@ -2329,7 +2330,8 @@ class ReportsCreator extends ControllerBase
                    ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
                    ->condition('eStudent.delapp', 0 , '=')
                    ->condition('eStudent.id', $epalStudentClass->student_id, '=')
-                   ->condition('eStudent.myschool_promoted', 2 , '<=');
+                   ->condition('eStudent.myschool_promoted', 2 , '<=')
+                   ->condition('eStudent.myschool_promoted', 1 , '>=');
                 $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 foreach ($epalStudents as $epalStudent) {
                   array_push($idColumn, $epalStudentClass->student_id);
@@ -2375,7 +2377,8 @@ class ReportsCreator extends ControllerBase
                    ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
                    ->condition('eStudent.delapp', 0 , '=')
                    ->condition('eStudent.id', $epalStudentClass->student_id, '=')
-                   ->condition('eStudent.myschool_promoted', 2 , '<=');
+                   ->condition('eStudent.myschool_promoted', 2 , '<=')
+                   ->condition('eStudent.myschool_promoted', 1 , '>=');
                 $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 foreach ($epalStudents as $epalStudent) {
                   array_push($idColumn, $epalStudentClass->student_id);
@@ -2421,7 +2424,8 @@ class ReportsCreator extends ControllerBase
                    ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
                    ->condition('eStudent.delapp', 0 , '=')
                    ->condition('eStudent.id', $epalStudentClass->student_id, '=')
-                   ->condition('eStudent.myschool_promoted', 2 , '<=');
+                   ->condition('eStudent.myschool_promoted', 2 , '<=')
+                   ->condition('eStudent.myschool_promoted', 1 , '>=');
                 $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 foreach ($epalStudents as $epalStudent) {
                   array_push($idColumn, $epalStudentClass->student_id);
@@ -2487,6 +2491,7 @@ class ReportsCreator extends ControllerBase
                          ], Response::HTTP_FORBIDDEN);
           }
           $schoolid = $user->init->value;
+          //$schoolid = 2792;
 
           //user role validation
           $roles = $user->getRoles();
@@ -2537,7 +2542,8 @@ class ReportsCreator extends ControllerBase
                  ->fields('eStudent', array('id', 'name', 'studentsurname','regionaddress', 'regiontk', 'regionarea','telnum','directorconfirm'))
                  ->condition('eStudent.id', $gelClass->student_id, '=')
                  ->condition('eStudent.delapp', 0 , '=')
-                 ->condition('eStudent.myschool_promoted', 2 , '<=');
+                 ->condition('eStudent.myschool_promoted', 2 , '<=')
+                 ->condition('eStudent.myschool_promoted', 1 , '>=');
               $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
               foreach ($gelStudents as $gelStudent)  {
                 array_push($idColumn, $gelStudent->id);
@@ -2587,6 +2593,7 @@ class ReportsCreator extends ControllerBase
                ->fields('eStudent', array('id', 'name', 'studentsurname','regionaddress', 'regiontk', 'regionarea','telnum','directorconfirm'))
                ->condition('eStudent.lastschool_registrynumber', $gelSchool->registry_no , '=')
                ->condition('eStudent.myschool_promoted', 2 , '<=')
+               ->condition('eStudent.myschool_promoted', 1 , '>=')
                ->condition('eStudent.delapp', 0 , '=')
                ->condition('eStudent.nextclass', $k, '=');
 

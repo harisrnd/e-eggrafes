@@ -195,6 +195,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private disclaimer_checked: number;
     private hasright: number;
     private app_update: BehaviorSubject<boolean>;
+    private apptype: BehaviorSubject<string>;
     private appId: BehaviorSubject<string>;
     private previousClass: BehaviorSubject<string>;
     private previousSector: BehaviorSubject<string>;
@@ -234,6 +235,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         this.showLoader = new BehaviorSubject(false);
         this.app_update = new BehaviorSubject(false);
         this.appId = new BehaviorSubject("");
+        this.apptype = new BehaviorSubject("epal");
 
         this.previousClass = new BehaviorSubject("");
         this.previousSector = new BehaviorSubject("");
@@ -301,6 +303,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                             if (datamode.get("app_update") === true) {
                                 this.app_update.next(true);
                                 this.appId.next(datamode.get("appid"));
+                                this.apptype.next(datamode.get("apptype"));
                                 this.previousClass.next(datamode.get("currentclass"));
                                 this.previousSector.next(datamode.get("sector_id"));
                                 this.previousCourse.next(datamode.get("course_id"));
@@ -419,6 +422,23 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     }
 
     submitNow(newapp) {
+
+          //not allowed to edit application targeted to other school type (epal)
+          if (this.app_update.getValue() && this.apptype.getValue() != "epal")
+          {
+            console.log("Error: trying to edit application in different schooltype.");
+            let mTitle = "Αποτυχία τροποποίησης αίτησης";
+            let mText = "Δεν έχετε δικαίωμα να τροποποιήσετε αίτηση για άλλο τύπο σχολείου. " +
+                        "Παρακαλώ σε περίπτωση που θέλετε να κάνετε Νέα Αίτηση, πατήστε την επιλογή 'Νέα' που βρίσκετε πάνω αριστερά στην οθόνη της εφαρμογής.";
+            let mHeader = "modal-header-danger";
+            this.modalTitle.next(mTitle);
+            this.modalText.next(mText);
+            this.modalHeader.next(mHeader);
+            this.showModal();
+            (<any>$(".loading")).remove();
+            this.showLoader.next(false);
+            return;
+          }
 
         //έλεγχος αν πρέπει να γίνει έλεγχος πληρότητας
         let nonCheckOccupancy = "$";
