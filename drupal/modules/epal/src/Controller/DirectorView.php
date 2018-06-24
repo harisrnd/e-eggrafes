@@ -417,6 +417,7 @@ class DirectorView extends ControllerBase
             }
 
             if ($schools) {
+
                 $list = array();
 
                 foreach ($schools as $object) {
@@ -492,8 +493,22 @@ class DirectorView extends ControllerBase
                 } else {
                     $limit = -1;
                 }
-                $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')
-                    ->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1));
+               
+
+                $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', -1 , '=') 
+                  ->condition('eSchool.currentclass', 1 , '=') 
+                  ->condition('eStudent.delapp', 0 , '=')           
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+
                 $list = array();
                 foreach ($CourseA as $object) {
                     $list[] = array(
@@ -526,8 +541,20 @@ class DirectorView extends ControllerBase
                 foreach ($CourseB as $object) {
                     $sectorid = $object->sector_id->entity->id();
                     $capacity_class_b = ($object -> capacity_class_sector ->value) *25;
-                    $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')
-                        ->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $sectorid, 'currentclass' => 2));
+                  
+
+                    $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted','delapp'))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', $sectorid , '=') 
+                  ->condition('eSchool.currentclass', 2 , '=')   
+                  ->condition('eStudent.delapp', 0 , '=')                 
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
                     $list[] = array(
                         'id' => $object->sector_id->entity->id(),
                         'name' => 'Β Λυκείου  '.$object->sector_id->entity->get('name')->value,
@@ -557,8 +584,20 @@ class DirectorView extends ControllerBase
                 foreach ($CourseC as $object) {
                     $specialityid = $object->specialty_id->entity->id();
                     $capacity_class_c = ($object -> capacity_class_specialty ->value) *25;
-                    $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')
-                        ->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $specialityid, 'currentclass' => 3));
+                   
+
+                         $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', $specialityid , '=') 
+                  ->condition('eSchool.currentclass', 3 , '=')  
+                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
                     $list[] = array(
                         'id' => $object->specialty_id->entity->id(),
                         'name' => 'Γ Λυκείου  '.$object->specialty_id->entity->get('name')->value,
@@ -586,8 +625,20 @@ class DirectorView extends ControllerBase
 
                 foreach ($CourseC as $object) {
                     $specialityid = $object->specialty_id->entity->id();
-                    $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')
-                        ->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $specialityid, 'currentclass' => 4));
+                   
+
+                   $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', $specialityid , '=') 
+                  ->condition('eSchool.currentclass', 4 , '=')  
+                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
                       $capacity_class_d = ($object -> capacity_class_specialty_d ->value) *25;
                     $list[] = array(
                         'id' => $object->specialty_id->entity->id(),
@@ -655,7 +706,20 @@ class DirectorView extends ControllerBase
         if ($CourseA) {
             $limit = $this->getLimit(1, $categ);
 
-            $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1));
+           
+               $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', -1 , '=') 
+                  ->condition('eSchool.currentclass', 1 , '=') 
+                  ->condition('eStudent.delapp', 0 , '=')           
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))
+                  ;
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
 
             if (sizeof($studentPerSchool) < $limit) {
                 return false;
@@ -663,71 +727,84 @@ class DirectorView extends ControllerBase
         }
 
         $limit = $this->getLimit(2, $categ);
-        $sCon = $this->connection->select('eepal_sectors_in_epal_field_data', 'eSchool');
-        $sCon->leftJoin('epal_student_class', 'eStudent',
-            'eStudent.epal_id = ' . $schoolid . ' ' .
-            'AND eStudent.specialization_id = eSchool.sector_id ' .
-            'AND eStudent.currentclass = 2');
-        $sCon->fields('eSchool', array('sector_id'))
-            ->fields('eStudent', array('specialization_id'))
-            ->groupBy('specialization_id')
-            ->groupBy('sector_id')
-            ->condition('eSchool.epal_id', $schoolid, '=');
-        $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
+      
+         $CourseB = $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(array('epal_id' => $schoolid));
+            if ($CourseB) {
+            foreach ($CourseB as $object) {
+                $sectorid = $object->sector_id->entity->id();
 
-        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted','delapp'))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', $sectorid , '=') 
+                  ->condition('eSchool.currentclass', 2 , '=')   
+                  ->condition('eStudent.delapp', 0 , '=')                 
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
-        foreach ($results as $result) {
-            if ($result->eStudent_count < $limit) {
+       
+                $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+                if (sizeof($results) < $limit) {
                 return false;
             }
+
         }
+    }
 
-        $limit = $this->getLimit(3, $categ);
-        $sCon = $this->connection->select('eepal_specialties_in_epal_field_data', 'eSchool');
-        $sCon->leftJoin('epal_student_class', 'eStudent',
-            'eStudent.epal_id = ' . $schoolid . ' ' .
-            'AND eStudent.specialization_id = eSchool.specialty_id ' .
-            'AND eStudent.currentclass = 3');
-        $sCon->fields('eSchool', array('specialty_id'))
-            ->fields('eStudent', array('specialization_id'))
-            ->groupBy('specialization_id')
-            ->groupBy('specialty_id')
-            ->condition('eSchool.epal_id', $schoolid, '=');
-        $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
+    $limit = $this->getLimit(3, $categ);
+    $CourseC = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $schoolid));
+            if ($CourseC) {
+                    
+            foreach ($CourseC as $object) {
+               $specialityid = $object->specialty_id->entity->id();
 
-        $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', $specialityid , '=') 
+                  ->condition('eSchool.currentclass', 3 , '=')  
+                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
-        foreach ($results as $result) {
-            if ($result->eStudent_count < $limit) {
-                return false;
-            }
-        }
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
-        if ($operation_shift == 'ΕΣΠΕΡΙΝΟ')
-        {
-            $limit = $this->getLimit(4, $categ);
-            $sCon = $this->connection->select('eepal_specialties_in_epal_field_data', 'eSchool');
-            $sCon->leftJoin('epal_student_class', 'eStudent',
-                'eStudent.epal_id = ' . $schoolid . ' ' .
-                'AND eStudent.specialization_id = eSchool.specialty_id ' .
-                'AND eStudent.currentclass = 4');
-            $sCon->fields('eSchool', array('specialty_id'))
-                ->fields('eStudent', array('specialization_id'))
-                ->groupBy('specialization_id')
-                ->groupBy('specialty_id')
-                ->condition('eSchool.epal_id', $schoolid, '=');
-            $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
-
-            $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-
-            foreach ($results as $result) {
-                if ($result->eStudent_count < $limit) {
+                if (sizeof($studentPerSchool) < $limit) {
                     return false;
-                }
-            }
+                 }
         }
+    }
+    if ($operation_shift == 'ΕΣΠΕΡΙΝΟ')
+        {
+        $limit = $this->getLimit(4, $categ);
+            $CourseC = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $schoolid));
+            if ($CourseC) {
+                    
+            foreach ($CourseC as $object) {
+               $specialityid = $object->specialty_id->entity->id();
 
+                $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')                  
+                  ->condition('eSchool.specialization_id', $specialityid , '=') 
+                  ->condition('eSchool.currentclass', 4 , '=')  
+                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+
+                  $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+                if (sizeof($studentPerSchool) < $limit) {
+                    return false;
+                 }
+        }
+    }
+
+        }
         return true;
     }
 
