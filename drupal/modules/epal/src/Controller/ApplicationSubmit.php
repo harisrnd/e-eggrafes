@@ -373,8 +373,10 @@ class ApplicationSubmit extends ControllerBase
           ], Response::HTTP_FORBIDDEN);
       }
 
+
       //έλεγχος πληρότητας τμήματος
-      if ( $eggrafesConfig->lock_small_classes->value === "1")
+      //if ( $eggrafesConfig->lock_small_classes->value === "1")
+      if ( $eggrafesConfig->activate_second_period->value == "1")
       {
         $classIdChecked = $applicationForm[0]['currentclass'];
         $secIdChecked = "-1";
@@ -389,6 +391,7 @@ class ApplicationSubmit extends ControllerBase
             //αν δεν βρει το σχολείο στη λίστα που είναι προς μη έλεγχο πληρότητας)
             if  (strpos($schNonCheckOccup, "$" . $epalIdChecked . "$") === false)
             {
+              $this->logger->error("Trace2 update.. "  );
               $retval = $this->isFull($epalIdChecked, $classIdChecked, $secIdChecked);
               if ($retval !== self::NON_FULL_CLASS) {
                   if ($retval === self::FULL_CLASS) {
@@ -1000,6 +1003,7 @@ class ApplicationSubmit extends ControllerBase
     public function isFull($epalId, $classId, $secId)
     {
         $schoolCapacity = $this->retrieveSchoolCapacity($epalId, $classId, $secId);
+        //$this->logger->error($schoolCapacity);
         if ($schoolCapacity === self::ERROR_DB)
             return self::ERROR_DB;
 
