@@ -2003,6 +2003,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
         }
 
+
         try {
             $authToken = $request->headers->get('PHP_AUTH_USER');
 
@@ -2026,6 +2027,30 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                 //$this->logger->warning($gelId."kvdikos sxoleiou".$classId);
                 $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gelId));
                 $school = reset($schools);
+                $operation_shift = $school->operation_shift->value;
+
+                if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
+                {
+                    $this->logger->warning($operation_shift."esperino");
+                    if ($classId == 4)
+                    {
+                        $classIdNew = 'Α';
+                    }
+                    elseif ($classId == 5)
+                    {
+                        $classIdNew = 'Β';
+                    }
+                    elseif ($classId == 6)
+                    {
+                        $classIdNew = 'Γ';
+                    }
+                    else
+                    {
+                        $classIdNew = 'Δ';
+
+                    }
+                }
+
                 if (!$school) {
                     $this->logger->warning('no access to this school='.$user->id());
                     return $this->respondWithStatus([
@@ -2048,6 +2073,8 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
                 $studentPerSchool = $this->entityTypeManager->getStorage('gelstudenthighschool')->loadByProperties(array('school_id' => $gelId, 'taxi' => $classIdNew));
 
+
+
                 if ($classIdNew === "Α")
                 {
                     $existingstudents =array();
@@ -2065,7 +2092,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                 $existingstudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 }
 
-                 //$this->logger->warning($sCon."existingstudents");
+                 $this->logger->warning($sCon."existingstudents");
 
 
                 }
