@@ -2513,6 +2513,7 @@ class ReportsCreator extends ControllerBase
 
           $idColumn = array();
           $classColumn = array();
+          $opColumn = array();
           $firstnameColumn = array();
           $surnameColumn = array();
           $addressColumn = array();
@@ -2539,7 +2540,7 @@ class ReportsCreator extends ControllerBase
               array_push($hgids, $gelClass->student_id);
               $sCon = $this->connection
                  ->select('gel_student', 'eStudent')
-                 ->fields('eStudent', array('id', 'name', 'studentsurname','regionaddress', 'regiontk', 'regionarea','telnum','directorconfirm'))
+                 ->fields('eStudent', array('id', 'nextclass', 'name', 'studentsurname','regionaddress', 'regiontk', 'regionarea','telnum','directorconfirm'))
                  ->condition('eStudent.id', $gelClass->student_id, '=')
                  ->condition('eStudent.delapp', 0 , '=')
                  ->condition('eStudent.myschool_promoted', 2 , '<=')
@@ -2547,6 +2548,19 @@ class ReportsCreator extends ControllerBase
               $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
               foreach ($gelStudents as $gelStudent)  {
                 array_push($idColumn, $gelStudent->id);
+                /*
+                if ($gelStudent->nextclass != 1 && $gelStudent->nextclass != 4 && $gelStudent->nextclass != 5)  {
+                    $sCon = $this->connection
+                       ->select('gel_student_choices', 'eChoices')
+                       ->fields('eChoices', array('choice_id'))
+                       ->condition('eChoices.student_id', $gelStudent->id , '=')
+                       ->condition('eChoices.choice_id', 15 , '>=')
+                       ->condition('eChoices.choice_id', 17 , '<=');
+                    $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                    $stChoice = reset($stChoices);
+                    array_push($opColumn, $stChoice->choice_id);
+                }
+                */
                 array_push($classColumn, $classLogos[$l]);
                 array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
                 array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
@@ -2603,6 +2617,22 @@ class ReportsCreator extends ControllerBase
               if (!in_array($gelStudent->id, $hgids))  {
 
                 array_push($idColumn, $gelStudent->id);
+
+                //if ($gelStudent->nextclass != '1' && $gelStudent->nextclass != '4' && $gelStudent->nextclass != '5')  {
+                /*
+                    $sCon = $this->connection
+                       ->select('gel_student_choices', 'eChoices')
+                       ->fields('eChoices', array('choice_id'))
+                       ->condition('eChoices.student_id', $gelStudent->id , '=')
+                       ->condition('eChoices.choice_id', 15 , '>=')
+                       ->condition('eChoices.choice_id', 17 , '<=');
+                    $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                    $stChoice = reset($stChoices);
+                    array_push($opColumn, $stChoice->choice_id);
+                    */
+                //}
+
+
                 array_push($classColumn, $this->retrieveGelClassName($k) . " (αυτοδίκαια) ");
                 array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
                 array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
@@ -2635,6 +2665,7 @@ class ReportsCreator extends ControllerBase
                  array_push($list, (object) array(
                            'id' => $idColumn[$j],
                            'section' => $classColumn[$j],
+                           'op' => $opColumn[$j],
                            'name' => $firstnameColumn[$j],
                            'surname' => $surnameColumn[$j],
                            'address' => preg_replace("/,/", " ", $addressColumn[$j]),
