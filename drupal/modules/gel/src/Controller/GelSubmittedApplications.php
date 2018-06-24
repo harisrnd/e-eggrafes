@@ -494,7 +494,7 @@ class GelSubmittedApplications extends ControllerBase
                     $canedit = '0';
                     if (  $applicantsAppModifyDisabled == "0"
                         && $eggrafesConfig->activate_second_period->value == $gelStudent->second_period
-                        && $gelStudent->changed >= $dateStartInt
+                        /*&& $gelStudent->changed >= $dateStartInt*/
                       )
                       $canedit = '1';
                     //end new piece
@@ -530,19 +530,22 @@ class GelSubmittedApplications extends ControllerBase
                           $schoolAddress = $schoolNameDest->street_address;
                           $schoolTel = $schoolNameDest->phone_number;
 
-                          //new piece of code
-                          //$this->logger->warning("Trace " . $schoolNameDest->unit_type_id . "  " . $schoolNameDest->extra_unitid  );
                           if ( $schoolNameDest->unit_type_id == 3 && $schoolNameDest->extra_unitid != 200)
-                            //δεν είναι δυνατό να εμφανιστεί αυτοδίκαια σχολείο τύπου Γυμνασίου, με εξαίρεση τα Γυμνάσια με ΛΤ
+                            //δεν είναι δυνατό να εμφανιστεί αυτοδίκαια σε σχολείο τύπου Γυμνασίου, με εξαίρεση τα Γυμνάσια με ΛΤ
                             //αυτός ο έλεγχος γεράφεται σε περίπτωση που κάποια ειδική περίπτωση δεν έχει προβλεφθεί
-                              $status = "3";
-                          //end
+                              $status = "8";
+                          //δεν είναι δυνατό να εμφανιστεί αυτοδίκαια σε .. ΕΠΑΛ
+                          if ( $schoolNameDest->unit_type_id == 5)
+                              $status = "8";
                         }
                     }
                     else if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "6" || $gelStudent->myschool_promoted === "7") )
                         $status = "5";
-                    else if ($applicantsResultsDisabled === "0" && $gelStudent->myschool_promoted != "1" && $gelStudent->myschool_promoted != "2"
-                             && $gelStudent->myschool_promoted != "6" && $gelStudent->myschool_promoted != "7" && $gelStudent->myschool_promoted != "0")
+                    else if ($applicantsResultsDisabled === "0" &&
+                              $gelStudent->myschool_promoted != null && $gelStudent->myschool_promoted != "0" &&
+                              $gelStudent->myschool_promoted != "1" && $gelStudent->myschool_promoted != "2" &&
+                              $gelStudent->myschool_promoted != "6" && $gelStudent->myschool_promoted != "7"
+                              )
                         $status = "6";
                     else if ($applicantsResultsDisabled === "0" && $gelStudent->myschool_promoted === "0" )
                         $status = "7";

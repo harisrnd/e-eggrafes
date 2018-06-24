@@ -545,6 +545,11 @@ export class ReportsSchema {
             },
             section: {
                 title: "Τάξη",
+                width: "11%",
+                filter: true
+            },
+            op: {
+                title: "ΟΠ",
                 width: "15%",
                 filter: true
             },
