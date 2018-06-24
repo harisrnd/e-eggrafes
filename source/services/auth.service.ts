@@ -20,9 +20,38 @@ export class AuthService {
                 .subscribe(linfo => {
 
                     if (linfo.size > 0) {
-                        linfo.reduce(({}, loginInfoObj) => {
+                             linfo.reduce(({}, loginInfoObj) => {
                             if ((loginInfoObj.auth_token && loginInfoObj.auth_token.length > 0 && loginInfoObj.auth_role === role) ||
                                 (loginInfoObj.minedu_username && loginInfoObj.minedu_username.length > 0 && loginInfoObj.auth_role === MINISTRY_ROLE && role === MINISTRY_ROLE)
+                            ) {
+                                resolve(true);
+                            }
+                            else {
+                                resolve(false);
+
+                            }
+                            return loginInfoObj;
+                        }, {});
+                    } else
+                        resolve(false);
+                },
+                error => {
+                    console.log("Error Getting Auth Data");
+                    reject(false);
+                });
+        });
+    }
+
+
+        isLoggedInFortworoles(role1, role2) {
+        return new Promise<boolean>((resolve, reject) => {
+            this._ngRedux.select("loginInfo")
+                .map(loginInfo => <ILoginInfoRecords>loginInfo)
+                .subscribe(loginInfo => {
+                    if (loginInfo.size > 0) {
+                        loginInfo.reduce(({}, loginInfoObj) => {
+                            if ((loginInfoObj.auth_token && loginInfoObj.auth_token.length > 0 && (loginInfoObj.auth_role === role1 || loginInfoObj.auth_role === role2)) ||
+                                (loginInfoObj.minedu_username && loginInfoObj.minedu_username.length > 0 && loginInfoObj.auth_role === MINISTRY_ROLE )
                             ) {
                                 resolve(true);
                             }
@@ -36,7 +65,7 @@ export class AuthService {
                 },
                 error => {
                     console.log("Error Getting Auth Data");
-                    reject(false);
+                    reject("Error Getting Auth Data");
                 });
         });
     }
@@ -199,6 +228,34 @@ export class AuthService {
                 });
         });
     }
+
+
+    isGelStudentsLockedforTworoles(role1,role2) {
+        return new Promise<boolean>((resolve, reject) => {
+            this._ngRedux.select("loginInfo")
+                .map(loginInfo => <ILoginInfoRecords>loginInfo)
+                .subscribe(loginInfo => {
+                    if (loginInfo.size > 0) {
+                        loginInfo.reduce(({}, loginInfoObj) => {
+                            if ((loginInfoObj.lock_students_gel && loginInfoObj.lock_students_gel === 1 && (loginInfoObj.auth_role === role1 || loginInfoObj.auth_role === role2)))
+                             {
+                                resolve(true);
+                            }
+                            else {
+                                resolve(false);
+                            }
+                            return loginInfoObj;
+                        }, {});
+                    } else
+                        resolve(false);
+                },
+                error => {
+                    console.log("Error Getting Auth Data");
+                    reject("Error Getting Auth Data");
+                });
+        });
+    }
+
 
     isCapacityLocked(role) {
         return new Promise<boolean>((resolve, reject) => {

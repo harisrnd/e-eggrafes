@@ -16,7 +16,7 @@ import { OrientationGroupActions } from "../../actions/orientationgroup.action";
 import { LangCourseFieldsActions } from "../../actions/langcoursesfields.actions";
 import { GelStudentDataFieldsActions } from "../../actions/gelstudentdatafields.actions";
 
-import { DIDE_ROLE, MINISTRY_ROLE, PDE_ROLE, SCHOOL_ROLE, STUDENT_ROLE, SCHOOLGEL_ROLE, SCHOOLGYM_ROLE } from "../../constants";
+import { DIDE_ROLE, MINISTRY_ROLE, PDE_ROLE, SCHOOL_ROLE, STUDENT_ROLE, SCHOOLGEL_ROLE, SCHOOLGYM_ROLE, SCHOOLGYMLT_ROLE} from "../../constants";
 import { HelperDataService } from "../../services/helper-data-service";
 import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
 import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
@@ -118,7 +118,7 @@ export default class HeaderComponent implements OnInit, OnDestroy {
         this.showLoader$.next(true);
         this._hds.signOut().then(data => {
             this._ata.initLoginInfo();
-            if (this.authRole === SCHOOL_ROLE || this.authRole === SCHOOLGEL_ROLE || this.authRole === SCHOOLGYM_ROLE) {
+            if (this.authRole === SCHOOL_ROLE || this.authRole === SCHOOLGEL_ROLE || this.authRole === SCHOOLGYM_ROLE ||  this.authRole === SCHOOLGYMLT_ROLE) {
                 this.authToken = "";
                 this.authRole = "";
                 window.location.assign((<any>data).next);
@@ -160,7 +160,7 @@ export default class HeaderComponent implements OnInit, OnDestroy {
     }
 
     goHome() {
-        if (this.authRole === SCHOOL_ROLE || this.authRole === SCHOOLGEL_ROLE || this.authRole === SCHOOLGYM_ROLE) {
+        if (this.authRole === SCHOOL_ROLE || this.authRole === SCHOOLGEL_ROLE || this.authRole === SCHOOLGYM_ROLE || this.authRole === SCHOOLGYMLT_ROLE) {
             this.router.navigate(["/school"]);
         }
         else if (this.authRole === PDE_ROLE) {

@@ -88,6 +88,7 @@ export const VALID_DATE_PATTERN = "([1-9]|0[1-9]|[12][0-9]|3[01])[- /.]([1-9]|0[
 
 export const SCHOOL_ROLE = "director";
 export const SCHOOLGEL_ROLE = "director_gel";
+export const SCHOOLGYMLT_ROLE = "director_gymlt";
 export const SCHOOLGYM_ROLE = "director_gym";
 export const STUDENT_ROLE = "student";
 export const PDE_ROLE = "pde";

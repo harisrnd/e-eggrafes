@@ -46,6 +46,7 @@ import { LoaderService } from "./services/Spinner.service";
 import SchoolGymAuthGuard from "./guards/schoolgym.auth.guard";
 
 
+
 import * as $ from "jquery";
 
 class MyLocalization extends NgLocalization {
@@ -101,7 +102,8 @@ class MyLocalization extends NgLocalization {
         DidepdeAuthGuard,
         MinistryAuthGuard,
         ReportsAuthGuard,
-        SchoolGymAuthGuard
+        SchoolGymAuthGuard,
+
     ]
 })
 class AppModule { }
