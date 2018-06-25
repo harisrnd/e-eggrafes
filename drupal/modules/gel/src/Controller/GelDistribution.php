@@ -2027,7 +2027,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                 //$this->logger->warning($gelId."kvdikos sxoleiou".$classId);
                 $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gelId));
                 $school = reset($schools);
-                $operation_shift = $schools->operation_shift->value;
+                $operation_shift = $school->operation_shift->value;
 
                 if ( $operation_shift != 'ΗΜΕΡΗΣΙΟ')
                 {
@@ -2092,7 +2092,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                 $existingstudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 }
 
-                 //$this->logger->warning($sCon."existingstudents");
+                 $this->logger->warning($sCon."existingstudents");
 
 
                 }

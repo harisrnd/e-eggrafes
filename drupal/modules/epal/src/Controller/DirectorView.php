@@ -189,7 +189,7 @@ class DirectorView extends ControllerBase
                                 //'relationtostudent' => $relationtostudent_decoded,
                                 //'birthdate' => substr($epalStudent->birthdate->value, 8, 10) . '/' . substr($epalStudent->birthdate->value, 6, 8) . '/' . substr($epalStudent->birthdate->value, 0, 4),
                                 'birthdate' => date("d-m-Y", strtotime($epalStudent->birthdate)),
-                                'checkstatus' => $checkstudentstatus -> directorconfirm ,
+                                'checkstatus' => $checkstudentstatus -> directorconfirm -> value ,
                                 'lock_delete' => $lock_delete,
                                 'created' => date('d/m/Y H:i', $epalStudent -> created ),
 
