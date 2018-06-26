@@ -2224,11 +2224,20 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
                             $studentIdNew = $studentId;
                             $choices = "";
-                            $studentchoices = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id' => $studentId));
+                            //$studentchoices = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id' => $studentId));
+
+
+                            $sCon = $this->connection->select('gel_student_choices', 'eSchool')
+                              ->fields('eSchool', array('student_id', 'choice_id','order_id'))
+                              ->condition('eSchool.student_id', $studentId , '=');
+                             $sCon -> orderBy('eSchool.order_id', 'ASC');
+
+                             $studentchoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
                             foreach ($studentchoices as $objects) {
-
-                                    $choices = $choices."  ".($objects -> choice_id ->entity->get('name')->value)."/" ;
+                            $schoices = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array('id' => $objects -> choice_id));
+                            $schoice = reset($schoices);   
+                                    $choices = $choices."  ".($schoice -> name ->value )."/" ;
                                 }
 
                             $crypt = new Crypt();
@@ -3045,7 +3054,7 @@ public function ConfirmStudents(Request $request)
                     $userRole = $tmpRole;
                 }
             }
-            if ($userRole === 'gel') {
+            if ($userRole === 'gel' || $tmpRole === 'gymlt') {
                 if ($content = $request->getContent()) {
                     $postData = json_decode($content);
                     $arr = $postData->students;
