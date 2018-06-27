@@ -1671,6 +1671,7 @@ public function FindCoursesPerSchoolGel(Request $request)
         $user = reset($users);
         if ($user) {
             $schoolid = $user->init->value;
+            //$schoolid = 1164;
             $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
             if (!$school) {
@@ -1686,7 +1687,7 @@ public function FindCoursesPerSchoolGel(Request $request)
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                
+
                 if ($tmpRole == 'gel' ||$tmpRole == 'gymlt') {
                     $userRole = $tmpRole;
                 }
@@ -2024,6 +2025,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
             $user = reset($users);
             if ($user) {
                 $gelId = $user->init->value;
+                //$gelId = 1164;
                 //$this->logger->warning($gelId."kvdikos sxoleiou".$classId);
                 $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gelId));
                 $school = reset($schools);
@@ -2115,12 +2117,25 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                              //$this->logger->warning($studentId."step2");
                             $studentIdNew = $gelStudent->id();
                             $choices = "";
-                            $studentchoices = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id' => $studentId));
+                            //$studentchoices = $this->entityTypeManager->getStorage('gel_student_choices')->loadByProperties(array('student_id' => $studentId));
 
-                            foreach ($studentchoices as $object) {
+                            $sCon = $this->connection->select('gel_student_choices', 'eSchool')
+                            ->fields('eSchool', array('student_id', 'choice_id','order_id'))
+                            ->condition('eSchool.student_id', $studentId , '=');
+                           $sCon -> orderBy('eSchool.order_id', 'ASC');
+
+                           $studentchoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+                            foreach ($studentchoices as $objects) {
                                     //$this->logger->warning($studentId."choices");
-                                    $choices = $choices."  ".($object -> choice_id ->entity->get('name')->value)."/" ;
-                                }
+                                    //$choices = $choices."  ".($object -> choice_id ->entity->get('name')->value)."/" ;
+                                //}
+
+                                $schoices = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array('id' => $objects -> choice_id));
+                                $schoice = reset($schoices);
+                                        $choices = $choices."  ".($schoice -> name ->value )."/" ;
+                            }
 
                             $crypt = new Crypt();
                             try {
@@ -2203,7 +2218,8 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 //'birthdate' => substr($gelStudent->birthdate->value, 8, 10) . '/' . substr($gelStudent->birthdate->value, 6, 8) . '/' . substr($gelStudent->birthdate->value, 0, 4),
                                 'birthdate' => date("d-m-Y", strtotime($gelStudent->birthdate->value)),
                                 'checkstatus' => $gelStudent -> directorconfirm ->value,
-                                'lock_delete' => $lock_delete,
+                                //'lock_delete' => $lock_delete,
+                                'lock_delete' => "0",
                                 'created' => date('d/m/Y H:i', $gelStudent -> created ->value),
                                 'choices' => $choices
 
@@ -2236,7 +2252,9 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
                             foreach ($studentchoices as $objects) {
                             $schoices = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array('id' => $objects -> choice_id));
-                            $schoice = reset($schoices);   
+
+                            $schoice = reset($schoices);
+
                                     $choices = $choices."  ".($schoice -> name ->value )."/" ;
                                 }
 
@@ -2310,7 +2328,8 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                                 //'birthdate' => substr($object->birthdate , 8, 10) . '/' . substr($object->birthdate , 6, 8) . '/' . substr($object->birthdate , 0, 4),
                                 'birthdate' => date("d-m-Y", strtotime($object->birthdate )),
                                 'checkstatus' => $object -> directorconfirm  ,
-                                'lock_delete' => $lock_delete,
+                                //'lock_delete' => $lock_delete,
+                                'lock_delete' => "0",
                                 'created' => date('d/m/Y H:i', $object -> created  ),
                                 'choices' => $choices
 
@@ -2460,7 +2479,7 @@ public function getSchoolGel(Request $request)
                 ->loadByProperties(array('id' => $schoolid));
             $CourseA = reset($CoursesA);
             if ($CourseA) {
-               
+
 
                 if ( $operation_shift == 'ΗΜΕΡΗΣΙΟ')
                 {
@@ -2723,7 +2742,7 @@ public function getSchoolGel(Request $request)
                     }
 
 
-                
+
 
 
                 }
@@ -2732,7 +2751,7 @@ public function getSchoolGel(Request $request)
 
 
 
-          
+
             }
 
             if ($CourseA) {

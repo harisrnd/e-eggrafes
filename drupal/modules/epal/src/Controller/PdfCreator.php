@@ -64,7 +64,7 @@ class PDFCreator extends ControllerBase {
       );
     }
 
-	public function createApplicantPDF(Request $request, $studentId, $status) {
+	public function createApplicantPDF(Request $request, $studentId, $status, $schname, $schaddress, $schtel) {
 
 		try {
 			 if (!$request->isMethod('GET')) {
@@ -163,6 +163,9 @@ class PDFCreator extends ControllerBase {
 
 			 $this->initPdfHandler();
 			 $this->createHeader($epalStudent,$status);
+
+			 $this->createResult($epalStudent, $status, $schname, $schaddress, $schtel);
+
 			 $ret = $this->createGuardianInfo($epalStudent);
 			 if ($ret === ERROR_DECODING)
 				 return $this->respondWithStatus([
@@ -212,15 +215,83 @@ class PDFCreator extends ControllerBase {
 		$this->pdf->SetFont($this->fontBold, '', 16);
 		$this->pdf->MultiCell(0, 8, $this->prepareString('Ηλεκτρονική Δήλωση Προτίμησης ΕΠΑΛ'), 0, 'C');
 		$this->pdf->SetFont($this->fontBold, '', $this->fontSizeHeader);
-		$this->pdf->MultiCell(0, 8, $this->prepareString('με αριθμό δήλωσης: ' . $student->id->value . ' / ' .  date('d-m-y (ώρα: H:i:s)',  $student->changed->value)), 0, 'C');
+		//αλλαγή τιμής Β περιόδου..
+		if ($student->changed->value != 1529867143)
+			$this->pdf->MultiCell(0, 8, $this->prepareString('με αριθμό δήλωσης: ' . $student->id->value . ' / ' .  date('d-m-y (ώρα: H:i:s)',  $student->changed->value)), 0, 'C');
+		else
+			$this->pdf->MultiCell(0, 8, $this->prepareString('με αριθμό δήλωσης: ' . $student->id->value . ' / ' .  date('d-m-y (ώρα: H:i:s)',  $student->created->value)), 0, 'C');
 
 		$this->pdf->SetFont($this->fontLight, '', 11);
 		//if ($this->applicantsResultsDisabled === "1")
 		if ($status === "0" ||  $status === "3" || $status === "4" || $status === "5" || $status === "6" || $status === "7")
 			$this->pdf->MultiCell(0, 8, $this->prepareString('(Αρχική)'), 0, 'R');
-		else
+		else if ($status === "1" ||  $status === "2")
 			$this->pdf->MultiCell(0, 8, $this->prepareString('(Οριστική)'), 0, 'R');
 		$this->pdf->Ln();
+
+	}
+
+	private function createResult($student, $status, $schname, $schaddress, $schtel)  {
+
+		$width = 45;
+		$height = 8;
+
+		if ($status == "1")  {
+			$this->pdf->SetFont($this->fontBold, '', $this->fontSizeHeader);
+			$this->pdf->SetFillColor(255,178,102);
+			$this->pdf->MultiCell(0, $height, $this->prepareString('Αποτέλεσμα Τοποθέτησης'), 0, 'C',true);
+			$this->pdf->Ln(4);
+			$this->pdf->SetFont($this->fontLight, '', /*$this->fontSizeRegular*/ 12);
+			$msg =  "Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο "  . $schname .
+               ". Παρακαλείστε να προσέλθετε ΑΜΕΣΑ στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. " .
+               "Διεύθυνση σχολείου: " . $schaddress . ", Τηλέφωνο σχολείου: " . $schtel . ".";
+			$this->pdf->MultiCell(0, $height, $this->prepareString($msg), 0, 'J');
+			$this->pdf->Ln();
+		}
+		else if ($status == "3")  {
+			$this->pdf->SetFont($this->fontBold, '', $this->fontSizeHeader);
+			$this->pdf->SetFillColor(255,178,102);
+			$this->pdf->MultiCell(0, $height, $this->prepareString('Αποτέλεσμα Τοποθέτησης'), 0, 'C',true);
+			$this->pdf->Ln(4);
+			$this->pdf->SetFont($this->fontLight, '', /*$this->fontSizeRegular*/ 12);
+			$msg =  "Η αίτησή σας δεν ικανοποιήθηκε. Μπορείτε να κάνετε νέα αίτηση στην επόμενη περίοδο δηλώσεων προτίμησης.";
+			$this->pdf->MultiCell(0, $height, $this->prepareString($msg), 0, 'J');
+			$this->pdf->Ln();
+		}
+		else if ($status == "5")  {
+			$this->pdf->SetFont($this->fontBold, '', $this->fontSizeHeader);
+			$this->pdf->SetFillColor(255,178,102);
+			$this->pdf->MultiCell(0, $height, $this->prepareString('Αποτέλεσμα Τοποθέτησης'), 0, 'C',true);
+			$this->pdf->Ln(4);
+			$this->pdf->SetFont($this->fontLight, '', /*$this->fontSizeRegular*/ 12);
+			$msg =  "Δεν ήταν δυνατή η τοποθέτησή σας σε σχολείο λόγω του αποτελέσματος φοίτησης. " .
+              "Μπορείτε να προχωρήσετε σε τροποποίηση της αίτησης στη Β’ περίοδο αιτήσεων.";
+			$this->pdf->MultiCell(0, $height, $this->prepareString($msg), 0, 'J');
+			$this->pdf->Ln();
+		}
+		else if ($status == "6")  {
+			$this->pdf->SetFont($this->fontBold, '', $this->fontSizeHeader);
+			$this->pdf->SetFillColor(255,178,102);
+			$this->pdf->MultiCell(0, $height, $this->prepareString('Αποτέλεσμα Τοποθέτησης'), 0, 'C',true);
+			$this->pdf->Ln(4);
+			$this->pdf->SetFont($this->fontLight, '', /*$this->fontSizeRegular*/ 12);
+			$msg =  "Δεν ήταν δυνατή η τοποθέτησή σας σε σχολείο λόγω του τρέχοντος αποτελέσματος προαγωγής. " .
+              "Σε περίπτωση προαγωγής σας τις αμέσως επόμενες ημέρες θα τοποθετηθείτε σε σχολείο χωρίς καμία δική σας περαιτέρω ενέργεια." ;
+			$this->pdf->MultiCell(0, $height, $this->prepareString($msg), 0, 'J');
+			$this->pdf->Ln();
+		}
+		else if ($status == "7")  {
+				$this->pdf->SetFont($this->fontBold, '', $this->fontSizeHeader);
+				$this->pdf->SetFillColor(255,178,102);
+				$this->pdf->MultiCell(0, $height, $this->prepareString('Αποτέλεσμα Τοποθέτησης'), 0, 'C',true);
+				$this->pdf->Ln(4);
+				$this->pdf->SetFont($this->fontLight, '', /*$this->fontSizeRegular*/ 12);
+				$msg =  "Το αποτέλεσμα της προαγωγής σας δεν έχει καταχωρισθεί στo πληροφοριακό σύστημα του σχολείου (myschool). " .
+                "Παρακαλώ επικοινωνήστε με τον διευθυντή του σχολείου σας." ;
+				$this->pdf->MultiCell(0, $height, $this->prepareString($msg), 0, 'J');
+				$this->pdf->Ln();
+		}
+
 
 	}
 

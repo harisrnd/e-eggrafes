@@ -83,6 +83,7 @@ import SchoolGymAuthGuard from "../guards/schoolgym.auth.guard";
 import ReportCapacity from "../components/director/report-capacity";
 import ReportEpalApplications from "../components/director/report-epal-applications";
 import ReportGelApplications from "../components/director/report-gel-applications";
+import ReportGelChoices from "../components/director/report-gel-choices";
 
 
 export const MainRoutes: Routes = [
@@ -112,6 +113,7 @@ export const MainRoutes: Routes = [
 
     { path: "school/directorgel-reports", component: DirectorGelReports, canActivate: [SchoolGelAuthGuard, SchoolGelStudentsLockedGuard] },
     { path: "school/report-gel-applications", component: ReportGelApplications, canActivate: [SchoolGelAuthGuard, SchoolGelStudentsLockedGuard] },
+    { path: "school/report-gel-choices", component: ReportGelChoices, canActivate: [SchoolGelAuthGuard, SchoolGelStudentsLockedGuard] },
 
     { path: "school/director-buttons", component: DirectorButtons, canActivate: [SchoolAuthGuard] },
     { path: "school/director-classcapacity", component: DirectorClassCapacity, canActivate: [SchoolAuthGuard, SchoolCapacityLockedGuard] },
@@ -189,6 +191,7 @@ export const MainDeclarations = [
     ReportCapacity,
     ReportEpalApplications,
     ReportGelApplications,
+    ReportGelChoices,
     InformStudents,
     UpdatePromotion,
     MinisterSettings,

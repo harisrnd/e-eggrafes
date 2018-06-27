@@ -122,7 +122,9 @@ import { IAppState } from "../../store/store";
                           <div *ngIf = "GelStudentDetails$.status == '1'|| GelStudentDetails$.status == '4' " >
                               <div class="col-md-12" style="font-size: 1.0em; color: #21610B; font-weight: bold;">
                                   Η αίτησή σας ικανοποιήθηκε. Έχετε επιλεγεί για να εγγραφείτε στο {{GelStudentDetails$.schoolName}}.
-                                  Παρακαλείστε να προσέλθετε στο σχολείο για να προχωρήσει η διαδικασία εγγραφής σας σε αυτό, προσκομίζοντας τα απαραίτητα δικαιολογητικά. Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
+                                  Μπορείτε να προσέλθετε στο σχολείο για να ολοκληρωθεί η διαδικασία εγγραφής σας σε αυτό,
+                                  προσκομίζοντας τα απαραίτητα δικαιολογητικά μέχρι την αρχή της σχολικής χρονιάς.
+                                  Διεύθυνση σχολείου: {{GelStudentDetails$.schoolAddress}}, Τηλέφωνο σχολείου: {{GelStudentDetails$.schoolTel}}.<br><br>
                               </div>
                           </div>
                           <div *ngIf = "GelStudentDetails$.status == '3' " >
@@ -739,11 +741,13 @@ import { IAppState } from "../../store/store";
     }
 
     createPdfServerSide() {
-        this._hds.createPdfServerSide(this.applicationEpalIdActive, this.EpalSubmittedDetails$.getValue()[0].status);
+        this._hds.createPdfServerSide(this.applicationEpalIdActive, this.EpalSubmittedDetails$.getValue()[0].status,
+          this.EpalSubmittedDetails$.getValue()[0].schoolName, this.EpalSubmittedDetails$.getValue()[0].schoolAddress, this.EpalSubmittedDetails$.getValue()[0].schoolTel);
     }
 
     createGelPdfServerSide() {
-        this._hds.createGelPdfServerSide(this.applicationGelIdActive, this.GelSubmittedDetails$.getValue()[0].status);
+        this._hds.createGelPdfServerSide(this.applicationGelIdActive, this.GelSubmittedDetails$.getValue()[0].status,
+          this.GelSubmittedDetails$.getValue()[0].schoolName, this.GelSubmittedDetails$.getValue()[0].schoolAddress, this.GelSubmittedDetails$.getValue()[0].schoolTel);
     }
 
     deleteApplication(appId: number): void {

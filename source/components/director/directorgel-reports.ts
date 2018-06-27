@@ -22,6 +22,10 @@ import { IAppState } from "../../store/store";
             <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(0)"><i class="fa fa-file-text"></i> Δηλώσεις Μαθητών</button>
         </div>
 
+        <div *ngIf = "userRole == 'director_gel' ">
+            <button type="button" class="btn btn-block"  (click)="nav_to_reportpath(1)"><i class="fa fa-file-text"></i> Επιλογές μαθητών</button>
+        </div>
+
     </div>
 
    `
@@ -69,6 +73,9 @@ import { IAppState } from "../../store/store";
     nav_to_reportpath(repId) {
         if (repId === 0) {
             this.router.navigate(["/school/report-gel-applications"]);
+        }
+        else if (repId === 1) {
+            this.router.navigate(["/school/report-gel-choices"]);
         }
     }
 

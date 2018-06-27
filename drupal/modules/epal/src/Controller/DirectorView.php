@@ -73,6 +73,7 @@ class DirectorView extends ControllerBase
             $user = reset($users);
             if ($user) {
                 $epalId = $user->init->value;
+                //$epalId = 76;
                 $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $epalId));
                 $school = reset($schools);
                 if (!$school) {
@@ -107,14 +108,14 @@ class DirectorView extends ControllerBase
                     $list = array();
                     foreach ($studentPerSchool as $object) {
                         $studentId = $object->student_id->target_id;
-                        
+
 
                            $sCon = $this->connection->select('epal_student', 'eStudent');
-               
+
                 $sCon->fields('eStudent', array('id','myschool_promoted','lastschool_registrynumber','currentclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear', 'created' ))
-                 
-                  ->condition('eStudent.id', $studentId , '=')                  
-                      
+
+                  ->condition('eStudent.id', $studentId , '=')
+
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -493,16 +494,16 @@ class DirectorView extends ControllerBase
                 } else {
                     $limit = -1;
                 }
-               
+
 
                 $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', -1 , '=') 
-                  ->condition('eSchool.currentclass', 1 , '=') 
-                  ->condition('eStudent.delapp', 0 , '=')           
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', -1 , '=')
+                  ->condition('eSchool.currentclass', 1 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -541,16 +542,16 @@ class DirectorView extends ControllerBase
                 foreach ($CourseB as $object) {
                     $sectorid = $object->sector_id->entity->id();
                     $capacity_class_b = ($object -> capacity_class_sector ->value) *25;
-                  
+
 
                     $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted','delapp'))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', $sectorid , '=') 
-                  ->condition('eSchool.currentclass', 2 , '=')   
-                  ->condition('eStudent.delapp', 0 , '=')                 
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $sectorid , '=')
+                  ->condition('eSchool.currentclass', 2 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -584,16 +585,16 @@ class DirectorView extends ControllerBase
                 foreach ($CourseC as $object) {
                     $specialityid = $object->specialty_id->entity->id();
                     $capacity_class_c = ($object -> capacity_class_specialty ->value) *25;
-                   
+
 
                          $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', $specialityid , '=') 
-                  ->condition('eSchool.currentclass', 3 , '=')  
-                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $specialityid , '=')
+                  ->condition('eSchool.currentclass', 3 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -625,16 +626,16 @@ class DirectorView extends ControllerBase
 
                 foreach ($CourseC as $object) {
                     $specialityid = $object->specialty_id->entity->id();
-                   
+
 
                    $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', $specialityid , '=') 
-                  ->condition('eSchool.currentclass', 4 , '=')  
-                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $specialityid , '=')
+                  ->condition('eSchool.currentclass', 4 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -706,15 +707,15 @@ class DirectorView extends ControllerBase
         if ($CourseA) {
             $limit = $this->getLimit(1, $categ);
 
-           
+
                $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', -1 , '=') 
-                  ->condition('eSchool.currentclass', 1 , '=') 
-                  ->condition('eStudent.delapp', 0 , '=')           
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', -1 , '=')
+                  ->condition('eSchool.currentclass', 1 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))
                   ;
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -727,7 +728,7 @@ class DirectorView extends ControllerBase
         }
 
         $limit = $this->getLimit(2, $categ);
-      
+
          $CourseB = $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(array('epal_id' => $schoolid));
             if ($CourseB) {
             foreach ($CourseB as $object) {
@@ -737,13 +738,13 @@ class DirectorView extends ControllerBase
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted','delapp'))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', $sectorid , '=') 
-                  ->condition('eSchool.currentclass', 2 , '=')   
-                  ->condition('eStudent.delapp', 0 , '=')                 
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $sectorid , '=')
+                  ->condition('eSchool.currentclass', 2 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
-       
+
                 $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
                 if (sizeof($results) < $limit) {
@@ -756,7 +757,7 @@ class DirectorView extends ControllerBase
     $limit = $this->getLimit(3, $categ);
     $CourseC = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $schoolid));
             if ($CourseC) {
-                    
+
             foreach ($CourseC as $object) {
                $specialityid = $object->specialty_id->entity->id();
 
@@ -764,10 +765,10 @@ class DirectorView extends ControllerBase
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', $specialityid , '=') 
-                  ->condition('eSchool.currentclass', 3 , '=')  
-                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $specialityid , '=')
+                  ->condition('eSchool.currentclass', 3 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -782,7 +783,7 @@ class DirectorView extends ControllerBase
         $limit = $this->getLimit(4, $categ);
             $CourseC = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $schoolid));
             if ($CourseC) {
-                    
+
             foreach ($CourseC as $object) {
                $specialityid = $object->specialty_id->entity->id();
 
@@ -790,10 +791,10 @@ class DirectorView extends ControllerBase
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', $specialityid , '=') 
-                  ->condition('eSchool.currentclass', 4 , '=')  
-                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $specialityid , '=')
+                  ->condition('eSchool.currentclass', 4 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -929,6 +930,7 @@ class DirectorView extends ControllerBase
         $user = reset($users);
         if ($user) {
             $schoolid = $user->init->value;
+            //$schoolid = 76;
             $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
             if (!$school) {
@@ -963,17 +965,17 @@ class DirectorView extends ControllerBase
                     if ($limitdown) {
                         $limit = $limitdown->limit_down->value;
                     }
-                    
+
 
 
                     $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', -1 , '=') 
-                  ->condition('eSchool.currentclass', 1 , '=') 
-                  ->condition('eStudent.delapp', 0 , '=')           
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', -1 , '=')
+                  ->condition('eSchool.currentclass', 1 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1004,15 +1006,15 @@ class DirectorView extends ControllerBase
                         $sectorid = $object->sector_id->entity->id();
 
 
-                      
+
                 $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted','delapp'))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', $sectorid , '=') 
-                  ->condition('eSchool.currentclass', 2 , '=')   
-                  ->condition('eStudent.delapp', 0 , '=')                 
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $sectorid , '=')
+                  ->condition('eSchool.currentclass', 2 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1043,16 +1045,16 @@ class DirectorView extends ControllerBase
                         $specialityid = $object->specialty_id->entity->id();
 
 
-              
+
 
                          $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', $specialityid , '=') 
-                  ->condition('eSchool.currentclass', 3 , '=')  
-                  ->condition('eStudent.delapp', 0 , '=')                  
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $specialityid , '=')
+                  ->condition('eSchool.currentclass', 3 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1079,16 +1081,16 @@ class DirectorView extends ControllerBase
                     }
                     foreach ($CourseC as $object) {
                         $specialityid = $object->specialty_id->entity->id();
-                       
+
 
                          $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
                   ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
-                  ->condition('eSchool.epal_id', $schoolid , '=')                  
-                  ->condition('eSchool.specialization_id', $specialityid , '=') 
-                  ->condition('eSchool.currentclass', 4 , '=')   
-                  ->condition('eStudent.delapp', 0 , '=')                 
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $specialityid , '=')
+                  ->condition('eSchool.currentclass', 4 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);

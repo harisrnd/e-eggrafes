@@ -745,6 +745,10 @@ export class HelperDataService implements OnInit, OnDestroy {
           return this.http.get(`${AppSettings.API_ENDPOINT}` + routepath , options)
               .map(response => response.json());
       }
+      else if (routepath === "/school/report-capacity/" || routepath === "/school/report-gel-choices/") {
+          return this.http.get(`${AppSettings.API_ENDPOINT}` + routepath , options)
+              .map(response => response.json());
+      }
     }
 
     makeDideReports(routepath)
@@ -1123,25 +1127,7 @@ export class HelperDataService implements OnInit, OnDestroy {
     }
     */
 
-    createPdfServerSide(headerid, status) {
 
-        let headers = new Headers({
-            "Content-Type": "application/json",
-        });
-        this.createAuthorizationHeader(headers);
-
-        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob });
-        let headerIdStr = headerid.toString();
-        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/pdf-application/` + headerIdStr + "/" + status, options)
-            .map((res) => {
-                return new Blob([res["_body"]], { type: "application/octet-stream" });
-            })
-            .subscribe(
-            data => {
-                FileSaver.saveAs(data, "appConfirmation.pdf");
-            },
-            err => console.error(err));
-    }
 
 
     sendmail(email, name, surname, message, school_type) {
@@ -1528,7 +1514,7 @@ getGelStudentDetails(headerid) {
         .map(response => response.json());
 }
 
-createGelPdfServerSide(headerid, status) {
+createPdfServerSide(headerid, status, schname, schaddress, schtel) {
 
     let headers = new Headers({
         "Content-Type": "application/json",
@@ -1537,7 +1523,28 @@ createGelPdfServerSide(headerid, status) {
 
     let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob });
     let headerIdStr = headerid.toString();
-    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/pdf-application/` + headerIdStr + "/" + status, options)
+    return this.http.get(`${AppSettings.API_ENDPOINT}/epal/pdf-application/` + headerIdStr + "/" + status + "/" + schname + "/" + schaddress + "/" + schtel, options)
+        .map((res) => {
+            return new Blob([res["_body"]], { type: "application/octet-stream" });
+        })
+        .subscribe(
+        data => {
+            FileSaver.saveAs(data, "appConfirmation.pdf");
+        },
+        err => console.error(err));
+}
+
+createGelPdfServerSide(headerid, status, schname, schaddress, schtel) {
+
+    let headers = new Headers({
+        "Content-Type": "application/json",
+    });
+    this.createAuthorizationHeader(headers);
+
+    let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob });
+    let headerIdStr = headerid.toString();
+
+    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/pdf-application/` + headerIdStr + "/" + status + "/" + schname + "/" + schaddress + "/" + schtel, options)
         .map((res) => {
             return new Blob([res["_body"]], { type: "application/octet-stream" });
         })

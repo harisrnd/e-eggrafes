@@ -38,27 +38,27 @@ function epal_theme() {
 function epal_mail($key, &$message, $params) {
     $options = array(
       'langcode' => $message['langcode'],
-    ); 
+    );
 
     switch ($key) {
       case 'send_verification_code':
         $message['from'] = \Drupal::config('system.site')->get('mail');
-        $message['subject'] = t('Σύστημα υποβολής ηλεκτρονικών δηλώσεων προτίμησης ΕΠΑΛ για το νέο σχολικό έτος: Επιβεβαίωση e-mail', $options);
+        $message['subject'] = t('Σύστημα υποβολής ηλεκτρονικών δηλώσεων προτίμησης για το νέο σχολικό έτος: Επιβεβαίωση e-mail', $options);
         $message['body'][] = $params['message'];
         break;
       case 'massive_mail_unallocated':
         $message['from'] = \Drupal::config('system.site')->get('mail');
-        $message['subject'] = t('Μη ικανοποίηση ηλεκτρονικής δήλωσης προτίμησης ΕΠΑΛ', $options);
+        $message['subject'] = t('Μη ικανοποίηση ηλεκτρονικής δήλωσης προτίμησης ', $options);
         $message['body'][] = $params['message'];
         break;
       case 'massive_mail_located':
         $message['from'] = \Drupal::config('system.site')->get('mail');
-        $message['subject'] = t('Ικανοποίηση ηλεκτρονικής δήλωσης προτίμησης ΕΠΑΛ', $options);
+        $message['subject'] = t('Ικανοποίηση ηλεκτρονικής δήλωσης προτίμησης', $options);
         $message['body'][] = $params['message'];
         break;
       case 'help_desk':
         $message['from'] = \Drupal::config('system.site')->get('mail');
-        $message['subject'] = t('Σύστημα υποβολής ηλεκτρονικών δηλώσεων προτίμησης ΕΠΑΛ για το νέο σχολικό έτος: Αίτημα Υποστήριξης', $options);
+        $message['subject'] = t('Σύστημα υποβολής ηλεκτρονικών δηλώσεων προτίμησης για το νέο σχολικό έτος: Αίτημα Υποστήριξης', $options);
         $message['body'][] = $params['message'];
         break;
     }
