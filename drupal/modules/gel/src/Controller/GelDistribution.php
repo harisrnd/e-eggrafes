@@ -2252,7 +2252,9 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
                             foreach ($studentchoices as $objects) {
                             $schoices = $this->entityTypeManager->getStorage('gel_choices')->loadByProperties(array('id' => $objects -> choice_id));
+
                             $schoice = reset($schoices);
+
                                     $choices = $choices."  ".($schoice -> name ->value )."/" ;
                                 }
 
