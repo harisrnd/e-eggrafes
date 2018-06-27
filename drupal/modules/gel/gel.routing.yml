@@ -47,7 +47,7 @@ gel.applicationdetails:
   requirements:
     _user_is_logged_in: 'TRUE'
 gel.applicant.creationpdf:
-  path: '/gel/pdf-application/{studentId}/{status}'
+  path: '/gel/pdf-application/{studentId}/{status}/{schname}/{schaddress}/{schtel}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:

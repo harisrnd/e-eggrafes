@@ -578,7 +578,8 @@ class SubmitedApplications extends ControllerBase
                       if ($epalStudent->finalized === "1")
                           $status = "1";
                       else if ($epalStudent->finalized === "0")
-                          $status = "2";
+                          //$status = "2"; Τροποποίηση για να βγαίνει μήνυμα ότι τοποθετήθηκε "κανονικά" και ας είναι ολιγομελές
+                          $status = "1";
                       else if (   ($epalStudent->second_period === "0" && /*$studInDistr === false*/ $epalStudent->finalized === null)   ||
                                   ($epalStudent->second_period === "1" && $epalStudent->changed < $dateStartInt)  )
                           $status = "3";
@@ -598,6 +599,11 @@ class SubmitedApplications extends ControllerBase
                         $status = "7";
                     else
                         $status = "0";
+
+                    if ($epalStudent->changed != 1529867143)
+                      $appchanged = $epalStudent->changed;
+                    else
+                      $appchanged = $epalStudent->created;
 
                     $list[] = array(
                             'applicationId' => $epalStudent->id,
@@ -626,7 +632,8 @@ class SubmitedApplications extends ControllerBase
                             'telnum' => $telnum_decoded,
                             'relationtostudent' => $epalStudent->relationtostudent,
                             'birthdate' => substr($epalStudent->birthdate, 8, 2).'/'.substr($epalStudent->birthdate, 5, 2).'/'.substr($epalStudent->birthdate, 0, 4),
-                            'changed' => date('d/m/Y H:i', $epalStudent->changed),
+                            //'changed' => date('d/m/Y H:i', $epalStudent->changed),
+                            'changed' => date('d/m/Y H:i', $appchanged),
                             'epalSchoolsChosen' => $epalSchoolsChosen,
                             'applicantsResultsDisabled' => $applicantsResultsDisabled,
                             'applicantsAppModifyDisabled' => $applicantsAppModifyDisabled,

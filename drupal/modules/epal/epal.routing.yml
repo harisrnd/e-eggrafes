@@ -197,7 +197,7 @@ epal.findcapacityperschool:
   requirements:
     _user_is_logged_in: 'TRUE'
 epal.applicant.creationpdf:
-  path: '/epal/pdf-application/{studentId}/{status}'
+  path: '/epal/pdf-application/{studentId}/{status}/{schname}/{schaddress}/{schtel}'
   options:
     _auth: [ 'basic_auth' ]
   defaults:
@@ -442,6 +442,14 @@ epal.schoolgel.report-gel-applications:
     _auth: [ 'basic_auth' ]
   defaults:
     _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportGelApplications'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.schoolgel.report-gel-choices:
+  path: '/school/report-gel-choices'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\ReportsCreator::makeReportGelChoices'
   requirements:
     _user_is_logged_in: 'TRUE'
 epal.dide.report-gel-distrib:

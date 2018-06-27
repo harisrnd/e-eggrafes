@@ -524,9 +524,61 @@ export class ReportsSchema {
             }
         },
 
+    };
+
+
+
+    reportGelChoices = {
+        actions: false,
+        fileName: "Επιλογές μαθητων ΓΕΛ",
+        pager: {
+            display: true,
+            perPage: 15
+        },
+        noDataMessage: "Δεν υπάρχουν δεδομένα που περιέχουν το κείμενο αναζήτησης",
+        columns: {
+            id: {
+                title: "Id αίτησης",
+                width: "10%",
+                filter: true
+            },
+            name: {
+                title: "Όνομα",
+                width: "15%",
+                filter: true
+            },
+            surname: {
+                title: "Επώνυμο",
+                width: "15%",
+                filter: true
+            },
+            section: {
+                title: "Τάξη",
+                width: "15%",
+                filter: true
+            },
+            choice: {
+                title: "Επιλογή",
+                width: "15%",
+                filter: true
+            },
+            orderid: {
+                title: "Σειρά Προτίμησης",
+                width: "10%",
+                filter: true
+            },
+            category: {
+                title: "Τύπος μαθήματος",
+                width: "10%",
+                filter: true
+            },
+
+        },
+
 
 
     };
+
 
 
     reportGelApplications = {

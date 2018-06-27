@@ -732,6 +732,7 @@ class GelApplicationSubmit extends ControllerBase
         //$this->logger->error($student["lastschool_class"]);
         $isNight = $this->isNightSchool($student["lastschool_registrynumber"]);
         //από ΓΕΛ
+        /*
         if ( $student["lastschool_unittypeid"] == "4"  )  {
             if ($isNight &&  $student["lastschool_class"] == "1" && $student["nextclass"] != 1 && $student["nextclass"] != 5) {
               //$this->logger->error("ΠΕΡΙΠΤΩΣΗ 1 Ή 8");
@@ -758,6 +759,7 @@ class GelApplicationSubmit extends ControllerBase
               return 1026;
             }
         }
+        */
 
         //από Γυμνάσιο
         //Προσοχή! Δεν αντιμετωπίζουμε τα Γυμνάσια με Λυκειακες Τάξεις

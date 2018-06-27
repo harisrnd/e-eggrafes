@@ -510,12 +510,12 @@ class GelSubmittedApplications extends ControllerBase
                       else if ($gelStudent->school_id)
                           //υπάρχει σχολείο στον πίνακα gelstudenthighschool
                           $status = "1";
-                      else if ($gelStudent->student_id != null && $gelStudent->school_id == null)
-                          //υπάρχει ο μαθητής αλλά όχι το σχολείο στον πίνακα gelstudenthighschool
-                          $status = "3";
                       else if ($gelStudent->lastschool_unittypeid == 40)
                           //ειδικές περιπτώσεις: μαθητές από ΣΔΕ / σχολεία εξωτερικού
                           $status = "3";
+                      else if ($gelStudent->student_id != null && $gelStudent->school_id == null)
+                          //υπάρχει ο μαθητής αλλά όχι το σχολείο στον πίνακα gelstudenthighschool
+                          $status = "8";
                       else if  ($gelStudent->student_id == null)  {
                           //ο μαθητής δεν υπάρχει στον πίνακα gelstudenthighschool, άρα πάει αυτοδίκαια στο σχολείο τρέχουσας φοίτησης
                           $status = "4";
@@ -552,6 +552,10 @@ class GelSubmittedApplications extends ControllerBase
                     else
                         $status = "0";
 
+                    if ($gelStudent->changed != 1529867143)
+                      $appchanged = $gelStudent->changed;
+                    else
+                      $appchanged = $gelStudent->created;
 
                     $list[] = array(
                             'applicationId' => $gelStudent->id,
@@ -576,7 +580,8 @@ class GelSubmittedApplications extends ControllerBase
                             'telnum' => $telnum_decoded,
                             'relationtostudent' => $gelStudent->relationtostudent,
                             'birthdate' => substr($gelStudent->birthdate, 8, 2).'/'.substr($gelStudent->birthdate, 5, 2).'/'.substr($gelStudent->birthdate, 0, 4),
-                            'changed' => date('d/m/Y H:i', $gelStudent->changed),
+                            //'changed' => date('d/m/Y H:i', $gelStudent->changed),
+                            'changed' => date('d/m/Y H:i', $appchanged),
                             'gelStudentChoices' => $gelStudentChoices,
                             //'schoolName' => $gelStudent->eeschfin_name,
                             //'schoolAddress' => $gelStudent->street_address,
