@@ -79,6 +79,14 @@ import { IAppState } from "../../store/store";
         </div>
         <br>
 
+         <div class="col-md-6">
+          <button type="submit" class="btn btn-lg btn-block"  
+          *ngIf="(loginInfo$ | async).size !== 0"  (click)="InitializeBPeriod()" >
+              Initialization Β Περιόδου <span class="glyphicon glyphicon-menu-right"></span>
+          </button>
+        </div>
+        <br>
+
     </div>
 
     </div>
@@ -95,6 +103,7 @@ import { IAppState } from "../../store/store";
     private showLoader: BehaviorSubject<boolean>;
     private loginInfoSub: Subscription;
     private ServiceStudentCertifSub: Subscription;
+    private InitializedSub: Subscription;
     //private wsIdentSub: Subscription;
     private minedu_userName: string;
     private minedu_userPassword: string;
@@ -136,6 +145,8 @@ import { IAppState } from "../../store/store";
             this.loginInfoSub.unsubscribe();
         if (this.ServiceStudentCertifSub)
             this.ServiceStudentCertifSub.unsubscribe();
+           if (this.InitializedSub)
+            this.InitializedSub.unsubscribe();
         //if (this.wsIdentSub)
         //   this.wsIdentSub.unsubscribe();
     }
@@ -239,7 +250,52 @@ import { IAppState } from "../../store/store";
 
         }
 
+
+
+
+        InitializeBPeriod()
+        {
+
+            console.log("ua mas trelanei");
+                this.showLoader.next(true);
+
+
+                this.InitializedSub = this._hds.InitialazationBPeriod(this.minedu_userName, this.minedu_userPassword)
+                .subscribe(data => {
+                      let mTitle = "ok";
+                      let mText = "H αρχικοποιηση για τη Β' περίοδο έγινε με επιτυχία.";
+                      let mHeader = "modal-header-success";
+                      this.modalTitle.next(mTitle);
+                      this.modalText.next(mText);
+                      this.modalHeader.next(mHeader);
+                      this.showModal("#promotionNotice");
+                      (<any>$(".loading")).remove();
+
+                      this.showLoader.next(false);
+                },
+                error => {
+                    console.log("Error Getting goToSecondPeriod from Web Service");
+
+                    let mTitle = "Αποτυχία Αρχικοποιησης.";
+                    let mText = "Αποτυχία Αρχικοποιησης. " +
+                      "Προσπαθήστε ξανά. Σε περίπτωση που το πρόβλημα επιμείνει, παρακαλώ επικοινωνήστε με την ομάδα υποστήριξης.";
+                    let mHeader = "modal-header-danger";
+                    this.modalTitle.next(mTitle);
+                    this.modalText.next(mText);
+                    this.modalHeader.next(mHeader);
+                    this.showModal("#promotionNotice");
+                    (<any>$(".loading")).remove();
+
+                    this.showLoader.next(false);
+                    return;
+                });
+
+        }
+
+
+        }
+
     //}
 
 
-}
+
