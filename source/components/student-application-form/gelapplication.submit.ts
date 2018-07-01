@@ -223,8 +223,9 @@ import { StudentGelCourseChosen } from "../students/student";
     //private guardianIdentSub: Subscription;
     private guardianEnabled: BehaviorSubject<number>;
     private birtdateFormView: BehaviorSubject<string>;
-     private father1: string;
+    private father1: string;
     private father2:string;
+    private bypassGuardianVer: number;
 
     constructor(
         private _hds: HelperDataService,
@@ -262,6 +263,8 @@ import { StudentGelCourseChosen } from "../students/student";
         this.hasright = 1;
         this.limitSchoolYear = "2013-2014";
 
+        this.bypassGuardianVer = 0;
+
         //this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
         //    this.wsEnabled.next(Number(z.res)) ;
        //});
@@ -276,7 +279,12 @@ import { StudentGelCourseChosen } from "../students/student";
         this.gelUserDataSub = this._hds.getApplicantUserData().subscribe(x => {
             if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren))
               this.hasright = 0;
+
+            if (Number(x.verificationCodeVerified) == 1)
+              this.bypassGuardianVer = 1;
         });
+
+
 
         //this.guardianIdentSub = this._hds.isGuardian_ident_enabled().subscribe(w => {
         //    this.guardianEnabled.next(Number(w.res)) ;
@@ -549,7 +557,7 @@ import { StudentGelCourseChosen } from "../students/student";
                       return;
                     }
 
-                    if (this.guardianEnabled.getValue() === 1 && (aitisiObj[0].websrv_cu_surname === null || aitisiObj[0].websrv_cu_surname === "")) {
+                    if (this.bypassGuardianVer === 0 &&  this.guardianEnabled.getValue() === 1 && (aitisiObj[0].websrv_cu_surname === null || aitisiObj[0].websrv_cu_surname === "")) {
                       let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
                       let mText = "Δεν έχει δηλωθεί Κηδεμόνας στο Πληροφοριακό Σύστημα του Σχολείου. " +
                         "Παρακαλείστε να επικοινωνήσετε με το σχολείο όπου φοιτά τώρα το παιδί για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καταχωρηθεί στο Πληροφοριακό Σύστημα του Σχολείου (myschοol) όπως είναι καταχωρημένο στην εφορία. " +
@@ -565,7 +573,7 @@ import { StudentGelCourseChosen } from "../students/student";
                       return;
                     }
 
-                    if (this.guardianEnabled.getValue() === 1 && aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
+                    if (this.bypassGuardianVer === 0 &&  this.guardianEnabled.getValue() === 1 && aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
 
                        this.father1 = aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "");
                        this.father2 = aitisiObj[0].cu_surname.replace(/ |-/g, "");

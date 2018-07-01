@@ -574,31 +574,62 @@ class SubmitedApplications extends ControllerBase
 
                     //$this->logger->warning("Trace2.." .  $applicantsResultsDisabled . "  " . $es->myschool_promoted );
 
-                    if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted === "1" || $es->myschool_promoted === "2") ) {
-                      if ($epalStudent->finalized === "1")
-                          $status = "1";
-                      else if ($epalStudent->finalized === "0")
-                          //$status = "2"; Τροποποίηση για να βγαίνει μήνυμα ότι τοποθετήθηκε "κανονικά" και ας είναι ολιγομελές
-                          $status = "1";
-                      else if (   ($epalStudent->second_period === "0" && /*$studInDistr === false*/ $epalStudent->finalized === null)   ||
-                                  ($epalStudent->second_period === "1" && $epalStudent->changed < $dateStartInt)  )
-                          $status = "3";
-                      else if ($epalStudent->second_period === "1" &&
-                               $epalStudent->changed >= $dateStartInt)
-                          $status = "4";
+                    if ($epalStudent->second_period === "0")  {
+
+                        if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted === "1" || $es->myschool_promoted === "2") ) {
+                          if ($epalStudent->finalized === "1")
+                              $status = "1";
+                          else if ($epalStudent->finalized === "0")
+                              //$status = "2"; Τροποποίηση για να βγαίνει μήνυμα ότι τοποθετήθηκε "κανονικά" και ας είναι ολιγομελές
+                              $status = "1";
+                          else if (   ($epalStudent->second_period === "0" && /*$studInDistr === false*/ $epalStudent->finalized === null)   ||
+                                      ($epalStudent->second_period === "1" && $epalStudent->changed < $dateStartInt)  )
+                              $status = "3";
+                          else if ($epalStudent->second_period === "1" &&
+                                   $epalStudent->changed >= $dateStartInt)
+                              $status = "4";
+                        }
+                        else if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted === "6" || $es->myschool_promoted === "7") )
+                            $status = "5";
+                        else if ($applicantsResultsDisabled === "0" &&
+                                 $es->myschool_promoted != null && $es->myschool_promoted != "0" &&
+                                 $es->myschool_promoted != "1" && $es->myschool_promoted != "2" &&
+                                 $es->myschool_promoted != "6" && $es->myschool_promoted != "7"
+                                 )
+                            $status = "6";
+                        else if ($applicantsResultsDisabled === "0" && $es->myschool_promoted === "0" )
+                            $status = "7";
+                        else
+                            $status = "0";
+
                     }
-                    else if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted === "6" || $es->myschool_promoted === "7") )
-                        $status = "5";
-                    else if ($applicantsResultsDisabled === "0" &&
-                             $es->myschool_promoted != null && $es->myschool_promoted != "0" &&
-                             $es->myschool_promoted != "1" && $es->myschool_promoted != "2" &&
-                             $es->myschool_promoted != "6" && $es->myschool_promoted != "7"
-                             )
-                        $status = "6";
-                    else if ($applicantsResultsDisabled === "0" && $es->myschool_promoted === "0" )
-                        $status = "7";
-                    else
-                        $status = "0";
+
+                    else if ($epalStudent->second_period === "1")  {
+
+                        if ($applicantsResultsDisabled === "0" && ($es->myschool_promoted != "3" && $es->myschool_promoted != "4" &&
+                            $es->myschool_promoted != "5" && $es->myschool_promoted != "14") )
+                        {
+                          if ($epalStudent->finalized === "1")
+                              $status = "1";
+                          else if ($epalStudent->finalized === "0")
+                              //$status = "2"; Τροποποίηση για να βγαίνει μήνυμα ότι τοποθετήθηκε "κανονικά" και ας είναι ολιγομελές
+                              $status = "1";
+                          else if (  $epalStudent->changed < $dateStartInt )
+                              $status = "3";
+                          else if ($epalStudent->changed >= $dateStartInt)
+                              $status = "4";
+                        }
+                        else if ($applicantsResultsDisabled === "0" &&
+                                 $es->myschool_promoted === "3" || $es->myschool_promoted === "4" ||
+                                 $es->myschool_promoted === "5" || $es->myschool_promoted != "14"
+                                 )
+                            $status = "6";
+                        else
+                            $status = "0";
+
+                    }
+
+
 
                     if ($epalStudent->changed != 1529867143)
                       $appchanged = $epalStudent->changed;

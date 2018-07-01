@@ -73,7 +73,7 @@ class DirectorView extends ControllerBase
             $user = reset($users);
             if ($user) {
                 $epalId = $user->init->value;
-                //$epalId = 76;
+                //$epalId = 191;
                 $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $epalId));
                 $school = reset($schools);
                 if (!$school) {
@@ -930,7 +930,7 @@ class DirectorView extends ControllerBase
         $user = reset($users);
         if ($user) {
             $schoolid = $user->init->value;
-            //$schoolid = 76;
+            //$schoolid = 191;
             $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
             if (!$school) {
