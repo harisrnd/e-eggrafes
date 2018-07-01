@@ -116,7 +116,9 @@ class DirectorView extends ControllerBase
 
                   ->condition('eStudent.id', $studentId , '=')
 
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
+
+
 
                   $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -504,7 +506,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', -1 , '=')
                   ->condition('eSchool.currentclass', 1 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                 ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -552,7 +554,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', $sectorid , '=')
                   ->condition('eSchool.currentclass', 2 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                 ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -595,7 +597,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', $specialityid , '=')
                   ->condition('eSchool.currentclass', 3 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -636,7 +638,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', $specialityid , '=')
                   ->condition('eSchool.currentclass', 4 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -742,7 +744,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', $sectorid , '=')
                   ->condition('eSchool.currentclass', 2 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                 ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
 
                 $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -769,7 +771,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', $specialityid , '=')
                   ->condition('eSchool.currentclass', 3 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -795,7 +797,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', $specialityid , '=')
                   ->condition('eSchool.currentclass', 4 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -976,7 +978,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', -1 , '=')
                   ->condition('eSchool.currentclass', 1 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -1015,7 +1017,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', $sectorid , '=')
                   ->condition('eSchool.currentclass', 2 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -1055,7 +1057,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', $specialityid , '=')
                   ->condition('eSchool.currentclass', 3 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -1091,7 +1093,7 @@ class DirectorView extends ControllerBase
                   ->condition('eSchool.specialization_id', $specialityid , '=')
                   ->condition('eSchool.currentclass', 4 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
-                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 

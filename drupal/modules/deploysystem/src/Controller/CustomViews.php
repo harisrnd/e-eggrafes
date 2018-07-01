@@ -87,6 +87,37 @@ class CustomViews extends ControllerBase {
 
     }
 
+	public function getGelSchoolList(Request $request, $schsearch)  {
+		try {
+			$sCon = $this->connection->select('gel_school', 'eSchool')
+				->fields('eSchool', array('name', 'registry_no', 'unit_type_id', 'id'));
+				//->condition('eSchool.name', '%' . db_like($schsearch) . '%', 'LIKE');
+					  $words = preg_split('/[\s]+/', $schsearch);
+					  foreach ($words as $word)
+							  $sCon->condition('eSchool.name', '%' . db_like($word) . '%', 'LIKE');
+  
+					  $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+			//$school = reset($schools);
+					  $list = array();
+					  foreach ($schools as $object) {
+							  $list[] = array(
+									  'registry_no' => $object->registry_no,
+									  'name' => $object->name,
+									  'unit_type_id' => $object->unit_type_id,
+									  'school_id' => $object->id,
+							  );
+					  }
+					  return $this->respondWithStatus($list, Response::HTTP_OK);
+  
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
+					  return $this->respondWithStatus([
+									  'message' => t("error in getSchoolList function"),
+							  ], Response::HTTP_FORBIDDEN);
+		}
+  
+	  }
+
 
 
 
