@@ -134,6 +134,8 @@ class WSConsumer extends ControllerBase
             $sCon->condition('gel_app.lastschool_schoolyear','2017-2018', '<');
             $sCon->condition('gel_app.myschool_id',NULL, 'IS NOT');
             $sCon->condition('gel_app.delapp',0, '=');
+            $sCon->condition('gel_app.second_period',1, '=');
+
             $students_promotions = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
             foreach ($students_promotions as $student) {
@@ -151,14 +153,16 @@ class WSConsumer extends ControllerBase
                 }
 
                 if ($result==NULL){
-                    $this->logger->warning($count.",".$student->myschool_id.", null response");
+                    $this->logger->warning($count.",".$student->myschool_id.", null result");
+
 
                 }
                 else{
 
                     $promotion=json_decode($result);
                     if ($promotion==NULL){
-                        $this->logger->warning($count.",".$student->myschool_id.", null response");
+                        $this->logger->warning($count.",".$student->myschool_id.", null promotion");
+                        $promotion=0;
                     }
 
                     $transaction = $this->connection->startTransaction();
@@ -194,6 +198,8 @@ class WSConsumer extends ControllerBase
             $sCon->condition('epal_app.lastschool_schoolyear','2017-2018', '<');
             $sCon->condition('epal_app.myschool_id',NULL, 'IS NOT');
             $sCon->condition('epal_app.delapp',0, '=');
+            $sCon->condition('gel_app.second_period',1, '=');
+
             $students_promotions = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
             foreach ($students_promotions as $student) {
@@ -211,14 +217,15 @@ class WSConsumer extends ControllerBase
                 }
 
                 if ($result==NULL){
-                    $this->logger->warning($count.",".$student->myschool_id.", null response");
+                    $this->logger->warning($count.",".$student->myschool_id.", null result");
 
                 }
                 else{
 
                     $promotion=json_decode($result);
                     if ($promotion==NULL){
-                        $this->logger->warning($count.",".$student->myschool_id.", null response");
+                        $this->logger->warning($count.",".$student->myschool_id.", null promotion");
+                        $promotion=0;
                     }
 
                     $transaction = $this->connection->startTransaction();

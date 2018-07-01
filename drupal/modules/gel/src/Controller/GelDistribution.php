@@ -3970,7 +3970,35 @@ public function Initializationbperiod(Request $request)
             $entity_storage_student->save($entity_object);
         
 
-        }
+            }
+
+            $this->logger->warning("sde prin");
+            $student = array();
+            //initialazation for sde
+            $sCon = $this->connection->select('gel_student', 'gStudent');
+            $sCon->fields('gStudent', array('id', 'lastschool_registrynumber','lastschool_unittypeid','lastschool_class','nextclass','second_period'))
+             ->condition('gStudent.lastschool_unittypeid', 40 , '=')
+             ->condition('gStudent.delapp', 0, '=');
+
+            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+            //$this->logger->warning("9");
+
+            foreach ($schools as $school) {
+         
+                $student = array(
+                    'langcode' => 'el',
+                    'id' => $school ->id,
+                    'student_id' => $school ->id,
+                    'taxi' => $school-> nextclass,
+                    'dide' => 0,//$school ->edu_admin_id,
+                    'second_period' => 1,
+                );
+                $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
+                $entity_object = $entity_storage_student->create($student);
+                $entity_storage_student->save($entity_object);
+     
+
+            }
 
 
     }

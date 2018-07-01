@@ -1229,11 +1229,11 @@ deletefilters(secsel,classid)
 initialized()
 {
 
-      this.hasdone = true;
-      this.showLoader.next(false);
+      //this.hasdone = true;
+      //this.showLoader.next(false);
 
 
-/*       this.InitializedSub = this._hds.findIfInitialized()
+       this.InitializedSub = this._hds.findIfInitialized()
 
                 .subscribe(data => {
                     this.Initialized$.next(data);
@@ -1254,7 +1254,7 @@ initialized()
                 error => {
                     this.Initialized$.next([{}]);
 
-                }); */
+                }); 
             
  }
 
@@ -1285,7 +1285,7 @@ getSDEStudents() {
       this.showLoader.next(false);
     });
 
-    this.showLoader.next(false);
+    //this.showLoader.next(false);
 
 
 }
