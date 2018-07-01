@@ -1,7 +1,15 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Subscription } from "rxjs/Rx";
+import { BehaviorSubject, Observable, Subscription } from "rxjs/Rx";
 import { HelperDataService } from "../../services/helper-data-service";
+import { AppSettings } from "../../app.settings";
+
+import { ILoginInfoRecords } from "../../store/logininfo/logininfo.types";
+import { IAppState } from "../../store/store";
+import { LOGININFO_INITIAL_STATE } from "../../store/logininfo/logininfo.initial-state";
+import { NgRedux } from "@angular-redux/store";
+import { Http, Headers, RequestOptions } from "@angular/http";
+
 import {
     FormBuilder,
     FormGroup,
@@ -293,7 +301,7 @@ import {
                       <div>Διεύθυνση Κατοικίας </div>
 
                     </div>
-                    <div class="col-md-2 " style="   font-weight: bold; font-size: 0.8em" >Τύπος Σχολείου</div>
+                    <div class="col-md-2 " style="font-weight: bold; font-size: 0.8em" >Τύπος Σχολείου</div>
                     <div class="col-md-3 " style="font-weight: bold;">
                             Σχολείο Τοποθέτησης
                      </div>
@@ -465,7 +473,7 @@ import {
                      </div>
                     <div class="col-md-2 ">
                     </div>
-                 </div>
+          </div>
 
 
                  <div *ngFor="let AllStudents$  of StudentsPerSchool$ | async; let l=index; let isOdd=odd; let isEven=even"
@@ -567,8 +575,65 @@ import {
 
       </div>
 
+      <li class="list-group-item isclickable" (click)="setActiveclass(40)">
+        <div *ngIf="(showLoader | async) === false && hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 40"
+        (click)="getSDEStudents()">ΣΔΕ/ΠΡΟΣΦΥΓΕΣ/ΚΑΤΟΙΚΟΙ ΕΞΩΤΕΡΙΚΟΥ</div>
+      </li>
+      <div *ngIf="(showLoader | async) === false" [hidden] ="aclassActive !== 40">
+        <br>
+
+        <div style="width: 100%; color: #000000; font-weight: bold;" >
+        <p style="margin-top: 20px; line-height: 2em;"> Αφού επιλέξετε τους μαθητες απο την παρακάτω λίστα, στη συνέχεια επιλέξτε το αντίστοιχο Λύκειο υποδοχής.</p>
+        <input ngui-auto-complete formControlName="lastschool_schoolname" [value] =  " (lastSchName || async).value" [source]="observableSource.bind(this)" [list-formatter]="lastSchoolListFormatter" [value-formatter]="lastSchoolValueFormatter" [min-chars]="5" no-match-found-text="Δεν βρέθηκαν σχολεία"
+        (valueChanged)="lastSchoolValueChanged($event)" placeholder="Πληκτρολογήστε τουλάχιστο 5 χαρακτήρες" class="form-control">
+        </div>
+        <br>
+        <br>
+
+        <div *ngIf = "(showLoader | async) === false" class="list-group-item framecolor">
+
+          <div class="col-md-5" style="font-weight: bold; font-size: 1em align:center">
+            <div>A/A Αίτησης</div>
+            <div>Διεύθυνση Κατοικίας </div>
+            <div>T.K., Περιοχή</div>
+          </div>
+          <div class="col-md-2" style="font-weight: bold; font-size: 1em align:center">Τύπος Σχολείου</div>
+          <div class="col-md-4" style="font-weight: bold; font-size: 1em; align:center">Σχολείο Τοποθέτησης</div>
+          <div class="col-md-1"></div>
+        </div>
+
+        <div *ngIf = "(showLoader | async) === false">
+          <div *ngFor="let studentSDE$  of SDEStudents$ | async; let l=index; let isOdd=odd; let isEven=even"
+           class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
+            style="margin: 0px 2px 0px 2px;">
 
 
+             <div class="col-md-1 " style = "font-size: 0.8em">
+              <input #cb type="checkbox" [checked]="findid(studentSDE$.id)" (change)="updateCheckedOptions(studentSDE$.id, l)">
+            </div>
+
+             <div class="col-md-4"  style = "font-size: 0.8em align:left">
+               <div>{{studentSDE$.id}}</div>
+               <div>{{studentSDE$.regionaddress}}</div>
+              <div>{{studentSDE$.regiontk}}{{studentSDE$.regionarea}}</div>  
+             </div>
+             <div class="col-md-2" style = "font-size: 0.8em" ><div>{{studentSDE$.school_type}}</div></div>
+             <div class="col-md-4" style = "font-size: 0.8em align:right" >
+                <div *ngIf="studentSDE$.oldschool !== false"  class= "changecolor" style = "font-size: 0.8em align:right">
+                    {{studentSDE$.oldschool}}
+                </div>
+                <div *ngIf="studentSDE$.oldschool !== true" style = "font-size: 0.8em align:right">
+                </div>
+             </div>
+             <div  class="col-md-1"  style="font-size: 0.8em;">
+                  <i *ngIf="studentSDE$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosaveSDE(studentSDE$.id)"></i>
+             </div>
+          </div>
+        </div>  
+
+
+
+      </div>  
 
 
 
@@ -614,13 +679,19 @@ import {
     private tot_pages = 1;
     private stperpage = 10;
     private hasdone = false;
+    private SDEStudents$: BehaviorSubject<any>;
+    private SDEStudentsSub: Subscription;
 
-
+    private loginInfoSub: Subscription;
+    private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
+    private lastSchName: BehaviorSubject<string>;
 
 
     constructor(
         private _hds: HelperDataService,
         private fb: FormBuilder,
+        private _ngRedux: NgRedux<IAppState>,
+        private http: Http
            ) {
         this.JuniorHighSchool$ = new BehaviorSubject([{}]);
         this.HighSchool$ = new BehaviorSubject([{}]);
@@ -640,9 +711,12 @@ import {
             studentperpage:[10],
             addressfilter:["",[]],
             amfilter:["",[]],
-
+            lastschool_schoolname: ["", []],
         });
 
+        this.SDEStudents$= new BehaviorSubject([{}]);
+        this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
+        this.lastSchName = new BehaviorSubject("");
 
 
     }
@@ -655,12 +729,30 @@ import {
 
     ngOnInit() {
 
+
+      this.loginInfoSub = this._ngRedux.select("loginInfo")
+      .map(loginInfo => <ILoginInfoRecords>loginInfo)
+      .subscribe(linfo => {
+        //new piece of code
+        if (linfo.size > 0) {
+            linfo.reduce(({ }, loginInfoObj) => {
+                return loginInfoObj;
+            }, {});
+          }
+          //end new piece of code
+          this.loginInfo$.next(linfo);
+    }, error => { console.log("error selecting loginInfo"); });
+
+
         this.initialized();
        
        this.selall = false;
        this.selections = [];
         (<any>$("#informationfeedback")).appendTo("body");
        this.getSchools();
+
+
+
     }
 
      setActiveRegion(ind,type, changed,changepages, addressfilter, amfilter) {
@@ -1137,8 +1229,11 @@ deletefilters(secsel,classid)
 initialized()
 {
 
+      //this.hasdone = true;
+      //this.showLoader.next(false);
 
-      this.InitializedSub = this._hds.findIfInitialized()
+
+       this.InitializedSub = this._hds.findIfInitialized()
 
                 .subscribe(data => {
                     this.Initialized$.next(data);
@@ -1159,7 +1254,7 @@ initialized()
                 error => {
                     this.Initialized$.next([{}]);
 
-                });
+                }); 
             
  }
 
@@ -1175,4 +1270,169 @@ getSchools()
             });
 }
 
+getSDEStudents() {
+
+  
+    this.showLoader.next(true);
+
+    this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
+              
+      this.SDEStudents$.next(data);
+    },
+    error => {
+      this.StudentsPerSchool$.next([{}]);
+      console.log("Error Getting SDE Students");
+      this.showLoader.next(false);
+    });
+
+    //this.showLoader.next(false);
+
+
+}
+
+private observableSource = (keyword: any): Observable<any[]> => {
+
+  let headers = new Headers({
+      "Content-Type": "application/json",
+  });
+  this.loginInfo$.getValue().forEach(loginInfoToken => {
+      headers.append("Authorization", "Basic " + btoa( loginInfoToken.auth_token + ":" +  loginInfoToken.auth_token));
+ });
+
+
+ let options = new RequestOptions({ headers: headers });
+
+ let url: string = `${AppSettings.API_ENDPOINT}/deploysystem/getgelschoollist/` + keyword ;
+
+  if (keyword) {
+      return this.http.get(url, options)
+          .map(res => {
+              let json = res.json();
+              let retArr = <any>Array();
+              //for (let i = 0; i < json.data.length; i++) {
+              for (let i = 0; i < json.length; i++) {
+                  retArr[i] = {};
+                  //retArr[i].registry_no = json.data[i].registry_no;
+                  //retArr[i].name = json.data[i].name;
+                  //retArr[i].id = json.data[i].id;
+                  retArr[i].registry_no = json[i].registry_no;
+                  retArr[i].name = json[i].name;
+                  retArr[i].unit_type_id = json[i].unit_type_id;
+                  retArr[i].school_id = json[i].school_id;
+
+              }
+              return retArr;
+          });
+  } else {
+      return Observable.of([]);
+  }
+};
+
+lastSchoolListFormatter(data: any): string {
+  return data.name;
+};
+
+lastSchoolValueFormatter(data: any): string {
+  return data.name;
+};
+
+lastSchoolValueChanged(e: any): void {
+  this.confirmSDE();
+};
+
+undosaveSDE(nid)
+{
+
+   this.showLoader.next(true);
+   
+  this.SaveSelectionSub = this._hds.saveHighScoolSelectionforSDE(nid, 0,1).subscribe(data => {
+
+            this.SaveSelection$.next(data);
+
+            this.selections = [];
+            this.selall = false;
+
+            this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
+              
+              this.SDEStudents$.next(data);
+            },
+            error => {
+              this.StudentsPerSchool$.next([{}]);
+              console.log("Error Getting SDE Students");
+              this.showLoader.next(false);
+            });
+
+    },
+        error => {
+          this.StudentsPerSchool$.next([{}]);
+          console.log("Error Undo");
+          this.showLoader.next(false);
+        });
+
+    this.showLoader.next(false);
+    this.modalHeader.next("modal-header-success");
+    this.modalTitle.next("Έγινε αναίρεση τοποθέτησης .");
+    this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
+    this.showModal();
+
+
+}
+
+confirmSDE()
+{
+
+
+    let oldschool = 0;
+    let schoolid = this.formGroup.controls["lastschool_schoolname"].value.school_id;
+
+
+    if (this.selections.length === 0)
+    {
+
+        schoolid = 0;
+        this.modalHeader.next("modal-header-danger");
+        this.modalTitle.next("Δεν επιλέξατε μαθητές.");
+        this.modalText.next("Επιλέξτε μαθητές και στη συνέχεια το Λύκειο υποδοχής τους. ");
+        this.showModal();
+        this.selall = false;
+        this.selections = [];
+
+
+    }
+     else{
+
+      this.showLoader.next(true);
+
+
+      this.SaveSelectionSub = this._hds.saveHighScoolSelectionforSDE(this.selections, schoolid,0).subscribe(data => {
+         this.SaveSelection$.next(data);
+         this.selections = [];
+         this.selall = false;
+
+         this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
+             this.SDEStudents$.next(data);
+          },
+          error => {
+            this.StudentsPerSchool$.next([{}]);
+            console.log("Error Getting SDE Students");
+            this.showLoader.next(false);
+          });
+
+
+       },
+        error => {
+          this.SaveSelection$.next([{}]);
+          console.log("Error saving Approved");
+          this.showLoader.next(false);
+        });
+
+
+        this.showLoader.next(false);
+        this.modalHeader.next("modal-header-success");
+        this.modalTitle.next("Αποθηκεύτηκαν.");
+        this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
+        this.showModal();    
+   }
+
+}
 }
