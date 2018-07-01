@@ -78,3 +78,11 @@ deploysystem.get_school_list:
     _controller: '\Drupal\deploysystem\Controller\CustomViews::getSchoolList'
   requirements:
     _user_is_logged_in: 'TRUE'
+deploysystem.get_gelschool_list:
+  path: '/deploysystem/getgelschoollist/{schsearch}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\deploysystem\Controller\CustomViews::getGelSchoolList'
+  requirements:
+    _user_is_logged_in: 'TRUE'

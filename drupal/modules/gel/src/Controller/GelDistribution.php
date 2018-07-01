@@ -2778,6 +2778,8 @@ public function FindStudentsPerSchoolGym(Request $request)
     $user = reset($users);
     if ($user) {
         $gymId = $user->init->value;
+        //$gymId = 969;
+
         $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gymId));
         $school = reset($schools);
         if (!$school) {
