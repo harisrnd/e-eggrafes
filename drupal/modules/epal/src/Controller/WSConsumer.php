@@ -134,6 +134,7 @@ class WSConsumer extends ControllerBase
             $sCon->condition('gel_app.lastschool_schoolyear','2017-2018', '<');
             $sCon->condition('gel_app.myschool_id',NULL, 'IS NOT');
             $sCon->condition('gel_app.delapp',0, '=');
+            $sCon->condition('gel_app.myschool_promoted',NULL, 'IS');
             $sCon->condition('gel_app.second_period',1, '=');
 
             $students_promotions = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -198,7 +199,8 @@ class WSConsumer extends ControllerBase
             $sCon->condition('epal_app.lastschool_schoolyear','2017-2018', '<');
             $sCon->condition('epal_app.myschool_id',NULL, 'IS NOT');
             $sCon->condition('epal_app.delapp',0, '=');
-            $sCon->condition('gel_app.second_period',1, '=');
+            $sCon->condition('epal_app.myschool_promoted',NULL, 'IS');
+            $sCon->condition('epal_app.second_period',1, '=');
 
             $students_promotions = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
