@@ -488,20 +488,15 @@ class GelSubmittedApplications extends ControllerBase
                     $schoolTel = $gelStudent->phone_number;
 
                     //$this->logger->warning("Trace.." .  $gelStudent->myschool_promoted . "  " . $gelStudent->second_period . "  " . $gelStudent->changed . " "  . $dateStartInt);
-
-                    //new piece of code concerning to enable / disable edit functionality
-                    //$this->logger->warning("Trace2.." .  $gelStudent->changed . "  " . $dateStartInt );
                     $canedit = '0';
                     if (  $applicantsAppModifyDisabled == "0"
                         && $eggrafesConfig->activate_second_period->value == $gelStudent->second_period
                         /*&& $gelStudent->changed >= $dateStartInt*/
                       )
                       $canedit = '1';
-                    //end new piece
 
                     if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "1" || $gelStudent->myschool_promoted === "2")) {
 
-                      //new piece of code
                       //  περιττό (?), στη Β' περίοδο οι αιτήσεις λογικά δεν έχουν ενημερωμένο το myschool_promoted ?
                       if ($gelStudent->second_period === "1" && $gelStudent->changed >= $dateStartInt)
                         //η αίτηση είναι της β' περιόδου με ημερομηνία μεταγενέστερη της ημερομηνίας έναρξης β' περιόδου
@@ -551,6 +546,7 @@ class GelSubmittedApplications extends ControllerBase
                         $status = "7";
                     else
                         $status = "0";
+
 
                     if ($gelStudent->changed != 1529867143)
                       $appchanged = $gelStudent->changed;

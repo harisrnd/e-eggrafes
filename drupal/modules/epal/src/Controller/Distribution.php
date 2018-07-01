@@ -285,14 +285,14 @@ class Distribution extends ControllerBase
         $total_count = 0;
         try {
             $sCon = $this->connection->select('epal_student', 'eStudent')
-                ->fields('eStudent', array('id', 'currentclass', 'currentepal', 'second_period', 'created'))
+                ->fields('eStudent', array('id', 'currentclass', 'currentepal', 'second_period', 'created', 'changed'))
                 ->condition('eStudent.delapp', 1, '!=');
             if ($period === self::IS_SECOND_PERIOD) {
                 $sCon->condition('eStudent.second_period', 1, '=');
 
                 //$datelimit = '7-9-2017';
                 $datelimitInt = strtotime($datelimit);
-                $sCon->condition('eStudent.created', $datelimitInt, '>=');
+                $sCon->condition('eStudent.changed', $datelimitInt, '>=');
 
             }
 
@@ -913,7 +913,8 @@ class Distribution extends ControllerBase
         try {
             $this->connection->delete('epal_student_class')
                 ->condition('second_period', 1)
-                ->condition('created', $datelimitInt, '>=')
+                //->condition('created', $datelimitInt, '>=')
+                ->condition('changed', $datelimitInt, '>=')
                 ->execute();
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());

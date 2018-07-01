@@ -209,6 +209,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
     private birtdateFormView: BehaviorSubject<string>;
     private father1: string;
     private father2:string;
+    private bypassGuardianVer: number;
 
     constructor(
         private _hds: HelperDataService,
@@ -253,6 +254,8 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
         this.birtdateFormView = new BehaviorSubject("");
 
+        this.bypassGuardianVer = 0;
+
         //this.wsIdentSub = this._hds.isWS_ident_enabled().subscribe(z => {
         //    this.wsEnabled.next(Number(z.res)) ;
         //});
@@ -271,6 +274,10 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
         this.epalUserDataSub = this._hds.getApplicantUserData().subscribe(x => {
             if ( Number(x.numAppSelf) > 0 && Number(x.numAppChildren) >= Number(x.numChildren))
               this.hasright = 0;
+
+            if (Number(x.verificationCodeVerified) == 1)
+              this.bypassGuardianVer = 1;
+
         });
 
         this.loginInfoSub = this._ngRedux.select("loginInfo")
@@ -554,7 +561,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
 
                     }
 
-                    if (this.guardianEnabled.getValue() === 1 && (aitisiObj[0].websrv_cu_surname === null || aitisiObj[0].websrv_cu_surname === "") ) {
+                    if (this.bypassGuardianVer === 0 &&  this.guardianEnabled.getValue() === 1 && (aitisiObj[0].websrv_cu_surname === null || aitisiObj[0].websrv_cu_surname === "") ) {
                       let mTitle = "Αποτυχία Ταυτοποίησης Κηδεμόνα";
                       let mText = "Δεν έχει δηλωθεί Κηδεμόνας στο Πληροφοριακό Σύστημα του Σχολείου. " +
                         "Παρακαλείστε να επικοινωνήσετε με το σχολείο όπου φοιτά τώρα το παιδί για να επιβεβαιώσετε ότι το ονοματεπώνυμο του κηδεμόνα έχει καταχωρηθεί στο Πληροφοριακό Σύστημα του Σχολείου (myschοol) όπως είναι καταχωρημένο στην εφορία. " +
@@ -570,7 +577,7 @@ import { StudentCourseChosen, StudentEpalChosen, StudentSectorChosen } from "../
                       return;
                     }
 
-                    if (this.guardianEnabled.getValue() === 1 && aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
+                    if (this.bypassGuardianVer === 0 && this.guardianEnabled.getValue() === 1 && aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "") !== aitisiObj[0].cu_surname.replace(/ |-/g, "")) {
 
                         this.father1 = aitisiObj[0].websrv_cu_surname.replace(/ |-/g, "");
                         this.father2 = aitisiObj[0].cu_surname.replace(/ |-/g, "");

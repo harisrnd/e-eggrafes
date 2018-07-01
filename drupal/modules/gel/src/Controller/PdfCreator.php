@@ -194,12 +194,14 @@ class PDFCreator extends ControllerBase {
 		else
 			$this->pdf->MultiCell(0, 8, $this->prepareString('με αριθμό δήλωσης: ' . $student->id->value . ' / ' .  date('d-m-y (ώρα: H:i:s)',  $student->created->value)), 0, 'C');
 
+		/*
 		$this->pdf->SetFont($this->fontLight, '', 11);
 		//if ($this->applicantsResultsDisabled === "1")
 		if ($status === "0" || $status === "2" || $status === "3" || $status === "5" || $status === "6" || $status === "7" || $status === "8")
 			$this->pdf->MultiCell(0, 8, $this->prepareString('(Αρχική)'), 0, 'R');
 		else if ($status === "1" || $status === "4" )
 			$this->pdf->MultiCell(0, 8, $this->prepareString('(Οριστική)'), 0, 'R');
+		*/
 
 		$this->pdf->Ln();
 

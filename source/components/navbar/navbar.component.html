@@ -44,7 +44,7 @@
                                 </div>
 
                                 <div *ngIf="(loginInfo$ | async).size > 0 " class="nav-item" >
-                                    <li *ngIf="(authRole=='director_gel') || (authRole=='director_gymlt')" class="nav-item">
+                                    <li *ngIf="(authRole=='director_gel') " class="nav-item">
                                         <a class="nav-link" [routerLink]="['/school/directorgel-reports']" [routerLinkActive]="['active']"><b>Αναφορές</b></a>
                                     </li>
                                 </div>
