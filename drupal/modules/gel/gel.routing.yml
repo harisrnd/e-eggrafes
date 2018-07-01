@@ -174,3 +174,11 @@ gel.deleteFromDirector:
     _controller: '\Drupal\gel\Controller\GelDistribution::deleteApplicationFromDirector'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.initializationBperiod:
+  path: '/gel/initializationBperiod'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\GelDistribution::Initializationbperiod'
+  requirements:
+    _user_is_logged_in: 'TRUE'

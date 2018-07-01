@@ -1836,6 +1836,25 @@ Initialazation() {
     }
 
 
+
+
+InitialazationBPeriod(username, userpassword) {
+
+      
+      let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+
+      this.createMinistryAuthorizationHeader(headers, username, userpassword);
+      let options = new RequestOptions({ headers: headers });
+      console.log("tralalala");
+      return this.http.get(`${AppSettings.API_ENDPOINT}/gel/initializationBperiod` , options)
+          .map(response => response.json());
+
+
+    }
+
+
 findIfInitialized()
 {
   this.loginInfo$.getValue().forEach(loginInfoToken => {
