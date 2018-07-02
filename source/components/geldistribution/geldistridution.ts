@@ -1349,9 +1349,6 @@ undosaveSDE(nid)
 
             this.SaveSelection$.next(data);
 
-            this.selections = [];
-            this.selall = false;
-
             this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
               
               this.SDEStudents$.next(data);
@@ -1374,6 +1371,8 @@ undosaveSDE(nid)
     this.modalTitle.next("Έγινε αναίρεση τοποθέτησης .");
     this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
     this.showModal();
+    this.selall = false;
+    this.selections = [];
 
 
 }
@@ -1384,7 +1383,7 @@ confirmSDE()
 
     let oldschool = 0;
     let schoolid = this.formGroup.controls["lastschool_schoolname"].value.school_id;
-
+    console.log(schoolid);
 
     if (this.selections.length === 0)
     {
@@ -1396,7 +1395,11 @@ confirmSDE()
         this.showModal();
         this.selall = false;
         this.selections = [];
+        console.log('sde')
+        this.formGroup.controls["lastschool_schoolname"].setValue("");
+        this.formGroup.controls["lastschool_schoolname"].updateValueAndValidity();
 
+        
 
     }
      else{
@@ -1406,8 +1409,6 @@ confirmSDE()
 
       this.SaveSelectionSub = this._hds.saveHighScoolSelectionforSDE(this.selections, schoolid,0).subscribe(data => {
          this.SaveSelection$.next(data);
-         this.selections = [];
-         this.selall = false;
 
          this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
              this.SDEStudents$.next(data);
@@ -1417,6 +1418,7 @@ confirmSDE()
             console.log("Error Getting SDE Students");
             this.showLoader.next(false);
           });
+          schoolid = 0;
 
 
        },
@@ -1432,6 +1434,11 @@ confirmSDE()
         this.modalTitle.next("Αποθηκεύτηκαν.");
         this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
         this.showModal();    
+        this.selall = false;
+        this.selections = [];
+        this.formGroup.controls["lastschool_schoolname"].setValue("");
+        this.formGroup.controls["lastschool_schoolname"].updateValueAndValidity();
+
    }
 
 }
