@@ -1946,4 +1946,43 @@ deleteApplicationforDirectorGel(appId) {
             .map(response => response.json());
 
 }
+
+
+getAllIDIWTStudents() {
+
+    this.loginInfo$.getValue().forEach(loginInfoToken => {
+        this.authToken = loginInfoToken.auth_token;
+        this.authRole = loginInfoToken.auth_role;
+    });
+
+    let headers = new Headers({
+        "Content-Type": "application/json",
+    });
+    this.createAuthorizationHeader(headers);
+    let options = new RequestOptions({ headers: headers });
+    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/idiwt_all_students` , options)
+        .map(response => response.json());
+}
+
+saveHighScoolSelectionforIDIWT(studentid, schoolid, undosel){
+
+this.loginInfo$.getValue().forEach(loginInfoToken => {
+        this.authToken = loginInfoToken.auth_token;
+        this.authRole = loginInfoToken.auth_role;
+    });
+    let headers = new Headers({
+        "Content-Type": "application/json",
+    });
+    this.createAuthorizationHeader(headers);
+    let options = new RequestOptions({ headers: headers });
+    //if (oldschool == false)
+    //{
+    //    oldschool = 999999;
+    //}
+    return this.http.get(`${AppSettings.API_ENDPOINT}/gel/saveselectionforIDIWT/`+ studentid + '/'+schoolid  + '/' + undosel, options)
+        .map(response => response.json());
+
+}
+
+
 }

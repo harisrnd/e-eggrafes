@@ -198,3 +198,19 @@ gel.initializationBperiod:
     _controller: '\Drupal\gel\Controller\GelDistribution::Initializationbperiod'
   requirements:
     _user_is_logged_in: 'TRUE'
+gel.idiwtallstudents:
+  path: '/gel/idiwt_all_students'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\SdeDistribution::getIdiwtStudents'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+gel.savehighscoolselectionforIDIWT:
+  path: '/gel/saveselectionforIDIWT/{studentid}/{schoolid}/{undoselection}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\gel\Controller\SdeDistribution::SaveIdiwtStudentHighSchhool'
+  requirements:
+    _user_is_logged_in: 'TRUE'
