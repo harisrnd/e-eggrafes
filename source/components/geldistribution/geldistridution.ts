@@ -71,10 +71,10 @@ import {
        -->
 
        <li class="list-group-item isclickable" (click)="setActiveclass(1)">
-          <div *ngIf="hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1" 
+          <div *ngIf="hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 1"
 
-          (click)="setActiveRegion(0,1,1,0,addressfilter, amfilter)"  > Α' Λυκείου  
-          
+          (click)="setActiveRegion(0,1,1,0,addressfilter, amfilter)"  > Α' Λυκείου
+
           </div>
        </li>
       <div [hidden] ="aclassActive !== 1 ">
@@ -615,7 +615,7 @@ import {
              <div class="col-md-4"  style = "font-size: 0.8em align:left">
                <div>{{studentSDE$.id}}</div>
                <div>{{studentSDE$.regionaddress}}</div>
-              <div>{{studentSDE$.regiontk}}{{studentSDE$.regionarea}}</div>  
+              <div>{{studentSDE$.regiontk}}{{studentSDE$.regionarea}}</div>
              </div>
              <div class="col-md-2" style = "font-size: 0.8em" ><div>{{studentSDE$.school_type}}</div></div>
              <div class="col-md-4" style = "font-size: 0.8em align:right" >
@@ -629,9 +629,9 @@ import {
                   <i *ngIf="studentSDE$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosaveSDE(studentSDE$.id)"></i>
              </div>
           </div>
-        </div>  
+        </div>
 
-      </div>  
+      </div>
 
 
 
@@ -675,7 +675,7 @@ import {
              <div class="col-md-4"  style = "font-size: 0.8em align:left">
                <div>{{studentIdiwt$.id}}</div>
                <div>{{studentIdiwt$.regionaddress}}</div>
-              <div>{{studentIdiwt$.regiontk}}{{studentIdiwt$.regionarea}}</div>  
+              <div>{{studentIdiwt$.regiontk}}{{studentIdiwt$.regionarea}}</div>
              </div>
              <div class="col-md-2" style = "font-size: 0.8em" ><div>{{studentIdiwt$.school_type}}</div></div>
              <div class="col-md-4" style = "font-size: 0.8em align:right" >
@@ -692,7 +692,7 @@ import {
         </div>
 
 
-      </div>  
+      </div>
 
 
 
@@ -748,6 +748,9 @@ import {
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private lastSchName: BehaviorSubject<string>;
 
+    private sdeLocker: BehaviorSubject<boolean>;
+    private privateLocker: BehaviorSubject<boolean>;
+
 
     constructor(
         private _hds: HelperDataService,
@@ -781,8 +784,8 @@ import {
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
         this.lastSchName = new BehaviorSubject("");
         this.IDIWTStudents$= new BehaviorSubject([{}]);
-
-
+        this.sdeLocker = new BehaviorSubject(false);
+        this.privateLocker = new BehaviorSubject(false);
 
     }
 
@@ -810,7 +813,7 @@ import {
 
 
         this.initialized();
-       
+
        this.selall = false;
        this.selections = [];
         (<any>$("#informationfeedback")).appendTo("body");
@@ -852,18 +855,18 @@ import {
 
            this.formGroup.get('pageno').setValue(this.pageno);
 
-                
+
                this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
 
                 .subscribe(data => {
-                   
+
                     this.StudentsPerSchool$.next(data);
                     if (this.pageno == 1){
 
 
                     if (data.length < this.stperpage)
                     {
-                     
+
                       this.tot_pages = 1;
                     }
                     else
@@ -877,7 +880,7 @@ import {
 
                     if (this.tot_pages == 0)
                         this.tot_pages = 1;
-                     
+
                     this.formGroup.get('maxpage').setValue(this.tot_pages);
 
                    }
@@ -1014,7 +1017,7 @@ import {
 
   findselection(ind)
   {
-                  
+
                   this.HighSchoolSelectionSub = this._hds.getHighSchoolSelection(ind).subscribe(x => {
                   this.HighSchoolSelection$.next(x);
 
@@ -1039,7 +1042,7 @@ updateCheckedOptions(k,l)
  else
  {
        this.selections.splice(index, 1);
-      
+
  }
 
  }
@@ -1078,7 +1081,7 @@ selectall(type,addressfilter, amfilter)
        let addressf = this.formGroup.get('addressfilter').value;
        let amf = this.formGroup.get('amfilter').value;
 
-        
+
           this.selall =! this.selall;
            this.showLoader.next(true);
             this.StudentsPerSchoolSub = this._hds.getStudentsPerSchool(this.regionActive,type,addressf, amf)
@@ -1143,7 +1146,7 @@ selectall(type,addressfilter, amfilter)
              this.regionActive = -1;
              this.formGroup.get('secsel').setValue(0);
              this.stperpage = 10;
-             
+
 
       }
       if (ind == 1)
@@ -1306,21 +1309,21 @@ initialized()
                     {
                       this.hasdone = true;
                       this.showLoader.next(false);
-                     
+
                     }
                     else
                     {
                       this.hasdone = false;
                       this.showLoader.next(false);
-                     
+
                     }
 
                 },
                 error => {
                     this.Initialized$.next([{}]);
 
-                }); 
-            
+                });
+
  }
 
 getSchools()
@@ -1337,14 +1340,16 @@ getSchools()
 
 getSDEStudents() {
 
-  
+    if (this.sdeLocker.getValue()) {
+      this.sdeLocker.next(!this.sdeLocker.getValue());
+      return;
+    }
+
+    this.showLoader.next(true);
 
     this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
-              
-      this.showLoader.next(true);
       this.SDEStudents$.next(data);
       this.showLoader.next(false);
-
     },
     error => {
       this.StudentsPerSchool$.next([{}]);
@@ -1352,7 +1357,7 @@ getSDEStudents() {
       this.showLoader.next(false);
     });
 
-
+    this.sdeLocker.next(true);
 
 }
 
@@ -1422,13 +1427,13 @@ undosaveSDE(nid)
 {
 
    this.showLoader.next(true);
-   
+
   this.SaveSelectionSub = this._hds.saveHighScoolSelectionforSDE(nid, 0,1).subscribe(data => {
 
             this.SaveSelection$.next(data);
 
             this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
-              
+
               this.SDEStudents$.next(data);
             },
             error => {
@@ -1477,7 +1482,7 @@ confirmSDE()
         this.formGroup.controls["lastschool_schoolname"].setValue("");
         this.formGroup.controls["lastschool_schoolname"].updateValueAndValidity();
 
-        
+
 
     }
      else{
@@ -1511,7 +1516,7 @@ confirmSDE()
         this.modalHeader.next("modal-header-success");
         this.modalTitle.next("Αποθηκεύτηκαν.");
         this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
-        this.showModal();    
+        this.showModal();
         this.selall = false;
         this.selections = [];
         this.formGroup.controls["lastschool_schoolname"].setValue("");
@@ -1524,21 +1529,25 @@ confirmSDE()
 
 getStudentsIdiwtika() {
 
-  
+  if (this.privateLocker.getValue()) {
+    this.privateLocker.next(!this.privateLocker.getValue());
+    return;
+  }
+
+  this.showLoader.next(true);
 
   this.IDIWTStudentsSub = this._hds.getAllIDIWTStudents().subscribe(data => {
-    
-    this.showLoader.next(true);
     this.IDIWTStudents$.next(data);
     this.showLoader.next(false);
-
   },
+
   error => {
     this.StudentsPerSchool$.next([{}]);
     console.log("Error Getting SDE Students");
     this.showLoader.next(false);
   });
 
+  this.privateLocker.next(true);
 
 
 }
@@ -1549,13 +1558,13 @@ undosaveIDIWT(nid)
 {
 
    this.showLoader.next(true);
-   
+
   this.SaveSelectionSub = this._hds.saveHighScoolSelectionforIDIWT(nid, 0,1).subscribe(data => {
 
             this.SaveSelection$.next(data);
 
             this.IDIWTStudentsSub = this._hds.getAllIDIWTStudents().subscribe(data => {
-              
+
               this.IDIWTStudents$.next(data);
             },
             error => {
@@ -1604,7 +1613,7 @@ confirmIDIWT()
         this.formGroup.controls["lastschool_schoolname_idiwt"].setValue("");
         this.formGroup.controls["lastschool_schoolname_idiwt"].updateValueAndValidity();
 
-        
+
 
     }
      else{
@@ -1638,7 +1647,7 @@ confirmIDIWT()
         this.modalHeader.next("modal-header-success");
         this.modalTitle.next("Αποθηκεύτηκαν.");
         this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
-        this.showModal();    
+        this.showModal();
         this.selall = false;
         this.selections = [];
         this.formGroup.controls["lastschool_schoolname_idiwt"].setValue("");
