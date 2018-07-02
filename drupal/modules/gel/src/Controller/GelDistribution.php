@@ -328,6 +328,44 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                 $sCon -> orderBy('gStudent.second_period', 'DESC');
             $studentPerSchool =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
+
+            $sCon = $this->connection->select('gel_student', 'gStudent')
+                ->fields('gStudent', array('lastschool_registrynumber','lastschool_unittypeid',  'lastschool_class' , 'delapp','nextclass','name','am','regionarea','regiontk','regionaddress','id','second_period'))
+                ->condition('gStudent.lastschool_registrynumber', $regno, '=')
+                ->condition('gStudent.lastschool_unittypeid', 5 , '=')
+                ->condition(db_or()->condition('gStudent.lastschool_class', "1")->condition('gStudent.lastschool_class', "4"))
+                ->condition('gStudent.delapp', 0, '=')
+                ->condition(db_or()->condition('gStudent.nextclass', "1")->condition('gStudent.nextclass', "4"));
+                $sCon -> orderBy('gStudent.second_period', 'DESC');
+            $studentPerSchoolfromepal =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+            $sCon = $this->connection->select('gel_student', 'gStudent')
+                ->fields('gStudent', array('lastschool_registrynumber','lastschool_unittypeid',  'lastschool_class' , 'delapp','nextclass','name','am','regionarea','regiontk','regionaddress','id','second_period'))
+                ->condition('gStudent.lastschool_registrynumber', $regno, '=')
+                ->condition('gStudent.lastschool_unittypeid', 4 , '=')
+                 ->condition('gStudent.nextclass', "1",'=')
+                ->condition('gStudent.lastschool_class', "4",'=')
+                ->condition('gStudent.delapp', 0, '=');
+                
+                $sCon -> orderBy('gStudent.second_period', 'DESC');
+            $studentPerSchoolfromesp =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+                $sCon = $this->connection->select('gel_student', 'gStudent')
+                ->fields('gStudent', array('lastschool_registrynumber','lastschool_unittypeid',  'lastschool_class' , 'delapp','nextclass','name','am','regionarea','regiontk','regionaddress','id','second_period'))
+                ->condition('gStudent.lastschool_registrynumber', $regno, '=')
+                ->condition('gStudent.lastschool_unittypeid', 4 , '=')
+                ->condition('gStudent.nextclass', "4",'=')
+                ->condition('gStudent.lastschool_class', "1",'=')
+                ->condition('gStudent.delapp', 0, '=');
+               
+                $sCon -> orderBy('gStudent.second_period', 'DESC');
+            $studentPerSchooltoesp =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+                
+
+            
                 }
                 if ($studentPerSchool) {
 
@@ -459,6 +497,408 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
 
                     }
+                }
+                if ($studentPerSchoolfromepal) {
+
+                    $list = array();
+                    $i = 0;
+                    foreach ($studentPerSchoolfromepal as $object) {
+
+                            $crypt = new Crypt();
+                            try {
+                                $name_decoded = $object->name;
+                                if ($object->am != "")
+                                  $am_decoded = $crypt ->decrypt($object->am);
+                                else
+                                  $am_decoded ="Παλιός απόφοιτος";
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress);
+                                if ($object->regiontk !== null)
+                                   $regiontk_decoded = $crypt->decrypt($object->regiontk);
+                                else
+                                    $regiontk_decoded = "";
+                                if ($object->regionarea !== null)
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea);
+                                else
+                                    $regionarea_decoded = null;
+                                if ($object ->nextclass === "4")
+                                {
+                                  $school_type = "Αίτηση για Εσπερινό";
+                                }
+                                else{
+                                  $school_type = "Αίτηση για Ημερήσιο";
+                                }
+
+
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+
+
+
+
+            if ($addressfilter === '99999' && $amfilter === '0')
+                            {
+                            $i++;
+                            $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                           }
+                           if ($addressfilter !== '99999' && $amfilter !== '0')
+                            {
+                            $pos = strpos($regionaddress_decoded,$addressfilter);
+                            $pos1 = strpos($am_decoded,$amfilter);
+                            if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+                            }
+
+
+                            if ($addressfilter !== '99999' && $amfilter === '0')
+                            {
+                            $pos = strpos($regionaddress_decoded,$addressfilter);
+
+                            if  ($pos >=0 && $pos !== false )
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+
+
+
+                           }
+
+                            if ($addressfilter === '99999' && $amfilter !== '0')
+                            {
+
+                            $pos1 = strpos($am_decoded,$amfilter);
+
+                            if  ($pos1 >=0 && $pos1 !== false)
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+
+                           }
+
+
+                    }
+                }
+
+            if ($studentPerSchoolfromesp) {
+
+                    $list = array();
+                    $i = 0;
+                    foreach ($studentPerSchoolfromesp as $object) {
+
+                            $crypt = new Crypt();
+                            try {
+                                $name_decoded = $object->name;
+                                if ($object->am != "")
+                                  $am_decoded = $crypt ->decrypt($object->am);
+                                else
+                                  $am_decoded ="Παλιός απόφοιτος";
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress);
+                                if ($object->regiontk !== null)
+                                   $regiontk_decoded = $crypt->decrypt($object->regiontk);
+                                else
+                                    $regiontk_decoded = "";
+                                if ($object->regionarea !== null)
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea);
+                                else
+                                    $regionarea_decoded = null;
+                                if ($object ->nextclass === "4")
+                                {
+                                  $school_type = "Αίτηση για Εσπερινό";
+                                }
+                                else{
+                                  $school_type = "Αίτηση για Ημερήσιο";
+                                }
+
+
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+
+
+
+
+            if ($addressfilter === '99999' && $amfilter === '0')
+                            {
+                            $i++;
+                            $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                           }
+                           if ($addressfilter !== '99999' && $amfilter !== '0')
+                            {
+                            $pos = strpos($regionaddress_decoded,$addressfilter);
+                            $pos1 = strpos($am_decoded,$amfilter);
+                            if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+                            }
+
+
+                            if ($addressfilter !== '99999' && $amfilter === '0')
+                            {
+                            $pos = strpos($regionaddress_decoded,$addressfilter);
+
+                            if  ($pos >=0 && $pos !== false )
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+
+
+
+                           }
+
+                            if ($addressfilter === '99999' && $amfilter !== '0')
+                            {
+
+                            $pos1 = strpos($am_decoded,$amfilter);
+
+                            if  ($pos1 >=0 && $pos1 !== false)
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+
+                           }
+
+
+                    }
+                }
+
+
+                 if ($studentPerSchooltoesp) {
+
+                    $list = array();
+                    $i = 0;
+                    foreach ($studentPerSchooltoesp as $object) {
+
+                            $crypt = new Crypt();
+                            try {
+                                $name_decoded = $object->name;
+                                if ($object->am != "")
+                                  $am_decoded = $crypt ->decrypt($object->am);
+                                else
+                                  $am_decoded ="Παλιός απόφοιτος";
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress);
+                                if ($object->regiontk !== null)
+                                   $regiontk_decoded = $crypt->decrypt($object->regiontk);
+                                else
+                                    $regiontk_decoded = "";
+                                if ($object->regionarea !== null)
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea);
+                                else
+                                    $regionarea_decoded = null;
+                                if ($object ->nextclass === "4")
+                                {
+                                  $school_type = "Αίτηση για Εσπερινό";
+                                }
+                                else{
+                                  $school_type = "Αίτηση για Ημερήσιο";
+                                }
+
+
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+
+
+
+
+            if ($addressfilter === '99999' && $amfilter === '0')
+                            {
+                            $i++;
+                            $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                           }
+                           if ($addressfilter !== '99999' && $amfilter !== '0')
+                            {
+                            $pos = strpos($regionaddress_decoded,$addressfilter);
+                            $pos1 = strpos($am_decoded,$amfilter);
+                            if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+                            }
+
+
+                            if ($addressfilter !== '99999' && $amfilter === '0')
+                            {
+                            $pos = strpos($regionaddress_decoded,$addressfilter);
+
+                            if  ($pos >=0 && $pos !== false )
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+
+
+
+                           }
+
+                            if ($addressfilter === '99999' && $amfilter !== '0')
+                            {
+
+                            $pos1 = strpos($am_decoded,$amfilter);
+
+                            if  ($pos1 >=0 && $pos1 !== false)
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+
+                           }
+
+
+                    }
+                }
+
+
+                if ($studentPerSchoolfromepal || $studentPerSchool || $studentPerSchoolfromesp || $studentPerSchooltoesp)
+                {
+
                     return $this->respondWithStatus($list, Response::HTTP_OK);
                 } else {
                     return $this->respondWithStatus([
@@ -540,6 +980,23 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
             $studentPerSchoolfromesp =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
 //$this->logger->warning($sCon."fromesp");
+
+
+             $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
+                ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid'))
+                ->condition('eSchool.edu_admin_id', $selectionId, '=')
+               
+                ->condition('gStudent.lastschool_unittypeid', 4 , '=')
+                ->condition('nextclass', "6",'=')
+                ->condition(db_or()->condition('lastschool_class', "1",'=')->condition('lastschool_class', "2",'='))
+                ->condition('gStudent.delapp', 0, '=');
+                $sCon -> orderBy('gStudent.second_period', 'DESC');
+            $studentPerSchooltoesp =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
+
+
 
                $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
@@ -965,10 +1422,149 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                     }
 
                 }
+                if ($studentPerSchooltoesp)
+                {
+
+                    $list = array();
+                    $i = 0;
+                    foreach ($studentPerSchooltoesp as $object) {
+
+                            $schoolIdNew = $object->lastschool_registrynumber;
 
 
 
-                if ($studentPerSchool || $studentPerSchoolfromesp || $studentPerSchoolfromidiwt) {
+
+                            $crypt = new Crypt();
+                            try {
+                                $name_decoded = $object->name;
+                                if ($object->am != "")
+                                  $am_decoded = $crypt ->decrypt($object->am);
+                                else
+                                  $am_decoded ="Παλιός απόφοιτος";
+                                $regionaddress_decoded = $crypt->decrypt($object->regionaddress);
+                                if ($object->regiontk !== null)
+                                   $regiontk_decoded = $crypt->decrypt($object->regiontk);
+                                else
+                                    $regiontk_decoded = "";
+                                if ($object->regionarea !== null)
+                                $regionarea_decoded = $crypt->decrypt($object->regionarea);
+                                else
+                                    $regionarea_decoded = null;
+                                if ($object ->nextclass === "6")
+                                {
+                                  $school_type = "Αίτηση για Εσπερινό";
+                                }
+                                else{
+                                  $school_type = "Αίτηση για Ημερήσιο";
+                                }
+
+
+                            } catch (\Exception $e) {
+                                $this->logger->warning(__METHOD__ . ' Decrypt error: ' . $e->getMessage());
+                                return $this->respondWithStatus([
+                                "message" => t("An unexpected error occured during DECODING data in getStudentPerSchool Method ")
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+
+
+
+
+            if ($addressfilter === '99999' && $amfilter === '0')
+                            {
+                            $i++;
+                            $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                           }
+                           if ($addressfilter !== '99999' && $amfilter !== '0')
+                            {
+                            $pos = strpos($regionaddress_decoded,$addressfilter);
+                            $pos1 = strpos($am_decoded,$amfilter);
+                            if  ($pos >=0 && $pos !== false && $pos1 >=0 && $pos1 !== false)
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+                            }
+
+
+                            if ($addressfilter !== '99999' && $amfilter === '0')
+                            {
+                            $pos = strpos($regionaddress_decoded,$addressfilter);
+
+                            if  ($pos >=0 && $pos !== false )
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+
+
+
+                           }
+
+                            if ($addressfilter === '99999' && $amfilter !== '0')
+                            {
+
+                            $pos1 = strpos($am_decoded,$amfilter);
+
+                            if  ($pos1 >=0 && $pos1 !== false)
+                            {
+
+                                $i++;
+                                $list[] = array(
+                                'idnew' => $i,
+                                'id' => $object->id,
+                                'name' => $name_decoded,
+                                'am' => $am_decoded,
+                                'regionaddress' => $regionaddress_decoded,
+                                'regiontk' => $regiontk_decoded,
+                                'regionarea' => $regionarea_decoded,
+                                'school_type' => $school_type,
+                                'oldschool' => $this -> gethighschoolperstudent($object->id),
+                            );
+                            }
+
+                           }
+
+
+                    }
+
+                }
+
+
+
+
+                if ($studentPerSchool || $studentPerSchoolfromesp || $studentPerSchoolfromidiwt || $studentPerSchooltoesp) {
                     return $this->respondWithStatus($list, Response::HTTP_OK);
                 }
                 else {
@@ -1035,7 +1631,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                 ->condition('eSchool.edu_admin_id', $selectionId, '=')
                  ->condition('eSchool.extra_unitid',400,'=')
                ->condition('gStudent.lastschool_unittypeid', 4 , '=')
-                ->condition('lastschool_class', "2",'=')
+                ->condition(db_or()->condition('lastschool_class', "2",'=')->condition('lastschool_class', "3",'='))
                 ->condition('nextclass', "7",'=')
                 ->condition('gStudent.delapp', 0, '=');
                 $sCon -> orderBy('gStudent.second_period', 'DESC');
@@ -3810,7 +4406,7 @@ public function Initializationbperiod(Request $request)
                 ->fields('gSchool', array('id', 'edu_admin_id', 'registry_no','extra_unitid'))
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
                 ->condition('gStudent.nextclass', "6",'=')
-                ->condition('gStudent.lastschool_class', "1",'=')
+                ->condition(db_or()->condition('gStudent.lastschool_class', "1")->condition('gStudent.lastschool_class', "2"))
                 ->condition('gStudent.delapp', 0, '=')
                 ->condition('gSchool.extra_unitid',300,'!=')
                 ->condition('gStudent.second_period', 1, '=');
@@ -3833,6 +4429,9 @@ public function Initializationbperiod(Request $request)
             $entity_storage_student->save($entity_object);
         
         }
+
+
+
 
 
        $student = array();
@@ -3910,7 +4509,7 @@ public function Initializationbperiod(Request $request)
             $sCon->fields('gStudent', array('id', 'lastschool_registrynumber','lastschool_unittypeid','lastschool_class','nextclass','second_period'))
                 ->fields('gSchool', array('id', 'edu_admin_id', 'registry_no','extra_unitid'))
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
-                ->condition('gStudent.lastschool_class', "2",'=')
+                ->condition(db_or()->condition('gStudent.lastschool_class', "3")->condition('gStudent.lastschool_class', "2"))
                 ->condition('gStudent.nextclass', "7",'=')
                 ->condition('gStudent.delapp', 0, '=')
                 ->condition('gStudent.second_period', 1, '=');
