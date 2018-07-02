@@ -2267,7 +2267,7 @@ public function FindCoursesPerSchoolGel(Request $request)
         $user = reset($users);
         if ($user) {
             $schoolid = $user->init->value;
-            //$schoolid = 1164;
+            //$schoolid = 2838;
             $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
             if (!$school) {
@@ -2621,7 +2621,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
             $user = reset($users);
             if ($user) {
                 $gelId = $user->init->value;
-                //$gelId = 1164;
+                //$gelId = 2838;
                 //$this->logger->warning($gelId."kvdikos sxoleiou".$classId);
                 $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gelId));
                 $school = reset($schools);
@@ -3740,7 +3740,7 @@ public function ConfirmStudents(Request $request)
         $dide_id = $user->init->value;
 
 
-        
+
 
         //$this->logger->warning("3".$second_period."aaaa" );
        $transaction = $this->connection->startTransaction();
@@ -3763,7 +3763,7 @@ public function ConfirmStudents(Request $request)
           //$this->logger->warning("4".$schools->second_period);
 
            foreach ($schools as $school) {
-            
+
                 //$this->logger->warning("4".$schools->second_period."edw");
             $student = array(
                 'langcode' => 'el',
@@ -3776,7 +3776,7 @@ public function ConfirmStudents(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-            
+
         }
 
                    $student = array();
@@ -3796,7 +3796,7 @@ public function ConfirmStudents(Request $request)
 
            $student = array();
            foreach ($schools as $school) {
-           
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -3808,7 +3808,7 @@ public function ConfirmStudents(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-            
+
         }
                    $student = array();
              //initialazation B class from esperina
@@ -3827,7 +3827,7 @@ public function ConfirmStudents(Request $request)
           //$this->logger->warning("6");
 
            foreach ($schools as $school) {
-             
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -3839,7 +3839,7 @@ public function ConfirmStudents(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
         }
 
 
@@ -3861,7 +3861,7 @@ public function ConfirmStudents(Request $request)
 
 
            foreach ($schools as $school) {
-            
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -3873,7 +3873,7 @@ public function ConfirmStudents(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-            
+
 
         }
 
@@ -3894,7 +3894,7 @@ public function ConfirmStudents(Request $request)
           //$this->logger->warning("7");
 
            foreach ($schools as $school) {
-           
+
 
             $student = array(
                 'langcode' => 'el',
@@ -3908,7 +3908,7 @@ public function ConfirmStudents(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
         }
                    $student = array();
             //initialazation C class to esperina
@@ -3928,7 +3928,7 @@ public function ConfirmStudents(Request $request)
 
 
            foreach ($schools as $school) {
-            
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -3941,7 +3941,7 @@ public function ConfirmStudents(Request $request)
             $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
         }
 
     //$this->logger->warning("9prin");
@@ -3961,7 +3961,7 @@ public function ConfirmStudents(Request $request)
           //$this->logger->warning("9");
 
            foreach ($schools as $school) {
-           
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -3973,7 +3973,7 @@ public function ConfirmStudents(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
 
         }
 
@@ -4020,12 +4020,12 @@ public function ConfirmStudents(Request $request)
 
         $dide_id = $user->init->value;
 
-        
+
 
         //$this->logger->warning($second_period."second");
 
         try {
-            
+
            $student = array();
            $sCon = $this->connection->select('gelstudenthighschool', 'gStudent');
             $sCon->fields('gStudent', array('dide','second_period'))
@@ -4163,7 +4163,7 @@ public function deleteApplicationFromDirector(Request $request)
 public function Initializationbperiod(Request $request)
     {
 
-        
+
         if (!$request->isMethod('GET')) {
             return $this->respondWithStatus([
                 "message" => t("Method Not Allowed")
@@ -4190,7 +4190,7 @@ public function Initializationbperiod(Request $request)
        // $dide_id = $user->init->value;
 
 
-        
+
 
         //$this->logger->warning("3".$second_period."aaaa" );
       // $transaction = $this->connection->startTransaction();
@@ -4231,7 +4231,7 @@ public function Initializationbperiod(Request $request)
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
             }
-        
+
              $student = array();
              //initialazation A class un-promoted from epal
             $sCon = $this->connection->select('gel_student', 'gStudent');
@@ -4243,11 +4243,11 @@ public function Initializationbperiod(Request $request)
                 ->condition('gStudent.delapp', 0, '=')
                 ->condition(db_or()->condition('gStudent.nextclass', "1")->condition('gStudent.nextclass', "4"))
                 ->condition('gStudent.second_period', 1, '=');
-                
+
 
            $schools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
-          
+
 
            foreach ($schools as $school) {
                 $this->logger->warning("41".$schools->second_period."edw");
@@ -4263,7 +4263,7 @@ public function Initializationbperiod(Request $request)
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
             }
-        
+
 
              $student = array();
              //initialazation A class from esperina un -promoted
@@ -4283,7 +4283,7 @@ public function Initializationbperiod(Request $request)
           $this->logger->warning("6");
 
            foreach ($schools as $school) {
-             
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -4295,7 +4295,7 @@ public function Initializationbperiod(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
         }
 
 
@@ -4316,7 +4316,7 @@ public function Initializationbperiod(Request $request)
           $this->logger->warning("61");
 
            foreach ($schools as $school) {
-             
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -4328,7 +4328,7 @@ public function Initializationbperiod(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
         }
 
 
@@ -4350,7 +4350,7 @@ public function Initializationbperiod(Request $request)
 
            $student = array();
            foreach ($schools as $school) {
-            
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -4362,7 +4362,7 @@ public function Initializationbperiod(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-            
+
         }
 
 
@@ -4383,7 +4383,7 @@ public function Initializationbperiod(Request $request)
           $this->logger->warning("62");
 
            foreach ($schools as $school) {
-             
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -4395,7 +4395,7 @@ public function Initializationbperiod(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
         }
 
             $student = array();
@@ -4415,7 +4415,7 @@ public function Initializationbperiod(Request $request)
           $this->logger->warning("63");
 
            foreach ($schools as $school) {
-             
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -4427,7 +4427,7 @@ public function Initializationbperiod(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
         }
 
 
@@ -4452,7 +4452,7 @@ public function Initializationbperiod(Request $request)
 
 
            foreach ($schools as $school) {
-           
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -4464,7 +4464,7 @@ public function Initializationbperiod(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-            
+
 
         }
 
@@ -4486,7 +4486,7 @@ public function Initializationbperiod(Request $request)
           $this->logger->warning("7a");
 
            foreach ($schools as $school) {
-           
+
 
             $student = array(
                 'langcode' => 'el',
@@ -4500,7 +4500,7 @@ public function Initializationbperiod(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
         }
                    $student = array();
             //initialazation C class to esperina
@@ -4555,7 +4555,7 @@ public function Initializationbperiod(Request $request)
           //$this->logger->warning("9");
 
            foreach ($schools as $school) {
-            
+
             $student = array(
                 'langcode' => 'el',
                 'id' => $school ->id,
@@ -4567,7 +4567,7 @@ public function Initializationbperiod(Request $request)
              $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
             $entity_object = $entity_storage_student->create($student);
             $entity_storage_student->save($entity_object);
-        
+
 
             }
 
@@ -4583,7 +4583,7 @@ public function Initializationbperiod(Request $request)
             //$this->logger->warning("9");
 
             foreach ($schools as $school) {
-         
+
                 $student = array(
                     'langcode' => 'el',
                     'id' => $school ->id,
@@ -4595,7 +4595,7 @@ public function Initializationbperiod(Request $request)
                 $entity_storage_student = $this->entityTypeManager->getStorage('gelstudenthighschool');
                 $entity_object = $entity_storage_student->create($student);
                 $entity_storage_student->save($entity_object);
-     
+
 
             }
 

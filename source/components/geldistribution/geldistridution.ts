@@ -631,6 +631,65 @@ import {
           </div>
         </div>  
 
+      </div>  
+
+
+
+        <li class="list-group-item isclickable" (click)="setActiveclass(300)">
+        <div *ngIf="(showLoader | async) === false && hasdone === true" class="col-md-12" style="font-weight: bold;"  [class.selectedout]="aclassActive === 300"
+        (click)="getStudentsIdiwtika()">ΜΑΘΗΤΕΣ ΑΠΟ ΙΔΙΩΤΙΚΑ</div>
+      </li>
+      <div *ngIf="(showLoader | async) === false" [hidden] ="aclassActive !== 300">
+        <br>
+
+        <div style="width: 100%; color: #000000; font-weight: bold;" >
+        <p style="margin-top: 20px; line-height: 2em;"> Αφού επιλέξετε τους μαθητες απο την παρακάτω λίστα, στη συνέχεια επιλέξτε το αντίστοιχο Λύκειο υποδοχής.</p>
+        <input ngui-auto-complete formControlName="lastschool_schoolname_idiwt" [value] =  " (lastSchName || async).value" [source]="observableSource.bind(this)" [list-formatter]="lastSchoolIdiwtListFormatter" [value-formatter]="lastSchoolIdiwtValueFormatter" [min-chars]="5" no-match-found-text="Δεν βρέθηκαν σχολεία"
+        (valueChanged)="lastSchoolIdiwtValueChanged($event)" placeholder="Πληκτρολογήστε τουλάχιστο 5 χαρακτήρες" class="form-control">
+        </div>
+        <br>
+        <br>
+
+        <div *ngIf = "(showLoader | async) === false" class="list-group-item framecolor">
+
+          <div class="col-md-5" style="font-weight: bold; font-size: 1em align:center">
+            <div>A/A Αίτησης</div>
+            <div>Διεύθυνση Κατοικίας </div>
+            <div>T.K., Περιοχή</div>
+          </div>
+          <div class="col-md-2" style="font-weight: bold; font-size: 1em align:center">Τύπος Σχολείου</div>
+          <div class="col-md-4" style="font-weight: bold; font-size: 1em; align:center">Σχολείο Τοποθέτησης</div>
+          <div class="col-md-1"></div>
+        </div>
+
+        <div *ngIf = "(showLoader | async) === false">
+          <div *ngFor="let studentIdiwt$  of IDIWTStudents$ | async; let l=index; let isOdd=odd; let isEven=even"
+           class="row list-group-item isclickable" [class.oddout]="isOdd" [class.evenout]="isEven"
+            style="margin: 0px 2px 0px 2px;">
+
+
+             <div class="col-md-1 " style = "font-size: 0.8em">
+              <input #cb type="checkbox" [checked]="findid(studentIdiwt$.id)" (change)="updateCheckedOptions(studentIdiwt$.id, l)">
+            </div>
+
+             <div class="col-md-4"  style = "font-size: 0.8em align:left">
+               <div>{{studentIdiwt$.id}}</div>
+               <div>{{studentIdiwt$.regionaddress}}</div>
+              <div>{{studentIdiwt$.regiontk}}{{studentIdiwt$.regionarea}}</div>  
+             </div>
+             <div class="col-md-2" style = "font-size: 0.8em" ><div>{{studentIdiwt$.school_type}}</div></div>
+             <div class="col-md-4" style = "font-size: 0.8em align:right" >
+                <div *ngIf="studentIdiwt$.oldschool !== false"  class= "changecolor" style = "font-size: 0.8em align:right">
+                    {{studentIdiwt$.oldschool}}
+                </div>
+                <div *ngIf="studentIdiwt$.oldschool !== true" style = "font-size: 0.8em align:right">
+                </div>
+             </div>
+             <div  class="col-md-1"  style="font-size: 0.8em;">
+                  <i *ngIf="studentIdiwt$.oldschool !== false" class="fa fa-undo isclickable" (click)="undosaveIDIWT(studentIdiwt$.id)"></i>
+             </div>
+          </div>
+        </div>
 
 
       </div>  
@@ -682,6 +741,9 @@ import {
     private SDEStudents$: BehaviorSubject<any>;
     private SDEStudentsSub: Subscription;
 
+    private IDIWTStudents$: BehaviorSubject<any>;
+    private IDIWTStudentsSub: Subscription;
+
     private loginInfoSub: Subscription;
     private loginInfo$: BehaviorSubject<ILoginInfoRecords>;
     private lastSchName: BehaviorSubject<string>;
@@ -712,11 +774,14 @@ import {
             addressfilter:["",[]],
             amfilter:["",[]],
             lastschool_schoolname: ["", []],
+            lastschool_schoolname_idiwt: ["", []],
         });
 
         this.SDEStudents$= new BehaviorSubject([{}]);
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
         this.lastSchName = new BehaviorSubject("");
+        this.IDIWTStudents$= new BehaviorSubject([{}]);
+
 
 
     }
@@ -1273,11 +1338,13 @@ getSchools()
 getSDEStudents() {
 
   
-    this.showLoader.next(true);
 
     this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
               
+      this.showLoader.next(true);
       this.SDEStudents$.next(data);
+      this.showLoader.next(false);
+
     },
     error => {
       this.StudentsPerSchool$.next([{}]);
@@ -1285,7 +1352,6 @@ getSDEStudents() {
       this.showLoader.next(false);
     });
 
-    //this.showLoader.next(false);
 
 
 }
@@ -1340,6 +1406,18 @@ lastSchoolValueChanged(e: any): void {
   this.confirmSDE();
 };
 
+lastSchoolIdiwtListFormatter(data: any): string {
+  return data.name;
+};
+
+lastSchoolIdiwtValueFormatter(data: any): string {
+  return data.name;
+};
+
+lastSchoolIdiwtValueChanged(e: any): void {
+  this.confirmIDIWT();
+};
+
 undosaveSDE(nid)
 {
 
@@ -1348,9 +1426,6 @@ undosaveSDE(nid)
   this.SaveSelectionSub = this._hds.saveHighScoolSelectionforSDE(nid, 0,1).subscribe(data => {
 
             this.SaveSelection$.next(data);
-
-            this.selections = [];
-            this.selall = false;
 
             this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
               
@@ -1374,6 +1449,8 @@ undosaveSDE(nid)
     this.modalTitle.next("Έγινε αναίρεση τοποθέτησης .");
     this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
     this.showModal();
+    this.selall = false;
+    this.selections = [];
 
 
 }
@@ -1384,7 +1461,7 @@ confirmSDE()
 
     let oldschool = 0;
     let schoolid = this.formGroup.controls["lastschool_schoolname"].value.school_id;
-
+    console.log(schoolid);
 
     if (this.selections.length === 0)
     {
@@ -1396,7 +1473,11 @@ confirmSDE()
         this.showModal();
         this.selall = false;
         this.selections = [];
+        console.log('sde')
+        this.formGroup.controls["lastschool_schoolname"].setValue("");
+        this.formGroup.controls["lastschool_schoolname"].updateValueAndValidity();
 
+        
 
     }
      else{
@@ -1406,8 +1487,6 @@ confirmSDE()
 
       this.SaveSelectionSub = this._hds.saveHighScoolSelectionforSDE(this.selections, schoolid,0).subscribe(data => {
          this.SaveSelection$.next(data);
-         this.selections = [];
-         this.selall = false;
 
          this.SDEStudentsSub = this._hds.getAllSDEStudents().subscribe(data => {
              this.SDEStudents$.next(data);
@@ -1417,6 +1496,7 @@ confirmSDE()
             console.log("Error Getting SDE Students");
             this.showLoader.next(false);
           });
+          schoolid = 0;
 
 
        },
@@ -1432,7 +1512,141 @@ confirmSDE()
         this.modalTitle.next("Αποθηκεύτηκαν.");
         this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
         this.showModal();    
+        this.selall = false;
+        this.selections = [];
+        this.formGroup.controls["lastschool_schoolname"].setValue("");
+        this.formGroup.controls["lastschool_schoolname"].updateValueAndValidity();
+
    }
 
 }
+
+
+getStudentsIdiwtika() {
+
+  
+
+  this.IDIWTStudentsSub = this._hds.getAllIDIWTStudents().subscribe(data => {
+    
+    this.showLoader.next(true);
+    this.IDIWTStudents$.next(data);
+    this.showLoader.next(false);
+
+  },
+  error => {
+    this.StudentsPerSchool$.next([{}]);
+    console.log("Error Getting SDE Students");
+    this.showLoader.next(false);
+  });
+
+
+
+}
+
+
+
+undosaveIDIWT(nid)
+{
+
+   this.showLoader.next(true);
+   
+  this.SaveSelectionSub = this._hds.saveHighScoolSelectionforIDIWT(nid, 0,1).subscribe(data => {
+
+            this.SaveSelection$.next(data);
+
+            this.IDIWTStudentsSub = this._hds.getAllIDIWTStudents().subscribe(data => {
+              
+              this.IDIWTStudents$.next(data);
+            },
+            error => {
+              this.StudentsPerSchool$.next([{}]);
+              console.log("Error Getting SDE Students");
+              this.showLoader.next(false);
+            });
+
+    },
+        error => {
+          this.StudentsPerSchool$.next([{}]);
+          console.log("Error Undo");
+          this.showLoader.next(false);
+        });
+
+    this.showLoader.next(false);
+    this.modalHeader.next("modal-header-success");
+    this.modalTitle.next("Έγινε αναίρεση τοποθέτησης .");
+    this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
+    this.showModal();
+    this.selall = false;
+    this.selections = [];
+
+
+}
+
+confirmIDIWT()
+{
+
+
+    let oldschool = 0;
+    let schoolid = this.formGroup.controls["lastschool_schoolname_idiwt"].value.school_id;
+    console.log(schoolid);
+
+    if (this.selections.length === 0)
+    {
+
+        schoolid = 0;
+        this.modalHeader.next("modal-header-danger");
+        this.modalTitle.next("Δεν επιλέξατε μαθητές.");
+        this.modalText.next("Επιλέξτε μαθητές και στη συνέχεια το Λύκειο υποδοχής τους. ");
+        this.showModal();
+        this.selall = false;
+        this.selections = [];
+        console.log('sde')
+        this.formGroup.controls["lastschool_schoolname_idiwt"].setValue("");
+        this.formGroup.controls["lastschool_schoolname_idiwt"].updateValueAndValidity();
+
+        
+
+    }
+     else{
+
+      this.showLoader.next(true);
+
+
+      this.SaveSelectionSub = this._hds.saveHighScoolSelectionforIDIWT(this.selections, schoolid,0).subscribe(data => {
+         this.SaveSelection$.next(data);
+
+         this.IDIWTStudentsSub = this._hds.getAllIDIWTStudents().subscribe(data => {
+             this.IDIWTStudents$.next(data);
+          },
+          error => {
+            this.StudentsPerSchool$.next([{}]);
+            console.log("Error Getting SDE Students");
+            this.showLoader.next(false);
+          });
+          schoolid = 0;
+
+
+       },
+        error => {
+          this.SaveSelection$.next([{}]);
+          console.log("Error saving Approved");
+          this.showLoader.next(false);
+        });
+
+
+        this.showLoader.next(false);
+        this.modalHeader.next("modal-header-success");
+        this.modalTitle.next("Αποθηκεύτηκαν.");
+        this.modalText.next("Οι επιλογές σας έχουν αποθηκευτεί.");
+        this.showModal();    
+        this.selall = false;
+        this.selections = [];
+        this.formGroup.controls["lastschool_schoolname_idiwt"].setValue("");
+        this.formGroup.controls["lastschool_schoolname_idiwt"].updateValueAndValidity();
+
+   }
+
+}
+
+
 }
