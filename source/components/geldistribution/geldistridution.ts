@@ -85,6 +85,8 @@ import {
                         (change)="setActiveRegion(secsel,1,1,0,addressfilter, amfilter)">
                     <option value="0"></option>
                     <option *ngFor="let JuniorHighSchools$  of JuniorHighSchool$ | async; let i=index; let isOdd=odd; let isEven=even" [value]="JuniorHighSchools$.id"> {{JuniorHighSchools$.name}}</option>
+                    <option value="5000">Υπόλοιπες Περιπτώσεις</option>
+
                 </select>
                 </div>
            <br>
