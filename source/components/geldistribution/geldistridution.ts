@@ -652,12 +652,14 @@ import {
 
         <div *ngIf = "(showLoader | async) === false" class="list-group-item framecolor">
 
-          <div class="col-md-5" style="font-weight: bold; font-size: 1em align:center">
+          <div class="col-md-1" style="font-weight: bold; font-size: 1em align:center"></div>
+          <div class="col-md-4" style="font-weight: bold; font-size: 1em align:center">
             <div>A/A Αίτησης</div>
             <div>Διεύθυνση Κατοικίας </div>
             <div>T.K., Περιοχή</div>
+            <div>Σχολείο Προέλευσης</div>
           </div>
-          <div class="col-md-2" style="font-weight: bold; font-size: 1em align:center">Τύπος Σχολείου</div>
+          <div class="col-md-2" style="font-weight: bold; font-size: 1em align:center">Τύπος Σχολείου Τοποθέτησης</div>
           <div class="col-md-4" style="font-weight: bold; font-size: 1em; align:center">Σχολείο Τοποθέτησης</div>
           <div class="col-md-1"></div>
         </div>
@@ -675,7 +677,8 @@ import {
              <div class="col-md-4"  style = "font-size: 0.8em align:left">
                <div>{{studentIdiwt$.id}}</div>
                <div>{{studentIdiwt$.regionaddress}}</div>
-              <div>{{studentIdiwt$.regiontk}}{{studentIdiwt$.regionarea}}</div>
+               <div>{{studentIdiwt$.regiontk}}{{studentIdiwt$.regionarea}}</div>
+               <div style = "font-size: 0.8em bold; align:left">{{studentIdiwt$.source_school}}</div>
              </div>
              <div class="col-md-2" style = "font-size: 0.8em" ><div>{{studentIdiwt$.school_type}}</div></div>
              <div class="col-md-4" style = "font-size: 0.8em align:right" >
