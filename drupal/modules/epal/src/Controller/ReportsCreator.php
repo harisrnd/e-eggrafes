@@ -2278,8 +2278,11 @@ class ReportsCreator extends ControllerBase
                ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
                ->condition('eStudent.id', $epalStudentClass->student_id, '=')
                ->condition('eStudent.delapp', 0 , '=')
-               ->condition('eStudent.myschool_promoted', 2 , '<=')
-               ->condition('eStudent.myschool_promoted', 1 , '>=');
+               //Για α' περίοδο: myschool_promoted in (1,2), Για β' περίοδο: myschool_promoted in (1,2,6,7)
+               //Να παραμετροποιηθεί με βάση την περίοδο, στην επόμενη έκδοση!
+               //->condition('eStudent.myschool_promoted', 2 , '<=')
+               //->condition('eStudent.myschool_promoted', 1 , '>=');
+               ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
             $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
             foreach ($epalStudents as $epalStudent) {
               array_push($idColumn, $epalStudentClass->student_id);
@@ -2335,8 +2338,9 @@ class ReportsCreator extends ControllerBase
                    ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
                    ->condition('eStudent.delapp', 0 , '=')
                    ->condition('eStudent.id', $epalStudentClass->student_id, '=')
-                   ->condition('eStudent.myschool_promoted', 2 , '<=')
-                   ->condition('eStudent.myschool_promoted', 1 , '>=');
+                   //->condition('eStudent.myschool_promoted', 2 , '<=')
+                   //->condition('eStudent.myschool_promoted', 1 , '>=');
+                    ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
                 $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 foreach ($epalStudents as $epalStudent) {
                   array_push($idColumn, $epalStudentClass->student_id);
@@ -2382,8 +2386,9 @@ class ReportsCreator extends ControllerBase
                    ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
                    ->condition('eStudent.delapp', 0 , '=')
                    ->condition('eStudent.id', $epalStudentClass->student_id, '=')
-                   ->condition('eStudent.myschool_promoted', 2 , '<=')
-                   ->condition('eStudent.myschool_promoted', 1 , '>=');
+                   //->condition('eStudent.myschool_promoted', 2 , '<=')
+                   //->condition('eStudent.myschool_promoted', 1 , '>=');
+                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
                 $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 foreach ($epalStudents as $epalStudent) {
                   array_push($idColumn, $epalStudentClass->student_id);
@@ -2429,8 +2434,9 @@ class ReportsCreator extends ControllerBase
                    ->fields('eStudent', array('name','studentsurname','regionaddress', 'regiontk', 'regionarea','telnum'))
                    ->condition('eStudent.delapp', 0 , '=')
                    ->condition('eStudent.id', $epalStudentClass->student_id, '=')
-                   ->condition('eStudent.myschool_promoted', 2 , '<=')
-                   ->condition('eStudent.myschool_promoted', 1 , '>=');
+                   //->condition('eStudent.myschool_promoted', 2 , '<=')
+                   //->condition('eStudent.myschool_promoted', 1 , '>=');
+                   ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
                 $epalStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 foreach ($epalStudents as $epalStudent) {
                   array_push($idColumn, $epalStudentClass->student_id);

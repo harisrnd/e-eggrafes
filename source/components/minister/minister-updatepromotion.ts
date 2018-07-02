@@ -74,15 +74,15 @@ import { IAppState } from "../../store/store";
 
         <div class="col-md-6">
           <button type="submit" class="btn btn-lg btn-block"  *ngIf="(loginInfo$ | async).size !== 0"  (click)="goToSecondPeriod()" >
-              Μετάπτωση Αιτήσεων σε Β' περίδο<span class="glyphicon glyphicon-menu-right"></span>
+              Μετάπτωση Αιτήσεων σε Β' περίοδο<span class="glyphicon glyphicon-menu-right"></span>
           </button>
         </div>
         <br>
 
          <div class="col-md-6">
-          <button type="submit" class="btn btn-lg btn-block"  
+          <button type="submit" class="btn btn-lg btn-block"
           *ngIf="(loginInfo$ | async).size !== 0"  (click)="InitializeBPeriod()" >
-              Initialization Β Περιόδου <span class="glyphicon glyphicon-menu-right"></span>
+              Αρχικοποίηση Διαχειριστικού Β' περιόδου <span class="glyphicon glyphicon-menu-right"></span>
           </button>
         </div>
         <br>
@@ -296,6 +296,3 @@ import { IAppState } from "../../store/store";
         }
 
     //}
-
-
-

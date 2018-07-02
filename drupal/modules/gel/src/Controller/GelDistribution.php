@@ -3810,7 +3810,7 @@ public function Initializationbperiod(Request $request)
                 ->fields('gSchool', array('id', 'edu_admin_id', 'registry_no','extra_unitid'))
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
                 ->condition('gStudent.nextclass', "6",'=')
-                ->condition('gStudent.lastschool_class', "1",'=')
+                ->condition(db_or()->condition('gStudent.lastschool_class', "1")->condition('gStudent.lastschool_class', "2"))
                 ->condition('gStudent.delapp', 0, '=')
                 ->condition('gSchool.extra_unitid',300,'!=')
                 ->condition('gStudent.second_period', 1, '=');
@@ -3833,6 +3833,9 @@ public function Initializationbperiod(Request $request)
             $entity_storage_student->save($entity_object);
         
         }
+
+
+
 
 
        $student = array();
@@ -3910,7 +3913,7 @@ public function Initializationbperiod(Request $request)
             $sCon->fields('gStudent', array('id', 'lastschool_registrynumber','lastschool_unittypeid','lastschool_class','nextclass','second_period'))
                 ->fields('gSchool', array('id', 'edu_admin_id', 'registry_no','extra_unitid'))
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
-                ->condition('gStudent.lastschool_class', "2",'=')
+                ->condition(db_or()->condition('gStudent.lastschool_class', "3")->condition('gStudent.lastschool_class', "2"))
                 ->condition('gStudent.nextclass', "7",'=')
                 ->condition('gStudent.delapp', 0, '=')
                 ->condition('gStudent.second_period', 1, '=');
