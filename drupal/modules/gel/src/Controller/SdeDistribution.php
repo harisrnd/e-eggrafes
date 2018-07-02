@@ -339,8 +339,8 @@ class SdeDistribution extends ControllerBase
 
                 $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
-                $sCon->fields('gStudent', array('lastschool_registrynumber','lastschool_unittypeid',  'lastschool_class' , 'delapp','nextclass','name','am','regionarea','regiontk','regionaddress','id','second_period'))
-                     ->fields('gSchool', array('id', 'edu_admin_id', 'registry_no','extra_unitid'))     
+                $sCon->fields('gStudent', array('lastschool_registrynumber','lastschool_unittypeid',  'lastschool_class' , 'delapp','nextclass','am','regionarea','regiontk','regionaddress','id','second_period'))
+                     ->fields('gSchool', array('id', 'name','edu_admin_id', 'registry_no','extra_unitid'))     
                      ->condition('gStudent.delapp', 0, '=')
                      ->condition('gSchool.extra_unitid',300,'=');
                 $studentPerSchool =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -355,7 +355,7 @@ class SdeDistribution extends ControllerBase
                     $i++;
                     $crypt = new Crypt();
                     try {
-                        $name_decoded = $object->name;
+                        //$name_decoded = $object->name;
                         $regionaddress_decoded = $crypt->decrypt($object->regionaddress);
                         if ($object->regiontk !== null)
                             $regiontk_decoded = $crypt->decrypt($object->regiontk);
@@ -372,6 +372,8 @@ class SdeDistribution extends ControllerBase
                         else{
                             $school_type = "ΗΜΕΡΗΣΙΟ";
                         }
+                        $school_sourceName = $object->name;//$crypt->decrypt($object->name);
+
 
 
                     } catch (\Exception $e) {
@@ -387,6 +389,7 @@ class SdeDistribution extends ControllerBase
                         'regionaddress' => $regionaddress_decoded,
                         'regionarea' => $regionarea_decoded,
                         'regiontk'=>$regiontk_decoded,
+                        'source_school'=>$school_sourceName,
                         'school_type'=>$school_type,
                         'oldschool' => $this->getSchoolperStudent($object->id),
 
