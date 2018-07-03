@@ -476,3 +476,19 @@ epal.svc.transition-bperiod:
     _controller: '\Drupal\epal\Controller\WSConsumer::transitionToBPeriod'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.getpdes:
+  path: '/epal/getpde'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\DirectorView::getpde'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.ministryschools:
+  path: '/epal/schools-per-perfministry/{pdeId}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\DirectorView::getSchoolsMinistry'
+  requirements:
+    _user_is_logged_in: 'TRUE'

@@ -1985,4 +1985,39 @@ this.loginInfo$.getValue().forEach(loginInfoToken => {
 }
 
 
+getPde(username, userpassword)
+{
+ let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+
+      this.createMinistryAuthorizationHeader(headers, username, userpassword);
+      let options = new RequestOptions({ headers: headers });
+      console.log("tralalala");
+      return this.http.get(`${AppSettings.API_ENDPOINT}/epal/getpde` , options)
+          .map(response => response.json());
+
+   
+   
+
+}
+
+
+
+ getSchoolsMinistry(ind,username, userpassword) {
+
+        
+     let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+
+      this.createMinistryAuthorizationHeader(headers, username, userpassword);
+      let options = new RequestOptions({ headers: headers });
+      console.log("tralalala");
+     return this.http.get(`${AppSettings.API_ENDPOINT}/epal/schools-per-perfministry/` + ind, options)
+            .map(response => response.json());
+
+
+    }
+
 }

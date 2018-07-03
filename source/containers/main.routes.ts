@@ -11,6 +11,7 @@ import EduadminView from "../components/infoviews/eduadmin-view";
 import MergeSchools from "../components/mergeschools/mergeschools";
 import UndoMergeSchools from "../components/mergeschools/undomerge";
 import SmallClassApprovement from "../components/mergeschools/smallclassapprovment";
+import SmallClassApprovementMin from "../components/mergeschools/smallclassapprovmentmin";
 import PerfectureView from "../components/infoviews/perfecture-view";
 import Breadcrumbs from "../components/main/breadcrumbs";
 import InformStudents from "../components/minister/minister-informstudents";
@@ -136,6 +137,7 @@ export const MainRoutes: Routes = [
     { path: "school/mergeschools", component: MergeSchools, canActivate: [DidepdeAuthGuard] },
     { path: "school/undomerge", component: UndoMergeSchools, canActivate: [DidepdeAuthGuard] },
     { path: "school/smallclassapprovement", component: SmallClassApprovement, canActivate: [RegionEduAuthGuard] },
+    { path: "ministry/smallclassapprovementmin", component: SmallClassApprovementMin, canActivate: [MinistryAuthGuard] },
     { path: "help-desk", component: HelpDesk, canActivate: [StudentAuthGuard] },
     { path: "ministry/report-merged-classes", component: ReportMergedClasses, canActivate: [ReportsAuthGuard] },
     { path: "ministry/report-applications", component: ReportApplications, canActivate: [ReportsAuthGuard] },
@@ -206,6 +208,7 @@ export const MainDeclarations = [
     MergeSchools,
     UndoMergeSchools,
     SmallClassApprovement,
+    SmallClassApprovementMin,
     ReportMergedClasses,
     ReportApplications,
     ReportUserApplications,
