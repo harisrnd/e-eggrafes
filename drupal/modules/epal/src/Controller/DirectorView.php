@@ -456,7 +456,7 @@ class DirectorView extends ControllerBase
             $userRoles = $user->getRoles();
             $userRole = '';
             foreach ($userRoles as $tmpRole) {
-                if (($tmpRole === 'regioneduadmin') || ($tmpRole === 'eduadmin')) {
+                if (($tmpRole === 'regioneduadmin') || ($tmpRole === 'eduadmin') ||  ($tmpRole === 'ministry')) {
                     $userRole = $tmpRole;
                 }
             }
@@ -470,7 +470,10 @@ class DirectorView extends ControllerBase
             } elseif ($userRole === 'eduadmin') {
                 $SchoolCats = $this->entityTypeManager->getStorage('eepal_school')
                     ->loadByProperties(array('id' => $schoolid, 'edu_admin_id' => $newid));
-            }
+            }elseif ($userRole === 'ministry') {
+                $SchoolCats = $this->entityTypeManager->getStorage('eepal_school')
+                    ->loadByProperties(array('id' => $schoolid));
+            } 
 
             $SchoolCat = reset($SchoolCats);
             if ($SchoolCat) {
@@ -510,6 +513,19 @@ class DirectorView extends ControllerBase
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
+                  $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass','directorconfirm'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', -1 , '=')
+                  ->condition('eSchool.currentclass', 1 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
+                  ->condition('eSchool.directorconfirm', 1 , '=')
+                  ->condition(db_or()->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7)));
+
+                  $studentPerSchoolConfir = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
 
 
                 $list = array();
@@ -518,6 +534,7 @@ class DirectorView extends ControllerBase
                         'id' => '1',
                         'name' => 'Α Λυκείου',
                         'size' => sizeof($studentPerSchool),
+                        'sizeconfirm' => sizeof($studentPerSchoolConfir),
                         'categ' => $categ,
                         'classes' => 1,
                         'limitdown' => $limit,
@@ -558,10 +575,24 @@ class DirectorView extends ControllerBase
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
+                     $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted','delapp'))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass','directorconfirm'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $sectorid , '=')
+                  ->condition('eSchool.currentclass', 2 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
+                  ->condition('eSchool.directorconfirm', 1 , '=')
+                ->condition(db_or()->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7)));
+
+                  $studentPerSchoolConfir = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
                     $list[] = array(
                         'id' => $object->sector_id->entity->id(),
                         'name' => 'Β Λυκείου  '.$object->sector_id->entity->get('name')->value,
                         'size' => sizeof($studentPerSchool),
+                        'sizeconfirm' => sizeof($studentPerSchoolConfir),
                         'categ' => $categ,
                         'classes' => 2,
                         'limitdown' => $limit,
@@ -601,10 +632,25 @@ class DirectorView extends ControllerBase
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
+
+                $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass','directorconfirm'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $specialityid , '=')
+                  ->condition('eSchool.currentclass', 3 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
+                   ->condition('eSchool.directorconfirm', 1 , '=')
+                  ->condition(db_or()->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7)));
+
+                  $studentPerSchoolConfir = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
                     $list[] = array(
                         'id' => $object->specialty_id->entity->id(),
                         'name' => 'Γ Λυκείου  '.$object->specialty_id->entity->get('name')->value,
                         'size' => sizeof($studentPerSchool),
+                        'sizeconfirm' => sizeof($studentPerSchoolConfir),
                         'categ' => $categ,
                         'classes' => 3,
                         'limitdown' => $limit,
@@ -641,11 +687,25 @@ class DirectorView extends ControllerBase
                   ->condition(db_or()->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7)));
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
+
+                   $sCon = $this->connection->select('epal_student', 'eStudent');
+                $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
+                $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass','directorconfirm'))
+                  ->condition('eSchool.epal_id', $schoolid , '=')
+                  ->condition('eSchool.specialization_id', $specialityid , '=')
+                  ->condition('eSchool.currentclass', 4 , '=')
+                  ->condition('eStudent.delapp', 0 , '=')
+                  ->condition('eSchool.directorconfirm', 1 , '=')
+                  ->condition(db_or()->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7)));
+                  $studentPerSchoolConfir = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+
                       $capacity_class_d = ($object -> capacity_class_specialty_d ->value) *25;
                     $list[] = array(
                         'id' => $object->specialty_id->entity->id(),
                         'name' => 'Δ Λυκείου  '.$object->specialty_id->entity->get('name')->value,
                         'size' => sizeof($studentPerSchool),
+                        'size' => sizeof($studentPerSchoolConfir),
                         'categ' => $categ,
                         'classes' => 4,
                         'limitdown' => $limit,
@@ -712,11 +772,12 @@ class DirectorView extends ControllerBase
                $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted','delapp' ))
-                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass','directorconfirm'))
                   ->condition('eSchool.epal_id', $schoolid , '=')
                   ->condition('eSchool.specialization_id', -1 , '=')
                   ->condition('eSchool.currentclass', 1 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
+                  ->condition('eSchool.directorconfirm', 1 , '=')
                  ->condition(db_or()->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7)));
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
@@ -737,11 +798,12 @@ class DirectorView extends ControllerBase
                 $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted','delapp'))
-                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass','directorconfirm'))
                   ->condition('eSchool.epal_id', $schoolid , '=')
                   ->condition('eSchool.specialization_id', $sectorid , '=')
                   ->condition('eSchool.currentclass', 2 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
+                  ->condition('eSchool.directorconfirm', 1 , '=')
                 ->condition(db_or()->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7)));
 
 
@@ -764,11 +826,12 @@ class DirectorView extends ControllerBase
                 $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
-                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass','directorconfirm'))
                   ->condition('eSchool.epal_id', $schoolid , '=')
                   ->condition('eSchool.specialization_id', $specialityid , '=')
                   ->condition('eSchool.currentclass', 3 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
+                  ->condition('eSchool.directorconfirm', 1 , '=')
                  ->condition(db_or()->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7)));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -790,11 +853,12 @@ class DirectorView extends ControllerBase
                 $sCon = $this->connection->select('epal_student', 'eStudent');
                 $sCon->leftJoin('epal_student_class', 'eSchool', 'eSchool.student_id = eStudent.id');
                 $sCon->fields('eStudent', array('id','myschool_promoted', 'delapp' ))
-                  ->fields('eSchool', array('epal_id','specialization_id','currentclass'))
+                  ->fields('eSchool', array('epal_id','specialization_id','currentclass','directorconfirm'))
                   ->condition('eSchool.epal_id', $schoolid , '=')
                   ->condition('eSchool.specialization_id', $specialityid , '=')
                   ->condition('eSchool.currentclass', 4 , '=')
                   ->condition('eStudent.delapp', 0 , '=')
+                  ->condition('eSchool.directorconfirm', 1 , '=')
                  ->condition(db_or()->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2))->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7)));
 
                   $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1118,6 +1182,138 @@ class DirectorView extends ControllerBase
     }
 
 
+
+
+public function getpde(Request $request)
+{
+
+     try {
+            if (!$request->isMethod('GET')) {
+                return $this->respondWithStatus([
+                    "message" => t("Method Not Allowed")
+                ], Response::HTTP_METHOD_NOT_ALLOWED);
+            }
+
+            //user validation
+            $authToken = $request->headers->get('PHP_AUTH_USER');
+            $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+            $user = reset($users);
+            if (!$user) {
+                return $this->respondWithStatus([
+                    'message' => t("User not found"),
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            //user role validation
+            $roles = $user->getRoles();
+            $validRole = false;
+            foreach ($roles as $role) {
+                if ($role === "ministry") {
+                    $validRole = true;
+                    break;
+                }
+            }
+            if (!$validRole) {
+                return $this->respondWithStatus([
+                    'message' => t("User Invalid Role"),
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            $list = array();
+
+            $sCon = $this->connection->select('eepal_region_field_data', 'eStudent');
+            $sCon->fields('eStudent', array('id','name' ));
+ 
+            $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                  foreach ($studentPerSchool as $object) {
+                        $list[] = array(
+                                'id' => $object -> id,
+                                'name' => $object -> name,
+                               
+                        );
+                        ++$i;
+                    }
+                
+            return $this->respondWithStatus($list, Response::HTTP_OK);
+        } //end try
+
+        catch (\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            return $this->respondWithStatus([
+                "message" => t("An unexpected problem occured during report")
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    public function getSchoolsMinistry(Request $request,$pdeId)
+    {
+
+
+         try {
+            if (!$request->isMethod('GET')) {
+                return $this->respondWithStatus([
+                    "message" => t("Method Not Allowed")
+                ], Response::HTTP_METHOD_NOT_ALLOWED);
+            }
+
+            //user validation
+            $authToken = $request->headers->get('PHP_AUTH_USER');
+            $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+            $user = reset($users);
+            if (!$user) {
+                return $this->respondWithStatus([
+                    'message' => t("User not found"),
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            //user role validation
+            $roles = $user->getRoles();
+            $validRole = false;
+            foreach ($roles as $role) {
+                if ($role === "ministry") {
+                    $validRole = true;
+                    break;
+                }
+            }
+            if (!$validRole) {
+                return $this->respondWithStatus([
+                    'message' => t("User Invalid Role"),
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            $list = array();
+
+               $schools = $this->entityTypeManager
+                    ->getStorage('eepal_school')
+                    ->loadByProperties(array('region_edu_admin_id' => $pdeId));
+           
+
+            if ($schools) {
+
+                $list = array();
+
+                foreach ($schools as $object) {
+                    $status = $this->returnstatus($object->id());
+                    $list[] = array(
+                        'id' => $object->id(),
+                        'name' => $object->name->value,
+                        'status' => $status,
+                    );
+                }
+
+                return $this->respondWithStatus($list, Response::HTTP_OK);
+        } 
+    }//end try
+        catch (\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            return $this->respondWithStatus([
+                "message" => t("An unexpected problem occured during report")
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+  
+
+}
 
 
     private function respondWithStatus($arr, $s)
