@@ -154,7 +154,13 @@
                                     </li>
                                 </div>
 
+                                <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
+                                    <li *ngIf=" authRole=='supervisor'" class="nav-item">
+                                        <a class="nav-link" [routerLink]="['/ministry/smallclassapprovementmin']" [routerLinkActive]="['active']"><b>Εγκρίσεις Ολιγομελών </b></a>
+                                    </li>
+                                </div>
 
+                                
 
                                 <div *ngIf="(loginInfo$ | async).size > 0" class="nav-item">
                                     <li *ngIf="authRole=='pde'" class="nav-item">
