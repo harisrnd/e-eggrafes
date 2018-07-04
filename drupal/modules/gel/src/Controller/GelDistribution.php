@@ -375,9 +375,11 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
             
                 }
+
+                $list = array();
+
                 if ($studentPerSchool) {
 
-                    $list = array();
                     $i = 0;
                     foreach ($studentPerSchool as $object) {
 
@@ -506,9 +508,9 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                     }
                 }
-                if ($studentPerSchoolfromepal) {
+                if ( ($studentPerSchoolfromepal) && (intval($newsch) === 5000)) {
 
-                    $list = array();
+                    //$list = array();
                     $i = 0;
                     foreach ($studentPerSchoolfromepal as $object) {
                             if (intval($newsch) === 5000)
@@ -784,9 +786,9 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                     }
                 }
 
-            if ($studentPerSchoolfromesp) {
+            if ( ($studentPerSchoolfromesp) && (intval($newsch) === 5000)) {
 
-                    $list = array();
+                    //$list = array();
                     $i = 0;
                     foreach ($studentPerSchoolfromesp as $object) {
                         if (intval($newsch) === 5000)
@@ -1058,9 +1060,9 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                 }
             }
 
-                 if ($studentPerSchooltoesp) {
+                 if ( ($studentPerSchooltoesp) && (intval($newsch) === 5000)) {
 
-                    $list = array();
+                    //$list = array();
                     $i = 0;
                     foreach ($studentPerSchooltoesp as $object) {
                             if (intval($newsch) === 5000)
@@ -1388,8 +1390,8 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 */
                 $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('eepal_school_field_data', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
-                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'nextclass','am','second_period'))
-                  ->fields('eSchool', array('id','registry_no','edu_admin_id'))
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'nextclass','am','second_period'))
+                  ->fields('eSchool', array('id','registry_no','edu_admin_id','name'))
                 ->condition('eSchool.edu_admin_id', $selectionId, '=')
                 ->condition('gStudent.lastschool_unittypeid', 5, '=')
                 ->condition(db_or()->condition('nextclass', "2")->condition('nextclass', "6"))
@@ -1404,8 +1406,8 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                 $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
-                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
-                ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid'))
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
+                ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid','name'))
                 ->condition('eSchool.edu_admin_id', $selectionId, '=')
                 ->condition('eSchool.extra_unitid',400,'=')
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
@@ -1419,13 +1421,13 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
              $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
-                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
-                ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid'))
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
+                ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid','name'))
                 ->condition('eSchool.edu_admin_id', $selectionId, '=')
-               
+                ->condition('eSchool.extra_unitid',NULL,'IS')
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
                 ->condition('nextclass', "6",'=')
-                ->condition(db_or()->condition('lastschool_class', "1",'=')->condition('lastschool_class', "2",'='))
+                //->condition(db_or()->condition('lastschool_class', 1,'=')->condition('lastschool_class', 2,'='))
                 ->condition('gStudent.delapp', 0, '=');
                 $sCon -> orderBy('gStudent.second_period', 'DESC');
             $studentPerSchooltoesp =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1435,8 +1437,8 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
-                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
-                ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid'))
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
+                ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid','name'))
                 ->condition('eSchool.edu_admin_id', $selectionId, '=')
                 ->condition('eSchool.extra_unitid',300,'=')
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
@@ -1448,10 +1450,12 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                //$this->logger->warning($sCon."fromidiwt");
 
                 }
+
+                $list = array();
+
                 if ($studentPerSchool)
                 {
 
-                    $list = array();
                     $i = 0;
                     foreach ($studentPerSchool as $object) {
 
@@ -1462,7 +1466,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                             $crypt = new Crypt();
                             try {
-                                $name_decoded = $object->name;
+                                //$name_decoded = $object->name;
                                 if ($object->am != "")
                                   $am_decoded = $crypt ->decrypt($object->am);
                                 else
@@ -1507,6 +1511,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                            }
@@ -1527,6 +1532,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1550,6 +1556,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1576,6 +1583,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1601,7 +1609,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                             $crypt = new Crypt();
                             try {
-                                $name_decoded = $object->name;
+                                //$name_decoded = $object->name;
                                 if ($object->am != "")
                                   $am_decoded = $crypt ->decrypt($object->am);
                                 else
@@ -1646,6 +1654,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                            }
@@ -1666,6 +1675,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1689,6 +1699,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1715,6 +1726,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1739,7 +1751,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                             $crypt = new Crypt();
                             try {
-                                $name_decoded = $object->name;
+                                //$name_decoded = $object->name;
                                 if ($object->am != "")
                                   $am_decoded = $crypt ->decrypt($object->am);
                                 else
@@ -1778,6 +1790,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                            }
@@ -1798,6 +1811,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1821,6 +1835,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1847,6 +1862,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1860,7 +1876,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                 if ($studentPerSchooltoesp)
                 {
 
-                    $list = array();
+                    //$list = array();
                     $i = 0;
                     foreach ($studentPerSchooltoesp as $object) {
 
@@ -1871,7 +1887,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                             $crypt = new Crypt();
                             try {
-                                $name_decoded = $object->name;
+                                //$name_decoded = $object->name;
                                 if ($object->am != "")
                                   $am_decoded = $crypt ->decrypt($object->am);
                                 else
@@ -1916,6 +1932,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                            }
@@ -1936,6 +1953,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1959,6 +1977,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -1985,6 +2004,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -2061,10 +2081,10 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                 $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
-                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','am','second_period'))
-                  ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid'))
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','am','second_period'))
+                  ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid','name'))
                 ->condition('eSchool.edu_admin_id', $selectionId, '=')
-                 ->condition('eSchool.extra_unitid',400,'=')
+                 ->condition('eSchool.extra_unitid',NULL,'IS')
                ->condition('gStudent.lastschool_unittypeid', 4 , '=')
                 ->condition(db_or()->condition('lastschool_class', "2",'=')->condition('lastschool_class', "3",'='))
                 ->condition('nextclass', "7",'=')
@@ -2076,8 +2096,8 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
-                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
-                  ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid'))
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
+                  ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid','name'))
                 ->condition('eSchool.edu_admin_id', $selectionId, '=')
                  ->condition('eSchool.extra_unitid',400,'=')
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
@@ -2090,8 +2110,8 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
             $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
-                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
-                  ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid'))
+                $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
+                  ->fields('eSchool', array('id','registry_no','edu_admin_id','extra_unitid','name'))
                 ->condition('eSchool.edu_admin_id', $selectionId, '=')
                  ->condition('eSchool.extra_unitid',300,'=')
                 ->condition('gStudent.lastschool_unittypeid', 4 , '=')
@@ -2103,10 +2123,11 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                 }
 
 
-                if ($studentPerSchoolfromidiwt)
+                $list = array();
+
+                if ($studentPerSchooltoesp)
                 {
 
-                    $list = array();
                     $i = 0;
                     foreach ($studentPerSchooltoesp as $object) {
 
@@ -2116,7 +2137,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                             $crypt = new Crypt();
                             try {
-                                $name_decoded = $object->name;
+                                //$name_decoded = $object->name;
                                 if ($object->am != "")
                                   $am_decoded = $crypt ->decrypt($object->am);
                                 else
@@ -2162,6 +2183,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                            }
@@ -2182,6 +2204,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -2205,6 +2228,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -2231,6 +2255,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -2245,7 +2270,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                 if ($studentPerSchoolfromidiwt)
                 {
 
-                    $list = array();
+                    //$list = array();
                     $i = 0;
                     foreach ($studentPerSchoolfromidiwt as $object) {
 
@@ -2255,7 +2280,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                             $crypt = new Crypt();
                             try {
-                                $name_decoded = $object->name;
+                                //$name_decoded = $object->name;
                                 if ($object->am != "")
                                   $am_decoded = $crypt ->decrypt($object->am);
                                 else
@@ -2301,6 +2326,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                            }
@@ -2321,6 +2347,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -2344,6 +2371,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -2370,6 +2398,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -2394,7 +2423,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
                             $crypt = new Crypt();
                             try {
-                                $name_decoded = $object->name;
+                                //$name_decoded = $object->name;
                                 if ($object->am != "")
                                   $am_decoded = $crypt ->decrypt($object->am);
                                 else
@@ -2433,6 +2462,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                            }
@@ -2453,6 +2483,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -2476,6 +2507,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }
@@ -2502,6 +2534,7 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
                                 'regiontk' => $regiontk_decoded,
                                 'regionarea' => $regionarea_decoded,
                                 'school_type' => $school_type,
+                                'source_school'=> $object->name,
                                 'oldschool' => $this -> gethighschoolperstudent($object->id),
                             );
                             }

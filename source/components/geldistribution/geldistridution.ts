@@ -327,6 +327,7 @@ import {
                       <div>{{AllStudents$.regionaddress}}</div>
                       <div>{{AllStudents$.regionarea}} </div>
                       <div>{{AllStudents$.regiontk}}</div>
+                      <div>{{AllStudents$.source_school}}</div>
                     </div>
                     <div class="col-md-2 " style = "font-size: 0.8em" >{{AllStudents$.school_type}}</div>
                     <div class="col-md-3 " style = "font-size: 0.8em" >
@@ -493,6 +494,7 @@ import {
                       <div>{{AllStudents$.regionaddress}}</div>
                       <div>{{AllStudents$.regionarea}} </div>
                       <div>{{AllStudents$.regiontk}}</div>
+                      <div>{{AllStudents$.source_school}}</div>
                     </div>
                     <div class="col-md-2 " style = "font-size: 0.8em" >{{AllStudents$.school_type}}</div>
                     <div class="col-md-3 " style = "font-size: 0.8em" >
