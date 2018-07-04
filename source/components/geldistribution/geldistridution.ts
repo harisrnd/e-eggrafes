@@ -327,6 +327,7 @@ import {
                       <div>{{AllStudents$.regionaddress}}</div>
                       <div>{{AllStudents$.regionarea}} </div>
                       <div>{{AllStudents$.regiontk}}</div>
+                      <div>{{AllStudents$.source_school}}</div>
                     </div>
                     <div class="col-md-2 " style = "font-size: 0.8em" >{{AllStudents$.school_type}}</div>
                     <div class="col-md-3 " style = "font-size: 0.8em" >
@@ -493,6 +494,7 @@ import {
                       <div>{{AllStudents$.regionaddress}}</div>
                       <div>{{AllStudents$.regionarea}} </div>
                       <div>{{AllStudents$.regiontk}}</div>
+                      <div>{{AllStudents$.source_school}}</div>
                     </div>
                     <div class="col-md-2 " style = "font-size: 0.8em" >{{AllStudents$.school_type}}</div>
                     <div class="col-md-3 " style = "font-size: 0.8em" >
@@ -1224,7 +1226,7 @@ this._hds.Initialazation()
                  this.modalTitle.next("Αρχικοποίηση");
                  this.modalText.next("Έχετε αρχικοποιήσει σωστά τους μαθητές σας.");
                  this.showModal();
-                  console.log(this.hasdone,"initialzation")
+                 //console.log(this.hasdone,"initialzation")
 
             })
             .catch(err => {
@@ -1471,7 +1473,7 @@ confirmSDE()
 
     let oldschool = 0;
     let schoolid = this.formGroup.controls["lastschool_schoolname"].value.school_id;
-    console.log(schoolid);
+    //console.log(schoolid);
 
     if (this.selections.length === 0)
     {
@@ -1483,7 +1485,7 @@ confirmSDE()
         this.showModal();
         this.selall = false;
         this.selections = [];
-        console.log('sde')
+        //console.log('sde')
         this.formGroup.controls["lastschool_schoolname"].setValue("");
         this.formGroup.controls["lastschool_schoolname"].updateValueAndValidity();
 
@@ -1602,7 +1604,7 @@ confirmIDIWT()
 
     let oldschool = 0;
     let schoolid = this.formGroup.controls["lastschool_schoolname_idiwt"].value.school_id;
-    console.log(schoolid);
+    //console.log(schoolid);
 
     if (this.selections.length === 0)
     {
@@ -1614,7 +1616,7 @@ confirmIDIWT()
         this.showModal();
         this.selall = false;
         this.selections = [];
-        console.log('sde')
+        //console.log('sde')
         this.formGroup.controls["lastschool_schoolname_idiwt"].setValue("");
         this.formGroup.controls["lastschool_schoolname_idiwt"].updateValueAndValidity();
 
