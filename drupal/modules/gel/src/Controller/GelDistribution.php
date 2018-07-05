@@ -3736,7 +3736,7 @@ public function getSchoolGel(Request $request)
                        );
                     if ($operation_shift != 'ΗΜΕΡΗΣΙΟ'){
 
-                     $sCon = $this->connection->select('gel_student', 'gStudent');
+                $sCon = $this->connection->select('gel_student', 'gStudent');
                 $sCon->leftJoin('gelstudenthighschool', 'gSchool', 'gSchool.id = gStudent.id');
                 $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created','myschool_promoted' ))
                   ->fields('gSchool', array('id','school_id','taxi'))
@@ -3771,10 +3771,6 @@ public function getSchoolGel(Request $request)
                         'size' => sizeof($studentPerSchool) + sizeof($existingstudentPerSchool),
                        );
                     }
-
-
-
-
 
                 }
                 ++$i;
