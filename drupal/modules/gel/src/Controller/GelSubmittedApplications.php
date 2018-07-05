@@ -495,7 +495,9 @@ class GelSubmittedApplications extends ControllerBase
                       )
                       $canedit = '1';
 
-                    if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "1" || $gelStudent->myschool_promoted === "2")) {
+                    //if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "1" || $gelStudent->myschool_promoted === "2")) {
+                    if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted != "3" && $gelStudent->myschool_promoted != "4"
+                        && $gelStudent->myschool_promoted != "5" && $gelStudent->myschool_promoted != "14")) {
 
                       //  περιττό (?), στη Β' περίοδο οι αιτήσεις λογικά δεν έχουν ενημερωμένο το myschool_promoted ?
                       if ($gelStudent->second_period === "1" && $gelStudent->changed >= $dateStartInt)
@@ -505,9 +507,9 @@ class GelSubmittedApplications extends ControllerBase
                       else if ($gelStudent->school_id)
                           //υπάρχει σχολείο στον πίνακα gelstudenthighschool
                           $status = "1";
-                      else if ($gelStudent->lastschool_unittypeid == 40)
+                      //else if ($gelStudent->lastschool_unittypeid == 40)
                           //ειδικές περιπτώσεις: μαθητές από ΣΔΕ / σχολεία εξωτερικού
-                          $status = "3";
+                      //    $status = "3";
                       else if ($gelStudent->student_id != null && $gelStudent->school_id == null)
                           //υπάρχει ο μαθητής αλλά όχι το σχολείο στον πίνακα gelstudenthighschool
                           $status = "8";
@@ -534,14 +536,16 @@ class GelSubmittedApplications extends ControllerBase
                               $status = "8";
                         }
                     }
-                    else if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "6" || $gelStudent->myschool_promoted === "7") )
-                        $status = "5";
-                    else if ($applicantsResultsDisabled === "0" &&
-                              $gelStudent->myschool_promoted != null && $gelStudent->myschool_promoted != "0" &&
-                              $gelStudent->myschool_promoted != "1" && $gelStudent->myschool_promoted != "2" &&
-                              $gelStudent->myschool_promoted != "6" && $gelStudent->myschool_promoted != "7"
-                              )
-                        $status = "6";
+                    //else if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "6" || $gelStudent->myschool_promoted === "7") )
+                    //    $status = "5";
+
+                    //else if ($applicantsResultsDisabled === "0" &&
+                    //          $gelStudent->myschool_promoted != null && $gelStudent->myschool_promoted != "0" &&
+                    //          $gelStudent->myschool_promoted != "1" && $gelStudent->myschool_promoted != "2" &&
+                    //          $gelStudent->myschool_promoted != "6" && $gelStudent->myschool_promoted != "7"
+                    //          )
+                    //    $status = "6";
+
                     else if ($applicantsResultsDisabled === "0" && $gelStudent->myschool_promoted === "0" )
                         $status = "7";
                     else
