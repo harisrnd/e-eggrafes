@@ -30,20 +30,18 @@ import { IAppState } from "../../store/store";
       </div>
 
 
-          <div style="min-height: 500px;">
+        <div style="min-height: 500px;">
         <form>
 
         <div *ngFor="let PdeNames$  of Pde$  | async; let k=index; let isOdd=odd; let isEven=even" style="font-size: 0.8em; font-weight: bold;">
                 <li class="list-group-item isclickable" (click)="clickPde(PdeNames$.id)"
                      [class.oddout]="isOdd"
                     [class.evenout]="isEven" [class.selectedout]="pdeActive === PdeNames$.id" >
-                    <div  class="col-md-12">{{PdeNames$.name}}</div>
+                    <div  class="col-md-12">{{PdeNames$.name}}!</div>
+                 </li>
 
-                       <div class = "row" [hidden]="PdeNames$.id !== pdeActive" style="margin: 0px 2px 0px 2px;">
-            <p style="margin-top: 20px; line-height: 2em;">Στην παρακάτω λίστα βλέπετε τα σχολεία ευθύνης σας.
-            <br/>Επιλέξτε σχολείο για να εμφανιστούν τα ολιγομελή τμήματα του σχολείου.</p>
-            <div class="row" style="margin-top: 20px; line-height: 2em;"><p><strong>Τα τμήματα</strong></p></div>
-            <div *ngFor="let SchoolNames$  of SchoolsPerPerf$  | async; let i=index; let isOdd=odd; let isEven=even" style="font-size: 0.8em; font-weight: bold;">
+         
+            <div *ngFor="let SchoolNames$  of SchoolsPerPerf$  | async; let i=index; let isOdd=odd; let isEven=even" style="font-size: 0.8em; font-weight: bold;" [hidden]="PdeNames$.id !== pdeActive">
                 <li class="list-group-item isclickable" (click)="setActiveRegion(SchoolNames$.id)"
                      [class.oddout]="isOdd"
                     [class.evenout]="isEven" [class.selectedout]="regionActive === SchoolNames$.id" >
@@ -81,59 +79,15 @@ import { IAppState } from "../../store/store";
                             </div>
                     </div>
 
-</div>
+            </div>
             </div>
 
 
-                    
-                   </li>
-        </div>
+
+      
 
 
-    <div class = "row" [hidden]="PdeNames$.id !== pdeActive" style="margin: 0px 2px 0px 2px;">
-            <p style="margin-top: 20px; line-height: 2em;">Στην παρακάτω λίστα βλέπετε τα σχολεία ευθύνης σας.
-            <br/>Επιλέξτε σχολείο για να εμφανιστούν τα ολιγομελή τμήματα του σχολείου.</p>
-            <div class="row" style="margin-top: 20px; line-height: 2em;"><p><strong>Τα τμήματα</strong></p></div>
-            <div *ngFor="let SchoolNames$  of SchoolsPerPerf$  | async; let i=index; let isOdd=odd; let isEven=even" style="font-size: 0.8em; font-weight: bold;">
-                <li class="list-group-item isclickable" (click)="setActiveRegion(SchoolNames$.id)"
-                     [class.oddout]="isOdd"
-                    [class.evenout]="isEven" [class.selectedout]="regionActive === SchoolNames$.id" >
-                    <div [class.changelistcolor]= "SchoolNames$.status === false" class="col-md-12">{{SchoolNames$.name}}</div>
-                    <div class = "row" [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
-                        <div class="col-md-8">Τμήματα</div>
-                        <div class="col-md-4">Έγκριση Ολιγομελούς</div>
-                    </div>
-                    </li>
-                    <p></p>
-                    <div class = "row" [hidden]="SchoolNames$.id !== regionActive" style="margin: 0px 2px 0px 2px;">
-                         <div class="col-md-8">&nbsp;</div>
-                         <div  [hidden]="SchoolNames$.id !== regionActive" class="col-md-4 pull-right" style="color: black;" >
-                         <span aria-hidden="true">
-                                <button type="button" class="btn-primary btn-sm pull-right" (click) ="setActiveRegion(SchoolNames$.id)">Κλείσιμο</button>
-                              </span>
-                         </div>
-                    </div>
-
-                    <div class = "row" *ngFor="let CoursesNames$  of CoursesPerPerf$  | async; let j=index; let isOdd2=odd; let isEven2=even"
-                        [class.oddin]="isOdd2" [class.evenin]="isEven2" [class.changecolor]="calccolor(CoursesNames$.size,CoursesNames$.limitdown)"
-                        [class.changecolorbalck]="calccolor(CoursesNames$.limitdown, CoursesNames$.size)"
-                        [class.selectedappout]="regionActive === j"
-                        [hidden]="(SchoolNames$.id !== regionActive) ||(calccolor(CoursesNames$.size,CoursesNames$.limitdown) === false) "
-                        style="margin: 0px 2px 0px 2px;" >
-
-
-                        <div class="col-md-8">{{CoursesNames$.name}}</div>
-                        <div class="col-md-4">
-                              <strong><label>Έγκριση Ολιγομελούς:</label> </strong>
-                              <select class="form-control pull-right" #cb name="{{CoursesNames$.id}}" (change)="confirmApproved(CoursesNames$.classes,CoursesNames$.approved_id, cb, j)" >
-                                  <option value="1" [selected]="CoursesNames$.approved === '1' ">Ναι</option>
-                                  <option value="2" [selected]="CoursesNames$.approved === '0' ">Όχι</option>
-                              </select>
-                            </div>
-                    </div>
-
-</div>
-            </div>
+   
         </form>
      </div>
 
@@ -264,7 +218,7 @@ import { IAppState } from "../../store/store";
         else {
             this.regionActive = ind;
             this.showLoader.next(true);
-            this.CoursesPerPerfSub = this._hds.getCoursePerPerfecture(this.regionActive)
+            this.CoursesPerPerfSub = this._hds.getCoursePerPerfectureMin(this.regionActive,this.minedu_userName, this.minedu_userPassword)
                 .subscribe(data => {
                     this.CoursesPerPerf$.next(data);
                     this.showLoader.next(false);
@@ -290,7 +244,7 @@ import { IAppState } from "../../store/store";
 
         let std = this.CoursesPerPerf$.getValue();
         std[ind].approved = rtype;
-        this.SavedSApprovedSub = this._hds.saveApprovedClasses(taxi, classid, type).subscribe(data => {
+        this.SavedSApprovedSub = this._hds.saveApprovedClassesMin(taxi, classid, type,this.minedu_userName, this.minedu_userPassword).subscribe(data => {
             this.SavedSApproved$.next(data);
             this.showLoader.next(false);
           },

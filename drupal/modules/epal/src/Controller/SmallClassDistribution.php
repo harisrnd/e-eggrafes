@@ -1496,4 +1496,111 @@ public function findStatusNew($id, $classId, $sector, $specialit)
         return self::SUCCESS;
     }
 
+
+
+    public function ApproveClassesMin(Request $request)
+    {
+        try {
+            if (!$request->isMethod('POST')) {
+                return $this->respondWithStatus([
+                    "message" => t("Method Not Allowed")
+                ], Response::HTTP_METHOD_NOT_ALLOWED);
+            }
+
+            //user validation
+            $authToken = $request->headers->get('PHP_AUTH_USER');
+            $users = $this->entityTypeManager->getStorage('user')->loadByProperties(array('name' => $authToken));
+            $user = reset($users);
+            if (!$user) {
+                return $this->respondWithStatus([
+                    'message' => t("User not found"),
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            //user role validation
+            $roles = $user->getRoles();
+            $validRole = false;
+            foreach ($roles as $role) {
+                if ($role === "ministry") {
+                    $validRole = true;
+                    break;
+                }
+            }
+            if (!$validRole) {
+                return $this->respondWithStatus([
+                    'message' => t("User Invalid Role"),
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            
+
+            if ($role === 'ministry') {
+                if ($content = $request->getContent()) {
+                    $postData = json_decode($content);
+                    $taxi = $postData -> taxi;
+                    $arr = $postData -> classid;
+                    $type = $postData -> type;
+                    $valnew = intval($arr);
+                    $typen = intval($type);
+                    if ($taxi === 1)
+                    $classesForConfirm = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(['id' => $valnew]);
+                    if ($taxi === 2)
+                    $classesForConfirm = $this->entityTypeManager->getStorage('eepal_sectors_in_epal')->loadByProperties(['id' => $valnew]);
+                    if ($taxi === 3 || $taxi === 4)
+                    $classesForConfirm = $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(['id' => $valnew]);
+
+                    $classConfirm = reset($classesForConfirm);
+                    if ($classConfirm) {
+                        if ($typen === 1) {
+                            if ($taxi === 1)
+                               $classConfirm->set('approved_a', 1);
+                            if ($taxi === 2)
+                               $classConfirm->set('approved_sector', 1);
+                            if ($taxi === 3)
+                               $classConfirm->set('approved_speciality', 1);
+                            if ($taxi === 4)
+                               $classConfirm->set('approved_speciality_d', 1);
+                            $classConfirm->save();
+                            return $this->respondWithStatus(['message' => t('saved')], Response::HTTP_OK);
+                        } elseif ($typen === 2) {
+                            if ($taxi === 1)
+                               $classConfirm->set('approved_a', 0);
+                            if ($taxi === 2)
+                               $classConfirm->set('approved_sector', 0);
+                            if ($taxi === 3)
+                               $classConfirm->set('approved_speciality', 0);
+                            if ($taxi === 4)
+                               $classConfirm->set('approved_speciality_d', 0);
+                            $classConfirm->save();
+                            return $this->respondWithStatus(['message' => t('saved')], Response::HTTP_OK);
+                        } else {
+                            return $this->respondWithStatus(['message' => t('Bad request')], Response::HTTP_FORBIDDEN);
+                        }
+                    } else {
+                        return $this->respondWithStatus(['message' => t('Student not found')], Response::HTTP_FORBIDDEN);
+                    }
+                } else {
+                    return $this->respondWithStatus(['message' => t('post with no data')], Response::HTTP_BAD_REQUEST);
+                }
+            } else {
+                return $this->respondWithStatus(['error_code' => 4003], Response::HTTP_FORBIDDEN);
+            }
+
+
+
+    }//end try
+        catch (\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            return $this->respondWithStatus([
+                "message" => t("An unexpected problem occured during report")
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+  
+
+    }
+
+
+
+
+
 }
