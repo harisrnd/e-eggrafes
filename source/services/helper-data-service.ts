@@ -2020,4 +2020,38 @@ getPde(username, userpassword)
 
     }
 
+
+     getCoursePerPerfectureMin(PerfectureId,username, userpassword) {
+        let PerfectureIdNew = PerfectureId.toString();
+
+        let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+
+      this.createMinistryAuthorizationHeader(headers, username, userpassword);
+      let options = new RequestOptions({ headers: headers });
+
+        return this.http.get(`${AppSettings.API_ENDPOINT}/epal/coursesperschmin/` + PerfectureIdNew, options)
+            .map(response => response.json());
+    }
+
+
+
+saveApprovedClassesMin(taxi, classid, type,username, userpassword)
+{
+     
+
+        let headers = new Headers({
+          "Content-Type": "application/json",
+      });
+
+      this.createMinistryAuthorizationHeader(headers, username, userpassword);
+      let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(`${AppSettings.API_ENDPOINT}/epal/approveclassesmin`, { taxi, classid, type }, options)
+            .map(response => response.json());
+
+}
+
+
 }

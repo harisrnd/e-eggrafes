@@ -492,3 +492,19 @@ epal.ministryschools:
     _controller: '\Drupal\epal\Controller\DirectorView::getSchoolsMinistry'
   requirements:
     _user_is_logged_in: 'TRUE'
+epal.coursesperschoolsmin:
+  path: '/epal/coursesperschmin/{schoolid}'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\DirectorView::getCoursesPerSchoolMin'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+epal.approveclassesmin:
+  path: '/epal/approveclassesmin'
+  options:
+    _auth: [ 'basic_auth' ]
+  defaults:
+    _controller: '\Drupal\epal\Controller\SmallClassDistribution::ApproveClassesMin'
+  requirements:
+    _user_is_logged_in: 'TRUE'
