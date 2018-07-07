@@ -2502,7 +2502,8 @@ class ReportsCreator extends ControllerBase
                          ], Response::HTTP_FORBIDDEN);
           }
           $schoolid = $user->init->value;
-          //$schoolid = 2838;
+          //hard
+          //$schoolid = 2420;
 
           //user role validation
           $roles = $user->getRoles();
@@ -2554,8 +2555,9 @@ class ReportsCreator extends ControllerBase
                  ->fields('eStudent', array('id', 'nextclass', 'name', 'studentsurname','regionaddress', 'regiontk', 'regionarea','telnum','directorconfirm'))
                  ->condition('eStudent.id', $gelClass->student_id, '=')
                  ->condition('eStudent.delapp', 0 , '=')
-                 ->condition('eStudent.myschool_promoted', 2 , '<=')
-                 ->condition('eStudent.myschool_promoted', 1 , '>=');
+                 //->condition('eStudent.myschool_promoted', 2 , '<=')
+                 //->condition('eStudent.myschool_promoted', 1 , '>=')
+                 ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
               $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
               foreach ($gelStudents as $gelStudent)  {
                 array_push($idColumn, $gelStudent->id);
@@ -2614,8 +2616,9 @@ class ReportsCreator extends ControllerBase
                ->select('gel_student', 'eStudent')
                ->fields('eStudent', array('id', 'name', 'studentsurname','regionaddress', 'regiontk', 'regionarea','telnum','directorconfirm'))
                ->condition('eStudent.lastschool_registrynumber', $gelSchool->registry_no , '=')
-               ->condition('eStudent.myschool_promoted', 2 , '<=')
-               ->condition('eStudent.myschool_promoted', 1 , '>=')
+               //->condition('eStudent.myschool_promoted', 2 , '<=')
+               //->condition('eStudent.myschool_promoted', 1 , '>=')
+               ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7))
                ->condition('eStudent.delapp', 0 , '=')
                ->condition('eStudent.nextclass', $k, '=');
 

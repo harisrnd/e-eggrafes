@@ -342,7 +342,8 @@ class SdeDistribution extends ControllerBase
                 $sCon->fields('gStudent', array('lastschool_registrynumber','lastschool_unittypeid',  'lastschool_class' , 'delapp','nextclass','am','regionarea','regiontk','regionaddress','id','second_period'))
                      ->fields('gSchool', array('id', 'name','edu_admin_id', 'registry_no','extra_unitid'))     
                      ->condition('gStudent.delapp', 0, '=')
-                     ->condition('gSchool.extra_unitid',300,'=');
+                     ->condition(db_or()->condition('gSchool.extra_unitid', 300 , '=') ->condition('gSchool.extra_unitid',1300,'='));
+                     //->condition('gSchool.extra_unitid',300,'=');
                 $studentPerSchool =  $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
             }

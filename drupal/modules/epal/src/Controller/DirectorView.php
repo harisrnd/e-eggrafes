@@ -73,7 +73,8 @@ class DirectorView extends ControllerBase
             $user = reset($users);
             if ($user) {
                 $epalId = $user->init->value;
-                //$epalId = 191;
+                //hard
+                //$epalId = 245;
                 $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $epalId));
                 $school = reset($schools);
                 if (!$school) {
@@ -473,7 +474,7 @@ class DirectorView extends ControllerBase
             }elseif ($userRole === 'ministry') {
                 $SchoolCats = $this->entityTypeManager->getStorage('eepal_school')
                     ->loadByProperties(array('id' => $schoolid));
-            } 
+            }
 
             $SchoolCat = reset($SchoolCats);
             if ($SchoolCat) {
@@ -994,7 +995,8 @@ class DirectorView extends ControllerBase
         $user = reset($users);
         if ($user) {
             $schoolid = $user->init->value;
-            //$schoolid = 191;
+            //hard
+            //$schoolid = 245;
             $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
             if (!$school) {
@@ -1223,17 +1225,17 @@ public function getpde(Request $request)
 
             $sCon = $this->connection->select('eepal_region_field_data', 'eStudent');
             $sCon->fields('eStudent', array('id','name' ));
- 
+
             $studentPerSchool = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                   foreach ($studentPerSchool as $object) {
                         $list[] = array(
                                 'id' => $object -> id,
                                 'name' => $object -> name,
-                               
+
                         );
                         ++$i;
                     }
-                
+
             return $this->respondWithStatus($list, Response::HTTP_OK);
         } //end try
 
@@ -1287,7 +1289,7 @@ public function getpde(Request $request)
                $schools = $this->entityTypeManager
                     ->getStorage('eepal_school')
                     ->loadByProperties(array('region_edu_admin_id' => $pdeId));
-           
+
 
             if ($schools) {
 
@@ -1303,7 +1305,7 @@ public function getpde(Request $request)
                 }
 
                 return $this->respondWithStatus($list, Response::HTTP_OK);
-        } 
+        }
     }//end try
         catch (\Exception $e) {
             $this->logger->warning($e->getMessage());
@@ -1311,7 +1313,7 @@ public function getpde(Request $request)
                 "message" => t("An unexpected problem occured during report")
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-  
+
 
 }
 
