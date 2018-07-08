@@ -2735,7 +2735,7 @@ public function FindCoursesPerSchoolGel(Request $request)
         $user = reset($users);
         if ($user) {
             $schoolid = $user->init->value;
-            //hard 
+            //hard
             //$schoolid = 2420;
             $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
@@ -3154,9 +3154,9 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                   ->condition('gStudent.delapp', '0' , '=')
                 ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
                 $existingstudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                
 
-                 
+
+
 
 
                 }

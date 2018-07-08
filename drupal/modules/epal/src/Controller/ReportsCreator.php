@@ -1819,7 +1819,7 @@ class ReportsCreator extends ControllerBase
             $sCon = $this->connection->select('eepal_school_field_data', 'eSchool');
 			$sCon->join('eepal_region_field_data', 'eRegion', 'eRegion.id = eSchool.region_edu_admin_id');
 			$sCon->join('eepal_admin_area_field_data', 'eAdmin', 'eAdmin.id = eSchool.edu_admin_id');
-            $sCon->fields('eSchool', array('id', 'name', 'capacity_class_a', 'region_edu_admin_id', 'edu_admin_id','operation_shift', 'metathesis_region'))
+            $sCon->fields('eSchool', array('id', 'name', 'capacity_class_a', 'region_edu_admin_id', 'edu_admin_id','operation_shift', 'metathesis_region', 'approved_a'))
 				->fields('eRegion', ['name'])
 				->fields('eAdmin', ['name']);
             if ($regionId != 0) {
@@ -1844,6 +1844,7 @@ class ReportsCreator extends ControllerBase
                 $percColumn = array();
                 $limitDownColumn = array();
                 $numNotConfirmedColumn = array();
+                $approvedColumn = array();
 
                 $smallClass = array();
 
@@ -1860,10 +1861,11 @@ class ReportsCreator extends ControllerBase
                         'AND eStudent.specialization_id = eSchool.sector_id ' .
                         //'AND eStudent.currentclass = 2  AND eStudent.directorconfirm = 1');
                         'AND eStudent.currentclass = 2');
-                    $sCon->fields('eSchool', array('sector_id','capacity_class_sector'))
+                    $sCon->fields('eSchool', array('sector_id','capacity_class_sector','approved_sector'))
                         ->fields('eSectors', ['name'])
                         ->groupBy('sector_id')
                         ->groupBy('capacity_class_sector')
+                        ->groupBy('approved_sector')
                         ->groupBy('eSectors.name')
                         ->condition('eSchool.epal_id', $epalSchool->id, '=');
                     //$sCon->addExpression('count(eStudent.id)', 'eStudent_count');
@@ -1892,6 +1894,11 @@ class ReportsCreator extends ControllerBase
                         array_push($limitDownColumn,$this->retrieveDownLimit($epalSchool->metathesis_region,"2"));
                         array_push($percColumn, $capacityColumnValue > 0 ? number_format($numStud / $capacityColumnValue * 100, 2) : 0);
 
+                        if ($sectorsInEpal->approved_sector)
+                          array_push($approvedColumn, 'ΝΑΙ');
+                        else
+                          array_push($approvedColumn, 'ΟΧΙ');
+
                         $numClassSec += $sectorsInEpal->capacity_class_sector;
                     }
                 } // end εύρεση αριθμού μαθητών για κάθε τομέα της Β' τάξης
@@ -1905,10 +1912,11 @@ class ReportsCreator extends ControllerBase
                         'AND eStudent.specialization_id = eSchool.specialty_id ' .
                         //'AND eStudent.currentclass = 3 AND eStudent.directorconfirm = 1');
                         'AND eStudent.currentclass = 3');
-                    $sCon->fields('eSchool', array('specialty_id', 'capacity_class_specialty'))
+                    $sCon->fields('eSchool', array('specialty_id', 'capacity_class_specialty','approved_speciality'))
                         ->fields('eSpecialties', ['name'])
                         ->groupBy('specialty_id')
                         ->groupBy('capacity_class_specialty')
+                        ->groupBy('approved_speciality')
                         ->groupBy('eSpecialties.name')
                         ->condition('eSchool.epal_id', $epalSchool->id, '=');
                     //$sCon->addExpression('count(eStudent.id)', 'eStudent_count');
@@ -1938,6 +1946,11 @@ class ReportsCreator extends ControllerBase
                         array_push($limitDownColumn,$this->retrieveDownLimit($epalSchool->metathesis_region,"3"));
                         array_push($percColumn, $capacityColumnValue > 0 ? number_format($numStud / $capacityColumnValue * 100, 2) : 0);
 
+                        if ($specialtiesInEpal->approved_speciality)
+                          array_push($approvedColumn, 'ΝΑΙ');
+                        else
+                          array_push($approvedColumn, 'ΟΧΙ');
+
                         $numClassCour += $specialtiesInEpal->capacity_class_specialty;
                     }
                 } // end εύρεση αριθμού μαθητών για κάθε ειδικότητα της Γ' τάξης
@@ -1952,10 +1965,11 @@ class ReportsCreator extends ControllerBase
                             'AND eStudent.specialization_id = eSchool.specialty_id ' .
                             //'AND eStudent.currentclass = 4 AND eStudent.directorconfirm = 1');
                             'AND eStudent.currentclass = 4');
-                        $sCon->fields('eSchool', array('specialty_id', 'capacity_class_specialty_d'))
+                        $sCon->fields('eSchool', array('specialty_id', 'capacity_class_specialty_d','approved_speciality_d'))
                             ->fields('eSpecialties', ['name'])
                             ->groupBy('specialty_id')
                             ->groupBy('capacity_class_specialty_d')
+                            ->groupBy('approved_speciality_d')
                             ->groupBy('eSpecialties.name')
                             ->condition('eSchool.epal_id', $epalSchool->id, '=');
                         //$sCon->addExpression('count(eStudent.id)', 'eStudent_count');
@@ -1985,6 +1999,11 @@ class ReportsCreator extends ControllerBase
                             array_push($capacityColumn, $capacityColumnValue);
                             array_push($limitDownColumn,$this->retrieveDownLimit($epalSchool->metathesis_region,"4"));
                             array_push($percColumn, $capacityColumnValue > 0 ? number_format($numStud / $capacityColumnValue * 100, 2) : 0);
+
+                            if ($specialtiesInEpal->approved_speciality_d)
+                              array_push($approvedColumn, 'ΝΑΙ');
+                            else
+                              array_push($approvedColumn, 'ΟΧΙ');
 
                             $numClassCour_D += $specialtiesInEpal->capacity_class_specialty_d;
                         }
@@ -2048,6 +2067,11 @@ class ReportsCreator extends ControllerBase
                         array_push($capacityColumn, $capacityColumnValue);
                         array_push($limitDownColumn,$this->retrieveDownLimit($epalSchool->metathesis_region,$clId));
                         array_push($percColumn, $capacityColumnValue > 0 ? number_format($numStud / $capacityColumnValue * 100, 2) : 0);
+
+                        if ($epalSchool->approved_a)
+                          array_push($approvedColumn, 'ΝΑΙ');
+                        else
+                          array_push($approvedColumn, 'ΟΧΙ');
                     }
                 } // end εύρεση αριθμού μαθητών για κάθε τάξη
 
@@ -2063,10 +2087,11 @@ class ReportsCreator extends ControllerBase
                                 'admin' => $adminColumn[$j],
                                 'section' => str_replace(",", "", $schoolSectionColumn[$j]),
                                 'num' => $numColumn[$j],
-                                'capacity' => $capacityColumn[$j],
-                                'percentage' => $percColumn[$j],
                                 'limit_down' => $limitDownColumn[$j],
-                                'num_not_confirmed' => $numNotConfirmedColumn[$j],
+                                //'capacity' => $capacityColumn[$j],
+                                //'percentage' => $percColumn[$j],
+                                //'num_not_confirmed' => $numNotConfirmedColumn[$j],
+                                'approved' => $approvedColumn[$j],
                             ));
                     }
                 }
@@ -2606,10 +2631,10 @@ class ReportsCreator extends ControllerBase
           $gelSchool = reset($gelSchools);
 
           if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ") {
-            $startIndex = 5; $endIndex = 7;
+            $startIndex = 4; $endIndex = 7;
           }
           else {
-            $startIndex = 2; $endIndex = 3;
+            $startIndex = 1; $endIndex = 3;
           }
           for ($k = $startIndex; $k <= $endIndex; $k++ )  {
             $sCon = $this->connection
@@ -2714,7 +2739,7 @@ class ReportsCreator extends ControllerBase
                          ], Response::HTTP_FORBIDDEN);
           }
           $schoolid = $user->init->value;
-          //$schoolid = 2838;
+          //$schoolid = 2420;
 
           //user role validation
           $roles = $user->getRoles();
@@ -2763,8 +2788,9 @@ class ReportsCreator extends ControllerBase
                  ->fields('eStudent', array('id', 'nextclass', 'name', 'studentsurname','regionaddress', 'regiontk', 'regionarea','telnum','directorconfirm'))
                  ->condition('eStudent.id', $gelClass->student_id, '=')
                  ->condition('eStudent.delapp', 0 , '=')
-                 ->condition('eStudent.myschool_promoted', 2 , '<=')
-                 ->condition('eStudent.myschool_promoted', 1 , '>=');
+                 //->condition('eStudent.myschool_promoted', 2 , '<=')
+                 //->condition('eStudent.myschool_promoted', 1 , '>=');
+                 ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
               $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
               foreach ($gelStudents as $gelStudent)  {
                 $sCon = $this->connection
@@ -2798,18 +2824,19 @@ class ReportsCreator extends ControllerBase
           $gelSchool = reset($gelSchools);
 
           if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ") {
-            $startIndex = 5; $endIndex = 7;
+            $startIndex = 4; $endIndex = 7;
           }
           else {
-            $startIndex = 2; $endIndex = 3;
+            $startIndex = 1; $endIndex = 3;
           }
           for ($k = $startIndex; $k <= $endIndex; $k++ )  {
             $sCon = $this->connection
                ->select('gel_student', 'eStudent')
                ->fields('eStudent', array('id', 'name', 'studentsurname','regionaddress', 'regiontk', 'regionarea','telnum','directorconfirm'))
                ->condition('eStudent.lastschool_registrynumber', $gelSchool->registry_no , '=')
-               ->condition('eStudent.myschool_promoted', 2 , '<=')
-               ->condition('eStudent.myschool_promoted', 1 , '>=')
+               //->condition('eStudent.myschool_promoted', 2 , '<=')
+               //->condition('eStudent.myschool_promoted', 1 , '>=')
+               ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7))
                ->condition('eStudent.delapp', 0 , '=')
                ->condition('eStudent.nextclass', $k, '=');
 

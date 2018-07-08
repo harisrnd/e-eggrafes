@@ -487,7 +487,7 @@ class GelSubmittedApplications extends ControllerBase
                     $schoolAddress = $gelStudent->street_address;
                     $schoolTel = $gelStudent->phone_number;
 
-                    $this->logger->warning("Trace.." .  $applicantsResultsDisabled . " " . $gelStudent->myschool_promoted . "  " . $gelStudent->second_period . "  " . $gelStudent->changed . " "  . $dateStartInt);
+                    //$this->logger->warning("Trace.." .  $applicantsResultsDisabled . " " . $gelStudent->myschool_promoted . "  " . $gelStudent->second_period . "  " . $gelStudent->changed . " "  . $dateStartInt);
                     $canedit = '0';
                     if (  $applicantsAppModifyDisabled == "0"
                         && $eggrafesConfig->activate_second_period->value == $gelStudent->second_period
@@ -495,14 +495,12 @@ class GelSubmittedApplications extends ControllerBase
                       )
                       $canedit = '1';
 
-                    $applicantsResultsDisabled = "0";
+                    //$applicantsResultsDisabled = "0";
                     //if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "1" || $gelStudent->myschool_promoted === "2")) {
                     if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted != "3" && $gelStudent->myschool_promoted != "4"
                         && $gelStudent->myschool_promoted != "5" && $gelStudent->myschool_promoted != "14")) {
 
-                      $this->logger->warning("Test!!!..");
                       //  περιττό (?), στη Β' περίοδο οι αιτήσεις λογικά δεν έχουν ενημερωμένο το myschool_promoted ?
-
                       if ($gelStudent->second_period == "1" && $gelStudent->changed >= $dateStartInt)
                         //η αίτηση είναι της β' περιόδου με ημερομηνία μεταγενέστερη της ημερομηνίας έναρξης β' περιόδου
                         $status = "2";

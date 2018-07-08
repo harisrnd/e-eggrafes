@@ -74,7 +74,7 @@ class DirectorView extends ControllerBase
             if ($user) {
                 $epalId = $user->init->value;
                 //hard
-                //$epalId = 245;
+                //$epalId = 46;
                 $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $epalId));
                 $school = reset($schools);
                 if (!$school) {
@@ -996,7 +996,7 @@ class DirectorView extends ControllerBase
         if ($user) {
             $schoolid = $user->init->value;
             //hard
-            //$schoolid = 245;
+            //$schoolid = 46;
             $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
             if (!$school) {
@@ -1355,7 +1355,7 @@ public function getpde(Request $request)
 
             $SchoolCats = $this->entityTypeManager->getStorage('eepal_school')
                     ->loadByProperties(array('id' => $schoolid));
-            
+
 
             $SchoolCat = reset($SchoolCats);
             if ($SchoolCat) {
@@ -1604,7 +1604,7 @@ public function getpde(Request $request)
 
 
 
-    
+
     }//end try
         catch (\Exception $e) {
             $this->logger->warning($e->getMessage());
@@ -1612,7 +1612,7 @@ public function getpde(Request $request)
                 "message" => t("An unexpected problem occured during report")
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-  
+
     }
 
 
