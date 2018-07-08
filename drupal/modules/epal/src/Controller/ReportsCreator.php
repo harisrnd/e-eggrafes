@@ -2528,7 +2528,7 @@ class ReportsCreator extends ControllerBase
           }
           $schoolid = $user->init->value;
           //hard
-          //$schoolid = 2420;
+          //$schoolid = 1573;
 
           //user role validation
           $roles = $user->getRoles();
@@ -2560,6 +2560,13 @@ class ReportsCreator extends ControllerBase
           //......<code to be written>
 
           $crypt = new Crypt();
+
+          $sCon = $this->connection
+             ->select('gel_school', 'eSchool')
+             ->fields('eSchool', array('operation_shift', 'registry_no'))
+             ->condition('eSchool.id', $schoolid, '=');
+          $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          $gelSchool = reset($gelSchools);
 
           $classNames = array("Α", "Β", "Γ", "Δ");
           $classLogos = array("Α' Λυκείου (τοποθέτηση)", "Β' Λυκείου (τοποθέτηση)", "Γ' Λυκείου (τοποθέτηση)", "Δ' Λυκείου (τοποθέτηση)");
@@ -2596,7 +2603,11 @@ class ReportsCreator extends ControllerBase
                 $stChoice = reset($stChoices);
                 //να αλλαχθεί σε ανάκτηση του ονόματος της ΟΠ από τη βάση με INNER JOIN
                 array_push($opColumn, $this->retrieveChoiceName($stChoice->choice_id));
-                array_push($classColumn, $classLogos[$l]);
+                //προσωρινή "θεραπεία" για Εσπερινά (αντιμετώπιση λάθους καταχώρησης πεδίου taxi)
+                if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ" && $stChoice->choice_id != null && $classLogos[$l] == "Β' Λυκείου (τοποθέτηση)")
+                  array_push($classColumn, $classLogos[$l+1]);
+                else
+                  array_push($classColumn, $classLogos[$l]);
                 array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
                 array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
                 $addr = $crypt->decrypt($gelStudent->regionaddress);
@@ -2623,12 +2634,14 @@ class ReportsCreator extends ControllerBase
 
 
           //βρες τους αυτοδίκαια
+          /*
           $sCon = $this->connection
              ->select('gel_school', 'eSchool')
              ->fields('eSchool', array('operation_shift', 'registry_no'))
              ->condition('eSchool.id', $schoolid, '=');
           $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
           $gelSchool = reset($gelSchools);
+          */
 
           if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ") {
             $startIndex = 4; $endIndex = 7;
@@ -2739,7 +2752,7 @@ class ReportsCreator extends ControllerBase
                          ], Response::HTTP_FORBIDDEN);
           }
           $schoolid = $user->init->value;
-          //$schoolid = 2420;
+          //$schoolid = 1573;
 
           //user role validation
           $roles = $user->getRoles();
@@ -2768,6 +2781,13 @@ class ReportsCreator extends ControllerBase
           $surnameColumn = array();
 
           $crypt = new Crypt();
+
+          $sCon = $this->connection
+             ->select('gel_school', 'eSchool')
+             ->fields('eSchool', array('operation_shift', 'registry_no'))
+             ->condition('eSchool.id', $schoolid, '=');
+          $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          $gelSchool = reset($gelSchools);
 
           $classNames = array("Α", "Β", "Γ", "Δ");
           $classLogos = array("Α' Λυκείου (τοποθέτηση)", "Β' Λυκείου (τοποθέτηση)", "Γ' Λυκείου (τοποθέτηση)", "Δ' Λυκείου (τοποθέτηση)");
@@ -2805,7 +2825,12 @@ class ReportsCreator extends ControllerBase
                     array_push($idColumn, $gelStudent->id);
                     array_push($choiceColumn, $this->retrieveChoiceName($stChoice->choice_id));
                     array_push($orderidColumn, $stChoice->order_id);
-                    array_push($classColumn, $classLogos[$l]);
+                    //array_push($classColumn, $classLogos[$l]);
+                    //προσωρινή "θεραπεία" για Εσπερινά (αντιμετώπιση λάθους καταχώρησης πεδίου taxi)
+                    if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ" && $stChoice->choice_id != null && $classLogos[$l] == "Β' Λυκείου (τοποθέτηση)")
+                      array_push($classColumn, $classLogos[$l+1]);
+                    else
+                      array_push($classColumn, $classLogos[$l]);
                     array_push($categoryColumn, $this->retrieveCategoryName($stChoice->choice_id));
                     array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
                     array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
@@ -2816,12 +2841,14 @@ class ReportsCreator extends ControllerBase
 
 
           //βρες τους αυτοδίκαια
+          /*
           $sCon = $this->connection
              ->select('gel_school', 'eSchool')
              ->fields('eSchool', array('operation_shift', 'registry_no'))
              ->condition('eSchool.id', $schoolid, '=');
           $gelSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
           $gelSchool = reset($gelSchools);
+          */
 
           if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ") {
             $startIndex = 4; $endIndex = 7;
