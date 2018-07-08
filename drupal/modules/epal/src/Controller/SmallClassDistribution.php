@@ -65,7 +65,7 @@ class SmallClassDistribution extends ControllerBase
 
         if ($classId == 1){
 
-            $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1));
+            $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1, 'directorconfirm' => 1));
 
             $size = sizeof($studentPerSchool);
                         return $size;
@@ -73,13 +73,13 @@ class SmallClassDistribution extends ControllerBase
         }
         elseif ($classId == 2)
         {
-            $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $sector, 'currentclass' => 2));
+            $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $sector, 'currentclass' => 2, 'directorconfirm' => 1));
                     $size = sizeof($studentPerSchool);
                         return $size;
         }
         elseif ($classId == 3)
         {
-                $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $specialit, 'currentclass' => 3));
+                $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $specialit, 'currentclass' => 3, 'directorconfirm' => 1));
                 $size = sizeof($studentPerSchool);
                     return $size;
         }
@@ -87,7 +87,7 @@ class SmallClassDistribution extends ControllerBase
         {
             if ($operation_shift == 'ΕΣΠΕΡΙΝΟ')
             {
-                $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $specialit, 'currentclass' => 4));
+                $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => $specialit, 'currentclass' => 4, 'directorconfirm' => 1));
                     $size = sizeof($studentPerSchool);
                         return $size;
 
@@ -1220,7 +1220,7 @@ public function findStatusNew($id, $classId, $sector, $specialit)
         if ($classId == 1)
         {
 
-            $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1));
+            $studentPerSchool = $this->entityTypeManager->getStorage('epal_student_class')->loadByProperties(array('epal_id' => $schoolid, 'specialization_id' => -1, 'currentclass' => 1, 'directorconfirm' => 1));
 
             $size = sizeof($studentPerSchool);
                         return $size;
@@ -1238,7 +1238,8 @@ public function findStatusNew($id, $classId, $sector, $specialit)
             ->groupBy('specialization_id')
             ->groupBy('sector_id')
             ->condition('eSchool.epal_id', $schoolid, '=')
-            ->condition('eStudent.specialization_id', $sector, '=');
+            ->condition('eStudent.specialization_id', $sector, '=')
+            ->condition('eStudent.directorconfirm', '1', '=');
         $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
 
         $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1246,6 +1247,7 @@ public function findStatusNew($id, $classId, $sector, $specialit)
 
             foreach ($results as $result) {
                 $size = $result->eStudent_count;
+                $this->logger->warning('id.'.$sector.'id'.$id.'count'.$size);
                 return $size;
             }
         }
@@ -1260,7 +1262,8 @@ public function findStatusNew($id, $classId, $sector, $specialit)
                 ->fields('eStudent', array('specialization_id'))
                 ->groupBy('specialization_id')
                 ->groupBy('specialty_id')
-                ->condition('eSchool.epal_id', $schoolid, '=');
+                ->condition('eSchool.epal_id', $schoolid, '=')
+                ->condition('eStudent.directorconfirm', 1, '=');
                 $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
 
                 $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
@@ -1286,7 +1289,8 @@ public function findStatusNew($id, $classId, $sector, $specialit)
                 ->groupBy('specialization_id')
                 ->groupBy('specialty_id')
                 ->condition('eSchool.epal_id', $schoolid, '=')
-                ->condition('eStudent.specialization_id', $specialit, '=');
+                ->condition('eStudent.specialization_id', $specialit, '=')
+                ->condition('eStudent.directorconfirm', 1, '=');
             $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
 
             $results = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
