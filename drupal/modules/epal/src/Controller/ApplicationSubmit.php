@@ -217,8 +217,6 @@ class ApplicationSubmit extends ControllerBase
                 ], Response::HTTP_FORBIDDEN);
             }
 
-            //$second_period = $eggrafesConfig->activate_second_period->value;
-
             $student = array(
                 'langcode' => 'el',
                 'user_id' => $epalUser->user_id->target_id,
@@ -500,7 +498,6 @@ class ApplicationSubmit extends ControllerBase
               ], Response::HTTP_FORBIDDEN);
           }
 
-          //$second_period = $eggrafesConfig->activate_second_period->value;
           $student = array(
               'langcode' => 'el',
               'user_id' => $epalUser->user_id->target_id,
@@ -613,7 +610,7 @@ class ApplicationSubmit extends ControllerBase
              $epalStudent->set('myschool_currentlevelname', $applicationForm[0]['level_name']);
              //if ($applicationForm[0]['unittype_name'] != null)
              $epalStudent->set('myschool_currentunittype', $applicationForm[0]['unittype_name']);
-             //$epalStudent->set('second_period', $eggrafesConfig->activate_second_period->value);
+             $epalStudent->set('second_period', $eggrafesConfig->activate_second_period->value);
 
              $epalStudent->save();
            }

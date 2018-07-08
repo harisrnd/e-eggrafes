@@ -69,7 +69,7 @@ import { GelStudentDataFieldsActions } from "../actions/gelstudentdatafields.act
             <p style = "font-size:1.0em">
             <strong>Ενημέρωση: </strong>
             Ευχαριστούμε για τη συνεργασία. Θα μπορείτε να ενημερωθείτε για το αποτέλεσμα της κατανομής της αίτησής σας από τις
-            <strong>02/07 (για τα ΕΠΑ.Λ.)</strong> και από τις <strong>04/07 (για τα ΓΕ.Λ.)</strong> και να εκτυπώσετε την αίτησή σας μέσω της εφαρμογής e-eggrafes.
+            <strong>02/07 (για τα ΕΠΑ.Λ.)</strong> και από τις <strong>05/07 (για τα ΓΕ.Λ.)</strong> και να εκτυπώσετε την αίτησή σας μέσω της εφαρμογής e-eggrafes.
             </p>
 
 

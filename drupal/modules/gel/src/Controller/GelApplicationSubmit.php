@@ -523,6 +523,8 @@ class GelApplicationSubmit extends ControllerBase
             $gelStudent->set('myschool_currentlevelname', $applicationForm[0]['level_name']);
             $gelStudent->set('myschool_currentunittype', $applicationForm[0]['unittype_name']);
 
+            $gelStudent->set('second_period', $second_period);
+
             $gelStudent->save();
           }
           $entity_storage_student->resetCache();

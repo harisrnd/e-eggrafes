@@ -487,7 +487,7 @@ class GelSubmittedApplications extends ControllerBase
                     $schoolAddress = $gelStudent->street_address;
                     $schoolTel = $gelStudent->phone_number;
 
-                    //$this->logger->warning("Trace.." .  $gelStudent->myschool_promoted . "  " . $gelStudent->second_period . "  " . $gelStudent->changed . " "  . $dateStartInt);
+                    //$this->logger->warning("Trace.." .  $applicantsResultsDisabled . " " . $gelStudent->myschool_promoted . "  " . $gelStudent->second_period . "  " . $gelStudent->changed . " "  . $dateStartInt);
                     $canedit = '0';
                     if (  $applicantsAppModifyDisabled == "0"
                         && $eggrafesConfig->activate_second_period->value == $gelStudent->second_period
@@ -495,16 +495,18 @@ class GelSubmittedApplications extends ControllerBase
                       )
                       $canedit = '1';
 
+                    //$applicantsResultsDisabled = "0";
                     //if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted === "1" || $gelStudent->myschool_promoted === "2")) {
                     if ($applicantsResultsDisabled === "0" && ($gelStudent->myschool_promoted != "3" && $gelStudent->myschool_promoted != "4"
                         && $gelStudent->myschool_promoted != "5" && $gelStudent->myschool_promoted != "14")) {
 
                       //  περιττό (?), στη Β' περίοδο οι αιτήσεις λογικά δεν έχουν ενημερωμένο το myschool_promoted ?
-                      if ($gelStudent->second_period === "1" && $gelStudent->changed >= $dateStartInt)
+                      if ($gelStudent->second_period == "1" && $gelStudent->changed >= $dateStartInt)
                         //η αίτηση είναι της β' περιόδου με ημερομηνία μεταγενέστερη της ημερομηνίας έναρξης β' περιόδου
                         $status = "2";
                       // end new piece of code
-                      else if ($gelStudent->school_id)
+
+                      if ($gelStudent->school_id)
                           //υπάρχει σχολείο στον πίνακα gelstudenthighschool
                           $status = "1";
                       //else if ($gelStudent->lastschool_unittypeid == 40)
@@ -512,7 +514,7 @@ class GelSubmittedApplications extends ControllerBase
                       //    $status = "3";
                       else if ($gelStudent->student_id != null && $gelStudent->school_id == null)
                           //υπάρχει ο μαθητής αλλά όχι το σχολείο στον πίνακα gelstudenthighschool
-                          $status = "8";
+                          $status = "3";
                       else if  ($gelStudent->student_id == null)  {
                           //ο μαθητής δεν υπάρχει στον πίνακα gelstudenthighschool, άρα πάει αυτοδίκαια στο σχολείο τρέχουσας φοίτησης
                           $status = "4";
