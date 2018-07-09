@@ -276,6 +276,12 @@ export class ReportsSchema {
                 width: "8%",
                 filter: false
             },
+            approved: {
+                title: "Εγκεκριμένο",
+                width: "8%",
+                filter: false
+            }
+            /*
             capacity: {
                 title: "Χωρ/κα",
                 width: "8%",
@@ -286,6 +292,7 @@ export class ReportsSchema {
                 width: "8%",
                 filter: false
             }
+            */
         }
     };
 

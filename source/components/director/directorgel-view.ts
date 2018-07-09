@@ -66,7 +66,8 @@ import { HelperDataService } from "../../services/helper-data-service";
                 [class.oddout]="isOdd" [class.evenout]="isEven"  [class.selectedout]="courseActive === i" >
                 <div class="row"  style="line-height: 2em;">
                   <div class="col-md-10" style="font-weight: bold;" >{{CoursesPerSchools$.taxi}}</div>
-                  <div class="col-md-2" style="font-weight: bold;" ><span class="pull-right" style="text-align: right; padding-right: 2px;">{{CoursesPerSchools$.size}}</span></div>
+                  <!--<div class="col-md-2" style="font-weight: bold;" ><span class="pull-right" style="text-align: right; padding-right: 2px;">{{CoursesPerSchools$.size}}</span></div>-->
+                  <div  *ngIf = "courseActive == i" class="col-md-2" style="font-weight: bold;" ><span class="pull-right" style="text-align: right; padding-right: 2px;">{{dynamicCount | async}}</span></div>
                 </div>
                 </li>
 
@@ -290,6 +291,8 @@ import { HelperDataService } from "../../services/helper-data-service";
     private sector = <number>0;
     private special = <number>0;
 
+    private dynamicCount: BehaviorSubject<string>;
+
     constructor(
         private _hds: HelperDataService,
         private activatedRoute: ActivatedRoute,
@@ -301,6 +304,8 @@ import { HelperDataService } from "../../services/helper-data-service";
         this.retrievedStudent = new BehaviorSubject(false);
         this.SavedStudents$ = new BehaviorSubject({});
         this.opened = false;
+
+        this.dynamicCount = new BehaviorSubject("");
     }
 
     public showConfirmModal(): void {
@@ -357,12 +362,14 @@ import { HelperDataService } from "../../services/helper-data-service";
 
     findstudent(taxi) {
         this.showLoader.next(true);
+        this.dynamicCount.next("");
         this.retrievedStudent.next(false);
         this.StudentInfoSub = this._hds.getStudentPerSchoolGel(taxi)
             .subscribe(data => {
                 this.StudentInfo$.next(data);
                 this.retrievedStudent.next(true);
                 this.showLoader.next(false);
+                this.dynamicCount.next(data.length);
             },
             error => {
                 this.StudentInfo$.next([{}]);

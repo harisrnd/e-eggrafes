@@ -57,6 +57,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
                 <option value="0"></option>
                 <option *ngFor="let SchoolSelection$  of SchoolSelections$ | async; let i=index" [value] = "SchoolSelection$.epal_id"> {{SchoolSelection$.epal_name}} </option>
             </select>
+            <br/>
             </div>
 
             <div *ngIf = "reportId === 3 || reportId === 5" >
@@ -71,6 +72,7 @@ import { ReportsSchema, TableColumn } from "./reports-schema";
                         <option value="3" >Γ' Λυκείου</option>
                         <option value="4" >Δ' Λυκείου</option>
                     </select>
+                    <br/>
                 </div>
                 <div class="col-md-11 offset-md-1">
                     <label *ngIf="(showSectorList | async) && enableCourseFilter && (classSelected === 2 || classSelected === 3 || classSelected === 4) ">Τομέας</label>
