@@ -194,13 +194,13 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 
 
                 <div *ngFor="let SectorNames$  of Sectors$  | async; let i=index; let isOdd=odd; let isEven=even" style="   font-weight: bold;">
-                <li class="list-group-item isclickable" (click)="setActiveSector(SectorNames$.id)"
-                     [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedout]="regionActive === SectorNames$.id" >
+                <li class="list-group-item isclickable" (click)="setActiveSectorD(SectorNames$.id)"
+                     [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedout]="regionActiveD === SectorNames$.id" >
                     <div class="col-md-12">{{SectorNames$.name}}</div>
                 </li>
 
 
-                      <div [hidden]="regionActive !== SectorNames$.id"  >
+                      <div [hidden]="regionActiveD !== SectorNames$.id"  >
 
                           <div *ngFor="let Courses$  of Specialit$ | async; let j=index; let isOdd=odd; let isEven=even" style="font-size: 0.8em; font-weight: bold;">
                             <li class="list-group-item isclickable" (click)="setActiveSpecialD(SectorNames$.id, Courses$.id)"
@@ -261,6 +261,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
     private CoursesforMergeSub: Subscription;
     private showLoader: BehaviorSubject<boolean>;
     private regionActive = <number>-1;
+    private regionActiveD = <number>-1;
     private SectorActive = <number>-1;
     private SectorActiveforBClass = <number>-1;
     private courseActiveforCClass = <number>-1;
@@ -338,6 +339,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
         this.aclassActive = -1;
         this.SectorActiveforBClass = -1;
         this.regionActive = -1;
+        this.regionActiveD = -1;
         this.courseActive = -1;
         this.specialActive = -1;
         this.courseActiveforCClass = -1;
@@ -367,12 +369,48 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 
   }
 
+  setActiveSectorD(ind)
+  {
+        this.aclassActive = -1;
+        this.SectorActiveforBClass = -1;
+        this.regionActive = -1;
+        this.regionActiveD = -1;
+        this.courseActive = -1;
+        this.specialActive = -1;
+        this.courseActiveforCClass = -1;
+        this.courseActiveforDClass = -1;
+        this.Specialit$.next([{}]);
+        if (ind === this.regionActiveD) {
+            ind = -1;
+            this.regionActiveD = ind;
+            this.specialActive = ind;
+            this.courseActive = ind;
+        }
+        else {
+            this.regionActiveD = ind;
+            this.showLoader.next(true);
+            this.SpecialitSub = this._hds.getAllCourses(this.regionActiveD)
+                .subscribe(data => {
+                    this.Specialit$.next(data);
+                    this.showLoader.next(false);
+                },
+                error => {
+                    console.log("Error Getting Courses");
+                    this.showLoader.next(false);
+                });
+        }
+
+
+
+  }
+
 
   setActive(ind)
   {
       this.aclassActive = -1;
       this.SectorActiveforBClass = -1;
       this.regionActive = -1;
+      this.regionActiveD = -1;
       this.courseActive = -1;
       this.specialActive = -1;
       this.courseActiveforCClass = -1;
@@ -401,6 +439,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 
 
   setActiveSpecial(sector_ind, special_ind){
+
 
 
       this.School$.next([{}]);
