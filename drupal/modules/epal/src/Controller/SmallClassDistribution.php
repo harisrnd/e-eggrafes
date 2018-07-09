@@ -211,7 +211,7 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
 
 
                        }
-                      else
+                      elseif ($classId == 3)
                        {
                       $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $object->id(), 'specialty_id' => $specialit));
                       if ($courses){
@@ -233,6 +233,32 @@ public function findGroupsForMerging(Request $request,$firstid, $classId, $secto
 
                     }
                     }
+                    else
+                    {
+                      if ($object -> operation_shift -> value == 'ΕΣΠΕΡΙΝΟ')
+                      {
+                      $courses =  $this->entityTypeManager->getStorage('eepal_specialties_in_epal')->loadByProperties(array('epal_id' => $object->id(), 'specialty_id' => $specialit));
+                      if ($courses){
+                      foreach ($courses as $key)
+                        {
+                            if ($firstid != $object->id())
+                            {
+                            $status = $this-> findStatus($object->id(),$classId, $sector, $specialit);
+                            $stat = intval($status);
+                                $list[] = array(
+                                'id' => $object->id(),
+                                'name' => $object->name->value,
+                                'tmhma' => $key->specialty_id-> entity->get('name')->value,
+                                'studentcount' => $stat,
+                                    );
+                            }
+
+                        }
+
+                    }
+                    }
+                    }
+
                 }
                 return $this->respondWithStatus($list, Response::HTTP_OK);
             } else {

@@ -266,6 +266,75 @@ import { HelperDataService } from "../../services/helper-data-service";
               </div>
 
 
+
+               <br>
+            <br>
+            <div style="   font-weight: bold;">
+                <li class="list-group-item isclickable" >
+                    <div class="col-md-12">Δ Λυκείου</div>
+                </li>
+           </div>
+           <br>
+
+
+                <div *ngFor="let SectorNames$  of Sectors$  | async; let i=index; let isOdd=odd; let isEven=even" style="font-weight: bold;">
+                <li class="list-group-item isclickable" (click)="setActiveSectorDClass(SectorNames$.id)"
+                     [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedout]="SectorActiveforDClass === SectorNames$.id" >
+                    <div class="col-md-12">{{SectorNames$.name}}</div>
+                </li>
+
+
+                      <div [hidden]="SectorActiveforDClass !== SectorNames$.id"  >
+
+                          <div *ngFor="let Courses$  of Specialit$ | async; let j=index; let isOdd=odd; let isEven=even" style="font-size: 0.8em; font-weight: bold;">
+                            <li class="list-group-item isclickable" (click)="setActiveSpecialD(Courses$.id)"
+                                 [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedout]="courseActive === Courses$.id" >
+                                <div class="col-md-12">{{Courses$.name}}</div>
+                            </li>
+
+
+                            <div [hidden]="courseActive !== Courses$.id"  >
+
+
+
+                         <div *ngIf="(retrievedSch | async)">
+                           <div *ngFor="let CoursesForUndoMerges$  of CoursesForUndoMerge$ | async; let i=index;
+                           let isOdd=odd; let isEven=even" >
+                            <div class="list-group-item isclickable" (click)="setActive(i)"
+                             [class.oddout]="isOdd" [class.evenout]="isEven"  [class.selectedout]="courseActive === i">
+                              <div class="row"  style="margin: 0px 2px 0px 2px; line-height: 2em;">
+                              <div class="col-md-5" style="font-weight: bold;" >{{CoursesForUndoMerges$.name}}</div>
+                              <div class="col-md-5" style="font-weight: bold;" >{{CoursesForUndoMerges$.namenew}}</div>
+                              <div class="col-md-2" style="font-size: 0.8em; font-weight: bold;" >
+
+                                   <i  class="fa fa-undo isclickable" (click)="undomergecourses(CoursesForUndoMerges$.id, CoursesForUndoMerges$.idnew,
+                                    CoursesForUndoMerges$.name, CoursesForUndoMerges$.namenew, 4,SectorNames$.id, Courses$.id)"></i>
+
+                              </div>
+
+
+                            </div>
+
+                            </div>
+                          </div>
+                      </div>
+
+
+
+
+
+
+                            </div>
+                         </div>
+
+
+                    </div>
+
+
+              </div>
+
+
+
         </form>
 
    `
@@ -306,6 +375,7 @@ import { HelperDataService } from "../../services/helper-data-service";
   private aclassActive = <number>-1;
   private SectorActiveforBClass = <number>-1;
   private SectorActiveforCClass = <number>-1;
+  private SectorActiveforDClass = <number>-1;
 
     constructor(
 
@@ -386,6 +456,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     {
       this.SectorActiveforBClass = -1;
       this.SectorActiveforCClass = -1;
+      this.SectorActiveforDClass = -1;
       this.courseActive = -1;
       if (this.aclassActive === ind)
       {
@@ -449,6 +520,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     {
 
       this.SectorActiveforCClass = -1;
+       this.SectorActiveforDClass = -1;
       this.courseActive = -1;
       this.aclassActive =-1;
 
@@ -467,6 +539,7 @@ import { HelperDataService } from "../../services/helper-data-service";
     setActiveSectorCClass(ind)
     {
       this.SectorActiveforBClass = -1;
+      this.SectorActiveforDClass = -1;
       this.courseActive = -1;
       this.aclassActive =-1;
 
@@ -490,6 +563,35 @@ import { HelperDataService } from "../../services/helper-data-service";
     }
 
 
+
+    setActiveSectorDClass(ind)
+    {
+      this.SectorActiveforBClass = -1;
+      this.SectorActiveforCClass = -1;
+      this.courseActive = -1;
+      this.aclassActive =-1;
+
+      if (this.SectorActiveforDClass  === ind){
+            ind = -1
+      }
+      this.SectorActiveforDClass = ind;
+      this.classSelected = 4;
+      this.sectorSelected = ind;
+      this.courseSelected = 0;
+      this.SpecialitSub = this._hds.getAllCourses(this.SectorActiveforDClass)
+                .subscribe(data => {
+                    this.Specialit$.next(data);
+                    this.showLoader.next(false);
+                },
+                error => {
+                    console.log("Error Getting Courses");
+                    this.showLoader.next(false);
+                });
+
+    }
+
+
+
     setActiveSpecial(ind )
     {
       if (this.courseActive  === ind){
@@ -497,6 +599,21 @@ import { HelperDataService } from "../../services/helper-data-service";
       }
       this.courseActive = ind;
       this.classSelected = 3;
+      this.courseSelected = ind;
+      this.findcourses();
+
+
+
+    }
+
+
+    setActiveSpecialD(ind )
+    {
+      if (this.courseActive  === ind){
+            ind = -1
+      }
+      this.courseActive = ind;
+      this.classSelected = 4;
       this.courseSelected = ind;
       this.findcourses();
 
