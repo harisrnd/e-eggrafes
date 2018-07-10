@@ -53,10 +53,10 @@ import { HelperDataService } from "../../services/helper-data-service";
                     </div>
 
                     <div class = "row" *ngFor="let CoursesNames$  of CoursesPerPerf$  | async; let j=index; let isOdd2=odd; let isEven2=even"
-                        [class.oddin]="isOdd2" [class.evenin]="isEven2" [class.changecolor]="calccolor(CoursesNames$.size,CoursesNames$.limitdown)"
-                        [class.changecolorbalck]="calccolor(CoursesNames$.limitdown, CoursesNames$.size)"
+                        [class.oddin]="isOdd2" [class.evenin]="isEven2" [class.changecolor]="calccolor(CoursesNames$.sizeconfirm,CoursesNames$.limitdown)"
+                        [class.changecolorbalck]="calccolor(CoursesNames$.limitdown, CoursesNames$.sizeconfirm)"
                         [class.selectedappout]="regionActive === j"
-                        [hidden]="(SchoolNames$.id !== regionActive) ||(calccolor(CoursesNames$.size,CoursesNames$.limitdown) === false) "
+                        [hidden]="(SchoolNames$.id !== regionActive) ||(calccolor(CoursesNames$.sizeconfirm,CoursesNames$.limitdown) === false) "
                         style="margin: 0px 2px 0px 2px;" >
 
 
