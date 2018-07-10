@@ -182,6 +182,67 @@ import { FormBuilder, FormGroup } from "@angular/forms";
               </div>
 
 
+
+                      <br>
+            <br>
+            <div style="   font-weight: bold;">
+                <li class="list-group-item isclickable" >
+                    <div class="col-md-12">Δ Λυκείου</div>
+                </li>
+           </div>
+           <br>
+
+
+                <div *ngFor="let SectorNames$  of Sectors$  | async; let i=index; let isOdd=odd; let isEven=even" style="   font-weight: bold;">
+                <li class="list-group-item isclickable" (click)="setActiveSectorD(SectorNames$.id)"
+                     [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedout]="regionActiveD === SectorNames$.id" >
+                    <div class="col-md-12">{{SectorNames$.name}}</div>
+                </li>
+
+
+                      <div [hidden]="regionActiveD !== SectorNames$.id"  >
+
+                          <div *ngFor="let Courses$  of Specialit$ | async; let j=index; let isOdd=odd; let isEven=even" style="font-size: 0.8em; font-weight: bold;">
+                            <li class="list-group-item isclickable" (click)="setActiveSpecialD(SectorNames$.id, Courses$.id)"
+                                 [class.oddout]="isOdd" [class.evenout]="isEven" [class.selectedout]="courseActive === Courses$.id" >
+                                <div class="col-md-12">{{Courses$.name}}</div>
+                            </li>
+
+
+                            <div [hidden]="courseActiveforDClass !== Courses$.id"  >
+                             <div *ngFor="let CoursesforMerges$  of School$ | async;
+                             let k=index; let isOdd=odd; let isEven=even"
+                             class="row list-group-item isclickable"
+                             [class.oddout]="isOdd" [class.evenout]="isEven"
+                             style="margin: 0px 2px 0px 2px; "
+                             (click)="setActiveCourses(CoursesforMerges$.id)"
+                             (click)="findmergingcourse(CoursesforMerges$.id,4,SectorNames$.id, Courses$.id)">
+                                  <div class="col-md-8" style="   font-weight: bold;" >{{CoursesforMerges$.name}}</div>
+                                  <div class="col-md-3" style="   font-weight: bold;" >{{CoursesforMerges$.studentcount}}</div>
+
+                                  <div [hidden]="courseActive !== CoursesforMerges$.id" >
+                                 <div *ngFor="let AllCourses$  of CoursesforMerge$ | async; let l=index; let isOdd=odd; let isEven=even"
+                                 class="row list-group-item"
+                                 [class.oddout]="isOdd" [class.evenout]="isEven" style="margin: 0px 2px 0px 2px;">
+                                  <div class="col-md-7" style="   font-weight: bold;" >{{AllCourses$.name}}</div>
+                                  <div class="col-md-2" style="   font-weight: bold;" >{{AllCourses$.studentcount}}</div>
+                                  <div class="col-md-3" style="   font-weight: bold;" >
+                                      <i class="fa fa-compress isclickable" (click)="mergecourses(AllCourses$.id ,CoursesforMerges$.id,AllCourses$.name, CoursesforMerges$.name, 4,SectorNames$.id, Courses$.id)"></i>
+                                  </div>
+                               </div>
+                              </div>
+
+                             </div>
+                            </div>
+                         </div>
+
+
+                    </div>
+
+
+              </div>
+
+
         </form>
 
 
@@ -200,9 +261,11 @@ import { FormBuilder, FormGroup } from "@angular/forms";
     private CoursesforMergeSub: Subscription;
     private showLoader: BehaviorSubject<boolean>;
     private regionActive = <number>-1;
+    private regionActiveD = <number>-1;
     private SectorActive = <number>-1;
     private SectorActiveforBClass = <number>-1;
     private courseActiveforCClass = <number>-1;
+    private courseActiveforDClass = <number>-1;
     private specialActive = <number>-1;
     private courseActive = <number>-1;
     private aclassActive = <number>-1;
@@ -276,9 +339,11 @@ import { FormBuilder, FormGroup } from "@angular/forms";
         this.aclassActive = -1;
         this.SectorActiveforBClass = -1;
         this.regionActive = -1;
+        this.regionActiveD = -1;
         this.courseActive = -1;
         this.specialActive = -1;
         this.courseActiveforCClass = -1;
+        this.courseActiveforDClass = -1;
         this.Specialit$.next([{}]);
         if (ind === this.regionActive) {
             ind = -1;
@@ -304,15 +369,53 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 
   }
 
+  setActiveSectorD(ind)
+  {
+        this.aclassActive = -1;
+        this.SectorActiveforBClass = -1;
+        this.regionActive = -1;
+        this.regionActiveD = -1;
+        this.courseActive = -1;
+        this.specialActive = -1;
+        this.courseActiveforCClass = -1;
+        this.courseActiveforDClass = -1;
+        this.Specialit$.next([{}]);
+        if (ind === this.regionActiveD) {
+            ind = -1;
+            this.regionActiveD = ind;
+            this.specialActive = ind;
+            this.courseActive = ind;
+        }
+        else {
+            this.regionActiveD = ind;
+            this.showLoader.next(true);
+            this.SpecialitSub = this._hds.getAllCourses(this.regionActiveD)
+                .subscribe(data => {
+                    this.Specialit$.next(data);
+                    this.showLoader.next(false);
+                },
+                error => {
+                    console.log("Error Getting Courses");
+                    this.showLoader.next(false);
+                });
+        }
+
+
+
+  }
+
 
   setActive(ind)
   {
       this.aclassActive = -1;
       this.SectorActiveforBClass = -1;
       this.regionActive = -1;
+      this.regionActiveD = -1;
       this.courseActive = -1;
       this.specialActive = -1;
       this.courseActiveforCClass = -1;
+      this.courseActiveforDClass = -1;
+
       this.School$.next([{}]);
         if (ind === this.SectorActiveforBClass) {
             ind = -1;
@@ -338,6 +441,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
   setActiveSpecial(sector_ind, special_ind){
 
 
+
       this.School$.next([{}]);
         if (special_ind === this.courseActiveforCClass) {
             special_ind = -1;
@@ -352,6 +456,36 @@ import { FormBuilder, FormGroup } from "@angular/forms";
             this.courseActiveforCClass = special_ind;
             this.showLoader.next(true);
             this.SchoolSub = this._hds.FindSmallCourses(3,sector_ind, special_ind)
+                .subscribe(data => {
+                    this.School$.next(data);
+                    this.showLoader.next(false);
+
+                },
+                error => {
+                    console.log("Error Getting Courses");
+                    this.showLoader.next(false);
+                });
+        }
+  }
+
+
+  setActiveSpecialD(sector_ind, special_ind){
+
+
+      this.School$.next([{}]);
+        if (special_ind === this.courseActiveforDClass) {
+            special_ind = -1;
+            this.SectorActive = sector_ind;
+            this.courseActiveforDClass = special_ind;
+
+
+        }
+        else {
+
+            this.SectorActive = sector_ind;
+            this.courseActiveforDClass = special_ind;
+            this.showLoader.next(true);
+            this.SchoolSub = this._hds.FindSmallCourses(4,sector_ind, special_ind)
                 .subscribe(data => {
                     this.School$.next(data);
                     this.showLoader.next(false);
@@ -397,6 +531,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
       this.courseActive = -1;
       this.specialActive = -1;
       this.courseActiveforCClass = -1;
+      this.courseActiveforDClass = -1;
       this.School$.next([{}]);
       if (this.aclassActive === ind)
       {
@@ -412,6 +547,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
       findmergingcourse(nid, classid, sector, special){
 
            this.showLoader.next(true);
+           console.log(classid,"taxi");
            this.CoursesforMergeSub = this._hds.FindMergingCourses(nid, classid, sector, special).subscribe(x => {
              this.CoursesforMerge$.next(x);
              this.showLoader.next(false);
