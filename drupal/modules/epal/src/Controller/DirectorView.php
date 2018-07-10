@@ -74,7 +74,7 @@ class DirectorView extends ControllerBase
             if ($user) {
                 $epalId = $user->init->value;
                 //hard
-                //$epalId = 315;
+                //$epalId = 46;
                 $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $epalId));
                 $school = reset($schools);
                 if (!$school) {
@@ -996,7 +996,7 @@ class DirectorView extends ControllerBase
         if ($user) {
             $schoolid = $user->init->value;
             //hard
-            //$schoolid = 315;
+            //$schoolid = 46;
             $schools = $this->entityTypeManager->getStorage('eepal_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
             if (!$school) {
@@ -1583,7 +1583,7 @@ public function getpde(Request $request)
                         'id' => $object->specialty_id->entity->id(),
                         'name' => 'Δ Λυκείου  '.$object->specialty_id->entity->get('name')->value,
                         'size' => sizeof($studentPerSchool),
-                        'size' => sizeof($studentPerSchoolConfir),
+                        'sizeconfirm' => sizeof($studentPerSchoolConfir),
                         'categ' => $categ,
                         'classes' => 4,
                         'limitdown' => $limit,

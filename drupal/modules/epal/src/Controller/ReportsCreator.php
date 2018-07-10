@@ -924,6 +924,7 @@ class ReportsCreator extends ControllerBase
             $sCon->addField('eRegion_epal', 'name','regionBName');
             $sCon->addField('eAdmin_epal', 'name','adminBName');
             $sCon->addField('eSchool_epal', 'name','schoolBName');
+
             if ($classId != 0) {
                 $sCon->condition('eStudent.currentclass', $classId, '=');
             }
@@ -961,7 +962,8 @@ class ReportsCreator extends ControllerBase
             $sCon->groupBy('eRegion_epal.name');
             $sCon->groupBy('eAdmin_epal.name');
             $sCon->groupBy('eSchool_epal.name');
-            $sCon->addExpression('count(eStudent.id)', 'eStudent_count');
+            //$sCon->addExpression('count(eStudent.id)', 'eStudent_count');
+            $sCon->addExpression('sum(case when eStudent.directorconfirm = 1 then 1 else 0 end)','eStudent_count'); //synolo pou exoun ginei confirm
             $mergedSchools = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
 
@@ -1003,7 +1005,8 @@ class ReportsCreator extends ControllerBase
                         array_push($schoolSectionColumn, 'Γ Tάξη / ' . $sector_specialty['sectorName'].'/'.$sector_specialty['specialtyName']);//->specialization_id);
                     }
                     else if ($mergedSchool->currentclass==4){
-                        array_push($schoolSectionColumn, 'Δ Tάξη / ' . $mergedSchool->specialization_id);
+                        //array_push($schoolSectionColumn, 'Δ Tάξη / ' . $mergedSchool->specialization_id);
+                          array_push($schoolSectionColumn, 'Δ Tάξη / ' . $sector_specialty['sectorName'].'/'.$sector_specialty['specialtyName']);
                     }
                 }
 
@@ -1016,7 +1019,9 @@ class ReportsCreator extends ControllerBase
                 $sCon->condition('eStudent.epal_id', $mergedSchool->epal_id, '=');
                 $sCon->condition('eStudent.currentclass', $mergedSchool->currentclass, '=');
                 $sCon->condition('eStudent.specialization_id', $mergedSchool->specialization_id, '=');
-                $sCon->addExpression('count(eStudent.id)', 'eStudent_extra_count');
+                //$sCon->addExpression('count(eStudent.id)', 'eStudent_extra_count');
+                $sCon->addExpression('sum(case when eStudent.directorconfirm = 1 then 1 else 0 end)','eStudent_extra_count'); //synolo pou exoun ginei confirm
+
                 $sCon->groupBy('eStudent.epal_id');
                 $sCon->groupBy('eStudent.currentclass');
                 $sCon->groupBy('eStudent.specialization_id');
@@ -2561,6 +2566,15 @@ class ReportsCreator extends ControllerBase
 
           $crypt = new Crypt();
 
+          $invalidids = array();
+          $sCon = $this->connection
+             ->select('invalid_apps', 'eInvalid')
+             ->fields('eInvalid', array('id'));
+          $invalidApps = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          foreach ($invalidApps as $invalidApp)
+            array_push($invalidids, $invalidApp->id);
+
+
           $sCon = $this->connection
              ->select('gel_school', 'eSchool')
              ->fields('eSchool', array('operation_shift', 'registry_no'))
@@ -2570,6 +2584,7 @@ class ReportsCreator extends ControllerBase
 
           $classNames = array("Α", "Β", "Γ", "Δ");
           $classLogos = array("Α' Λυκείου (τοποθέτηση)", "Β' Λυκείου (τοποθέτηση)", "Γ' Λυκείου (τοποθέτηση)", "Δ' Λυκείου (τοποθέτηση)");
+          $classLogosFull = array("Α' Λυκείου (τοποθέτηση)", "Β' Λυκείου (τοποθέτηση)", "Γ' Λυκείου (τοποθέτηση)", "Α' Λυκείου (τοποθέτηση)", "Β' Λυκείου (τοποθέτηση)", "Γ' Λυκείου (τοποθέτηση)","Δ' Λυκείου (τοποθέτηση)");
           $hgids = array();
           for ($l=0; $l<4;$l++)  {
             $sCon = $this->connection
@@ -2592,56 +2607,64 @@ class ReportsCreator extends ControllerBase
                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
               $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
               foreach ($gelStudents as $gelStudent)  {
-                array_push($idColumn, $gelStudent->id);
-                $sCon = $this->connection
-                       ->select('gel_student_choices', 'eChoices')
-                       ->fields('eChoices', array('choice_id'))
-                       ->condition('eChoices.student_id', $gelStudent->id , '=')
-                       ->condition('eChoices.choice_id', 15 , '>=')
-                       ->condition('eChoices.choice_id', 17 , '<=');
-                $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                $stChoice = reset($stChoices);
-                //να αλλαχθεί σε ανάκτηση του ονόματος της ΟΠ από τη βάση με INNER JOIN
-                array_push($opColumn, $this->retrieveChoiceName($stChoice->choice_id));
-                //προσωρινή "θεραπεία" για Εσπερινά (αντιμετώπιση λάθους καταχώρησης πεδίου taxi)
-                if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ" && $stChoice->choice_id != null && $classLogos[$l] == "Β' Λυκείου (τοποθέτηση)")
-                  array_push($classColumn, $classLogos[$l+1]);
-                else
-                  array_push($classColumn, $classLogos[$l]);
-                array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
-                array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
-                $addr = $crypt->decrypt($gelStudent->regionaddress);
-                if ($gelStudent->regiontk != null)  {
-                  $addr .= ", ΤΚ ";
-                  $addr .= $crypt->decrypt($gelStudent->regiontk);
+
+                if ( !in_array($gelStudent->id, $invalidids) )  {
+                  array_push($idColumn, $gelStudent->id);
+                  $sCon = $this->connection
+                         ->select('gel_student_choices', 'eChoices')
+                         ->fields('eChoices', array('choice_id'))
+                         ->condition('eChoices.student_id', $gelStudent->id , '=')
+                         ->condition('eChoices.choice_id', 15 , '>=')
+                         ->condition('eChoices.choice_id', 17 , '<=');
+                  $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                  $stChoice = reset($stChoices);
+                  //να αλλαχθεί σε ανάκτηση του ονόματος της ΟΠ από τη βάση με INNER JOIN
+                  array_push($opColumn, $this->retrieveChoiceName($stChoice->choice_id));
+                  //προσωρινή "θεραπεία" για Εσπερινά (αντιμετώπιση λάθους καταχώρησης πεδίου taxi)
+                  /*
+                  if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ" && $stChoice->choice_id != null && $classLogos[$l] == "Β' Λυκείου (τοποθέτηση)")
+                    array_push($classColumn, $classLogos[$l+1]);
+                  else
+                    array_push($classColumn, $classLogos[$l]);
+                  */
+                  array_push($classColumn, $classLogosFull[$gelStudent->nextclass - 1]);
+
+                  array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
+                  array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
+                  $addr = $crypt->decrypt($gelStudent->regionaddress);
+                  if ($gelStudent->regiontk != null)  {
+                    $addr .= ", ΤΚ ";
+                    $addr .= $crypt->decrypt($gelStudent->regiontk);
+                  }
+                  if ($gelStudent->regionarea != null)  {
+                    $addr .= ", ";
+                    $addr .= $crypt->decrypt($gelStudent->regionarea);
+                  }
+                  array_push($addressColumn, $addr);
+                  array_push($telColumn, $crypt->decrypt($gelStudent->telnum));
+                  if ($gelStudent->directorconfirm == null )
+                    array_push($confirmColumn, 'ΔΕΝ ΕΛΕΓΧΘΗΚΕ');
+                  else if ($gelStudent->directorconfirm == 1 )
+                    array_push($confirmColumn, 'ΝΑΙ');
+                  else if ($gelStudent->directorconfirm == 0 )
+                    array_push($confirmColumn, 'ΟΧΙ');
                 }
-                if ($gelStudent->regionarea != null)  {
-                  $addr .= ", ";
-                  $addr .= $crypt->decrypt($gelStudent->regionarea);
-                }
-                array_push($addressColumn, $addr);
-                array_push($telColumn, $crypt->decrypt($gelStudent->telnum));
-                if ($gelStudent->directorconfirm == null )
-                  array_push($confirmColumn, 'ΔΕΝ ΕΛΕΓΧΘΗΚΕ');
-                else if ($gelStudent->directorconfirm == 1 )
-                  array_push($confirmColumn, 'ΝΑΙ');
-                else if ($gelStudent->directorconfirm == 0 )
-                  array_push($confirmColumn, 'ΟΧΙ');
               }
             }
-
           }
 
 
 
           //new piece of code ..
           //add in hgid array invalid ids!
+          /*
           $sCon = $this->connection
              ->select('invalid_apps', 'eInvalid')
              ->fields('eInvalid', array('id'));
           $invalidApps = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
           foreach ($invalidApps as $invalidApp)
             array_push($hgids, $invalidApp->id);
+          */
 
 
           //βρες τους αυτοδίκαια
@@ -2674,7 +2697,7 @@ class ReportsCreator extends ControllerBase
             $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
             foreach ($gelStudents as $gelStudent)  {
 
-              if (!in_array($gelStudent->id, $hgids))  {
+              if (!in_array($gelStudent->id, $hgids)  && !in_array($gelStudent->id, $invalidids))  {
                 array_push($idColumn, $gelStudent->id);
                 $sCon = $this->connection
                        ->select('gel_student_choices', 'eChoices')
@@ -2763,7 +2786,8 @@ class ReportsCreator extends ControllerBase
                          ], Response::HTTP_FORBIDDEN);
           }
           $schoolid = $user->init->value;
-          //$schoolid = 1573;
+          //hard
+          //$schoolid = 954;
 
           //user role validation
           $roles = $user->getRoles();
@@ -2780,7 +2804,6 @@ class ReportsCreator extends ControllerBase
                          ], Response::HTTP_FORBIDDEN);
           }
 
-          $crypt = new Crypt();
           $list = array();
 
           $idColumn = array();
@@ -2793,6 +2816,14 @@ class ReportsCreator extends ControllerBase
 
           $crypt = new Crypt();
 
+          $invalidids = array();
+          $sCon = $this->connection
+             ->select('invalid_apps', 'eInvalid')
+             ->fields('eInvalid', array('id'));
+          $invalidApps = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          foreach ($invalidApps as $invalidApp)
+            array_push($invalidids, $invalidApp->id);
+
           $sCon = $this->connection
              ->select('gel_school', 'eSchool')
              ->fields('eSchool', array('operation_shift', 'registry_no'))
@@ -2802,6 +2833,7 @@ class ReportsCreator extends ControllerBase
 
           $classNames = array("Α", "Β", "Γ", "Δ");
           $classLogos = array("Α' Λυκείου (τοποθέτηση)", "Β' Λυκείου (τοποθέτηση)", "Γ' Λυκείου (τοποθέτηση)", "Δ' Λυκείου (τοποθέτηση)");
+          $classLogosFull = array("Α' Λυκείου (τοποθέτηση)", "Β' Λυκείου (τοποθέτηση)", "Γ' Λυκείου (τοποθέτηση)", "Α' Λυκείου (τοποθέτηση)", "Β' Λυκείου (τοποθέτηση)", "Γ' Λυκείου (τοποθέτηση)","Δ' Λυκείου (τοποθέτηση)");
           $hgids = array();
           for ($l=0; $l<4;$l++)  {
             $sCon = $this->connection
@@ -2824,27 +2856,33 @@ class ReportsCreator extends ControllerBase
                  ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2)->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
               $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
               foreach ($gelStudents as $gelStudent)  {
-                $sCon = $this->connection
-                       ->select('gel_student_choices', 'eChoices')
-                       ->fields('eChoices', array('choice_id', 'order_id'))
-                       ->condition('eChoices.student_id', $gelStudent->id , '=')
-                       ->condition('eChoices.choice_id', 1 , '>=')
-                       ->condition('eChoices.choice_id', 14 , '<=');
-                $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+                if ( !in_array($gelStudent->id, $invalidids) )  {
+                  $sCon = $this->connection
+                         ->select('gel_student_choices', 'eChoices')
+                         ->fields('eChoices', array('choice_id', 'order_id'))
+                         ->condition('eChoices.student_id', $gelStudent->id , '=')
+                         ->condition('eChoices.choice_id', 1 , '>=')
+                         ->condition('eChoices.choice_id', 14 , '<=');
+                  $stChoices = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
-                foreach ($stChoices as $stChoice)  {
-                    array_push($idColumn, $gelStudent->id);
-                    array_push($choiceColumn, $this->retrieveChoiceName($stChoice->choice_id));
-                    array_push($orderidColumn, $stChoice->order_id);
-                    //array_push($classColumn, $classLogos[$l]);
-                    //προσωρινή "θεραπεία" για Εσπερινά (αντιμετώπιση λάθους καταχώρησης πεδίου taxi)
-                    if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ" && $stChoice->choice_id != null && $classLogos[$l] == "Β' Λυκείου (τοποθέτηση)")
-                      array_push($classColumn, $classLogos[$l+1]);
-                    else
-                      array_push($classColumn, $classLogos[$l]);
-                    array_push($categoryColumn, $this->retrieveCategoryName($stChoice->choice_id));
-                    array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
-                    array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
+                  foreach ($stChoices as $stChoice)  {
+                      array_push($idColumn, $gelStudent->id);
+                      array_push($choiceColumn, $this->retrieveChoiceName($stChoice->choice_id));
+                      array_push($orderidColumn, $stChoice->order_id);
+                      //array_push($classColumn, $classLogos[$l]);
+                      //προσωρινή "θεραπεία" για Εσπερινά (αντιμετώπιση λάθους καταχώρησης πεδίου taxi)
+                      /*
+                      if ($gelSchool->operation_shift == "ΕΣΠΕΡΙΝΟ" && $stChoice->choice_id != null && $classLogos[$l] == "Β' Λυκείου (τοποθέτηση)")
+                        array_push($classColumn, $classLogos[$l+1]);
+                      else
+                        array_push($classColumn, $classLogos[$l]);
+                      */
+                      array_push($classColumn, $classLogosFull[$gelStudent->nextclass - 1]);
+
+                      array_push($categoryColumn, $this->retrieveCategoryName($stChoice->choice_id));
+                      array_push($firstnameColumn, $crypt->decrypt($gelStudent->name));
+                      array_push($surnameColumn, $crypt->decrypt($gelStudent->studentsurname));
+                  }
                 }
               }
             }
@@ -2852,12 +2890,14 @@ class ReportsCreator extends ControllerBase
 
           //new piece of code ..
           //add in hgid array invalid ids!
+          /*
           $sCon = $this->connection
              ->select('invalid_apps', 'eInvalid')
              ->fields('eInvalid', array('id'));
           $invalidApps = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
           foreach ($invalidApps as $invalidApp)
             array_push($hgids, $invalidApp->id);
+          */
 
           //βρες τους αυτοδίκαια
           /*
@@ -2889,7 +2929,7 @@ class ReportsCreator extends ControllerBase
             $gelStudents = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
             foreach ($gelStudents as $gelStudent)  {
 
-              if (!in_array($gelStudent->id, $hgids))  {
+              if (!in_array($gelStudent->id, $hgids)  && !in_array($gelStudent->id, $invalidids))  {
                 $sCon = $this->connection
                        ->select('gel_student_choices', 'eChoices')
                        ->fields('eChoices', array('choice_id', 'order_id'))
