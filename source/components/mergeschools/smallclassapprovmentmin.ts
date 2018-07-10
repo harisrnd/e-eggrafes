@@ -29,7 +29,7 @@ import { IAppState } from "../../store/store";
         </div>
       </div>
 
-      
+
         <div style="min-height: 500px;">
         <form>
 
@@ -40,7 +40,7 @@ import { IAppState } from "../../store/store";
                     <div  class="col-md-12">{{PdeNames$.name}}!</div>
                  </li>
 
-         
+
             <div *ngFor="let SchoolNames$  of SchoolsPerPerf$  | async; let i=index; let isOdd=odd; let isEven=even" style="font-size: 0.8em; font-weight: bold;" [hidden]="PdeNames$.id !== pdeActive">
                 <li class="list-group-item isclickable" (click)="setActiveRegion(SchoolNames$.id)"
                      [class.oddout]="isOdd"
@@ -84,10 +84,10 @@ import { IAppState } from "../../store/store";
 
 
 
-      
 
 
-   
+
+
         </form>
      </div>
 
@@ -115,13 +115,13 @@ import { IAppState } from "../../store/store";
     private loginInfoSub: Subscription;
     private Pde$: BehaviorSubject<any>;
     private PdeSub: Subscription;
-    
+
 
     constructor(
        private _ngRedux: NgRedux<IAppState>,
         private _hds: HelperDataService,
         private activatedRoute: ActivatedRoute,
-        private router: Router) 
+        private router: Router)
     {
         this.loginInfo$ = new BehaviorSubject(LOGININFO_INITIAL_STATE);
         this.SchoolsPerPerf$ = new BehaviorSubject([{}]);
@@ -139,7 +139,7 @@ import { IAppState } from "../../store/store";
     }
 
     ngOnInit() {
-       
+
         (<any>$("#informationfeedback")).appendTo("body");
 
          this.loginInfoSub = this._ngRedux.select("loginInfo")
@@ -180,10 +180,10 @@ import { IAppState } from "../../store/store";
         (<any>$("#informationfeedback")).appendTo("body");
         if (ind === this.pdeActive) {
             ind = -1;
-            
+
         }
         this.pdeActive = ind;
-       
+
         this.showLoader.next(true);
         this.SchoolPerPerfSub = this._hds.getSchoolsMinistry(ind, this.minedu_userName, this.minedu_userPassword)
             .subscribe(data => {
@@ -203,7 +203,7 @@ import { IAppState } from "../../store/store";
 
 
     calccolor(size, limit) {
-        console.log(size, limit, "oria");
+        //console.log(size, limit, "oria");
         if (size < limit)
             return true;
         else

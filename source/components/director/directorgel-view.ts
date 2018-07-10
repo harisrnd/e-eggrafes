@@ -61,7 +61,7 @@ import { HelperDataService } from "../../services/helper-data-service";
       </div>
       <div *ngFor="let CoursesPerSchools$  of CoursesPerSchool$ | async; let i=index; let isOdd=odd; let isEven=even" >
                 <li class="list-group-item isclickable" (click)="setActive(i)"
-                (click)="findstudent(CoursesPerSchools$.class)"
+                (click)="findstudent(CoursesPerSchools$.class, courseActive, i)"
                 [class.changelistcolor]= "CoursesPerSchools$.size < CoursesPerSchools$.limitdown"
                 [class.oddout]="isOdd" [class.evenout]="isEven"  [class.selectedout]="courseActive === i" >
                 <div class="row"  style="line-height: 2em;">
@@ -360,27 +360,31 @@ import { HelperDataService } from "../../services/helper-data-service";
             });
     }
 
-    findstudent(taxi) {
+    findstudent(taxi, courseActive, i) {
         this.showLoader.next(true);
         this.dynamicCount.next("");
         this.retrievedStudent.next(false);
-        this.StudentInfoSub = this._hds.getStudentPerSchoolGel(taxi)
-            .subscribe(data => {
-                this.StudentInfo$.next(data);
-                this.retrievedStudent.next(true);
-                this.showLoader.next(false);
-                this.dynamicCount.next(data.length);
-            },
-            error => {
-                this.StudentInfo$.next([{}]);
-                console.log("Error Getting Students");
-                this.showLoader.next(false);
-                if (error.status === 404) {
-                    this.showModal("#emptyselection");
-                } else {
-                    this.showModal("#errorselection");
-                }
-            });
+        if (courseActive == i) {
+          this.StudentInfoSub = this._hds.getStudentPerSchoolGel(taxi)
+              .subscribe(data => {
+                  this.StudentInfo$.next(data);
+                  this.retrievedStudent.next(true);
+                  this.showLoader.next(false);
+                  this.dynamicCount.next(data.length);
+              },
+              error => {
+                  this.StudentInfo$.next([{}]);
+                  console.log("Error Getting Students");
+                  this.showLoader.next(false);
+                  if (error.status === 404) {
+                      this.showModal("#emptyselection");
+                  } else {
+                      this.showModal("#errorselection");
+                  }
+              });
+          }
+          else
+            this.showLoader.next(false);
 
     }
 
