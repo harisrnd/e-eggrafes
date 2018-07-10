@@ -2528,7 +2528,7 @@ class ReportsCreator extends ControllerBase
           }
           $schoolid = $user->init->value;
           //hard
-          //$schoolid = 1573;
+          //$schoolid = 954;
 
           //user role validation
           $roles = $user->getRoles();
@@ -2631,6 +2631,17 @@ class ReportsCreator extends ControllerBase
             }
 
           }
+
+
+
+          //new piece of code ..
+          //add in hgid array invalid ids!
+          $sCon = $this->connection
+             ->select('invalid_apps', 'eInvalid')
+             ->fields('eInvalid', array('id'));
+          $invalidApps = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          foreach ($invalidApps as $invalidApp)
+            array_push($hgids, $invalidApp->id);
 
 
           //βρες τους αυτοδίκαια
@@ -2839,6 +2850,14 @@ class ReportsCreator extends ControllerBase
             }
           }
 
+          //new piece of code ..
+          //add in hgid array invalid ids!
+          $sCon = $this->connection
+             ->select('invalid_apps', 'eInvalid')
+             ->fields('eInvalid', array('id'));
+          $invalidApps = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
+          foreach ($invalidApps as $invalidApp)
+            array_push($hgids, $invalidApp->id);
 
           //βρες τους αυτοδίκαια
           /*

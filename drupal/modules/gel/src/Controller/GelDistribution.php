@@ -2736,7 +2736,7 @@ public function FindCoursesPerSchoolGel(Request $request)
         if ($user) {
             $schoolid = $user->init->value;
             //hard
-            //$schoolid = 1573;
+            //$schoolid = 954;
             $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
             if (!$school) {
@@ -3104,7 +3104,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
             if ($user) {
                 $gelId = $user->init->value;
                 //hard
-                //$gelId = 1573;
+                //$gelId = 954;
                 //$this->logger->warning($gelId."kvdikos sxoleiou".$classId);
                 $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gelId));
                 $school = reset($schools);
@@ -3223,7 +3223,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
 
                 }
-                if ($studentPerSchool || $existingstudents_prom || existingstudents_non_prom) {
+                if ($studentPerSchool || $existingstudents_prom || $existingstudents_non_prom) {
                     $list = array();
 
                     foreach ($studentPerSchool as $object) {
