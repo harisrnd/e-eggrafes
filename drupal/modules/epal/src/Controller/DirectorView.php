@@ -706,7 +706,7 @@ class DirectorView extends ControllerBase
                         'id' => $object->specialty_id->entity->id(),
                         'name' => 'Δ Λυκείου  '.$object->specialty_id->entity->get('name')->value,
                         'size' => sizeof($studentPerSchool),
-                        'size' => sizeof($studentPerSchoolConfir),
+                        'sizeconfirm' => sizeof($studentPerSchoolConfir),
                         'categ' => $categ,
                         'classes' => 4,
                         'limitdown' => $limit,
