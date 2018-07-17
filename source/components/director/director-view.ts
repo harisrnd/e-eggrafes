@@ -93,7 +93,7 @@ import { HelperDataService } from "../../services/helper-data-service";
                      <div class="col-md-8">&nbsp;</div>
                      <div class="col-md-4">
                       <strong><label>Επιβεβαίωση Εγγραφής:</label> </strong>
-                      <select class="form-control pull-right" #cb name="{{StudentDetails$.id}}" (change)="confirmStudent(StudentDetails$.id, cb, j)">
+                      <select [disabled] = true class="form-control pull-right" #cb name="{{StudentDetails$.id}}" (change)="confirmStudent(StudentDetails$.id, cb, j)" >
                           <option value="1" [selected]="StudentDetails$.checkstatus === '1' ">Ναι</option>
                           <option value="2" [selected]="StudentDetails$.checkstatus === '0' ">Όχι</option>
                           <option value="3" [selected]="StudentDetails$.checkstatus != '0' && StudentDetails$.checkstatus != '1'">Δεν ελέγχθηκε</option>

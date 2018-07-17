@@ -387,7 +387,6 @@ public function getStudentsPerSchool(Request $request, $schoolid, $type,$address
 
 
 /*
-/*
             $sCon = $this->connection->select('gel_student', 'gStudent');
             $sCon->leftJoin('gel_school', 'eSchool', 'eSchool.registry_no = gStudent.lastschool_registrynumber');
             $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ,'am','second_period'))
@@ -2763,8 +2762,7 @@ public function FindCoursesPerSchoolGel(Request $request)
         if ($user) {
             $schoolid = $user->init->value;
             //hard
-            //$schoolid = 361;
-            //$schoolid = 1877;
+            //$schoolid = 954;
             $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $schoolid));
             $school = reset($schools);
             if (!$school) {
@@ -3132,8 +3130,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
             if ($user) {
                 $gelId = $user->init->value;
                 //hard
-                //$gelId = 361;
-                //$gelId = 1877;
+                //$gelId = 954;
                 //$this->logger->warning($gelId."kvdikos sxoleiou".$classId);
                 $schools = $this->entityTypeManager->getStorage('gel_school')->loadByProperties(array('id' => $gelId));
                 $school = reset($schools);
@@ -3203,13 +3200,13 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                         ->fields('gSchool', array('id','registry_no'))
                         ->condition('gSchool.id', $gelId , '=')
                         ->condition('gStudent.nextclass', $classId , '=')
-                        //->condition('gStudent.lastschool_class', $classId-1 , '=')
-                        ->condition('gStudent.delapp', '0' , '=');
-                        //->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                        ->condition('gStudent.lastschool_class', $classId-1 , '=')
+                        ->condition('gStudent.delapp', '0' , '=')
+                        ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
                     $existingstudents_prom = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
 
-                   /* $sCon = $this->connection->select('gel_student', 'gStudent');
+                    $sCon = $this->connection->select('gel_student', 'gStudent');
                     $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                     $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                         ->fields('gSchool', array('id','registry_no'))
@@ -3218,7 +3215,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                         ->condition('gStudent.lastschool_class', $classId , '=')
                         ->condition('gStudent.delapp', '0' , '=')
                         ->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
-                    $existingstudents_non_prom = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);  */
+                    $existingstudents_non_prom = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 //}
 
                  $this->logger->warning($sCon."existingstudents");
@@ -3232,13 +3229,13 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                         ->fields('gSchool', array('id','registry_no'))
                         ->condition('gSchool.id', $gelId , '=')
                         ->condition('gStudent.nextclass', $classId , '=')
-                        //->condition('gStudent.lastschool_class', $classId-4 , '=')
-                        ->condition('gStudent.delapp', '0' , '=');
-                        //->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
+                        ->condition('gStudent.lastschool_class', $classId-4 , '=')
+                        ->condition('gStudent.delapp', '0' , '=')
+                        ->condition(db_or()->condition('myschool_promoted', 1)->condition('myschool_promoted', 2));
                     $existingstudents_prom = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
 
 
-                    /* $sCon = $this->connection->select('gel_student', 'gStudent');
+                    $sCon = $this->connection->select('gel_student', 'gStudent');
                     $sCon->leftJoin('gel_school', 'gSchool', 'gSchool.registry_no = gStudent.lastschool_registrynumber');
                     $sCon->fields('gStudent', array('id','lastschool_registrynumber','nextclass', 'delapp','name','studentsurname' ,'fatherfirstname' ,'motherfirstname' ,'regionaddress' ,'regiontk' ,'regionarea','telnum' ,'guardian_name' ,'guardian_surname','guardian_fathername ','guardian_mothername', 'birthdate', 'lastschool_schoolname','lastschool_class','lastschool_schoolyear','directorconfirm', 'created' ))
                         ->fields('gSchool', array('id','registry_no'))
@@ -3247,24 +3244,19 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                         ->condition('gStudent.lastschool_class', $classId-3 , '=')
                         ->condition('gStudent.delapp', '0' , '=')
                         ->condition(db_or()->condition('myschool_promoted', 6)->condition('myschool_promoted', 7));
-                    $existingstudents_non_prom = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ); */
+                    $existingstudents_non_prom = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
                 }
 
 
                 }
-                if ($studentPerSchool || $existingstudents_prom ) {
-                //if ($studentPerSchool || $existingstudents_prom || $existingstudents_non_prom) {
-
+                if ($studentPerSchool || $existingstudents_prom || $existingstudents_non_prom) {
                     $list = array();
 
                     foreach ($studentPerSchool as $object) {
                         $studentId = $object->student_id->target_id;
 
                         //$this->logger->warning($studentId."Aaaaa1");
-                        $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId,'nextclass'=>$classId));
-                        $gelStudent = reset($gelStudents);
-
-                        /*$gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => '2','nextclass'=>$classId));
+                        $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => '2','nextclass'=>$classId));
                         $gelStudent = reset($gelStudents);
                         if (!$gelStudent) {
                                    //$this->logger->warning($studentId."step1");
@@ -3278,21 +3270,20 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                              $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => '6','nextclass'=>$classId));
                              $gelStudent = reset($gelStudents);
                         }
-
                         if (!$gelStudent) {
                              //$this->logger->warning($studentId."step3");
 
                              $gelStudents = $this->entityTypeManager->getStorage('gel_student')->loadByProperties(array('id' => $studentId, 'myschool_promoted' => '7','nextclass'=>$classId));
                              $gelStudent = reset($gelStudents);
-                        }*/
+                        }
 
                         $sCon = $this->connection->select('invalid_apps', 'invalid');
                         $sCon->fields('invalid', array('id'))
                         ->condition('invalid.id', $studentId , '=');
                         $existsinvalid = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                        //if (sizeof($existsinvalid)>0){
-                        //    $this->logger->warning($studentId." invalid");
-                        //}
+                        if (sizeof($existsinvalid)>0){
+                            $this->logger->warning($studentId." invalid");
+                        }
 
                          if ($gelStudent && sizeof($existsinvalid)==0 ) {
 
@@ -3422,9 +3413,9 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                         $sCon->fields('invalid', array('id'))
                         ->condition('invalid.id', $studentId , '=');
                         $existsinvalid = $sCon->execute()->fetchAll(\PDO::FETCH_OBJ);
-                        //if (sizeof($existsinvalid)>0){
-                        //    $this->logger->warning($studentId." invalid");
-                        //}
+                        if (sizeof($existsinvalid)>0){
+                            $this->logger->warning($studentId." invalid");
+                        }
 
                         if (!$gelStudents && sizeof($existsinvalid)==0) {
                         //if (!$gelStudents) {
@@ -3529,7 +3520,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
                     }
 
 
-                    /*foreach ($existingstudents_non_prom as $object) {
+                    foreach ($existingstudents_non_prom as $object) {
 
 
                         $studentId = $object->id ;
@@ -3645,7 +3636,7 @@ public function getStudentPerSchoolGel(Request $request, $classId)
 
                             );
                         }
-                    }*/
+                    }
 
 
 
